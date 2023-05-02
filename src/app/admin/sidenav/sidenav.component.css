@@ -1,0 +1,35 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: blue;
+    color: white;
+    height: 100vh;
+  }
+  
+  .sidebar .nav {
+    margin-left: 100;
+  }
+  
+  .sidebar .nav-link {
+    color: white;
+    border-radius: 0;
+  }
+  
+  .sidebar .nav-link:hover {
+    background-color: white;
+    color: blue;
+    border-radius: 0;
+  }
+  
+  .sidebar .nav-link:active {
+    color: blue;
+    background-color: white;
+    border-radius: 0;
+  }
+  
+  .sidebar .active {
+    background-color: white;
+    color: blue;
+    border-radius: 0;
+  }
+  
