@@ -14,6 +14,10 @@ import { BlacklistComponent } from './admin/blacklist/blacklist.component';
 //Bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SidenavComponent } from './admin/sidenav/sidenav.component';
+import { VatComponent } from './admin/vat/vat.component';
+
+//ClientModule
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,12 +29,14 @@ import { SidenavComponent } from './admin/sidenav/sidenav.component';
     SupplierComponent,
     ReportComponent,
     BlacklistComponent,
-    SidenavComponent
+    SidenavComponent,
+    VatComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

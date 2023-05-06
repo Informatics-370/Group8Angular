@@ -1,0 +1,29 @@
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">VATID</th>
+        <th scope="col">Percentage</th>
+        <th scope="col">Date</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vat of vats">
+        <td>{{ vat.vatid }}</td>
+        <td>{{ vat.percentage }}</td>
+        <td>{{ vat.date }}</td>
+        <!-- Td content -->
+      <td>
+        <button class="btn btn-primary" (click)="vat.vatid !== undefined && editVAT(vat.vatid)" style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn btn-danger" (click)="vat.vatid !== undefined && deleteVAT(vat.vatid)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+      </tr>
+    </tbody>
+  </table>
+ 
+  
+  

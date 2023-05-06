@@ -7,6 +7,7 @@ import { FaqComponent } from './admin/faq/faq.component';
 import { SupplierComponent } from './admin/supplier/supplier.component';
 import { ReportComponent } from './admin/report/report.component';
 import { BlacklistComponent } from './admin/blacklist/blacklist.component';
+import { VatComponent } from './admin/vat/vat.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'faq', component: FaqComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'report', component: ReportComponent },
-  { path: 'blacklist', component: BlacklistComponent }
+  { path: 'blacklist', component: BlacklistComponent },
+  {path: 'vat', component: VatComponent}
 
 ];
 
