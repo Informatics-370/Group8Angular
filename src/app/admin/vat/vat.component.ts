@@ -74,8 +74,8 @@ export class VatComponent implements OnInit {
               this.vats[index] = this.currentVat;
             }
             this.closeVatModal();
-            form.resetForm();
-            this.router.navigate(['/vat']).then(() => window.location.reload());
+            // form.resetForm();
+            // this.router.navigate(['/vat']).then(() => window.location.reload());
           },
           error: (error: any) => console.error(error)
         });
@@ -89,7 +89,7 @@ export class VatComponent implements OnInit {
               this.vats.push(data);
               this.closeVatModal();
               form.resetForm();
-              this.router.navigate(['/vat']).then(() => window.location.reload());
+              // this.router.navigate(['/vat']).then(() => window.location.reload());
             },
             error: (error: any) => console.error(error)
           });
