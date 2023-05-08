@@ -1,1 +1,70 @@
-<p>wine works!</p>
+<div class="text-end mb-3">
+    <button class="btn btn-success" (click)="openAddDiscountModal()">
+      <i class="fas fa-plus"></i> Add Discount
+    </button>
+  </div>
+  
+  <!-- Add/Edit Discount Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showModal}" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{editingDiscount ? 'Edit Discount' : 'Add Discount'}}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeDiscountModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #discountForm="ngForm" (ngSubmit)="submitDiscountForm(discountForm)">
+            
+            <div class="mb-3">
+              <label for="discountCode" class="form-label">Discount Code</label>
+              <input type="text" class="form-control" id="discountCode" [(ngModel)]="currentDiscount.discountCode" name="discountCode" required disabled>
+            </div>
+            
+            <div class="mb-3">
+              <label for="discountDescription" class="form-label">Discount Description</label>
+              <input type="text" class="form-control" id="discountDescription" [(ngModel)]="currentDiscount.discountDescription" name="discountDescription" required>
+            </div>
+            <div class="mb-3">
+              <label for="discountAmount" class="form-label">Discount Amount</label>
+              <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountAmount" name="discountAmount" required>
+            </div>
+            <!-- <div class="mb-3">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" class="form-control" id="date" [(ngModel)]="currentDiscount.date" name="date" required [min]="minDate">
+            </div> -->
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeDiscountModal()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submitDiscountForm(discountForm)">{{editingDiscount ? 'Save Changes' : 'Save'}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Code</th>
+        <th scope="col">Description</th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let discount of discounts">
+        <td>{{ discount.discountCode }}</td>
+        <td>{{ discount.discountDescription }}</td>
+        <td>{{ discount.discountAmount }}</td>
+        <td>
+            <button class="btn btn-primary" (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)" style="margin-right: 4px;">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              
+              <button class="btn btn-danger" (click)="discount.discountID !== undefined && deleteDiscount(discount.discountID)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+            </tr>
+          </tbody>
+        </table>
