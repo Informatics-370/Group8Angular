@@ -1,70 +1,342 @@
+<br>
+<br>
+<!-- Wine --------------------------------------------------------------------------------------------------------------------->
+<!-- Wine button -->
 <div class="text-end mb-3">
-    <button class="btn btn-success" (click)="openAddDiscountModal()">
-      <i class="fas fa-plus"></i> Add Discount
-    </button>
+  <button class="btn btn-success btn-sm" (click)="openAddWineModal()">
+    <i class="fas fa-plus"></i> Add
+  </button>
+</div>
+<!-- Wine Table -->
+<h2>Wine</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Vintage</th>
+      <th scope="col">Restock Limit</th>
+      <th scope="col">Image URL</th>
+      <th scope="col">Tasting Note</th>
+      <th scope="col">Price</th>
+      <th scope="col">Type</th>
+      <th scope="col">Varietal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let wine of wines">
+      <td>{{ wine.WineID }}</td>
+      <td>{{ wine.Name }}</td>
+      <td>{{ wine.Description }}</td>
+      <td>{{ wine.Vintage }}</td>
+      <td>{{ wine.RestockLimit }}</td>
+      <td>{{ wine.ImageUrl }}</td>
+      <td>{{ wine.WineTastingNote }}</td>
+      <td>{{ wine.WinePrice }}</td>
+
+      <td>{{ wine.WineTypeName }}</td>
+      <td>{{ wine.VarietalName }}</td>
+    </tr>
+  </tbody>
+</table>
+<!-- Add/Edit Wine Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showWineModal}" [ngStyle]="{'display': showWineModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingWine ? 'Edit Wine' : 'Add Wine'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeWineModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #wineForm="ngForm" (ngSubmit)="submitWineForm(wineForm)">
+          <div class="mb-3">
+            <label for="wineName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="wineName" [(ngModel)]="currentWine.Name" name="wineName"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="wineDescription" class="form-label">Description</label>
+            <input type="text" class="form-control" id="wineDescription" [(ngModel)]="currentWine.Description"
+              name="wineDescription">
+          </div>
+          <div class="mb-3">
+            <label for="wineVintage" class="form-label">Vintage</label>
+            <input type="text" class="form-control" id="wineVintage" [(ngModel)]="currentWine.Vintage"
+              name="wineVintage">
+          </div>
+          <div class="mb-3">
+            <label for="wineRestockLimit" class="form-label">Restock Limit</label>
+            <input type="number" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.RestockLimit"
+              name="wineRestockLimit" required>
+          </div>
+          <div class="mb-3">
+            <label for="wineImageUrl" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="wineImageUrl" [(ngModel)]="currentWine.ImageUrl"
+              name="wineImageUrl">
+          </div>
+          <div class="mb-3">
+            <label for="wineTastingNote" class="form-label">Tasting Note</label>
+            <textarea class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.WineTastingNote"
+              name="wineTastingNote"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="winePrice" class="form-label">Price</label>
+            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentWine.WinePrice"
+              name="winePrice" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="wineType" class="form-label">Type</label>
+            <select class="form-control" id="wineType" [(ngModel)]="currentWine.WineType" name="wineType" required>
+              <option *ngFor="let wineType of winetypes" [value]="wineType">{{ wineType.Name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="wineVarietal" class="form-label">Varietal</label>
+            <select class="form-control" id="wine Varietal" [(ngModel)]="currentWine.Varietal" name="wineVarietal"
+              required>
+              <option *ngFor="let varietal of varietals" [value]="varietal">{{ varietal.Name }}</option>
+            </select>
+          </div>
+          <!-- <div class="mb-3">
+            <label for="wineRegion" class="form-label">Region</label>
+            <input type="text" class="form-control" id="wineRegion" [(ngModel)]="currentWine.region"
+              name="wineRegion">
+          </div> -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes'
+          : 'Save'}}</button>
+      </div>
+    </div>
+
   </div>
-  
-  <!-- Add/Edit Discount Modal -->
-  <div class="modal" tabindex="-1" [ngClass]="{'show': showModal}" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{editingDiscount ? 'Edit Discount' : 'Add Discount'}}</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeDiscountModal()"></button>
-        </div>
-        <div class="modal-body">
-          <form #discountForm="ngForm" (ngSubmit)="submitDiscountForm(discountForm)">
-            
-            <div class="mb-3">
-              <label for="discountCode" class="form-label">Discount Code</label>
-              <input type="text" class="form-control" id="discountCode" [(ngModel)]="currentDiscount.discountCode" name="discountCode" required disabled>
-            </div>
-            
-            <div class="mb-3">
-              <label for="discountDescription" class="form-label">Discount Description</label>
-              <input type="text" class="form-control" id="discountDescription" [(ngModel)]="currentDiscount.discountDescription" name="discountDescription" required>
-            </div>
-            <div class="mb-3">
-              <label for="discountAmount" class="form-label">Discount Amount</label>
-              <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountAmount" name="discountAmount" required>
-            </div>
-            <!-- <div class="mb-3">
-              <label for="date" class="form-label">Date</label>
-              <input type="date" class="form-control" id="date" [(ngModel)]="currentDiscount.date" name="date" required [min]="minDate">
-            </div> -->
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeDiscountModal()">Close</button>
-          <button type="button" class="btn btn-primary" (click)="submitDiscountForm(discountForm)">{{editingDiscount ? 'Save Changes' : 'Save'}}</button>
-        </div>
+</div>
+<!-- Wine --------------------------------------------------------------------------------------------------------------------->
+
+<!-- varietal and winetype ---------------------------------------------------------------------------------------------------->
+<!-- two varietal and type tables: -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Wine Types</h2>
+      <button class="btn btn-success btn-sm float-right" (click)="openAddWineTypeModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+      
+
+      <!-- table types -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let wineType of winetypes">
+            <td>{{ wineType.Name }}</td>
+            <td>{{wineType.Description}}</td>
+            <td>
+              <button class="btn btn-primary btn-sm mr-1" (click)="openEditWineTypeModal(wineType.WineTypeID)">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteWineType(wineType.WineTypeID)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+
+      <!-- table varietals -->
+      <table class="table">
+        <thead>
+          <tr>
+            <!-- <th>Varietal ID</th> -->
+            <th>Name</th>
+            <th>Description </th>
+            <th>Actions </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let varietal of varietals">
+            <!-- <td>{{ varietal.VarietalID }}</td> -->
+            <td>{{ varietal.Name }}</td>
+            <td>{{varietal.Description}}</td>
+            <td>
+              <button class="btn btn-primary btn-sm mr-1" (click)="openEditVarietalModal(varietal.VarietalID)">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteVarietal(varietal.VarietalID)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!--Winetype add/edit  modal-->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showTypeModal}" [ngStyle]="{'display': showTypeModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingWineType ? 'Edit Wine Type' : 'Add Wine Type'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeWineTypeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #typeForm="ngForm" (ngSubmit)="SubmitWineTypeForm(typeForm)">
+
+          <div class="mb-3">
+            <label for="typeName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="typeName" [(ngModel)]="currentWineType.Name"
+              name="typeName" required>
+          </div>
+
+           <div class="mb-3">
+            <label for="WineTypeDescription" class="form-label">Description</label>
+            <input type="text" class="form-control" id="typeDescription" [(ngModel)]="currentWineType.Description"
+              name="WineTypeDescription" required>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeWineTypeModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="SubmitWineTypeForm(typeForm)">{{editingWineType ?
+          'Save Changes' : 'Save'}}</button>
       </div>
     </div>
   </div>
-  
-  <!-- Table -->
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Code</th>
-        <th scope="col">Description</th>
-        <th scope="col">Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let discount of discounts">
-        <td>{{ discount.discountCode }}</td>
-        <td>{{ discount.discountDescription }}</td>
-        <td>{{ discount.discountAmount }}</td>
-        <td>
-            <button class="btn btn-primary" (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)" style="margin-right: 4px;">
-                <i class="fas fa-pencil-alt"></i>
-              </button>
-              
-              <button class="btn btn-danger" (click)="discount.discountID !== undefined && deleteDiscount(discount.discountID)">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-            </tr>
-          </tbody>
-        </table>
+</div>
+
+<!-- Varietal add/edit modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}" [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingVarietal ? 'Edit Varietal' : 'Add Varietal'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeVarietalModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #varietalForm="ngForm" (ngSubmit)="SubmitVarietalForm(varietalForm)">
+
+          <div class="mb-3">
+            <label for="varietalName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.Name"
+              name="varietalName" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="varietalDescription" class="form-label">Description</label>
+            <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.Description"
+              name="varietalDescription" required>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeVarietalModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="SubmitVarietalForm(varietalForm)">{{editingVarietal ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Discount ------------------------------------------------------------------------------------------------------------------>
+<!-- Discount button -->
+<div class="text-end mb-3">
+  <button class="btn btn-success btn-sm" (click)="openAddDiscountModal()">
+    <i class="fas fa-plus"></i> Add
+  </button>
+</div>
+<!--Discount table -->
+<h2>Discount</h2>
+<table class="table table-striped">
+
+  <thead>
+    <tr>
+      <th scope="col">Code</th>
+      <th scope="col">Description</th>
+      <th scope="col">Amount (R)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let discount of discounts">
+      <td>{{ discount.discountCode }}</td>
+      <td>{{ discount.discountDescription }}</td>
+      <td>{{ discount.discountAmount }}</td>
+      <td>
+        <button class="btn btn-primary"
+          (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
+          style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+
+        <button class="btn btn-danger"
+          (click)="discount.discountID !== undefined && deleteDiscount(discount.discountID)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Add/Edit Discount Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDiscountModal}" [ngStyle]="{'display': showDiscountModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingDiscount ? 'Edit Discount' : 'Add Discount'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDiscountModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #discountForm="ngForm" (ngSubmit)="submitDiscountForm(discountForm)">
+
+          <div class="mb-3">
+            <label for="discountCode" class="form-label">Discount Code</label>
+            <input type="text" class="form-control" id="discountCode" [(ngModel)]="currentDiscount.discountCode"
+              name="discountCode" required disabled>
+          </div>
+
+          <div class="mb-3">
+            <label for="discountDescription" class="form-label">Discount Description</label>
+            <input type="text" class="form-control" id="discountDescription"
+              [(ngModel)]="currentDiscount.discountDescription" name="discountDescription" required>
+          </div>
+          <div class="mb-3">
+            <label for="discountAmount" class="form-label">Discount Amount</label>
+            <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountAmount"
+              name="discountAmount" required>
+          </div>
+          <!-- <div class="mb-3">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" class="form-control" id="date" [(ngModel)]="currentDiscount.date" name="date" required [min]="minDate">
+            </div> -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDiscountModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitDiscountForm(discountForm)">{{editingDiscount ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Discount ------------------------------------------------------------------------------------------------------------------->
+
