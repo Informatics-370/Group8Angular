@@ -8,7 +8,7 @@ import { VarietalService } from '../services/varietal.service';
 import { WinetypeService } from '../services/winetype.service';
 import { Wine } from 'src/app/Model/wine';
 import { WineType } from 'src/app/Model/winetype';
-import { Varietal } from 'src/app/Model/winetype';
+import { Varietal } from 'src/app/Model/varietal';
 
 @Component({
   selector: 'app-wine',

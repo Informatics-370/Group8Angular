@@ -1,5 +1,5 @@
 import { WineType } from "./winetype";
-import { Varietal } from "./winetype";
+import { Varietal } from "./varietal";
 
 export class Wine {
   WineID: number | undefined;

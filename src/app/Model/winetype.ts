@@ -1,7 +1,7 @@
 export class WineType {
-  WineTypeID: number;
-  Name: string;
-  Description: string;
+  WineTypeID: number|undefined;
+  Name: string|undefined;
+  Description: string|undefined;
 
   constructor() {
     this.WineTypeID = 0;
@@ -11,14 +11,4 @@ export class WineType {
 }
 
 
-export class Varietal {
-  VarietalID: number;
-  Name: string;
-  Description: string;
 
-  constructor() {
-    this.VarietalID = 0;
-    this.Name = '';
-    this.Description = '';
-  }
-}
