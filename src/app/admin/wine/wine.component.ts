@@ -264,7 +264,7 @@ export class WineComponent implements OnInit {
   editingDiscount: boolean = false;
   showDeleteDiscountModal = false;
   discountToDeleteDetails: any;
-discountToDelete: any = null;
+  discountToDelete: any = null;
 
 
   // Discount methods---------------------------------------------------------------------------------.>
@@ -345,12 +345,15 @@ discountToDelete: any = null;
 
   //Delete discount
   async deleteDiscount(): Promise<void> {
-    if (this.discountToDeleteDetails && this.discountToDeleteDetails.discountID !== undefined) {
-      await this.discountService.deleteDiscount(this.discountToDeleteDetails.discountID);
-      this.discounts = this.discounts.filter(discount => discount.discountID !== this.discountToDeleteDetails.discountID);
+    if (this.discountToDelete !== null) {
+      try {
+        await this.discountService.deleteDiscount(this.discountToDelete);
+        console.log(this.discountToDelete);
+        this.discounts = this.discounts.filter(discount => discount.discountID !== this.discountToDelete);
+      } catch (error) {
+        console.error('Error deleting Discount:', error);
+      }
       this.closeDeleteModal();
-    } else {
-      console.log("Discount to delete is null, undefined, or has an undefined discountID property.");
     }
   }
 

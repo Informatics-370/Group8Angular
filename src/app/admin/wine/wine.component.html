@@ -301,13 +301,15 @@
       <td>{{ discount.discountAmount }}</td>
       <td>
         <button class="btn btn-primary"
-          (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
-          style="margin-right: 4px;">
-          <i class="fas fa-pencil-alt"></i>
-        </button>
-        <button class="btn btn-danger" (click)="discount.discountID !== undefined && openDeleteDiscountModal(discount)">
-          <i class="fas fa-trash-alt"></i>
-        </button>
+        (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
+        style="margin-right: 4px;">
+        <i class="fas fa-pencil-alt"></i>
+      </button>
+
+      <button class="btn btn-danger"
+        (click)="discount.discountID !== undefined && openDeleteDiscountModal(discount)">
+        <i class="fas fa-trash-alt"></i>
+      </button>
 
 
       </td>
