@@ -31,10 +31,10 @@ export class Wine {
   }
 
   get WineTypeName(): string | undefined {
-    return this.WineType?.Name;
+    return this.WineType?.name;
   }
 
   get VarietalName(): string | undefined {
-    return this.Varietal?.Name;
+    return this.Varietal?.name;
   }
 }

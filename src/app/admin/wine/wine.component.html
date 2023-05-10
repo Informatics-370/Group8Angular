@@ -90,7 +90,7 @@
           <div class="mb-3">
             <label for="wineType" class="form-label">Type</label>
             <select class="form-control" id="wineType" [(ngModel)]="currentWine.WineType" name="wineType" required>
-              <option *ngFor="let wineType of winetypes" [value]="wineType">{{ wineType.Name }}</option>
+              <option *ngFor="let wineType of winetypes" [value]="wineType">{{ wineType.name }}</option>
             </select>
           </div>
 
@@ -98,7 +98,7 @@
             <label for="wineVarietal" class="form-label">Varietal</label>
             <select class="form-control" id="wine Varietal" [(ngModel)]="currentWine.Varietal" name="wineVarietal"
               required>
-              <option *ngFor="let varietal of varietals" [value]="varietal">{{ varietal.Name }}</option>
+              <option *ngFor="let varietal of varietals" [value]="varietal">{{ varietal.name }}</option>
             </select>
           </div>
           <!-- <div class="mb-3">
@@ -141,8 +141,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let wineType of winetypes">
-            <td>{{ wineType.Name }}</td>
-            <td>{{ wineType.Description }}</td>
+            <td>{{ wineType.name }}</td>
+            <td>{{ wineType.description }}</td>
             <td>
               <!-- WineType buttons -->
               <button class="btn btn-primary btn-sm mr-1"
@@ -177,8 +177,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let varietal of varietals">
-            <td>{{ varietal.Name }}</td>
-            <td>{{ varietal.Description }}</td>
+            <td>{{ varietal.name }}</td>
+            <td>{{ varietal.description }}</td>
             <td>
               <!-- Varietal buttons -->
               <button class="btn btn-primary btn-sm mr-1"
@@ -212,13 +212,13 @@
 
           <div class="mb-3">
             <label for="typeName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="typeName" [(ngModel)]="currentWineType.Name" name="typeName"
+            <input type="text" class="form-control" id="typeName" [(ngModel)]="currentWineType.name" name="typeName"
               required>
           </div>
 
           <div class="mb-3">
             <label for="WineTypeDescription" class="form-label">Description</label>
-            <input type="text" class="form-control" id="typeDescription" [(ngModel)]="currentWineType.Description"
+            <input type="text" class="form-control" id="typeDescription" [(ngModel)]="currentWineType.description"
               name="WineTypeDescription" required>
           </div>
 
@@ -247,13 +247,13 @@
 
           <div class="mb-3">
             <label for="varietalName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.Name"
+            <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
               name="varietalName" required>
           </div>
 
           <div class="mb-3">
             <label for="varietalDescription" class="form-label">Description</label>
-            <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.Description"
+            <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
               name="varietalDescription" required>
           </div>
 
