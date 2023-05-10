@@ -41,7 +41,8 @@
   </tbody>
 </table>
 <!-- Add/Edit Wine Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showWineModal}" [ngStyle]="{'display': showWineModal ? 'block' : 'none'}">
+<div class="modal" tabindex="-1" [ngClass]="{'show': showWineModal}"
+  [ngStyle]="{'display': showWineModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -122,60 +123,71 @@
 <!-- two varietal and type tables: -->
 <div class="container-fluid">
   <div class="row">
+    <!-- Wine Types Column -->
     <div class="col-md-6">
       <h2>Wine Types</h2>
       <button class="btn btn-success btn-sm float-right" (click)="openAddWineTypeModal()">
         <i class="fas fa-plus"></i> Add
       </button>
-      
 
-      <!-- table types -->
+      <!-- Wine Types table -->
       <table class="table">
         <thead>
           <tr>
             <th>Name</th>
-            <th>Description </th>
+            <th>Description</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let wineType of winetypes">
             <td>{{ wineType.Name }}</td>
-            <td>{{wineType.Description}}</td>
+            <td>{{ wineType.Description }}</td>
             <td>
-              <button class="btn btn-primary btn-sm mr-1" (click)="openEditWineTypeModal(wineType.WineTypeID)">
-                <i class="fas fa-edit"></i> Edit
+              <!-- WineType buttons -->
+              <button class="btn btn-primary btn-sm mr-1"
+                (click)="wineType.WineTypeID !== undefined && openEditWineTypeModal(wineType.WineTypeID)">
+                <i class="fas fa-pencil-alt"></i>
               </button>
-              <button class="btn btn-danger btn-sm" (click)="deleteWineType(wineType.WineTypeID)">
-                <i class="fas fa-trash"></i> Delete
+              <button class="btn btn-danger btn-sm"
+                (click)="wineType.WineTypeID !== undefined && deleteWineType(wineType.WineTypeID)">
+                <i class="fas fa-trash-alt"></i>
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      
+    </div>
 
-      <!-- table varietals -->
+    <!-- Varietals Column -->
+    <div class="col-md-6">
+      <h2>Varietals</h2>
+      <button class="btn btn-success btn-sm float-right" (click)="openAddVarietalModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+
+      <!-- Varietals table -->
       <table class="table">
         <thead>
           <tr>
-            <!-- <th>Varietal ID</th> -->
             <th>Name</th>
-            <th>Description </th>
-            <th>Actions </th>
+            <th>Description</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let varietal of varietals">
-            <!-- <td>{{ varietal.VarietalID }}</td> -->
             <td>{{ varietal.Name }}</td>
-            <td>{{varietal.Description}}</td>
+            <td>{{ varietal.Description }}</td>
             <td>
-              <button class="btn btn-primary btn-sm mr-1" (click)="openEditVarietalModal(varietal.VarietalID)">
-                <i class="fas fa-edit"></i> Edit
+              <!-- Varietal buttons -->
+              <button class="btn btn-primary btn-sm mr-1"
+                (click)="varietal.VarietalID !== undefined && openEditVarietalModal(varietal.VarietalID)">
+                <i class="fas fa-pencil-alt"></i>
               </button>
-              <button class="btn btn-danger btn-sm" (click)="deleteVarietal(varietal.VarietalID)">
-                <i class="fas fa-trash"></i> Delete
+              <button class="btn btn-danger btn-sm"
+                (click)="varietal.VarietalID !== undefined && deleteVarietal(varietal.VarietalID)">
+                <i class="fas fa-trash-alt"></i>
               </button>
             </td>
           </tr>
@@ -185,8 +197,10 @@
   </div>
 </div>
 
+
 <!--Winetype add/edit  modal-->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showTypeModal}" [ngStyle]="{'display': showTypeModal ? 'block' : 'none'}">
+<div class="modal" tabindex="-1" [ngClass]="{'show': showTypeModal}"
+  [ngStyle]="{'display': showTypeModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -198,11 +212,11 @@
 
           <div class="mb-3">
             <label for="typeName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="typeName" [(ngModel)]="currentWineType.Name"
-              name="typeName" required>
+            <input type="text" class="form-control" id="typeName" [(ngModel)]="currentWineType.Name" name="typeName"
+              required>
           </div>
 
-           <div class="mb-3">
+          <div class="mb-3">
             <label for="WineTypeDescription" class="form-label">Description</label>
             <input type="text" class="form-control" id="typeDescription" [(ngModel)]="currentWineType.Description"
               name="WineTypeDescription" required>
@@ -220,7 +234,8 @@
 </div>
 
 <!-- Varietal add/edit modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}" [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
+<div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}"
+  [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -298,7 +313,8 @@
 </table>
 
 <!-- Add/Edit Discount Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showDiscountModal}" [ngStyle]="{'display': showDiscountModal ? 'block' : 'none'}">
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDiscountModal}"
+  [ngStyle]="{'display': showDiscountModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -339,4 +355,3 @@
   </div>
 </div>
 <!-- Discount ------------------------------------------------------------------------------------------------------------------->
-

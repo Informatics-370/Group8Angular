@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Varietal } from 'src/app/Model/winetype';
+import { Varietal } from 'src/app/Model/varietal';
 import { environment } from 'src/app/environment';
 import { HttpClient } from '@angular/common/http';
 import { Wine } from 'src/app/Model/wine';
