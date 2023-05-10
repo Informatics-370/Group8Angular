@@ -24,22 +24,22 @@ export class WineComponent implements OnInit {
   winetypes: WineType[] = [];
   varietals: Varietal[] = [];
 
+  //Wine modal booleans
   showWineModal: boolean = false;
   showTypeModal: boolean = false;
   showVarietalModal: boolean = false;
 
-
-
-
-
+  //Wine variables
   editingWine: boolean = false;
   currentWine: Wine = new Wine();
   showDeleteWineModal = false;
 
+  //Varietal variables
   editingVarietal: boolean = false;
   currentVarietal: Varietal = new Varietal();
   showDeleteVarietalModal: boolean = false;
 
+  // WineType variables
   editingWineType: boolean = false;
   currentWineType: WineType = new WineType();
   showDeleteWineTypeModal: boolean = false;
@@ -57,7 +57,8 @@ export class WineComponent implements OnInit {
     this.loadWinetypes();
   }
 
-
+  //--------------------------------------------------------------------------------------------------------------------------------
+//Methods to display the Wines, WineTypes and WineVarietals in the tables
   async loadDiscounts(): Promise<void> {
     try {
       this.discounts = await this.discountService.getDiscounts();
@@ -77,6 +78,7 @@ export class WineComponent implements OnInit {
   async loadVarietals(): Promise<void> {
     try {
       this.varietals = await this.varietalService.getVarietals();
+      console.log('Loaded Varietals:', this.varietals); // Add this line
     } catch (error) {
       console.error(error);
     }
@@ -89,6 +91,8 @@ export class WineComponent implements OnInit {
       console.error(error);
     }
   }
+//--------------------------------------------------------------------------------------------------------------------------------
+
 
   // Wine methods
   openAddWineModal() {
@@ -105,6 +109,9 @@ export class WineComponent implements OnInit {
   closeWineModal() {
     this.showWineModal = false;
   }
+
+
+
   // Varietal methods
   openAddVarietalModal() {
     this.editingVarietal = false;
@@ -120,6 +127,9 @@ export class WineComponent implements OnInit {
   closeVarietalModal() {
     this.showVarietalModal = false;
   }
+
+
+
   // WineType methods
   openAddWineTypeModal() {
     this.editingWineType = false;
