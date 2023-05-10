@@ -17,7 +17,9 @@ import { Varietal } from 'src/app/Model/varietal';
 })
 export class WineComponent implements OnInit {
 
-  discounts: Discount[] = [];
+
+
+  //Marco geniet 
   wines: Wine[] = [];
   winetypes: WineType[] = [];
   varietals: Varietal[] = [];
@@ -25,19 +27,23 @@ export class WineComponent implements OnInit {
   showWineModal: boolean = false;
   showTypeModal: boolean = false;
   showVarietalModal: boolean = false;
-  showDiscountModal: boolean = false;
 
-  editingDiscount: boolean = false;
-  currentDiscount: Discount = new Discount();
+
+
+
 
   editingWine: boolean = false;
   currentWine: Wine = new Wine();
+  showDeleteWineModal = false;
 
   editingVarietal: boolean = false;
   currentVarietal: Varietal = new Varietal();
+  showDeleteVarietalModal: boolean = false;
 
   editingWineType: boolean = false;
   currentWineType: WineType = new WineType();
+  showDeleteWineTypeModal: boolean = false;
+  
 
 
 
@@ -84,23 +90,6 @@ export class WineComponent implements OnInit {
     }
   }
 
-  // Modal-related methods
-  // Discount methods
-  openAddDiscountModal() {
-    this.editingDiscount = false;
-    this.currentDiscount = new Discount();
-    this.showDiscountModal = true;
-  }
-
-  openEditDiscountModal(id: number) {
-    console.log('Opening edit discount modal for ID:', id);
-    this.editingDiscount = true;
-    this.currentDiscount = this.discounts.find(discount => discount.discountID === id)!;
-    this.showDiscountModal = true;
-  }
-  closeDiscountModal() {
-    this.showDiscountModal = false;
-  }
   // Wine methods
   openAddWineModal() {
     this.editingWine = false;
@@ -137,7 +126,7 @@ export class WineComponent implements OnInit {
     this.currentWineType = new WineType();
     this.showTypeModal = true;
   }
-  openEditWineTypeModal(id: number ) {
+  openEditWineTypeModal(id: number) {
     console.log('Opening edit wine type modal for ID:', id);
     this.editingWineType = true;
     this.currentWineType = this.winetypes.find(wineType => wineType.WineTypeID === id)!;
@@ -147,48 +136,6 @@ export class WineComponent implements OnInit {
     this.showTypeModal = false;
   }
 
-  // generate a new discount code for the customer to use upon checkout
-  generateUniqueCode() {
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const randomLetter1 = alphabet[Math.floor(Math.random() * alphabet.length)];
-    const randomLetter2 = alphabet[Math.floor(Math.random() * alphabet.length)];
-    const timestampLast3Digits = Date.now().toString().slice(-3);
-
-    return randomLetter1 + randomLetter2 + '-' + timestampLast3Digits;
-  }
-
-  async submitDiscountForm(form: NgForm): Promise<void> {
-    console.log('Submitting form with editingDiscount flag:', this.editingDiscount);
-    if (form.valid) {
-
-      // Generate a unique discount code only for new discount
-      if (!this.editingDiscount) {
-        const uniqueCode = this.generateUniqueCode();
-        this.currentDiscount.discountCode = uniqueCode;
-      }
-
-      try {
-        if (this.editingDiscount) {
-          // Update Discount
-          await this.discountService.updateDiscount(this.currentDiscount.discountID!, this.currentDiscount);
-          const index = this.discounts.findIndex(discount => discount.discountID === this.currentDiscount.discountID);
-          if (index !== -1) {
-            this.discounts[index] = this.currentDiscount;
-          }
-        } else {
-          // Add Discount
-          const data = await this.discountService.addDiscount(this.currentDiscount);
-          this.discounts.push(data);
-        }
-        this.closeDiscountModal();
-        if (!this.editingDiscount) {
-          form.resetForm();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
 
   async submitWineForm(form: NgForm): Promise<void> {
     console.log('Submitting form with editingWine flag:', this.editingWine);
@@ -222,7 +169,7 @@ export class WineComponent implements OnInit {
       try {
         if (this.editingVarietal) {
           // Update Varietal
-          await this.varietalService.updateVarietal(this.currentVarietal.VarietalID!, this.currentVarietal);        
+          await this.varietalService.updateVarietal(this.currentVarietal.VarietalID!, this.currentVarietal);
           const index = this.varietals.findIndex(varietal => varietal.VarietalID === this.currentVarietal.VarietalID);
           if (index !== -1) {
             this.varietals[index] = this.currentVarietal;
@@ -294,15 +241,115 @@ export class WineComponent implements OnInit {
     }
   }
 
-  async deleteDiscount(id: number): Promise<void> {
-    try {
-      await this.discountService.deleteDiscount(id);
-      this.discounts = this.discounts.filter(discount => discount.discountID !== id);
-    } catch (error) {
-      console.error('Error deleting Discount:', error);
+
+
+  // DISCOUNT------------------------------------------------------------------------------------------------------------------------------------------------------------//
+  //===================================================================================================================================================================.//
+
+
+  //Discount variables needed
+  discounts: Discount[] = [];
+  currentDiscount: Discount = new Discount();
+  showDiscountModal: boolean = false;
+  editingDiscount: boolean = false;
+  showDeleteDiscountModal = false;
+  discountToDeleteDetails: any;
+discountToDelete: any = null;
+
+
+  // Discount methods---------------------------------------------------------------------------------.>
+
+  // Modal-related methods
+  openAddDiscountModal() {
+    this.editingDiscount = false;
+    this.currentDiscount = new Discount();
+    this.showDiscountModal = true;
+  }
+  openEditDiscountModal(id: number) {
+    console.log('Opening edit discount modal for ID:', id);
+    this.editingDiscount = true;
+    this.currentDiscount = this.discounts.find(discount => discount.discountID === id)!;
+    this.showDiscountModal = true;
+  }
+  closeDiscountModal() {
+    this.showDiscountModal = false;
+  }
+
+  openDeleteDiscountModal(discount: any): void {
+    this.discountToDelete = discount.discountID;
+    console.log("Discount : ",this.discountToDelete)
+    this.discountToDeleteDetails = discount;
+    this.showDeleteDiscountModal = true;
+  }
+  
+
+  closeDeleteModal(): void {
+    this.showDeleteDiscountModal = false;
+  }
+
+  //CRUD discount
+
+  // generate a new discount code for the customer to use upon checkout
+  generateUniqueCode() {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const randomLetter1 = alphabet[Math.floor(Math.random() * alphabet.length)];
+    const randomLetter2 = alphabet[Math.floor(Math.random() * alphabet.length)];
+    const timestampLast3Digits = Date.now().toString().slice(-3);
+
+    return randomLetter1 + randomLetter2 + '-' + timestampLast3Digits;
+  }
+
+  //Create and Edit discount
+  async submitDiscountForm(form: NgForm): Promise<void> {
+    console.log('Submitting form with editingDiscount flag:', this.editingDiscount);
+    if (form.valid) {
+
+      // Generate a unique discount code only for new discount
+      if (!this.editingDiscount) {
+        const uniqueCode = this.generateUniqueCode();
+        this.currentDiscount.discountCode = uniqueCode;
+      }
+
+      try {
+        if (this.editingDiscount) {
+          // Update Discount
+          await this.discountService.updateDiscount(this.currentDiscount.discountID!, this.currentDiscount);
+          const index = this.discounts.findIndex(discount => discount.discountID === this.currentDiscount.discountID);
+          if (index !== -1) {
+            this.discounts[index] = this.currentDiscount;
+          }
+        } else {
+          // Add Discount
+          const data = await this.discountService.addDiscount(this.currentDiscount);
+          this.discounts.push(data);
+        }
+        this.closeDiscountModal();
+        if (!this.editingDiscount) {
+          form.resetForm();
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
+  //Delete discount
+  async deleteDiscount(): Promise<void> {
+    if (this.discountToDeleteDetails && this.discountToDeleteDetails.discountID !== undefined) {
+      await this.discountService.deleteDiscount(this.discountToDeleteDetails.discountID);
+      this.discounts = this.discounts.filter(discount => discount.discountID !== this.discountToDeleteDetails.discountID);
+      this.closeDeleteModal();
+    } else {
+      console.log("Discount to delete is null, undefined, or has an undefined discountID property.");
+    }
+  }
+
+    // Discount END-----------------------------------------------------------------------------------------------------.>
+
 }
+  
+
+
+
 
 
