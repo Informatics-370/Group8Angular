@@ -2,39 +2,55 @@ import { WineType } from "./winetype";
 import { Varietal } from "./varietal";
 
 export class Wine {
-  WineID: number | undefined;
-  Name: string | undefined;
-  Description: string | undefined;
-  Vintage: string | undefined;
-  RestockLimit: number | undefined;
-  ImageUrl: string | undefined;
-  WineTastingNote: string | undefined;
-  WinePrice: number | undefined;
-  WineTypeID: number | undefined;
-  WineType: WineType | undefined;
-  VarietalID: number | undefined;
-  Varietal: Varietal | undefined;
+  wineID: number;
+  name: string;
+  description: string;
+  vintage: string;
+  restockLimit: number;
+  imageFile: File | null; // Property to store the selected image file
+  imageUrl: string;
+  wineTastingNote: string;
+  winePrice: number;
+  wineTypeID: number;
+  wineType: WineType;
+  varietalID: number;
+  varietal: Varietal;
 
-  constructor(wineID = 0, name = '', description = '', vintage = '', restockLimit = 0, imageUrl = '', wineTastingNote = '', winePrice = 0, wineTypeID = 0, wineType = new WineType(), varietalID = 0, varietal = new Varietal()) {
-    this.WineID = wineID;
-    this.Name = name;
-    this.Description = description;
-    this.Vintage = vintage;
-    this.RestockLimit = restockLimit;
-    this.ImageUrl = imageUrl;
-    this.WineTastingNote = wineTastingNote;
-    this.WinePrice = winePrice;
-    this.WineTypeID = wineTypeID;
-    this.WineType = wineType;
-    this.VarietalID = varietalID;
-    this.Varietal = varietal;
+  constructor(
+    wineID: number = 0,
+    name: string = '',
+    description: string = '',
+    vintage: string = '',
+    restockLimit: number = 0,
+    imageUrl: string = '',
+    wineTastingNote: string = '',
+    winePrice: number = 0,
+    wineTypeID: number = 0,
+    wineType: WineType = new WineType(),
+    varietalID: number = 0,
+    varietal: Varietal = new Varietal(),
+    imageFile: File | null = null // Add the parameter to the constructor
+  ) {
+    this.wineID = wineID;
+    this.name = name;
+    this.description = description;
+    this.vintage = vintage;
+    this.restockLimit = restockLimit;
+    this.imageUrl = imageUrl;
+    this.wineTastingNote = wineTastingNote;
+    this.winePrice = winePrice;
+    this.wineTypeID = wineTypeID;
+    this.wineType = wineType;
+    this.varietalID = varietalID;
+    this.varietal = varietal;
+    this.imageFile = imageFile; // Assign the parameter to the property
   }
 
-  get WineTypeName(): string | undefined {
-    return this.WineType?.name;
+  get wineTypeName(): string | undefined {
+    return this.wineType?.name;
   }
 
-  get VarietalName(): string | undefined {
-    return this.Varietal?.name;
+  get varietalName(): string | undefined {
+    return this.varietal?.name;
   }
 }

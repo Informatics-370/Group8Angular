@@ -1,46 +1,49 @@
 <br>
 <br>
 <!-- Wine --------------------------------------------------------------------------------------------------------------------->
-<!-- Wine button -->
+
+<!-- Wine Table -->
 <div class="text-end mb-3">
   <button class="btn btn-success btn-sm" (click)="openAddWineModal()">
     <i class="fas fa-plus"></i> Add
   </button>
 </div>
-<!-- Wine Table -->
-<!--Boys het GEJOB-->
 <h2>Wine</h2>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">ID</th>
+      <!-- <th scope="col">ID</th> -->
       <th scope="col">Name</th>
       <th scope="col">Description</th>
       <th scope="col">Vintage</th>
       <th scope="col">Restock Limit</th>
-      <th scope="col">Image URL</th>
-      <th scope="col">Tasting Note</th>
       <th scope="col">Price</th>
-      <th scope="col">Type</th>
-      <th scope="col">Varietal</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let wine of wines">
-      <td>{{ wine.WineID }}</td>
-      <td>{{ wine.Name }}</td>
-      <td>{{ wine.Description }}</td>
-      <td>{{ wine.Vintage }}</td>
-      <td>{{ wine.RestockLimit }}</td>
-      <td>{{ wine.ImageUrl }}</td>
-      <td>{{ wine.WineTastingNote }}</td>
-      <td>{{ wine.WinePrice }}</td>
-
-      <td>{{ wine.WineTypeName }}</td>
-      <td>{{ wine.VarietalName }}</td>
+      <td>{{ wine.name }}</td>
+      <td>{{ wine.description }}</td>
+      <td>{{ wine.vintage }}</td>
+      <td>{{ wine.restockLimit }}</td>
+      <td>{{ wine.winePrice }}</td>
+      <td>
+        <button class="btn btn-primary" (click)="wine.wineID !== undefined && openEditWineModal(wine.wineID)"
+          style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn btn-danger" (click)="wine.wineID !== undefined && openDeleteWineModal(wine)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
+
+
+
+
 <!-- Add/Edit Wine Modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showWineModal}"
   [ngStyle]="{'display': showWineModal ? 'block' : 'none'}">
@@ -53,222 +56,297 @@
       <div class="modal-body">
         <form #wineForm="ngForm" (ngSubmit)="submitWineForm(wineForm)">
           <div class="mb-3">
-            <label for="wineName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="wineName" [(ngModel)]="currentWine.Name" name="wineName"
+            <label for="wineName" class="form-label">Wine Name</label>
+            <input type="text" class="form-control" id="wineName" [(ngModel)]="currentWine.name" name="wineName"
               required>
           </div>
+
           <div class="mb-3">
-            <label for="wineDescription" class="form-label">Description</label>
-            <input type="text" class="form-control" id="wineDescription" [(ngModel)]="currentWine.Description"
-              name="wineDescription">
+            <label for="wineDescription" class="form-label">Wine Description</label>
+            <input type="text" class="form-control" id="wineDescription" [(ngModel)]="currentWine.description"
+              name="wineDescription" required>
           </div>
+
           <div class="mb-3">
-            <label for="wineVintage" class="form-label">Vintage</label>
-            <input type="text" class="form-control" id="wineVintage" [(ngModel)]="currentWine.Vintage"
-              name="wineVintage">
+            <label for="wineVintage" class="form-label">Wine Vintage</label>
+            <input type="text" class="form-control" id="wineVintage" [(ngModel)]="currentWine.vintage"
+              name="wineVintage" required>
           </div>
+
           <div class="mb-3">
             <label for="wineRestockLimit" class="form-label">Restock Limit</label>
-            <input type="number" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.RestockLimit"
+            <input type="number" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.restockLimit"
               name="wineRestockLimit" required>
           </div>
+
           <div class="mb-3">
-            <label for="wineImageUrl" class="form-label">Image URL</label>
-            <input type="text" class="form-control" id="wineImageUrl" [(ngModel)]="currentWine.ImageUrl"
-              name="wineImageUrl">
+            <label for="wineTastingNote" class="form-label">Wine Tasting Note</label>
+            <input type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
+              name="wineTastingNote" required>
           </div>
+
           <div class="mb-3">
-            <label for="wineTastingNote" class="form-label">Tasting Note</label>
-            <textarea class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.WineTastingNote"
-              name="wineTastingNote"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="winePrice" class="form-label">Price</label>
-            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentWine.WinePrice"
+            <label for="winePrice" class="form-label">Wine Price</label>
+            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentWine.winePrice"
               name="winePrice" required>
           </div>
 
           <div class="mb-3">
-            <label for="wineType" class="form-label">Type</label>
-            <select class="form-control" id="wineType" [(ngModel)]="currentWine.WineType" name="wineType" required>
-              <option *ngFor="let wineType of winetypes" [value]="wineType">{{ wineType.name }}</option>
+            <label for="wineType" class="form-label">Wine Type</label>
+            <select class="form-control" id="wineType" [(ngModel)]="currentWine.wineTypeID" name="wineType" required>
+              <option *ngFor="let winetype of winetypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
             </select>
           </div>
 
           <div class="mb-3">
-            <label for="wineVarietal" class="form-label">Varietal</label>
-            <select class="form-control" id="wine Varietal" [(ngModel)]="currentWine.Varietal" name="wineVarietal"
+            <label for="wineVarietal" class="form-label">Wine Varietal</label>
+            <select class="form-control" id="wineVarietal" [(ngModel)]="currentWine.varietalID" name="wineVarietal"
               required>
-              <option *ngFor="let varietal of varietals" [value]="varietal">{{ varietal.name }}</option>
+              <option *ngFor="let varietal of varietals" [value]="varietal.varietalID">{{varietal.name}}</option>
             </select>
           </div>
-          <!-- <div class="mb-3">
-            <label for="wineRegion" class="form-label">Region</label>
-            <input type="text" class="form-control" id="wineRegion" [(ngModel)]="currentWine.region"
-              name="wineRegion">
-          </div> -->
+
+          <div class="mb-3">
+            <label for="imageUrl" class="form-label">Image</label>
+            <input type="file" class="form-control" id="imageUrl" (change)="onFileSelected($event)" name="imageUrl" accept="image/*" required>
+          </div>
+          
+
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes'
-          : 'Save'}}</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-<!-- Wine --------------------------------------------------------------------------------------------------------------------->
-
-<!-- varietal and winetype ---------------------------------------------------------------------------------------------------->
-<!-- two varietal and type tables: -->
-<div class="container-fluid">
-  <div class="row">
-    <!-- Wine Types Column -->
-    <div class="col-md-6">
-      <h2>Wine Types</h2>
-      <button class="btn btn-success btn-sm float-right" (click)="openAddWineTypeModal()">
-        <i class="fas fa-plus"></i> Add
-      </button>
-
-      <!-- Wine Types table -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let wineType of winetypes">
-            <td>{{ wineType.name }}</td>
-            <td>{{ wineType.description }}</td>
-            <td>
-              <!-- WineType buttons -->
-              <button class="btn btn-primary btn-sm mr-1"
-                (click)="wineType.WineTypeID !== undefined && openEditWineTypeModal(wineType.WineTypeID)">
-                <i class="fas fa-pencil-alt"></i>
-              </button>
-              <button class="btn btn-danger btn-sm"
-                (click)="wineType.WineTypeID !== undefined && deleteWineType(wineType.WineTypeID)">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Varietals Column -->
-    <div class="col-md-6">
-      <h2>Varietals</h2>
-      <button class="btn btn-success btn-sm float-right" (click)="openAddVarietalModal()">
-        <i class="fas fa-plus"></i> Add
-      </button>
-
-      <!-- Varietals table -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let varietal of varietals">
-            <td>{{ varietal.name }}</td>
-            <td>{{ varietal.description }}</td>
-            <td>
-              <!-- Varietal buttons -->
-              <button class="btn btn-primary btn-sm mr-1"
-                (click)="varietal.VarietalID !== undefined && openEditVarietalModal(varietal.VarietalID)">
-                <i class="fas fa-pencil-alt"></i>
-              </button>
-              <button class="btn btn-danger btn-sm"
-                (click)="varietal.VarietalID !== undefined && deleteVarietal(varietal.VarietalID)">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-
-<!--Winetype add/edit  modal-->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showTypeModal}"
-  [ngStyle]="{'display': showTypeModal ? 'block' : 'none'}">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{editingWineType ? 'Edit Wine Type' : 'Add Wine Type'}}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeWineTypeModal()"></button>
-      </div>
-      <div class="modal-body">
-        <form #typeForm="ngForm" (ngSubmit)="SubmitWineTypeForm(typeForm)">
-
-          <div class="mb-3">
-            <label for="typeName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="typeName" [(ngModel)]="currentWineType.name" name="typeName"
-              required>
-          </div>
-
-          <div class="mb-3">
-            <label for="WineTypeDescription" class="form-label">Description</label>
-            <input type="text" class="form-control" id="typeDescription" [(ngModel)]="currentWineType.description"
-              name="WineTypeDescription" required>
-          </div>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeWineTypeModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="SubmitWineTypeForm(typeForm)">{{editingWineType ?
+        <button type="button" class="btn btn-primary" (click)="submitWineForm(wineForm)">{{editingWine ?
           'Save Changes' : 'Save'}}</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Varietal add/edit modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}"
-  [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
+
+
+<!-- Delete Wine modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWineModal}"
+  [ngStyle]="{'display': showDeleteWineModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{editingVarietal ? 'Edit Varietal' : 'Add Varietal'}}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeVarietalModal()"></button>
+        <h5 class="modal-title">Delete Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteWineModal()"></button>
       </div>
       <div class="modal-body">
-        <form #varietalForm="ngForm" (ngSubmit)="SubmitVarietalForm(varietalForm)">
-
-          <div class="mb-3">
-            <label for="varietalName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
-              name="varietalName" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="varietalDescription" class="form-label">Description</label>
-            <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
-              name="varietalDescription" required>
-          </div>
-
-        </form>
+        Are you sure you want to delete this wine?
+        <p>Wine Name: {{ wineToDeleteDetails?.name }}</p>
+        <p>Wine Description: {{ wineToDeleteDetails?.description }}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeVarietalModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="SubmitVarietalForm(varietalForm)">{{editingVarietal ?
-          'Save Changes' : 'Save'}}</button>
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteWineModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteWine()">Yes</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Wine END --------------------------------------------------------------------------------------------------------------------->
+
+
+
+<!-- Varietal and Winetype Table -------------------------------------------------------------------------------------------------->
+
+
+<div class="row">
+  <div class="col">
+
+    <!-- Varietal Table -->
+    <div class="text-end mb-3">
+      <button class="btn btn-success btn-sm" (click)="openAddVarietalModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+    <h2>Varietal</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let varietal of varietals">
+          <td>{{ varietal.name }}</td>
+          <td>{{ varietal.description }}</td>
+          <td>
+            <button class="btn btn-primary"
+              (click)="varietal.varietalID !== undefined && openEditVarietalModal(varietal.varietalID)"
+              style="margin-right: 4px;">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+
+            <button class="btn btn-danger"
+              (click)="varietal.varietalID !== undefined && openDeleteVarietalModal(varietal)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add/Edit Varietal Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}"
+    [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{editingVarietal ? 'Edit Varietal' : 'Add Varietal'}}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeVarietalModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #varietalForm="ngForm" (ngSubmit)="submitVarietalForm(varietalForm)">
+
+            <div class="mb-3">
+              <label for="varietalName" class="form-label">Varietal Name</label>
+              <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
+                name="varietalName" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="varietalDescription" class="form-label">Varietal Description</label>
+              <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
+                name="varietalDescription" required>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeVarietalModal()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submitVarietalForm(varietalForm)">{{editingVarietal ?
+            'Save Changes' : 'Save'}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Varietal Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteVarietalModal}"
+    [ngStyle]="{'display': showDeleteVarietalModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Confirmation</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteVarietalModal()"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this varietal?
+          <p></p>
+          <p>Varietal Name: {{ varietalToDeleteDetails?.name }}</p>
+          <p>Varietal Description: {{ varietalToDeleteDetails?.description }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeDeleteVarietalModal()">No</button>
+          <button type="button" class="btn btn-primary" (click)="deleteVarietal()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+
+    <!-- Winetype Table -->
+    <div class="text-end mb-3">
+      <button class="btn btn-success btn-sm" (click)="openAddWinetypeModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+    <h2>Winetype</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let winetype of winetypes">
+          <td>{{ winetype.name }}</td>
+          <td>{{ winetype.description }}</td>
+          <td>
+            <button class="btn btn-primary"
+              (click)="winetype.wineTypeID !== undefined && openEditWinetypeModal(winetype.wineTypeID)"
+              style="margin-right: 4px;">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button class="btn btn-danger"
+              (click)="winetype.wineTypeID !== undefined && openDeleteWinetypeModal(winetype)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Add/Edit Winetype Modal -->
+    <div class="modal" tabindex="-1" [ngClass]="{'show': showWinetypeModal}"
+      [ngStyle]="{'display': showWinetypeModal ? 'block' : 'none'}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{editingWinetype ? 'Edit Winetype' : 'Add Winetype'}}</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeWinetypeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form #winetypeForm="ngForm" (ngSubmit)="submitWinetypeForm(winetypeForm)">
+
+              <div class="mb-3">
+                <label for="winetypeName" class="form-label">Winetype Name</label>
+                <input type="text" class="form-control" id="winetypeName" [(ngModel)]="currentWinetype.name"
+                  name="winetypeName" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="winetypeDescription" class="form-label">Winetype Description</label>
+                <input type="text" class="form-control" id="winetypeDescription"
+                  [(ngModel)]="currentWinetype.description" name="winetypeDescription" required>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeWinetypeModal()">Close</button>
+            <button type="button" class="btn btn-primary" (click)="submitWinetypeForm(winetypeForm)">{{editingWinetype ?
+              'Save Changes' : 'Save'}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Winetype Modal -->
+    <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWinetypeModal}"
+      [ngStyle]="{'display': showDeleteWinetypeModal ? 'block' : 'none'}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Confirmation</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteWineTypeModal()"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this winetype?
+            <p></p>
+            <p>Winetype Name: {{ winetypeToDeleteDetails?.name }}</p>
+            <p>Winetype Description: {{ winetypeToDeleteDetails?.description }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeDeleteWineTypeModal()">No</button>
+            <button type="button" class="btn btn-primary" (click)="deleteWinetype()">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<!-- Varietal and Winetype end ----------------------------------------------------------------------------------------------------------------------------------------->
 
 
 
@@ -301,15 +379,14 @@
       <td>{{ discount.discountAmount }}</td>
       <td>
         <button class="btn btn-primary"
-        (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
-        style="margin-right: 4px;">
-        <i class="fas fa-pencil-alt"></i>
-      </button>
+          (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
+          style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
 
-      <button class="btn btn-danger"
-        (click)="discount.discountID !== undefined && openDeleteDiscountModal(discount)">
-        <i class="fas fa-trash-alt"></i>
-      </button>
+        <button class="btn btn-danger" (click)="discount.discountID !== undefined && openDeleteDiscountModal(discount)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
 
 
       </td>
