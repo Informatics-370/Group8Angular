@@ -1,3 +1,6 @@
+@import '~bootstrap-icons/font/bootstrap-icons.css';
+
+
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -13,6 +16,9 @@
   .sidebar .nav-link {
     color: white;
     border-radius: 0;
+    font-size: 18px;
+    padding: 10px;
+    margin-bottom: 10px;
   }
   
   .sidebar .nav-link:hover {
