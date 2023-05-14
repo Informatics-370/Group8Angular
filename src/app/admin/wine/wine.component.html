@@ -3,16 +3,17 @@
 <!-- Wine --------------------------------------------------------------------------------------------------------------------->
 
 <!-- Wine Table -->
-<div class="row align-items-center">
-  <div class="col">
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
     <h2>Wine</h2>
   </div>
-  <div class="col text-end">
+  <div class="col-md-6 text-end">
     <button class="btn btn-success btn-sm" (click)="openAddWineModal()">
-      <i class="fas fa-plus"></i> Wine
+      <i class="fas fa-plus"></i> Add
     </button>
   </div>
 </div>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -44,8 +45,7 @@
     </tr>
   </tbody>
 </table>
-<br>
-<br>
+
 
 
 
@@ -163,16 +163,17 @@
   <div class="col">
 
     <!-- Varietal Table -->
-    <div class="row align-items-center">
-      <div class="col">
+    <div class="row align-items-center mb-3">
+      <div class="col-md-6">
         <h2>Varietal</h2>
       </div>
-      <div class="col text-end">
+      <div class="col-md-6 text-end">
         <button class="btn btn-success btn-sm" (click)="openAddVarietalModal()">
-          <i class="fas fa-plus"></i> Varietal
+          <i class="fas fa-plus"></i> Add
         </button>
       </div>
     </div>
+
     <table class="table table-striped">
       <thead>
         <tr>
@@ -200,8 +201,7 @@
       </tbody>
     </table>
   </div>
-  <br>
-  <br>
+
   <!-- Add/Edit Varietal Modal -->
   <div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}"
     [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
@@ -263,13 +263,13 @@
   <div class="col">
 
     <!-- Winetype Table -->
-    <div class="row align-items-center">
-      <div class="col">
-        <h2>Winetype</h2>
+    <div class="row align-items-center mb-3">
+      <div class="col-md-6">
+        <h2>Wine type</h2>
       </div>
-      <div class="col text-end">
+      <div class="col-md-6 text-end">
         <button class="btn btn-success btn-sm" (click)="openAddWinetypeModal()">
-          <i class="fas fa-plus"></i> Type
+          <i class="fas fa-plus"></i> Add
         </button>
       </div>
     </div>
@@ -298,8 +298,7 @@
         </tr>
       </tbody>
     </table>
-    <br>
-    <br>
+
     <!-- Add/Edit Winetype Modal -->
     <div class="modal" tabindex="-1" [ngClass]="{'show': showWinetypeModal}"
       [ngStyle]="{'display': showWinetypeModal ? 'block' : 'none'}">
@@ -369,16 +368,19 @@
 
 <!-- Discount ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 <!-- Discount button -->
-<div class="row align-items-center">
-  <div class="col">
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
     <h2>Discount</h2>
   </div>
-  <div class="col text-end">
+  <div class="col-md-6 text-end">
     <button class="btn btn-success btn-sm" (click)="openAddDiscountModal()">
-      <i class="fas fa-plus"></i> Discount
+      <i class="fas fa-plus"></i> Add
     </button>
   </div>
 </div>
+
+
+<!--Discount table -->
 <table class="table table-striped">
 
   <thead>

@@ -1,14 +1,7 @@
-<br>
-<br>
-<div class="row align-items-center">
-  <div class="col">
-    <h1>VAT</h1>
-  </div>
-  <div class="col text-end">
-    <button class="btn btn-success" (click)="openAddVatModal()">
-      <i class="fas fa-plus"></i> VAT
-    </button>
-  </div>
+<div class="text-end mb-3">
+  <button class="btn btn-success" (click)="openAddVatModal()">
+    <i class="fas fa-plus"></i> Add VAT
+  </button>
 </div>
 
 <!-- Add/Edit VAT Modal -->
@@ -45,9 +38,9 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col" class="header-cell">Percentage</th>
-      <th scope="col" class="header-cell">Date</th>
-      <th scope="col" class="header-cell">Actions</th>
+      <th scope="col">Percentage</th>
+      <th scope="col">Date</th>
+      <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
