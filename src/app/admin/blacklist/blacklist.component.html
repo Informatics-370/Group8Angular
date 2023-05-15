@@ -1,4 +1,51 @@
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+<br>
+<br>
+<div class="row align-items-center">
+  <div class="col">
+    <h1>Blacklist</h1>
+  </div>
+  <div class="col text-end">
+    <!-- (click)="openAddBlacklistModal()" -->
+    <button class="btn btn-success">
+      <i class="fas fa-plus"></i> Customer
+    </button>
+  </div>
+</div>
 
-<p>blacklist works!</p>
-<p> HEHE </p>
-<p>New github video </p>
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
+
+<!--************************************************************ Table for View Blacklist *************************************************************************************-->
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="header-cell">UserID</th>
+        <th scope="col" class="header-cell">Email</th>
+        <th scope="col" class="header-cell">Reason</th>
+        <th scope="col" class="header-cell"> Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        <!-- *ngFor="let vat of vats" -->
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <!-- (click)="vat.vatid !== undefined && openEditVatModal(vat.vatid)" -->
+          <button class="btn btn-primary" style="margin-right: 4px;">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <!-- (click)="vat.vatid !== undefined && deleteVAT(vat.vatid)" -->
+          <button class="btn btn-danger" >
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!--************************************************************ Table for View Blacklist *********************************************************************************-->
+   
