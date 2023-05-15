@@ -5,15 +5,49 @@
   <div class="col">
     <h1>Supplier</h1>
   </div>
-  <div class="col text-end">
-    <!-- (click)="openAddVatModal()" -->
-    <button class="btn btn-success">
+  <div class="col text-end">    
+    <button class="btn btn-success" (click)="openAddSupplierModal()">
       <i class="fas fa-plus"></i> Supplier
     </button>
   </div>
 </div>
 
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
+<!-- Add/Edit VAT Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showModal}" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingSupplier ? 'Edit VAT' : 'Add VAT'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeSupplierModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #supplierForm="ngForm" (ngSubmit)="submitSupplierForm(supplierForm)">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="currentSupplier.name" name="name" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phonenumber" name="phone" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required>
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeSupplierModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitSupplierForm(supplierForm)">{{editingSupplier ? 'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <!--************************************************************ Table for View Suppliers *************************************************************************************-->
@@ -28,17 +62,17 @@
       </tr>
     </thead>
     <tbody>
-        <!-- *ngFor="let vat of vats" -->
+        <!-- *ngFor="let supplier of suppliers" -->
       <tr>
         <td></td>
         <td></td>
         <td></td>
         <td>
-            <!-- (click)="vat.vatid !== undefined && openEditVatModal(vat.vatid)" -->
+            <!-- (click)="supplier.supplierid !== undefined && openEditSupplierModal(supplier.supplierid)" -->
           <button class="btn btn-primary" style="margin-right: 4px;">
             <i class="fas fa-pencil-alt"></i>
           </button>
-          <!-- (click)="vat.vatid !== undefined && deleteVAT(vat.vatid)" -->
+          <!-- (click)="supplier.supplierid !== undefined && deleteSupplier(supplier.supplierid)" -->
           <button class="btn btn-danger" >
             <i class="fas fa-trash-alt"></i>
           </button>
