@@ -374,9 +374,14 @@ async deleteWine(): Promise<void> {
   openEditDiscountModal(id: number) {
     console.log('Opening edit discount modal for ID:', id);
     this.editingDiscount = true;
-    this.currentDiscount = this.discounts.find(discount => discount.discountID === id)!;
+    // Find the original Discount object
+    const originalDiscount = this.discounts.find(discount => discount.discountID === id);
+    if (originalDiscount) {
+      // Clone the original Discount object and assign it to currentDiscount
+      this.currentDiscount = {...originalDiscount};
+    }
     this.showDiscountModal = true;
-  }
+    }
   closeDiscountModal() {
     this.showDiscountModal = false;
   }
@@ -422,6 +427,7 @@ async deleteWine(): Promise<void> {
           await this.discountService.updateDiscount(this.currentDiscount.discountID!, this.currentDiscount);
           const index = this.discounts.findIndex(discount => discount.discountID === this.currentDiscount.discountID);
           if (index !== -1) {
+            // Update the original Discount object with the changes made to the clone
             this.discounts[index] = this.currentDiscount;
           }
         } else {
@@ -437,7 +443,7 @@ async deleteWine(): Promise<void> {
         console.error(error);
       }
     }
-  }
+}
 
   //Delete discount
   async deleteDiscount(): Promise<void> {
