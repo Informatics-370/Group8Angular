@@ -1,1 +1,75 @@
-<p>faq works!</p>
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+<br>
+<br>
+<div class="row align-items-center">
+  <div class="col">
+    <h1>FAQ's</h1>
+  </div>
+  <div class="col text-end">    
+    <button class="btn btn-success" (click)="openAddFAQModal()">
+      <i class="fas fa-plus"></i> FAQ
+    </button>
+  </div>
+</div>
+
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
+<!-- Add/Edit VAT Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showModal}" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingFAQ ? 'Edit VAT' : 'Add VAT'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeFAQModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #faqForm="ngForm" (ngSubmit)="submitFAQForm(faqForm)">
+          <div class="mb-3">
+            <label for="question" class="form-label">FAQ Question</label>
+            <input type="text" class="form-control" id="question" [(ngModel)]="currentFAQ.question" name="question" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="answer" class="form-label">FAQ Answer</label>
+            <input type="text" class="form-control" id="answer" [(ngModel)]="currentFAQ.answer" name="answer" required>
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeFAQModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitFAQForm(faqForm)">{{editingFAQ ? 'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--************************************************************ Table for View FAQ's *************************************************************************************-->
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="header-cell">Question</th>
+        <th scope="col" class="header-cell">Answer</th>
+        <th scope="col" class="header-cell"> Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let faq of faqs">
+            <td>{{ faq.question }}</td>
+            <td>{{ faq.answer }}</td>
+            <td>
+              <button class="btn btn-primary" (click)="faq.faqid !== undefined && openEditFAQModal(faq.faqid)" style="margin-right: 4px;">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button class="btn btn-danger" (click)="faq.faqid !== undefined && deleteFAQ(faq.faqid)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!--************************************************************ Table for View FAQ's *********************************************************************************-->
+   
