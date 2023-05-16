@@ -1,38 +1,67 @@
-
+@import '~bootstrap-icons/font/bootstrap-icons.css';
 .sidebar {
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(3, 3, 172);
-    color: white;
-    height: 100vh;
-  }
-  
-  .sidebar .nav {
-    margin-left: 100;
-  }
-  
-  .sidebar .nav-link {
-    color: white;
-    border-radius: 0;
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .sidebar .nav-link:hover {
-    background-color: white;
-    color: blue;
-    border-radius: 0;
-  }
-  
-  .sidebar .nav-link:active {
-    color: blue;
-    background-color: white;
-    border-radius: 0;
-  }
-  
-  .sidebar .active {
-    background-color: white;
-    color: blue;
-    border-radius: 0;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(3, 3, 172);
+  color: white;
+  height: 100vh;
+}
+
+.sidebar .nav {
+  margin-left: 100;
+}
+
+.sidebar .nav-link {
+  color: white;
+  border-radius: 0;
+  font-size: 18px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.sidebar .nav-link span {
+  display: inline-block;
+  transform-origin: center center;
+}
+
+.sidebar .nav-link:hover {
+  background-color: white;
+  color: blue;
+  border-radius: 0;
+}
+
+.sidebar .nav-link:hover span {
+  transform: translateX(5px); /* Adjust the translation to move to the right */
+}
+
+.sidebar .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%) scale(0.8); /* Adjust the scale and translation */
+  width: 200%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Adjust the transition timing and duration */
+}
+
+.sidebar .nav-link:hover::before {
+  opacity: 1;
+  transform: translateX(10%); /* Adjust the translation to move to the right */
+}
+
+.sidebar .nav-link:active {
+  color: blue;
+  background-color: white;
+  border-radius: 0;
+}
+
+.sidebar .active {
+  background-color: white;
+  color: blue;
+  border-radius: 0;
+}
