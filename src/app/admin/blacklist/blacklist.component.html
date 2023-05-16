@@ -1,13 +1,13 @@
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
 <br>
 <br>
 <div class="row align-items-center">
   <div class="col">
     <h1>Blacklist</h1>
   </div>
-  <div class="col text-end">
-    <!-- (click)="openAddBlacklistModal()" -->
-    <button class="btn btn-success">
+  <div class="col text-end">    
+    <button class="btn btn-success" (click)="openAddBlacklistCModal()">
       <i class="fas fa-plus"></i> Customer
     </button>
   </div>
@@ -19,33 +19,100 @@
 <!--************************************************************ Table for View Blacklist *************************************************************************************-->
 
 <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col" class="header-cell">UserID</th>
-        <th scope="col" class="header-cell">Email</th>
-        <th scope="col" class="header-cell">Reason</th>
-        <th scope="col" class="header-cell"> Actions</th>
+  <thead>
+    <tr>
+      <th scope="col" class="header-cell">BlacklistID</th>
+      <th scope="col" class="header-cell">Email</th>
+      <th scope="col" class="header-cell">Reason</th>
+      <th scope="col" class="header-cell"> Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of blacklistC">
+      <td>{{ x.blacklistID }}</td>
+      <td>{{ x.email }}</td>
+      <td>{{ x.reason }}</td>
+      <td>
+        <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.blacklistID!== undefined && openEditBlacklistCModal(x.blacklistID)">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn btn-danger" (click)="x.blacklistID!== undefined && openDeleteBlacklistCModal(x)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
       </tr>
-    </thead>
-    <tbody>
-        <!-- *ngFor="let vat of vats" -->
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-            <!-- (click)="vat.vatid !== undefined && openEditVatModal(vat.vatid)" -->
-          <button class="btn btn-primary" style="margin-right: 4px;">
-            <i class="fas fa-pencil-alt"></i>
-          </button>
-          <!-- (click)="vat.vatid !== undefined && deleteVAT(vat.vatid)" -->
-          <button class="btn btn-danger" >
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </td>
-        </tr>
-      </tbody>
-    </table>
+    </tbody>
+  </table>
 
-    <!--************************************************************ Table for View Blacklist *********************************************************************************-->
-   
+  <!--************************************************************ Table for View Blacklist *********************************************************************************-->
+ 
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}"
+  [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingBlacklistC ? 'Edit Blacklist Customer' : 'Add Blacklist Customer'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeBlacklistCModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form #blacklistForm="ngForm" (ngSubmit)="submitBlacklistCForm(blacklistForm)">
+          
+          <!-- <div class="mb-3">
+            <label for="BlacklistID" class="form-label">Blacklist ID</label>
+            <input type="text" class="form-control" id="blacklistID" [(ngModel)]="currentBlacklistC.blacklistID" name="blacklistID">
+          </div>  -->
+
+          <div class="mb-3">
+            <label for="blacklistCEmail" class="form-label">Customer e-mail</label>
+            <input type="text" class="form-control" id="blacklistCEmail" [(ngModel)]="currentBlacklistC.email"
+              name="blacklistCEmail" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="blacklistReason" class="form-label">Reason for being on the blacklist</label>
+            <input type="text" class="form-control" id="blacklistReason" [(ngModel)]="currentBlacklistC.reason"
+              name="blacklistReason" required>
+          </div>          
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBlacklistCModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitBlacklistCForm(blacklistForm)">{{editingBlacklistC ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteBlacklistCModal}"
+  [ngStyle]="{'display': showDeleteBlacklistCModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteBlacklistCModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to remove this customer from the blacklist?</p>
+        <p>Customer Email: {{ blacklistCToDeleteDetails?.email }}</p>
+        <p>Reason for being on blacklist: {{ blacklistCToDeleteDetails?.reason }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteBlacklistCModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteBlacklistC()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->

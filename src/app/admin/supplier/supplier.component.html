@@ -31,7 +31,7 @@
           
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phonenumber" name="phone" required>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phoneNumber" name="phone" required>
           </div>
 
           <div class="mb-3">
@@ -63,17 +63,16 @@
     </thead>
     <tbody>
         <!-- *ngFor="let supplier of suppliers" -->
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        <tr *ngFor="let x of suppliers">
+          <td>{{ x.name }}</td>
+          <td>{{ x.phoneNumber }}</td>
+          <td>{{ x.email }}</td>
         <td>
             <!-- (click)="supplier.supplierid !== undefined && openEditSupplierModal(supplier.supplierid)" -->
           <button class="btn btn-primary" style="margin-right: 4px;">
             <i class="fas fa-pencil-alt"></i>
           </button>
-          <!-- (click)="supplier.supplierid !== undefined && deleteSupplier(supplier.supplierid)" -->
-          <button class="btn btn-danger" >
+          <button class="btn btn-danger" (click)="x.supplierID!== undefined && openDeleteSupplierModal(x)">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
@@ -83,3 +82,29 @@
 
     <!--************************************************************ Table for View Suppliers *********************************************************************************-->
    
+
+     <!--************************************************************ Delete Modal *************************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSupplierModal}"
+[ngStyle]="{'display': showDeleteSupplierModal ? 'block' : 'none'}">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Delete Confirmation</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteSupplierModal()"></button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this supplier?</p>
+      <p>Supplier Name: {{ supplierToDeleteDetails?.name }}</p>
+      <p>Supplier Phone Number: {{ supplierToDeleteDetails?.phoneNumber }}</p>
+      <p>Supplier Email: {{ supplierToDeleteDetails?.email }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeDeleteSupplierModal()">No</button>
+      <button type="button" class="btn btn-primary" (click)="deleteSupplier(supplierToDeleteDetails.supplierID)">Yes</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->
