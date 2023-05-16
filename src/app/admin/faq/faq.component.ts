@@ -46,7 +46,12 @@ export class FaqComponent implements OnInit {
   //This function opens the modal window with the selected FAQ record's details and allows the user to edit the record.
   openEditFAQModal(id: number) {
     this.editingFAQ = true;
-    this.currentFAQ = this.faqs.find(faq => faq.faqid === id)!;
+    
+    const originalFAQ = this.faqs.find(x => x.faqid === id);
+    if (originalFAQ) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentFAQ = {...originalFAQ};
+    }
     this.showModal = true;
   }
 //The closeFAQModal() function is called when the user clicks the "Close" button in the modal window. 

@@ -15,6 +15,10 @@ export class SupplierComponent implements OnInit {
   showModal: boolean = false;
   editingSupplier: boolean = false;
   currentSupplier: Supplier = new Supplier();
+
+    supplierToDelete: any = null;
+    supplierToDeleteDetails: any;
+    showDeleteSupplierModal = false;
   
   constructor(private supplierService: SupplierService, private router: Router) {}
 
@@ -23,16 +27,19 @@ export class SupplierComponent implements OnInit {
     this.loadSuppliers();
   }
 
-  //retrieves all the information in the Supplier table from the database and stores it in the suppliers array.
-  loadSuppliers(): void {
+// ****************** Methods to display the list of Suppliers. *****************************************************************************************************************
+  
+loadSuppliers(): void {
     this.supplierService.getSuppliers().subscribe({
       next: (data: Supplier[]) => this.suppliers = data,
       error: (error: any) => console.error(error)
     });
   }
 
+// ****************** Methods to display the list of Suppliers. *****************************************************************************************************************
+
   isDuplicateSupplier(supplier: Supplier): boolean {
-    return this.suppliers.some(item => item.name === supplier.name && item.phonenumber === supplier.phonenumber && item.email === supplier.email);
+    return this.suppliers.some(item => item.name === supplier.name && item.phoneNumber === supplier.phoneNumber && item.email === supplier.email);
   }
 
   // The openAddSupplierModal() function is called when the "Add Supplier" button is clicked, 
@@ -47,7 +54,7 @@ export class SupplierComponent implements OnInit {
   //This function opens the modal window with the selected Supplier record's details and allows the user to edit the record.
   openEditSupplierModal(id: number) {
     this.editingSupplier = true;
-    this.currentSupplier = this.suppliers.find(supplier => supplier.supplierid === id)!;
+    this.currentSupplier = this.suppliers.find(supplier => supplier.supplierID === id)!;
     this.showModal = true;
   }
 //The closeSupplierModal() function is called when the user clicks the "Close" button in the modal window. 
@@ -64,9 +71,9 @@ export class SupplierComponent implements OnInit {
 
 
         // Update Supplier
-        this.supplierService.updateSupplier(this.currentSupplier.supplierid!, this.currentSupplier).subscribe({
+        this.supplierService.updateSupplier(this.currentSupplier.supplierID!, this.currentSupplier).subscribe({
           next: () => {
-            const index = this.suppliers.findIndex(supplier => supplier.supplierid === this.currentSupplier.supplierid);
+            const index = this.suppliers.findIndex(supplier => supplier.supplierID === this.currentSupplier.supplierID);
             if (index !== -1) {
               this.suppliers[index] = this.currentSupplier;
             }
@@ -94,11 +101,27 @@ export class SupplierComponent implements OnInit {
     }
   }
   
+//******************* Delete Modal-related methods *********************************************************************************************************************************
 
+  openDeleteSupplierModal(selectedSuppllier: any): void {
+    this.supplierToDelete = selectedSuppllier.supplierid;
+    console.log("Supplier : ", this.supplierToDelete)
+    this.supplierToDeleteDetails = selectedSuppllier;
+    this.showDeleteSupplierModal = true;
+  }
+  
+  closeDeleteSupplierModal(): void {
+    this.showDeleteSupplierModal = false;
+  }
+  
   deleteSupplier(id: number): void {
     this.supplierService.deleteSupplier(id).subscribe({
-      next: () => this.suppliers = this.suppliers.filter(supplier => supplier.supplierid !== id),
+      next: () => this.suppliers = this.suppliers.filter(x => x.supplierID !== id),
       error: (error: any) => console.error(error)
     });
+    this.showDeleteSupplierModal = false;
   }
+
+//******************* Delete Modal-related methods *********************************************************************************************************************************
+
 }
