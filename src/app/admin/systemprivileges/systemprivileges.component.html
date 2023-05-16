@@ -1,0 +1,100 @@
+<br>
+<br>
+<!-- System Privileges -->
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
+    <h2>System Privileges</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    <button class="btn btn-success btn-sm" (click)="openAddSystemPrivilegeModal()">
+      <i class="fas fa-plus"></i> Add
+    </button>
+  </div>
+</div>
+
+<!-- System Privileges table -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Privilege Name</th>
+      <th scope="col">Privilege Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let priv of systemPrivileges">
+      <td>{{ priv.privilege_Name }}</td>
+      <td>{{ priv.privilege_Description }}</td>
+      <td>
+        <button class="btn btn-primary"
+          (click)="priv.systemPrivilegeID !== undefined && openEditSystemPrivilegeModal(priv.systemPrivilegeID)"
+          style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+
+        <button class="btn btn-danger" (click)="priv.systemPrivilegeID !== undefined && openDeleteSystemPrivilegeModal(priv)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  
+  <!-- Add/Edit EarlyBird Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showSystemPrivilegeModal}"
+    [ngStyle]="{'display': showSystemPrivilegeModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{editingSystemPrivilege ? 'Edit SystemPrivilege' : 'Add SystemPrivilege'}}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemPrivilegeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm)">
+  
+            <div class="mb-3">
+              <label for="percentage" class="form-label">Name</label>
+              <input type="text" class="form-control" id="sysPrivName" [(ngModel)]="currentSystemPrivilege.privilege_Name"
+                name="percentage" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="limit" class="form-label">Description</label>
+              <input type="text" class="form-control" id="limit"
+                [(ngModel)]="currentSystemPrivilege.privilege_Description" name="sysPrivDescription" required>
+            </div>
+            
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeSystemPrivilegeModal()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submitSystemPrivilegeForm(systemPrivilegeForm)">{{editingSystemPrivilege ?
+            'Save Changes' : 'Save'}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Delete EarlyBird modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSystemPrivilegeModal}"
+[ngStyle]="{'display': showDeleteSystemPrivilegeModal ? 'block' : 'none'}">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Delete Confirmation</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteModal()"></button>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to delete this System privilege?
+      <p></p>
+      <p>ID: {{ systemPrivilegeToDeleteDetails?.systemPrivilegeID }}</p>
+      <p>Name: {{ systemPrivilegeToDeleteDetails?.privilege_Name }}</p>
+      <p>Description: {{ systemPrivilegeToDeleteDetails?.privilege_Description }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>
+      <button type="button" class="btn btn-primary" (click)="deleteSystemPrivilege()">Yes</button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- SystemPrivileges ---------------------------------------------------------------------------------------------------------------------------------------------------------->
