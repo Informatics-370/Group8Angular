@@ -1,0 +1,15 @@
+// blacklist.ts
+export class WriteOffReason {
+    blacklistID: number | undefined;
+    userID: number | undefined;
+    email: string | undefined;
+    reason: string | undefined;
+  
+    constructor() {
+      this.blacklistID = 0;
+      this.userID = 0;
+      this.email = "User Email";
+      this.reason = "Why put on blacklist";
+    }
+  }
+  
