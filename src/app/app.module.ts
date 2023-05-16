@@ -19,6 +19,8 @@ import { VatComponent } from './admin/vat/vat.component';
 
 //ClientModule
 import { HttpClientModule } from '@angular/common/http';
+import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivileges.component';
+import { EmployeeComponent } from './admin/employee/employee.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { HttpClientModule } from '@angular/common/http';
     BlacklistComponent,
     SidenavComponent,
     VatComponent,
+    SystemprivilegesComponent,
+    EmployeeComponent,
     
   ],
   imports: [
