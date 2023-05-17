@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { Employee } from 'src/app/Model/employee';
 import { SystemPrivilege } from 'src/app/Model/systemprivilege';
 import { environment } from 'src/app/environment';
@@ -13,8 +13,8 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) { }
 
-  async GetEmployees(): Promise<Employee[]> {
-    return firstValueFrom(this.http.get<Employee[]>(this.apiUrl));
+  GetEmployees(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 
   async GetEmployee(id: number): Promise<Employee> {

@@ -8,7 +8,7 @@ import { SupplierComponent } from './admin/supplier/supplier.component';
 import { ReportComponent } from './admin/report/report.component';
 import { BlacklistComponent } from './admin/blacklist/blacklist.component';
 import { VatComponent } from './admin/vat/vat.component';
-import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivileges.component';
+import { EmployeeComponent } from './admin/employee/employee.component';
 
 
 
@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'report', component: ReportComponent },
   { path: 'blacklist', component: BlacklistComponent },
   { path: 'vat', component: VatComponent},
-  { path: 'systemprivilege', component: SystemprivilegesComponent}
+  { path: 'employees', component: EmployeeComponent}
 
 ];
 

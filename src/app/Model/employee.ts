@@ -1,23 +1,23 @@
 export class Employee{
     employeeID: number | undefined;
-    first_name: string | undefined;
-    last_name: string | undefined;
+    first_Name: string | undefined;
+    last_Name: string | undefined;
     email: string | undefined;
-    phone_number: string | undefined;
-    id_number: string | undefined;
-    hire_date: Date | undefined;
+    phone_Number: string | undefined;
+    iD_Number: string | undefined;
+    hire_Date: Date;
     userID: number | undefined;
     superUserID : number | undefined;
 
     constructor(){   
         this.employeeID = 0;
-        this.first_name = '';     
-        this.last_name = '';     
+        this.first_Name = '';     
+        this.last_Name = '';     
         this.email = '';     
-        this.phone_number = '';     
-        this.id_number = '';     
-        this.hire_date = new Date();
-        this.userID = 0;
-        this.superUserID = 0;     
+        this.phone_Number = '';     
+        this.iD_Number = '';     
+        this.hire_Date = new Date();
+        this.userID = 1;
+        this.superUserID = 1;     
     }
 }
