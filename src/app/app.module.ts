@@ -36,7 +36,6 @@ import { EmployeeComponent } from './admin/employee/employee.component';
     VatComponent,
     SystemprivilegesComponent,
     EmployeeComponent,
-    
   ],
   imports: [
     BrowserModule,
