@@ -61,7 +61,7 @@
       <div class="modal-body">
         <form #blacklistForm="ngForm" (ngSubmit)="submitBlacklistCForm(blacklistForm)">
 
-          <!-- <div class="mb-3">
+           <div class="mb-3">
             <label for="blacklistCEmail" class="form-label">Customer e-mail</label>
             <input type="email" class="form-control" id="blacklistCEmail" [(ngModel)]="currentBlacklistC.email"
               name="blacklistCEmail" email required #emailField="ngModel">
@@ -78,7 +78,7 @@
             <div *ngIf="reasonField.invalid && reasonField.touched" class="alert alert-danger">
               <div *ngIf="reasonField.errors?.['required']">Reason is required.</div>
             </div>
-          </div>           -->
+          </div>          
 
         </form>
       </div>
