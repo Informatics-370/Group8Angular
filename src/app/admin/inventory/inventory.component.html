@@ -11,10 +11,103 @@
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
 
 
+<!--****************************************************** Page Footer + WriteOff Reason Buttons *****************************************************************************-->
+
 <footer>
     <div class="d-grid gap-3 d-md-flex justify-content-md-end">
-    <button type="button" class="btn btn-success">Create Write-off Reason</button>
+    <button type="button" class="btn btn-success" (click)="openAddWORModal()">Create Write-off Reason</button>
     <button type="button" class="btn btn-warning">Edit Write-off Reason</button>
-    <button type="button" class="btn btn-danger">Delete Write-off Reason</button>
+    <button type="button" class="btn btn-danger" (click)="openSelectorModal()"> Delete Write-off Reason</button>
     </div>
 </footer>
+
+<!--****************************************************** Page Footer + WriteOff Reason Buttons *****************************************************************************-->
+
+
+<!--************************************************************ Selector Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showSelectorModal}"
+  [ngStyle]="{'display': showSelectorModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Please Select Write Off Reason</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeSelectorModal()"></button>
+      </div>
+      <div class="modal-body">                
+          <div class="form-group">
+            <label for="dropdown-label">Select a Write Off Reason:</label>
+            <select class="form-control" id="dropdown-label" *ngFor="let x of writeOffReason">
+              <option selected disabled>Select a Write Off Reason...</option>
+              <option> {{ x.description }} </option>
+            </select>
+          </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeSelectorModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="deleteWOR()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Selector Modal ***********************************************************************************************-->
+
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showWORModal}"
+  [ngStyle]="{'display': showWORModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingWOR ? 'Edit Write Off Reason' : 'Add Write Off Reason'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeWORModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form #writeORForm="ngForm" (ngSubmit)="submitWORForm(writeORForm)">        
+
+          <div class="mb-3">
+            <label for="blacklistCEmail" class="form-label">Write Off Reason Description</label>
+            <input type="text" class="form-control" id="blacklistCEmail" [(ngModel)]="currentWOR.description"
+              name="blacklistCEmail" required>
+          </div>                   
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeWORModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitWORForm(writeORForm)">{{editingWOR ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWORModal}"
+  [ngStyle]="{'display': showDeleteWORModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteWORModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this Write Off Reason?</p>
+        <p>Description: {{ wORToDeleteDetails?.description }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteWORModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteWOR()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->

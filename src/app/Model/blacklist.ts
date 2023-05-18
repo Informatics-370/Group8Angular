@@ -8,8 +8,8 @@ export class Blacklist {
     constructor() {
       this.blacklistID = 0;
       this.userID = 0;
-      this.email = "User Email";
-      this.reason = "Why put on blacklist";
+      this.email = "";
+      this.reason = "";
     }
   }
   

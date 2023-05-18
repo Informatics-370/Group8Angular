@@ -74,7 +74,7 @@ openEditBlacklistCModal(id: number) {
 }
 
 async submitBlacklistCForm(form: NgForm): Promise<void> {
-  console.log('Submitting form with editingBlacklist flag:', this.editingBlacklistC);
+  console.log('Submitting form with editing Blacklist flag:', this.editingBlacklistC);
   if (form.valid) {
     try {
       if (this.editingBlacklistC) {
