@@ -171,9 +171,11 @@ async deleteWine(): Promise<void> {
   openEditWinetypeModal(id: number) {
     console.log('Opening edit winetype modal for ID:', id);
     this.editingWinetype = true;
-    this.currentWinetype = this.winetypes.find(winetype => winetype.wineTypeID === id)!;
+    // Create a copy of the Winetype, not reference the same object
+    this.currentWinetype = {...this.winetypes.find(winetype => winetype.wineTypeID === id)!};
     this.showWinetypeModal = true;
   }
+  
   closeWinetypeModal() {
     this.showWinetypeModal = false;
   }
@@ -273,9 +275,11 @@ async deleteWine(): Promise<void> {
   openEditVarietalModal(id: number) {
     console.log('Opening edit varietal modal for ID:', id);
     this.editingVarietal = true;
-    this.currentVarietal = this.varietals.find(varietal => varietal.varietalID === id)!;
+    // We need to make a copy of the varietal, not reference the same object
+    this.currentVarietal = {...this.varietals.find(varietal => varietal.varietalID === id)!};
     this.showVarietalModal = true;
   }
+  
 
   closeVarietalModal() {
     this.showVarietalModal = false;
