@@ -37,9 +37,13 @@
       <div class="modal-body">                
           <div class="form-group">
             <label for="dropdown-label">Select a Write Off Reason:</label>
-            <select class="form-control" id="dropdown-label" *ngFor="let x of writeOffReason">
+            <!-- *ngFor="let x of writeOffReason" -->
+            <select class="form-control" id="dropdown-label">
               <option selected disabled>Select a Write Off Reason...</option>
-              <option> {{ x.description }} </option>
+              <!-- <option> {{ x.description }} </option> -->
+              <option> Label 1 </option>
+              <option> Label 2 </option>
+              <option> Label 3 </option>
             </select>
           </div>        
       </div>
@@ -69,9 +73,9 @@
         <form #writeORForm="ngForm" (ngSubmit)="submitWORForm(writeORForm)">        
 
           <div class="mb-3">
-            <label for="blacklistCEmail" class="form-label">Write Off Reason Description</label>
-            <input type="text" class="form-control" id="blacklistCEmail" [(ngModel)]="currentWOR.description"
-              name="blacklistCEmail" required>
+            <label for="WriteOffReason" class="form-label">Write Off Reason Description</label>
+            <input type="text" class="form-control" id="WriteOffReason" [(ngModel)]="currentWOR.description"
+              name="writeOffReason" required>
           </div>                   
 
         </form>
