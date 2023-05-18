@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BlacklistService } from './blacklist.service';
+import { WriteOffReason } from 'src/app/Model/writeOffReason';
 
-describe('BlacklistService', () => {
-  let service: BlacklistService;
+describe('WriteORService', () => {
+  let service: WriteOffReason;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(BlacklistService);
+    service = TestBed.inject(WriteOffReason);
   });
 
   it('should be created', () => {
