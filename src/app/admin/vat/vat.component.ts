@@ -58,7 +58,12 @@ export class VatComponent implements OnInit {
   //This function opens the modal window with the selected VAT record's details and allows the user to edit the record.
   openEditVatModal(id: number) {
     this.editingVat = true;
-    this.currentVat = this.vats.find(vat => vat.vatid === id)!;
+
+    const originalSupplier = this.vats.find(x => x.vatid === id);
+    if (originalSupplier) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentVat = {...originalSupplier};
+    }
     this.showModal = true;
   }
 //The closeVatModal() function is called when the user clicks the "Close" button in the modal window. 
