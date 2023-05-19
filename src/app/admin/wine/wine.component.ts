@@ -9,6 +9,7 @@ import { WinetypeService } from '../services/winetype.service';
 import { Wine } from 'src/app/Model/wine';
 import { WineType } from 'src/app/Model/winetype';
 import { Varietal } from 'src/app/Model/varietal';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-wine',
@@ -20,7 +21,7 @@ import { Varietal } from 'src/app/Model/varietal';
 export class WineComponent implements OnInit {
 
 
-  constructor(private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService) { }
+  constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService) { }
 
   ngOnInit(): void {
     this.loadDiscounts();
@@ -417,17 +418,16 @@ async deleteWine(): Promise<void> {
     return randomLetter1 + randomLetter2 + '-' + timestampLast3Digits;
   }
 
-  //Create and Edit discount
   async submitDiscountForm(form: NgForm): Promise<void> {
     console.log('Submitting form with editingDiscount flag:', this.editingDiscount);
     if (form.valid) {
-
+  
       // Generate a unique discount code only for new discount
       if (!this.editingDiscount) {
         const uniqueCode = this.generateUniqueCode();
         this.currentDiscount.discountCode = uniqueCode;
       }
-
+  
       try {
         if (this.editingDiscount) {
           // Update Discount
@@ -437,10 +437,12 @@ async deleteWine(): Promise<void> {
             // Update the original Discount object with the changes made to the clone
             this.discounts[index] = this.currentDiscount;
           }
+          this.toastr.success('Successfully updated', 'Update');
         } else {
           // Add Discount
           const data = await this.discountService.addDiscount(this.currentDiscount);
           this.discounts.push(data);
+          this.toastr.success('Successfully added', 'Add');
         }
         this.closeDiscountModal();
         if (!this.editingDiscount) {
@@ -448,19 +450,21 @@ async deleteWine(): Promise<void> {
         }
       } catch (error) {
         console.error(error);
+        this.toastr.error('Error, please try again');
       }
     }
-}
-
-  //Delete discount
+  }
+  
   async deleteDiscount(): Promise<void> {
     if (this.discountToDelete !== null) {
       try {
         await this.discountService.deleteDiscount(this.discountToDelete);
         console.log(this.discountToDelete);
         this.discounts = this.discounts.filter(discount => discount.discountID !== this.discountToDelete);
+        this.toastr.success('Successfully deleted', 'Delete');
       } catch (error) {
         console.error('Error deleting Discount:', error);
+        this.toastr.error('Error, please try again', 'Delete');
       }
       this.closeDeleteModal();
     }

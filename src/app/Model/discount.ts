@@ -8,7 +8,7 @@ export class Discount {
     constructor() {
       this.discountID = 0;
       this.discountCode = "This code will be generated";
-      this.discountDescription = "To who and for what reason?";
+      this.discountDescription = "";
       this.discountAmount = 0;
     }
   }
