@@ -54,7 +54,12 @@ loadSuppliers(): void {
   //This function opens the modal window with the selected Supplier record's details and allows the user to edit the record.
   openEditSupplierModal(id: number) {
     this.editingSupplier = true;
-    this.currentSupplier = this.suppliers.find(supplier => supplier.supplierID === id)!;
+
+    const originalSupplier = this.suppliers.find(x => x.supplierID === id);
+    if (originalSupplier) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentSupplier = {...originalSupplier};
+    }
     this.showModal = true;
   }
 //The closeSupplierModal() function is called when the user clicks the "Close" button in the modal window. 

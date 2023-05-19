@@ -19,24 +19,38 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{editingSupplier ? 'Edit VAT' : 'Add Supplier'}}</h5>
+        <h5 class="modal-title">{{editingSupplier ? 'Edit Supplier' : 'Add Supplier'}}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeSupplierModal()"></button>
       </div>
       <div class="modal-body">
         <form #supplierForm="ngForm" (ngSubmit)="submitSupplierForm(supplierForm)">
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" [(ngModel)]="currentSupplier.name" name="name" required>
+            <input type="text" class="form-control" id="name" [(ngModel)]="currentSupplier.name" name="name" required #nameField="ngModel">
+            <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
+              <div *ngIf="nameField.errors?.['required']">Name is required.</div>
+            </div>
           </div>
           
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phoneNumber" name="phone" required>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phoneNumber" name="phone" required #phoneInput="ngModel" pattern="[0-9]{10,14}">
+            <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="text-danger">
+              <div *ngIf="phoneInput.errors && phoneInput.errors['required']">Phone number is required.</div>
+              <div *ngIf="phoneInput.errors && phoneInput.errors['pattern']">Phone number should be between 10 and 14 digits.</div>
+            </div>
           </div>
+          
+          
 
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="text" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required>
+            <input type="email" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required
+            email required #emailField="ngModel">
+            <div *ngIf="emailField.invalid && emailField.touched" class="alert alert-danger">
+              <div *ngIf="emailField.errors?.['required']">Email is required.</div>
+              <div *ngIf="emailField.errors?.['email']">Please enter a valid email address.</div>
+            </div>
           </div>
           
         </form>
@@ -68,8 +82,7 @@
           <td>{{ x.phoneNumber }}</td>
           <td>{{ x.email }}</td>
         <td>
-            <!-- (click)="supplier.supplierid !== undefined && openEditSupplierModal(supplier.supplierid)" -->
-          <button class="btn btn-primary" style="margin-right: 4px;">
+          <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.supplierID !== undefined && openEditSupplierModal(x.supplierID)">
             <i class="fas fa-pencil-alt"></i>
           </button>
           <button class="btn btn-danger" (click)="x.supplierID!== undefined && openDeleteSupplierModal(x)">
