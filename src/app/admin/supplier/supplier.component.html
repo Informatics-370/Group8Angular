@@ -35,7 +35,7 @@
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
             <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phoneNumber" name="phone" required #phoneInput="ngModel" pattern="[0-9]{10,14}">
-            <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="text-danger">
+            <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="alert alert-danger">
               <div *ngIf="phoneInput.errors && phoneInput.errors['required']">Phone number is required.</div>
               <div *ngIf="phoneInput.errors && phoneInput.errors['pattern']">Phone number should be between 10 and 14 digits.</div>
             </div>
