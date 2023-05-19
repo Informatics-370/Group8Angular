@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EarlyBirdService } from '../services/earlybird.service';
 import { EarlyBird } from 'src/app/Model/earlybird';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-event',
@@ -17,7 +18,7 @@ export class EventComponent implements OnInit {
   earlyBirdToDeleteDetails: any;
   earlyBirdToDelete: any = null;
 
-  constructor(private earlyBirdService: EarlyBirdService){ }
+  constructor(private earlyBirdService: EarlyBirdService, private toastr : ToastrService){ }
 
   ngOnInit(): void {
     // you can load initial data here if needed.
@@ -67,9 +68,11 @@ export class EventComponent implements OnInit {
             // Update the original EarlyBird object with the changes made to the clone
             this.earlyBirds[index] = this.currentEarlyBird;
           }
+          this.toastr.success('Successfully updated', 'Update');
         } else {
           const data = await this.earlyBirdService.addEarlyBird(this.currentEarlyBird);
           this.earlyBirds.push(data);
+          this.toastr.success('Successfully added', 'Add');
         }
         this.closeEarlyBirdModal();
         if (!this.editingEarlyBird) {
@@ -77,9 +80,10 @@ export class EventComponent implements OnInit {
         }
       } catch (error) {
         console.error(error);
+        this.toastr.error('Error, please try again');
       }
     }
-}
+  }
 
   async deleteEarlyBird(): Promise<void> {
     if (this.earlyBirdToDelete !== null) {
@@ -87,8 +91,10 @@ export class EventComponent implements OnInit {
         await this.earlyBirdService.deleteEarlyBird(this.earlyBirdToDelete);
         console.log(this.earlyBirdToDelete);
         this.earlyBirds = this.earlyBirds.filter(earlyBird => earlyBird.earlyBirdID !== this.earlyBirdToDelete);
+        this.toastr.success('Successfully deleted', 'Delete');
       } catch (error) {
         console.error('Error deleting EarlyBird:', error);
+        this.toastr.error('Error, please try again', 'Delete');
       }
       this.closeDeleteModal();
     }
