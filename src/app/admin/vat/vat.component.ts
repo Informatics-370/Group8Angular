@@ -3,6 +3,8 @@ import { VAT } from 'src/app/Model/vat';
 import { VatService } from '../services/vat.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+
 
 
 @Component({
@@ -16,6 +18,8 @@ export class VatComponent implements OnInit {
   showModal: boolean = false;
   editingVat: boolean = false;
   currentVat: VAT = new VAT();
+  datePipe: DatePipe = new DatePipe('en-US');
+
   
   constructor(private vatService: VatService, private router: Router) {}
 
@@ -75,6 +79,8 @@ export class VatComponent implements OnInit {
   //The submitVatForm() function is called when the user submits the form in the modal window. This function saves the 
   //new or edited VAT record to an array of VAT records and closes the modal window.
   submitVatForm(form: NgForm): void {
+     // Format the date before using it
+  const formattedDate = this.datePipe.transform(this.currentVat.date, 'yyyy-MM-dd');
     if (form.valid) {
       if (this.editingVat) {
 

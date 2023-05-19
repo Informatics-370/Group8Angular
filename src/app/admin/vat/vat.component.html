@@ -23,7 +23,11 @@
         <form #vatForm="ngForm" (ngSubmit)="submitVatForm(vatForm)">
           <div class="mb-3">
             <label for="percentage" class="form-label">Percentage</label>
-            <input type="number" class="form-control" id="percentage" [(ngModel)]="currentVat.percentage" name="percentage" required>
+            <input type="number" class="form-control" id="percentage" [(ngModel)]="currentVat.percentage" name="percentage" required [min]="0.01" #percentageField="ngModel">
+            <div *ngIf="percentageField.invalid && percentageField.touched" class="alert alert-danger">
+              <div *ngIf="percentageField.errors?.['required']">Percentage is required.</div>
+              <div *ngIf="percentageField.errors?.['min']">Percentage cannot be zero.</div>
+            </div>
           </div>
           
           <div class="mb-3">
@@ -31,15 +35,18 @@
             <input type="date" class="form-control" id="date" [(ngModel)]="currentVat.date" name="date" required [min]="minDate">
           </div>
           
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeVatModal()">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="vatForm.invalid">
+              {{editingVat ? 'Save Changes' : 'Save'}}
+            </button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeVatModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitVatForm(vatForm)">{{editingVat ? 'Save Changes' : 'Save'}}</button>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Table -->
 <table class="table table-striped">

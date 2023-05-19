@@ -13,7 +13,8 @@ import { Varietal } from 'src/app/Model/varietal';
 @Component({
   selector: 'app-wine',
   templateUrl: './wine.component.html',
-  styleUrls: ['./wine.component.css']
+  styleUrls: ['./wine.component.css'],
+  
 })
 export class WineComponent implements OnInit {
 

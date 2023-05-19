@@ -41,12 +41,9 @@
             </div>
           </div>
           
-          
-
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required
-            email required #emailField="ngModel">
+            <input type="email" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required email #emailField="ngModel">
             <div *ngIf="emailField.invalid && emailField.touched" class="alert alert-danger">
               <div *ngIf="emailField.errors?.['required']">Email is required.</div>
               <div *ngIf="emailField.errors?.['email']">Please enter a valid email address.</div>

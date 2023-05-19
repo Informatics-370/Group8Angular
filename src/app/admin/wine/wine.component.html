@@ -63,53 +63,86 @@
           <div class="mb-3">
             <label for="wineName" class="form-label">Wine Name</label>
             <input type="text" class="form-control" id="wineName" [(ngModel)]="currentWine.name" name="wineName"
-              required>
-          </div>
+              required #wineNameField="ngModel">
+            <div *ngIf="wineNameField.invalid && wineNameField.touched" class="alert alert-danger">
+              <div *ngIf="wineNameField.errors?.['required']">Wine name is required.</div>
+            </div>
+          </div>          
 
           <div class="mb-3">
             <label for="wineDescription" class="form-label">Wine Description</label>
             <input type="text" class="form-control" id="wineDescription" [(ngModel)]="currentWine.description"
-              name="wineDescription" required>
+              name="wineDescription" required #wineDescriptionField="ngModel">
+            <div *ngIf="wineDescriptionField.invalid && wineDescriptionField.touched" class="alert alert-danger">
+              <div *ngIf="wineDescriptionField.errors?.['required']">Wine description is required.</div>
+            </div>
           </div>
-
+          
           <div class="mb-3">
             <label for="wineVintage" class="form-label">Wine Vintage</label>
             <input type="text" class="form-control" id="wineVintage" [(ngModel)]="currentWine.vintage"
-              name="wineVintage" required>
+              name="wineVintage" required #wineVintageField="ngModel">
+            <div *ngIf="wineVintageField.invalid && wineVintageField.touched" class="alert alert-danger">
+              <div *ngIf="wineVintageField.errors?.['required']">Wine vintage is required.</div>
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="wineRestockLimit" class="form-label">Restock Limit</label>
             <input type="number" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.restockLimit"
-              name="wineRestockLimit" required>
+              name="wineRestockLimit" required [min]="0.01" #wineRestockLimitField="ngModel">
+            <div *ngIf="wineRestockLimitField.invalid && wineRestockLimitField.touched" class="alert alert-danger">
+              <div *ngIf="wineRestockLimitField.errors?.['required']">Restock limit is required.</div>
+              <div *ngIf="wineRestockLimitField.errors?.['min']">Restock limit cannot be zero.</div>
+            </div>
           </div>
+          
+          
 
           <div class="mb-3">
             <label for="wineTastingNote" class="form-label">Wine Tasting Note</label>
             <input type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
-              name="wineTastingNote" required>
+              name="wineTastingNote" required #wineTastingNoteField="ngModel">
+            <div *ngIf="wineTastingNoteField.invalid && wineTastingNoteField.touched" class="alert alert-danger">
+              <div *ngIf="wineTastingNoteField.errors?.['required']">Wine tasting note is required.</div>
+            </div>
           </div>
+          
 
-          <div class="mb-3">
-            <label for="winePrice" class="form-label">Wine Price</label>
-            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentWine.winePrice"
-              name="winePrice" required>
-          </div>
+     <div class="mb-3">
+  <label for="winePrice" class="form-label">Wine Price</label>
+  <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentWine.winePrice"
+    name="winePrice" required [min]="0.01" #winePriceField="ngModel">
+  <div *ngIf="winePriceField.invalid && winePriceField.touched" class="alert alert-danger">
+    <div *ngIf="winePriceField.errors?.['required']">Wine price is required.</div>
+    <div *ngIf="winePriceField.errors?.['min']">Wine price cannot be zero.</div>
+  </div>
+</div>
+
+          
 
           <div class="mb-3">
             <label for="wineType" class="form-label">Wine Type</label>
-            <select class="form-control" id="wineType" [(ngModel)]="currentWine.wineTypeID" name="wineType" required>
+            <select class="form-control" id="wineType" [(ngModel)]="currentWine.wineTypeID" name="wineType" required #wineTypeField="ngModel">
               <option *ngFor="let winetype of winetypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
             </select>
+            <div *ngIf="wineTypeField.invalid && wineTypeField.touched" class="alert alert-danger">
+              <div *ngIf="wineTypeField.errors?.['required']">Wine type is required.</div>
+            </div>
           </div>
+          
 
           <div class="mb-3">
             <label for="wineVarietal" class="form-label">Wine Varietal</label>
             <select class="form-control" id="wineVarietal" [(ngModel)]="currentWine.varietalID" name="wineVarietal"
-              required>
+              required #wineVarietalField="ngModel">
               <option *ngFor="let varietal of varietals" [value]="varietal.varietalID">{{varietal.name}}</option>
             </select>
+            <div *ngIf="wineVarietalField.invalid && wineVarietalField.touched" class="alert alert-danger">
+              <div *ngIf="wineVarietalField.errors?.['required']">Wine varietal is required.</div>
+            </div>
           </div>
+          
 
           <div class="mb-3">
             <label for="imageUrl" class="form-label">Image</label>
