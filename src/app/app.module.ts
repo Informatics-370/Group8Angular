@@ -22,6 +22,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivileges.component';
 import { EmployeeComponent } from './admin/employee/employee.component';
 
+import { ToastrModule } from 'ngx-toastr';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +47,12 @@ import { EmployeeComponent } from './admin/employee/employee.component';
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ToastrModule.forRoot({ // ToastrModule options
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,}),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -4,6 +4,7 @@ import { VatService } from '../services/vat.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -21,7 +22,7 @@ export class VatComponent implements OnInit {
   datePipe: DatePipe = new DatePipe('en-US');
 
   
-  constructor(private vatService: VatService, private router: Router) {}
+  constructor(private vatService: VatService, private router: Router, private toastr: ToastrService) {}
 
   //When the page is called these methods are automatically called
   ngOnInit(): void {
@@ -79,12 +80,11 @@ export class VatComponent implements OnInit {
   //The submitVatForm() function is called when the user submits the form in the modal window. This function saves the 
   //new or edited VAT record to an array of VAT records and closes the modal window.
   submitVatForm(form: NgForm): void {
-     // Format the date before using it
-  const formattedDate = this.datePipe.transform(this.currentVat.date, 'yyyy-MM-dd');
+    // Format the date before using it
+    const formattedDate = this.datePipe.transform(this.currentVat.date, 'yyyy-MM-dd');
+  
     if (form.valid) {
       if (this.editingVat) {
-
-
         // Update VAT
         this.vatService.updateVAT(this.currentVat.vatid!, this.currentVat).subscribe({
           next: () => {
@@ -93,34 +93,45 @@ export class VatComponent implements OnInit {
               this.vats[index] = this.currentVat;
             }
             this.closeVatModal();
+            this.toastr.success('Successfully updated', 'Update');
           },
-          error: (error: any) => console.error(error)
+          error: (error: any) => {
+            console.error(error);
+            this.toastr.error('Error, please try again', 'Update');
+          }
         });
       } else {
-
-        
         // Check for duplicate VAT entries before adding
         if (this.isDuplicateVAT(this.currentVat)) {
-          alert('VAT with the same percentage and date already exists!');
+          this.toastr.error('VAT with the same percentage and date already exists!', 'Error');
         } else {
           this.vatService.addVAT(this.currentVat).subscribe({
             next: (data: VAT) => {
               this.vats.push(data);
               this.closeVatModal();
               form.resetForm();
+              this.toastr.success('Successfully added', 'Add');
             },
-            error: (error: any) => console.error(error)
+            error: (error: any) => {
+              console.error(error);
+              this.toastr.error('Error, please try again', 'Add');
+            }
           });
         }
       }
     }
   }
-  
 
   deleteVAT(id: number): void {
     this.vatService.deleteVAT(id).subscribe({
-      next: () => this.vats = this.vats.filter(vat => vat.vatid !== id),
-      error: (error: any) => console.error(error)
+      next: () => {
+        this.vats = this.vats.filter(vat => vat.vatid !== id);
+        this.toastr.success('Successfully deleted', 'Delete');
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Error, please try again', 'Delete');
+      }
     });
   }
 }

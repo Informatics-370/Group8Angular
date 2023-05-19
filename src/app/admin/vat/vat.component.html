@@ -23,12 +23,14 @@
         <form #vatForm="ngForm" (ngSubmit)="submitVatForm(vatForm)">
           <div class="mb-3">
             <label for="percentage" class="form-label">Percentage</label>
-            <input type="number" class="form-control" id="percentage" [(ngModel)]="currentVat.percentage" name="percentage" required [min]="0.01" #percentageField="ngModel">
+            <input type="number" class="form-control" id="percentage" [(ngModel)]="currentVat.percentage" name="percentage" required [min]="0.01" [max]="100" #percentageField="ngModel">
             <div *ngIf="percentageField.invalid && percentageField.touched" class="alert alert-danger">
               <div *ngIf="percentageField.errors?.['required']">Percentage is required.</div>
               <div *ngIf="percentageField.errors?.['min']">Percentage cannot be zero.</div>
+              <div *ngIf="percentageField.errors?.['max']">Percentage cannot exceed 100.</div> <!-- Add this validation message -->
             </div>
           </div>
+          
           
           <div class="mb-3">
             <label for="date" class="form-label">Date</label>
