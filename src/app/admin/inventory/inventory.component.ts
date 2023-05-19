@@ -122,12 +122,12 @@ closeDeleteWORModal(): void {
 }
 
 async deleteWOR(): Promise<void> {
-  if (this.wORToDeleteDetails && this.wORToDeleteDetails.blacklistID !== undefined) {
-    await this.writeORService.deleteWriteOR(this.wORToDeleteDetails.blacklistID);
-    this.writeOffReason = this.writeOffReason.filter(x => x.writeOff_ReasonID !== this.wORToDeleteDetails.blacklistID);
+  if (this.wORToDeleteDetails && this.wORToDeleteDetails.writeOff_ReasonID !== undefined) {
+    await this.writeORService.deleteWriteOR(this.wORToDeleteDetails.writeOff_ReasonID);
+    this.writeOffReason = this.writeOffReason.filter(x => x.writeOff_ReasonID !== this.wORToDeleteDetails.writeOff_ReasonID);
     this.closeDeleteWORModal();
   } else {
-    console.log("Write off Reason to Delete is null, undefined, or has an undefined BlacklistID property.");
+    console.log("Write off Reason to Delete is null, undefined, or has an undefined writeOff_ReasonID property.");
   }
 }
 
