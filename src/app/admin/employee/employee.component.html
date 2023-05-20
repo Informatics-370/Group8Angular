@@ -3,7 +3,7 @@
 <!-- Employees -->
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
-    <h2>Employees</h2>
+    <h2>Employee Accounts</h2>
   </div>
   <div class="col-md-6 text-end">
     <button class="btn btn-success btn-sm" (click)="openAddEmployeeModal()">
@@ -13,7 +13,11 @@
 </div>
 
 <!-- System Privileges table -->
-<table class="table table-striped">
+<div class="text-center" *ngIf="employees.length === 0">
+  <h3>No employee details are currently in your system.</h3>
+</div>
+
+<table class="table table-striped" *ngIf="employees.length > 0">
   <thead>
     <tr>
       <th scope="col">First Name</th>
@@ -47,9 +51,8 @@
   </tbody>
 </table>
   
-  <!-- Add/Edit EarlyBird Modal -->
-  <div class="modal" tabindex="-1" [ngClass]="{'show': showEmployeeModal}"
-    [ngStyle]="{'display': showEmployeeModal ? 'block' : 'none'}">
+  <!-- Add/Edit Employee Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showEmployeeModal}" [ngStyle]="{'display': showEmployeeModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -58,60 +61,80 @@
         </div>
         <div class="modal-body">
           <form #employeeForm="ngForm" (ngSubmit)="submitEmployeeForm(employeeForm)">
-            <!-- ! FIRST NAME  -->
+            <!--! FIRST NAME -->
             <div class="mb-3">
               <label for="name" class="form-label">First Name:</label>
-              <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name"
-                name="Name" required>
+              <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="Name" required pattern="^[A-Za-z]+$">
+              <div *ngIf="employeeForm.controls['Name'].invalid && employeeForm.controls['Name'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['Name'].errors?.['required']">First Name is required.</div>
+                <div *ngIf="employeeForm.controls['Name'].errors?.['pattern']">First Name should not contain numerical values.</div>
+              </div>
             </div>
-
-            <!-- ! LAST NAME  -->
+            
+            <!--! LAST NAME -->
             <div class="mb-3">
               <label for="surname" class="form-label">Last Name:</label>
-              <input type="text" class="form-control" id="empLastName"
-                [(ngModel)]="currentEmployee.last_Name" name="Surname" required>
-            </div>
-
-            <!-- ! EMAIL  -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email: </label>
-                <input type="text" class="form-control" id="empEmail"
-                  [(ngModel)]="currentEmployee.email" name="email" required>
+              <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="Surname" required pattern="^[A-Za-z]+$">
+              <div *ngIf="employeeForm.controls['Surname'].invalid && employeeForm.controls['Surname'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['Surname'].errors?.['required']">Last Name is required.</div>
+                <div *ngIf="employeeForm.controls['Surname'].errors?.['pattern']">Last Name should not contain numerical values.</div>
               </div>
+            </div>
             
-              <!-- ! PHONE NUMBER  -->
-              <div class="mb-3">
+  
+            <!--! EMAIL -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email: </label>
+              <input type="email" class="form-control" id="empEmail" [(ngModel)]="currentEmployee.email" name="email" required>
+              <div *ngIf="employeeForm.controls['email'].invalid && employeeForm.controls['email'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['email'].errors?.['required']">Email is required.</div>
+                <div *ngIf="employeeForm.controls['email'].errors?.['email']">Invalid email format.</div>
+              </div>
+            </div>
+  
+            <!--! PHONE NUMBER -->
+            <div class="mb-3">
               <label for="phonenumber" class="form-label">Phone number:</label>
-              <input type="text" class="form-control" id="empPhoneNumber"
-                [(ngModel)]="currentEmployee.phone_Number" name="phonenumber" required>
+              <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phone_Number" name="phonenumber" required>
+              <div *ngIf="employeeForm.controls['phonenumber'].invalid && employeeForm.controls['phonenumber'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['phonenumber'].errors?.['required']">Phone number is required.</div>
+              </div>
+            </div>
+  
+            <!--! ID NUMBER -->
+            <div class="mb-3">
+              <label for="idnumber" class="form-label">ID Number:</label>
+              <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idnumber" required pattern="^[0-9]+$">
+              <div *ngIf="employeeForm.controls['idnumber'].invalid && employeeForm.controls['idnumber'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['idnumber'].errors?.['required']">ID Number is required.</div>
+                <div *ngIf="employeeForm.controls['idnumber'].errors?.['pattern']">ID Number should contain only numerical values.</div>
+              </div>
             </div>
 
-            <!-- ! ID NUMBER  -->
+  
+            <!--! HIRE DATE -->
             <div class="mb-3">
-                <label for="idnumber" class="form-label">ID Number:</label>
-                <input type="text" class="form-control" id="empIDNumber"
-                  [(ngModel)]="currentEmployee.iD_Number" name="idnumber" required>
+              <label for="hiredate" class="form-label">Hire Date:</label>
+              <input type="date" class="form-control" id="empHireDate" [(ngModel)]="currentEmployee.hire_Date" name="hiredate" required [max]="maxDate">
+              <div *ngIf="employeeForm.controls['hiredate'].invalid && employeeForm.controls['hiredate'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['hiredate'].errors?.['required']">Hire Date is required.</div>
               </div>
-
-              <!-- ! HIRE DATE  -->
-              <div class="mb-3">
-                <label for="hiredate" class="form-label">Hire Date:</label>
-                <input type="date" class="form-control" id="empHireDate"
-                  [(ngModel)]="currentEmployee.hire_Date" name="hiredate" required [max]="maxDate">
-              </div>
-              
+            </div>
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeEmployeeModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">
+                {{editingEmployee ? 'Save Changes' : 'Save'}}
+              </button>
+            </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeEmployeeModal()">Close</button>
-          <button type="button" class="btn btn-primary" (click)="submitEmployeeForm(employeeForm)">{{editingEmployee ?
-            'Save Changes' : 'Save'}}</button>
         </div>
       </div>
     </div>
   </div>
   
-  <!-- Delete EarlyBird modal -->
+  
+  <!-- Delete Employee modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteEmployeeModal}"
 [ngStyle]="{'display': showDeleteEmployeeModal ? 'block' : 'none'}">
 <div class="modal-dialog">
@@ -153,7 +176,11 @@
 </div>
 
 <!-- System Privileges table -->
-<table class="table table-striped">
+<div *ngIf="systemPrivileges.length === 0" class="text-center">
+  <h3>No system privileges are currently in your system.</h3>
+</div>
+
+<table class="table table-striped" *ngIf="systemPrivileges.length > 0">
   <thead>
     <tr>
       <th scope="col">Privilege Name</th>
@@ -179,9 +206,8 @@
   </tbody>
 </table>
   
-  <!-- Add/Edit EarlyBird Modal -->
-  <div class="modal" tabindex="-1" [ngClass]="{'show': showSystemPrivilegeModal}"
-    [ngStyle]="{'display': showSystemPrivilegeModal ? 'block' : 'none'}">
+  <!-- Add/Edit SystemPrivilege Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showSystemPrivilegeModal}" [ngStyle]="{'display': showSystemPrivilegeModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -190,29 +216,38 @@
         </div>
         <div class="modal-body">
           <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm)">
-  
             <div class="mb-3">
-              <label for="percentage" class="form-label">Name</label>
+              <label for="name" class="form-label">Name</label>
               <input type="text" class="form-control" id="sysPrivName" [(ngModel)]="currentSystemPrivilege.privilege_Name"
-                name="percentage" required>
+                name="name" required pattern="^[A-Za-z,\s]+$">
+              <div *ngIf="systemPrivilegeForm.controls['name'].invalid && systemPrivilegeForm.controls['name'].touched" class="alert alert-danger">
+                <div *ngIf="systemPrivilegeForm.controls['name'].errors?.['required']">Name is required.</div>
+                <div *ngIf="systemPrivilegeForm.controls['name'].errors?.['pattern']">Name should not contain numerical values.</div>
+              </div>
             </div>
   
             <div class="mb-3">
               <label for="limit" class="form-label">Description</label>
-              <input type="text" class="form-control" id="limit"
-                [(ngModel)]="currentSystemPrivilege.privilege_Description" name="sysPrivDescription" required>
+              <input type="text" class="form-control" id="limit" [(ngModel)]="currentSystemPrivilege.privilege_Description"
+                name="description" required pattern="^[A-Za-z,\s]+$">
+              <div *ngIf="systemPrivilegeForm.controls['description'].invalid && systemPrivilegeForm.controls['description'].touched" class="alert alert-danger">
+                <div *ngIf="systemPrivilegeForm.controls['description'].errors?.['required']">Description is required.</div>
+                <div *ngIf="systemPrivilegeForm.controls['description'].errors?.['pattern']">Description should not contain numerical values.</div>
+              </div>
             </div>
             
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeSystemPrivilegeModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="systemPrivilegeForm.invalid">
+                {{editingSystemPrivilege ? 'Save Changes' : 'Save'}}
+              </button>
+            </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeSystemPrivilegeModal()">Close</button>
-          <button type="button" class="btn btn-primary" (click)="submitSystemPrivilegeForm(systemPrivilegeForm)">{{editingSystemPrivilege ?
-            'Save Changes' : 'Save'}}</button>
         </div>
       </div>
     </div>
   </div>
+  
   
   <!-- Delete EarlyBird modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSystemPrivilegeModal}"
