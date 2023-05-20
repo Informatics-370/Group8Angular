@@ -4,6 +4,7 @@ import { EmployeeService } from '../services/employee.service';
 import { Employee } from 'src/app/Model/employee';
 import { SystemprivilegeService } from '../services/systemprivilege.service';
 import { SystemPrivilege } from 'src/app/Model/systemprivilege';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
@@ -21,7 +22,7 @@ export class EmployeeComponent {
   employeeToDelete: any = null;
   maxDate!: string;
 
-  constructor(private employeeService: EmployeeService, private privilegeService: SystemprivilegeService){ }
+  constructor(private employeeService: EmployeeService, private privilegeService: SystemprivilegeService, private toastr : ToastrService){ }
 
   ngOnInit(): void { 
     this.getEmployees();
@@ -45,6 +46,7 @@ export class EmployeeComponent {
       },
       (error: any) => {
         console.error(error);
+        this.toastr.error("Unable to load employee data");
       }
     );
   }
@@ -92,10 +94,12 @@ export class EmployeeComponent {
           if (index !== -1) {
             // Update the original Employee object with the changes made to the clone
             this.employees[index] = this.currentEmployee;
+            this.toastr.success("Employee updated.", "Update employee");
           }
         } else {
           const data = await this.employeeService.AddEmployee(this.currentEmployee);
           this.employees.push(data);
+          this.toastr.success("A new employee has been added to the system.", "Add Employee");
         }
         this.closeEmployeeModal();
         if (!this.editingEmployee) {
@@ -103,6 +107,7 @@ export class EmployeeComponent {
         }
       } catch (error) {
         console.error(error);
+        this.toastr.error("‘Adding a new employee failed, please try again later.", "Add Employee")
       }
     }
 }
@@ -113,8 +118,10 @@ export class EmployeeComponent {
         await this.employeeService.DeleteEmployee(this.employeeToDelete);
         console.log(this.employeeToDelete);
         this.employees = this.employees.filter(employee => employee.employeeID !== this.employeeToDelete);
+        this.toastr.success("The employee has been deleted.", "Delete Employee");
       } catch (error) {
         console.error('Error deleting employee:', error);
+        this.toastr.error("Deleting the selected employee account failed, please try again later.", "Delete Employee");
       }
       this.closeDeleteEmployeeModal();
     }
@@ -124,7 +131,7 @@ export class EmployeeComponent {
 
 
   // ? EVERYTHING TO DO WITH SYSTEMPRIVILEGES \\
-  
+
   systemPrivileges: SystemPrivilege[] = [];
   currentSystemPrivilege: SystemPrivilege = new SystemPrivilege();
   showSystemPrivilegeModal: boolean = false;
@@ -143,6 +150,7 @@ export class EmployeeComponent {
       },
       (error: any) => {
         console.error(error);
+        this.toastr.error("Failed to retrieve system privilege info", "System Privilege");
       }
     );
   }
@@ -190,10 +198,12 @@ export class EmployeeComponent {
           if (index !== -1) {
             // Update the original SystemPrivilege object with the changes made to the clone
             this.systemPrivileges[index] = this.currentSystemPrivilege;
+            this.toastr.success("System privilege has been updated successfully", "System privilege update");
           }
         } else {
           const data = await this.privilegeService.AddSystemPrivilege(this.currentSystemPrivilege);
           this.systemPrivileges.push(data);
+          this.toastr.success("A new system privilege has been added to the system", "System Privilege added");
         }
         this.closeSystemPrivilegeModal();
         if (!this.editingSystemPrivilege) {
@@ -201,6 +211,7 @@ export class EmployeeComponent {
         }
       } catch (error) {
         console.error(error);
+        this.toastr.error("Adding a new system privilege failed, please try again later.", "System privilege add failed");
       }
     }
 }
@@ -211,11 +222,14 @@ export class EmployeeComponent {
         await this.privilegeService.DeleteSystemPrivilege(this.systemPrivilegeToDelete);
         console.log(this.systemPrivilegeToDelete);
         this.systemPrivileges = this.systemPrivileges.filter(SystemPrivilege => SystemPrivilege.systemPrivilegeID !== this.systemPrivilegeToDelete);
+        this.toastr.success("The system privilege has been deleted.", "System privilege deleted");
       } catch (error) {
         console.error('Error deleting SystemPrivilege:', error);
+        this.toastr.error("Deleting the selected system privilege account failed, please try again later.", "System privilege delete failed");
       }
       this.closeDeleteSystemPrivilegeModal();
     }
   }
 
 }
+  
