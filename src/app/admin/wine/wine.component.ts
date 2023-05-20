@@ -60,6 +60,7 @@ export class WineComponent implements OnInit {
       this.discounts = await this.discountService.getDiscounts();
     } catch (error) {
       console.error(error);
+      this.toastr.error('Error, please try again', 'Discount Table');
     }
   }
   //--------------------------------------------------------------------------------------------------------------------------------

@@ -22,6 +22,17 @@ export class EventComponent implements OnInit {
 
   ngOnInit(): void {
     // you can load initial data here if needed.
+    this.loadEarlyBirds();
+  }
+
+  async loadEarlyBirds(): Promise<void> {
+    try {
+      this.earlyBirds = await this.earlyBirdService.getEarlyBirds();
+     
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error, please try again', 'Early Bird Table');
+    }
   }
 
   openAddEarlyBirdModal() {
