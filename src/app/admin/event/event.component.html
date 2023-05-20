@@ -56,10 +56,14 @@
           <div class="mb-3">
             <label for="percentage" class="form-label">Percentage</label>
             <input type="number" class="form-control" id="percentage" [(ngModel)]="currentEarlyBird.percentage"
-              name="percentage" percentage required min="1" #percentage="ngModel">
+              name="percentage" percentage required min="1" max="100" #percentage="ngModel">
             <div *ngIf="percentage.invalid && percentage.touched" class="alert alert-danger">
               <div *ngIf="percentage.errors?.['required']">Percentage is required.</div>
               <div *ngIf="percentage.value === 0">Percentage cannot be 0.</div>
+              <div *ngIf="percentage.errors?.['required']">Percentage is required.</div>
+              <div *ngIf="percentage.errors?.['max']">Percentage cannot be more than 100.</div>
+              <div *ngIf="percentage.errors?.['min']">Discount amount cannot be zero.</div>
+             
             </div>
           </div>
 
@@ -70,6 +74,7 @@
             <div *ngIf="limit.invalid && limit.touched" class="alert alert-danger">
               <div *ngIf="limit.errors?.['required']">Limit is required.</div>
               <div *ngIf="limit.value === 999">Limit cannot be 999.</div>
+              
             </div>
           </div>
 
