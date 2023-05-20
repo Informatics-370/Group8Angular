@@ -33,7 +33,10 @@ export class SupplierComponent implements OnInit {
 loadSuppliers(): void {
     this.supplierService.getSuppliers().subscribe({
       next: (data: Supplier[]) => this.suppliers = data,
-      error: (error: any) => console.error(error)
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Error, please try again', 'Supplier Table');
+      }
     });
   }
 

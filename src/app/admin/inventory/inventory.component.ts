@@ -39,6 +39,7 @@ export class InventoryComponent implements OnInit{
         this.writeOffReason = await this.writeORService.getWriteORs();
       } catch (error) {
         console.error(error);
+        this.toastr.error('Error, please try again', 'Write-Off Reason Table');
       }
       };
 

@@ -39,6 +39,7 @@ async loadBlacklistCs(): Promise<void> {
         this.blacklistC = await this.blacklistService.getBlacklist();
       } catch (error) {
         console.error(error);
+        this.toastr.error('Error, please try again', 'Blacklist Table');
       }
       };
       
