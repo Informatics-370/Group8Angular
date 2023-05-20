@@ -3,6 +3,7 @@ import { Supplier } from 'src/app/Model/supplier';
 import { SupplierService } from '../services/supplier.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-supplier',
@@ -20,7 +21,7 @@ export class SupplierComponent implements OnInit {
     supplierToDeleteDetails: any;
     showDeleteSupplierModal = false;
   
-  constructor(private supplierService: SupplierService, private router: Router) {}
+  constructor(private supplierService: SupplierService, private router: Router, private toastr: ToastrService) {}
 
   //When the page is called these methods are automatically called
   ngOnInit(): void {
@@ -83,8 +84,12 @@ loadSuppliers(): void {
               this.suppliers[index] = this.currentSupplier;
             }
             this.closeSupplierModal();
+            this.toastr.success('Successfully updated', 'Update');
           },
-          error: (error: any) => console.error(error)
+          error: (error: any) => {
+            console.error(error);
+            this.toastr.error('Error, please try again', 'Update');
+          }
         });
       } else {
 
@@ -98,8 +103,12 @@ loadSuppliers(): void {
               this.suppliers.push(data);
               this.closeSupplierModal();
               form.resetForm();
+              this.toastr.success('Successfully added', 'Add');
             },
-            error: (error: any) => console.error(error)
+            error: (error: any) => { 
+            console.error(error)
+            this.toastr.error('Error, please try again', 'Add');
+      }
           });
         }
       }
@@ -121,8 +130,14 @@ loadSuppliers(): void {
   
   deleteSupplier(id: number): void {
     this.supplierService.deleteSupplier(id).subscribe({
-      next: () => this.suppliers = this.suppliers.filter(x => x.supplierID !== id),
-      error: (error: any) => console.error(error)
+      next: () => {
+      this.suppliers = this.suppliers.filter(x => x.supplierID !== id)
+      this.toastr.success('Successfully deleted', 'Delete');
+    },
+      error: (error: any) => { 
+      console.error(error)
+      this.toastr.error('Error, please try again', 'Delete');
+      }
     });
     this.showDeleteSupplierModal = false;
   }

@@ -3,6 +3,7 @@ import { Blacklist } from 'src/app/Model/blacklist';
 import { BlacklistService } from '../services/blacklist.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-blacklist',
@@ -19,7 +20,7 @@ export class BlacklistComponent implements OnInit{
     blacklistCToDeleteDetails: any;
     showDeleteBlacklistCModal = false;
     
-    constructor(private blacklistService: BlacklistService, private router: Router) {}
+    constructor(private blacklistService: BlacklistService, private router: Router, private toastr: ToastrService) {}
 
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -84,10 +85,12 @@ async submitBlacklistCForm(form: NgForm): Promise<void> {
         if (index !== -1) {
           this.blacklistC[index] = this.currentBlacklistC;
         }
+        this.toastr.success('Successfully updated', 'Update');
       } else {
         // Add Blacklist Customer
         const data = await this.blacklistService.addBlacklistC(this.currentBlacklistC);
         this.blacklistC.push(data);
+        this.toastr.success('Successfully added', 'Add');
       }
       this.closeBlacklistCModal();
       if (!this.editingBlacklistC) {
@@ -95,6 +98,7 @@ async submitBlacklistCForm(form: NgForm): Promise<void> {
       }
     } catch (error) {
       console.error(error);
+      this.toastr.error('Error, please try again');
     }
   }
 }
@@ -117,12 +121,16 @@ closeDeleteBlacklistCModal(): void {
 
 async deleteBlacklistC(): Promise<void> {
   if (this.blacklistCToDeleteDetails && this.blacklistCToDeleteDetails.blacklistID !== undefined) {
+    try{
     await this.blacklistService.deleteBlacklistC(this.blacklistCToDeleteDetails.blacklistID);
     this.blacklistC = this.blacklistC.filter(x => x.blacklistID !== this.blacklistCToDeleteDetails.blacklistID);
+    this.toastr.success('Successfully deleted', 'Delete');
     this.closeDeleteBlacklistCModal();
-  } else {
+    }catch (error){ 
+    this.toastr.error('Error, please try again', 'Delete');
     console.log("Blacklist Customer to remove is null, undefined, or has an undefined BlacklistID property.");
-  }
+  }  
+}
 }
 
 //******************* Delete Modal-related methods *********************************************************************************************************************************
