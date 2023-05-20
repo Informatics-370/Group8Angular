@@ -3,6 +3,7 @@ import { WriteOffReason } from 'src/app/Model/writeOffReason';
 import { WriteORService } from '../services/writeOffReason.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-inventory',
@@ -19,7 +20,7 @@ export class InventoryComponent implements OnInit{
     showDeleteWORModal = false;
     showSelectorModal = false;
 
-    constructor(private writeORService: WriteORService, private router: Router) {}
+    constructor(private writeORService: WriteORService, private router: Router, private toastr: ToastrService) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
 
@@ -90,10 +91,12 @@ async submitWORForm(form: NgForm): Promise<void> {
         if (index !== -1) {
           this.writeOffReason[index] = this.currentWOR;
         }
+        this.toastr.success('Successfully updated', 'Update');
       } else {
         // Add WriteOffReason 
         const data = await this.writeORService.addWriteOR(this.currentWOR);
         this.writeOffReason.push(data);
+        this.toastr.success('Successfully added', 'Add');
       }
       this.closeWORModal();
       if (!this.editingWOR) {
@@ -101,6 +104,7 @@ async submitWORForm(form: NgForm): Promise<void> {
       }
     } catch (error) {
       console.error(error);
+      this.toastr.error('Error, please try again');
     }
   }
 }
@@ -123,12 +127,16 @@ closeDeleteWORModal(): void {
 
 async deleteWOR(): Promise<void> {
   if (this.wORToDeleteDetails && this.wORToDeleteDetails.writeOff_ReasonID !== undefined) {
+    try{
     await this.writeORService.deleteWriteOR(this.wORToDeleteDetails.writeOff_ReasonID);
     this.writeOffReason = this.writeOffReason.filter(x => x.writeOff_ReasonID !== this.wORToDeleteDetails.writeOff_ReasonID);
+    this.toastr.success('Successfully deleted', 'Delete');
     this.closeDeleteWORModal();
-  } else {
+  } catch (error) {
+    this.toastr.error('Error, please try again', 'Delete');
     console.log("Write off Reason to Delete is null, undefined, or has an undefined writeOff_ReasonID property.");
   }
+}
 }
 
 //******************* Delete Modal-related methods *********************************************************************************************************************************
