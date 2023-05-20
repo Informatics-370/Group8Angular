@@ -43,7 +43,10 @@ export class VatComponent implements OnInit {
   loadVATs(): void {
     this.vatService.getVATs().subscribe({
       next: (data: VAT[]) => this.vats = data,
-      error: (error: any) => console.error(error)
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Error, please try again', 'VAT Table');
+      }
     });
   }
 
