@@ -39,7 +39,7 @@ async loadBlacklistCs(): Promise<void> {
         this.blacklistC = await this.blacklistService.getBlacklist();
       } catch (error) {
         console.error(error);
-        this.toastr.error('Error, please try again', 'Blacklist Table');
+        this.toastr.error('Error, failed to connect to the database', 'Blacklist Table');
       }
       };
       
@@ -86,12 +86,12 @@ async submitBlacklistCForm(form: NgForm): Promise<void> {
         if (index !== -1) {
           this.blacklistC[index] = this.currentBlacklistC;
         }
-        this.toastr.success('Successfully updated', 'Update');
+        this.toastr.success('Successfully updated', 'Customer');
       } else {
         // Add Blacklist Customer
         const data = await this.blacklistService.addBlacklistC(this.currentBlacklistC);
         this.blacklistC.push(data);
-        this.toastr.success('Successfully added', 'Add');
+        this.toastr.success('Successfully added', 'Customer');
       }
       this.closeBlacklistCModal();
       if (!this.editingBlacklistC) {
@@ -99,7 +99,7 @@ async submitBlacklistCForm(form: NgForm): Promise<void> {
       }
     } catch (error) {
       console.error(error);
-      this.toastr.error('Error, please try again');
+      this.toastr.error('Error occurred please try again', 'Customer');
     }
   }
 }
@@ -125,10 +125,10 @@ async deleteBlacklistC(): Promise<void> {
     try{
     await this.blacklistService.deleteBlacklistC(this.blacklistCToDeleteDetails.blacklistID);
     this.blacklistC = this.blacklistC.filter(x => x.blacklistID !== this.blacklistCToDeleteDetails.blacklistID);
-    this.toastr.success('Successfully deleted', 'Delete');
+    this.toastr.success('Successfully removed', 'Customer');
     this.closeDeleteBlacklistCModal();
     }catch (error){ 
-    this.toastr.error('Error, please try again', 'Delete');
+    this.toastr.error('Removal failed, please try again', 'Error');
     console.log("Blacklist Customer to remove is null, undefined, or has an undefined BlacklistID property.");
   }  
 }
