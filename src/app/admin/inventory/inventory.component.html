@@ -41,6 +41,10 @@
     </tbody>
   </table>
 
+  <div class="text-center" *ngIf="writeOffReason.length === 0">
+    <h3>No write-off reasons currently in your system.</h3>
+  </div>
+
 <!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
 
 
@@ -61,14 +65,17 @@
           <div class="mb-3">
             <label for="WriteOffReason" class="form-label">Write Off Reason Description</label>
             <input type="text" class="form-control" id="WriteOffReason" [(ngModel)]="currentWOR.description"
-              name="writeOffReason" required>
-          </div>                   
+              name="writeOffReason" required #reasonField="ngModel">
+          </div>   
+          <div *ngIf="reasonField.invalid && reasonField.touched" class="alert alert-danger">
+            <div *ngIf="reasonField.errors?.['required']">Descriptions is required.</div>
+          </div>              
 
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWORModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitWORForm(writeORForm)">{{editingWOR ?
+        <button type="button" class="btn btn-primary" [disabled]="writeORForm.invalid" (click)="submitWORForm(writeORForm)">{{editingWOR ?
           'Save Changes' : 'Save'}}</button>
       </div>
     </div>

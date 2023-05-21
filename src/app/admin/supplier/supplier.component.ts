@@ -35,7 +35,7 @@ loadSuppliers(): void {
       next: (data: Supplier[]) => this.suppliers = data,
       error: (error: any) => {
         console.error(error);
-        this.toastr.error('Error, please try again', 'Supplier Table');
+        this.toastr.error('Error, failed to connect to the database', 'Supplier Table');
       }
     });
   }
@@ -135,14 +135,14 @@ loadSuppliers(): void {
     this.supplierService.deleteSupplier(id).subscribe({
       next: () => {
       this.suppliers = this.suppliers.filter(x => x.supplierID !== id)
-      this.toastr.success('Successfully deleted', 'Delete');
+      this.toastr.success('Successfully deleted', 'Supplier');
+      this.showDeleteSupplierModal = false;
     },
       error: (error: any) => { 
       console.error(error)
-      this.toastr.error('Error, please try again', 'Delete');
+      this.toastr.error('Deletion failed, please try again', 'Error');
       }
     });
-    this.showDeleteSupplierModal = false;
   }
 
 //******************* Delete Modal-related methods *********************************************************************************************************************************
