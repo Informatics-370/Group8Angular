@@ -44,11 +44,12 @@ openAddWinetypeModal() {
   this.currentWinetype = new WineType();
   this.showWinetypeModal = true;
 }
+
 openEditWinetypeModal(id: number) {
   console.log('Opening edit winetype modal for ID:', id);
   this.editingWinetype = true;
-  // Create a copy of the Winetype, not reference the same object
-  this.currentWinetype = {...this.winetypes.find(winetype => winetype.wineTypeID === id)!};
+  // Create a deep copy of the Winetype, not reference the same object
+  this.currentWinetype = JSON.parse(JSON.stringify(this.winetypes.find(winetype => winetype.wineTypeID === id)!));
   this.showWinetypeModal = true;
 }
 

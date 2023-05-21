@@ -88,6 +88,7 @@ wineToDelete: any = null;
 selectedFile: File | null = null;
 
 
+
 //save wine picture
 onFileSelected(event: Event): void {
   const target = event.target as HTMLInputElement;
@@ -146,12 +147,13 @@ async submitWineForm(form: NgForm): Promise<void> {
 
       if (this.editingWine) {
         await this.wineService.updateWine(this.currentWine.wineID!, formData);
+        const updatedWine = await this.wineService.getWine(this.currentWine.wineID!); // Fetch the updated wine.
         const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
         if (index !== -1) {
-          this.wines[index] = this.currentWine;
+          this.wines[index] = updatedWine; // Update the wine in the wines array.
         }
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
-      } else {
+      }  else {
         const createdWine = await this.wineService.addWine(formData);
         this.wines.push(createdWine);
         this.toastr.success('Wine has been added successfully.', 'Wine Form');
@@ -216,8 +218,8 @@ async deleteWine(): Promise<void> {
   openEditWinetypeModal(id: number) {
     console.log('Opening edit winetype modal for ID:', id);
     this.editingWinetype = true;
-    // Create a copy of the Winetype, not reference the same object
-    this.currentWinetype = {...this.winetypes.find(winetype => winetype.wineTypeID === id)!};
+    // Create a deep copy of the Winetype, not reference the same object
+    this.currentWinetype = JSON.parse(JSON.stringify(this.winetypes.find(winetype => winetype.wineTypeID === id)!));
     this.showWinetypeModal = true;
   }
   
@@ -320,11 +322,10 @@ async deleteWine(): Promise<void> {
   openEditVarietalModal(id: number) {
     console.log('Opening edit varietal modal for ID:', id);
     this.editingVarietal = true;
-    // We need to make a copy of the varietal, not reference the same object
-    this.currentVarietal = {...this.varietals.find(varietal => varietal.varietalID === id)!};
+    // We need to make a deep copy of the varietal, not reference the same object
+    this.currentVarietal = JSON.parse(JSON.stringify(this.varietals.find(varietal => varietal.varietalID === id)!));
     this.showVarietalModal = true;
   }
-  
 
   closeVarietalModal() {
     this.showVarietalModal = false;

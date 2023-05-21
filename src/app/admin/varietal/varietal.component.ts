@@ -47,8 +47,8 @@ export class VarietalComponent {
   openEditVarietalModal(id: number) {
     console.log('Opening edit varietal modal for ID:', id);
     this.editingVarietal = true;
-    // We need to make a copy of the varietal, not reference the same object
-    this.currentVarietal = {...this.varietals.find(varietal => varietal.varietalID === id)!};
+    // We need to make a deep copy of the varietal, not reference the same object
+    this.currentVarietal = JSON.parse(JSON.stringify(this.varietals.find(varietal => varietal.varietalID === id)!));
     this.showVarietalModal = true;
   }
   
