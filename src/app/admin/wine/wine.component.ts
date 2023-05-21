@@ -39,6 +39,7 @@ export class WineComponent implements OnInit {
       this.wines = await this.wineService.getWines();
     } catch (error) {
       console.error(error);
+      this.toastr.error('Error, please try again', 'Wine Table');
     }
   }
   async loadVarietals(): Promise<void> {
@@ -63,6 +64,16 @@ export class WineComponent implements OnInit {
       this.toastr.error('Error, please try again', 'Discount Table');
     }
   }
+
+  getVarietalName(varietalID: number): string {
+    const varietal = this.varietals.find(v => v.varietalID === varietalID);
+    return varietal?.name || 'Unknown';
+  }
+  
+  getWinetypeName(wineTypeID: number): string {
+    const winetype = this.winetypes.find(w => w.wineTypeID === wineTypeID);
+    return winetype?.name || 'Unknown';
+  }
   //--------------------------------------------------------------------------------------------------------------------------------
 
   //Wine----------------------------------------------------------------------------------------------------------------------------.>
@@ -74,11 +85,15 @@ editingWine: boolean = false;
 showDeleteWineModal = false;
 wineToDeleteDetails: any;
 wineToDelete: any = null;
+selectedFile: File | null = null;
+
 
 //save wine picture
-onFileSelected(event: any) {
-  const file: File = event.target.files[0];
-  this.currentWine.imageFile = file;
+onFileSelected(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  if (target.files !== null) {
+    this.selectedFile = target.files[0];
+  }
 }
 
 // Modal-related methods
@@ -117,38 +132,63 @@ async submitWineForm(form: NgForm): Promise<void> {
   console.log('Submitting form with editingWine flag:', this.editingWine);
   if (form.valid) {
     try {
+      const formData = new FormData();
+
+      if (this.selectedFile) {
+        formData.append('imageFile', this.selectedFile, this.selectedFile.name);
+      }
+
+      for (const key in this.currentWine) {
+        if (this.currentWine.hasOwnProperty(key)) {
+          formData.append(key, (this.currentWine as any)[key]);
+        }
+      }
+
       if (this.editingWine) {
-        // Update Wine
-        await this.wineService.updateWine(this.currentWine.wineID!, this.currentWine);
+        await this.wineService.updateWine(this.currentWine.wineID!, formData);
         const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
         if (index !== -1) {
           this.wines[index] = this.currentWine;
         }
+        this.toastr.success('Wine has been updated successfully.', 'Wine Form');
       } else {
-        // Add Wine
-        const data = await this.wineService.addWine(this.currentWine);
-        this.wines.push(data);
+        const createdWine = await this.wineService.addWine(formData);
+        this.wines.push(createdWine);
+        this.toastr.success('Wine has been added successfully.', 'Wine Form');
       }
+
       this.closeWineModal();
-      if (!this.editingWine) {
-        form.resetForm();
-      }
+      form.resetForm();
     } catch (error) {
       console.error(error);
+      this.toastr.error('An error occurred, please try again.', 'Wine Form');
     }
   }
 }
 
+
+
 // Delete Wine
 async deleteWine(): Promise<void> {
-  if (this.wineToDeleteDetails && this.wineToDeleteDetails.wineID !== undefined) {
-    await this.wineService.deleteWine(this.wineToDeleteDetails.wineID);
-    this.wines = this.wines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
-    this.closeDeleteWineModal();
-  } else {
-    console.log("Wine to delete is null, undefined, or has an undefined WineID property.");
+  try {
+    if (this.wineToDeleteDetails && this.wineToDeleteDetails.wineID !== undefined) {
+      await this.wineService.deleteWine(this.wineToDeleteDetails.wineID);
+      this.wines = this.wines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
+      // Toastr success message for deletion
+      this.toastr.success('Wine has been deleted successfully.', 'Successful');
+      this.closeDeleteWineModal();
+    } else {
+      console.log("Wine to delete is null, undefined, or has an undefined WineID property.");
+      // Toastr warning message
+      this.toastr.warning('Unable to delete wine, please check the wine details.', 'Error');
+    }
+  } catch (error) {
+    console.error(error);
+    // Toastr error message
+    this.toastr.error('An error occurred, please try again.', 'Error');
   }
 }
+
 // Wine END-----------------------------------------------------------------------------------------------------.>
 
 

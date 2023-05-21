@@ -1,0 +1,100 @@
+ <!-- Winetype Table -->
+ <div class="row align-items-center mb-3">
+    <div class="col-md-6">
+      <h2>Wine type</h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-success btn-sm" (click)="openAddWinetypeModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let winetype of winetypes">
+        <td>{{ winetype.name }}</td>
+        <td>{{ winetype.description }}</td>
+        <td>
+          <button class="btn btn-primary"
+            (click)="winetype.wineTypeID !== undefined && openEditWinetypeModal(winetype.wineTypeID)"
+            style="margin-right: 4px;">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="btn btn-danger"
+            (click)="winetype.wineTypeID !== undefined && openDeleteWinetypeModal(winetype)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Add/Edit Winetype Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showWinetypeModal}"
+  [ngStyle]="{'display': showWinetypeModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingWinetype ? 'Edit Winetype' : 'Add Winetype'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeWinetypeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #winetypeForm="ngForm" (ngSubmit)="submitWinetypeForm(winetypeForm)">
+
+          <div class="mb-3">
+            <label for="winetypeName" class="form-label">Winetype Name</label>
+            <input type="text" class="form-control" id="winetypeName" [(ngModel)]="currentWinetype.name"
+              name="winetypeName" required #winetypeNameField="ngModel">
+            <div *ngIf="winetypeNameField.invalid && winetypeNameField.touched" class="alert alert-danger">
+              <div *ngIf="winetypeNameField.errors?.['required']">Wine Type name is required.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="winetypeDescription" class="form-label">Winetype Description</label>
+            <input type="text" class="form-control" id="winetypeDescription"
+              [(ngModel)]="currentWinetype.description" name="winetypeDescription" required #winetypeDescriptionField="ngModel">
+            <div *ngIf="winetypeDescriptionField.invalid && winetypeDescriptionField.touched" class="alert alert-danger">
+              <div *ngIf="winetypeDescriptionField.errors?.['required']">Wine Type description is required.</div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeWinetypeModal()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="winetypeForm.invalid" (click)="submitWinetypeForm(winetypeForm)">{{editingWinetype ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Delete Winetype Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWinetypeModal}"
+    [ngStyle]="{'display': showDeleteWinetypeModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Confirmation</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteWineTypeModal()"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this winetype?
+          <p></p>
+          <p>Winetype Name: {{ winetypeToDeleteDetails?.name }}</p>
+          <p>Winetype Description: {{ winetypeToDeleteDetails?.description }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeDeleteWineTypeModal()">No</button>
+          <button type="button" class="btn btn-primary" (click)="deleteWinetype()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>

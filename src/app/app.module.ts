@@ -25,6 +25,9 @@ import { EmployeeComponent } from './admin/employee/employee.component';
 import { ToastrModule } from 'ngx-toastr';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { VarietalComponent } from './admin/varietal/varietal.component';
+import { TypeComponent } from './admin/type/type.component';
+import { DiscountComponent } from './admin/discount/discount.component';
 
 
 @NgModule({
@@ -41,6 +44,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     VatComponent,
     SystemprivilegesComponent,
     EmployeeComponent,
+    VarietalComponent,
+    TypeComponent,
+    DiscountComponent,
   ],
   imports: [
     BrowserModule,

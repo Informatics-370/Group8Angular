@@ -1,0 +1,102 @@
+ <!-- Varietal Table -->
+ <div class="row align-items-center mb-3">
+    <div class="col-md-6">
+      <h2>Varietal</h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-success btn-sm" (click)="openAddVarietalModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let varietal of varietals">
+        <td>{{ varietal.name }}</td>
+        <td>{{ varietal.description }}</td>
+        <td>
+          <button class="btn btn-primary"
+            (click)="varietal.varietalID !== undefined && openEditVarietalModal(varietal.varietalID)"
+            style="margin-right: 4px;">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+
+          <button class="btn btn-danger"
+            (click)="varietal.varietalID !== undefined && openDeleteVarietalModal(varietal)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Add/Edit Varietal Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}"
+  [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingVarietal ? 'Edit Varietal' : 'Add Varietal'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeVarietalModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #varietalForm="ngForm" (ngSubmit)="submitVarietalForm(varietalForm)">
+
+          <div class="mb-3">
+            <label for="varietalName" class="form-label">Varietal Name</label>
+            <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
+              name="varietalName" required #nameField="ngModel">
+            <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
+              <div *ngIf="nameField.errors?.['required']">Varietal name is required.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="varietalDescription" class="form-label">Varietal Description</label>
+            <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
+              name="varietalDescription" required #descField="ngModel">
+            <div *ngIf="descField.invalid && descField.touched" class="alert alert-danger">
+              <div *ngIf="descField.errors?.['required']">Varietal description is required.</div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeVarietalModal()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="varietalForm.invalid" (click)="submitVarietalForm(varietalForm)">{{editingVarietal ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Delete Varietal Modal -->
+ <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteVarietalModal}"
+ [ngStyle]="{'display': showDeleteVarietalModal ? 'block' : 'none'}">
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title">Delete Confirmation</h5>
+       <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteVarietalModal()"></button>
+     </div>
+     <div class="modal-body">
+       Are you sure you want to delete this varietal?
+       <p></p>
+       <p>Varietal Name: {{ varietalToDeleteDetails?.name }}</p>
+       <p>Varietal Description: {{ varietalToDeleteDetails?.description }}</p>
+     </div>
+     <div class="modal-footer">
+       <button type="button" class="btn btn-secondary" (click)="closeDeleteVarietalModal()">No</button>
+       <button type="button" class="btn btn-primary" (click)="deleteVarietal()">Yes</button>
+     </div>
+   </div>
+ </div>
+</div>
