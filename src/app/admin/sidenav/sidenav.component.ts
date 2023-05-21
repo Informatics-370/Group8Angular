@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent {
-
+    showWineSubnav = false;
+    // rest of your component
+  
 }

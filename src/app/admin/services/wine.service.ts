@@ -25,11 +25,11 @@ export class WineService {
     return firstValueFrom(this.http.get<Wine>(`${this.apiUrl}/${id}`));
   }
 
-  async addWine(wine: Wine): Promise<Wine> {
+  async addWine(wine: FormData): Promise<Wine> {
     return firstValueFrom(this.http.post<Wine>(this.apiUrl, wine));
   }
-
-  async updateWine(id: number, wine: Wine): Promise<any> {
+  
+  async updateWine(id: number, wine: FormData): Promise<any> {
     console.log('Updating wine with ID:', id, 'and data:', wine);
     return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, wine));
   }
