@@ -3,6 +3,7 @@ import { FAQ } from 'src/app/Model/faq';
 import { FAQService } from '../services/faq.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-faq',
@@ -14,8 +15,12 @@ export class FaqComponent implements OnInit {
   showModal: boolean = false;
   editingFAQ: boolean = false;
   currentFAQ: FAQ = new FAQ();
+
+  faqToDelete: any = null;
+  faqToDeleteDetails: any;
+  showDeleteFAQModal = false;
   
-  constructor(private faqService: FAQService, private router: Router) {}
+  constructor(private faqService: FAQService, private router: Router, private toastr: ToastrService) {}
 
   //When the page is called these methods are automatically called
   ngOnInit(): void {
@@ -26,7 +31,10 @@ export class FaqComponent implements OnInit {
   loadFAQs(): void {
     this.faqService.getFAQs().subscribe({
       next: (data: FAQ[]) => this.faqs = data,
-      error: (error: any) => console.error(error)
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Error, please try again', 'VAT Table');
+      }
     });
   }
 
@@ -75,23 +83,31 @@ export class FaqComponent implements OnInit {
               this.faqs[index] = this.currentFAQ;
             }
             this.closeFAQModal();
+            this.toastr.success('Successfully updated', 'Update');
           },
-          error: (error: any) => console.error(error)
+          error: (error: any) => {
+            console.error(error)
+            this.toastr.error('Error, please try again', 'Update');
+          }
         });
       } else {
 
         
         // Check for duplicate FAQ entries before adding
         if (this.isDuplicateFAQ(this.currentFAQ)) {
-          alert('FAQ with the same question or answer already exists!');
+          this.toastr.error('FAQ with the same question or answer already exists!');
         } else {
           this.faqService.addFAQ(this.currentFAQ).subscribe({
             next: (data: FAQ) => {
               this.faqs.push(data);
               this.closeFAQModal();
               form.resetForm();
+              this.toastr.success('Successfully added', 'Add');
             },
-            error: (error: any) => console.error(error)
+            error: (error: any) => {
+              console.error(error);
+              this.toastr.error('Error, please try again', 'Add');
+            }
           });
         }
       }
@@ -99,10 +115,29 @@ export class FaqComponent implements OnInit {
   }
   
 
+
+  openDeleteFAQModel(selectedSuppllier: any): void {
+    this.faqToDelete = selectedSuppllier.supplierid;
+    console.log("Supplier : ", this.faqToDelete)
+    this.faqToDeleteDetails = selectedSuppllier;
+    this.showDeleteFAQModal = true;
+  }
+  
+  closeDeleteFAQModal(): void {
+    this.showDeleteFAQModal = false;
+  }
+
   deleteFAQ(id: number): void {
     this.faqService.deleteFAQ(id).subscribe({
-      next: () => this.faqs = this.faqs.filter(faq => faq.faqid !== id),
-      error: (error: any) => console.error(error)
+      next: () => {
+        this.faqs = this.faqs.filter(faq => faq.faqid !== id);
+        this.toastr.success('Successfully deleted', 'Delete');
+        this.showDeleteFAQModal = false;
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Error, please try again', 'Delete');
+      }
     });
   }
 }
