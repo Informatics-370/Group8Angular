@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Discount } from 'src/app/Model/discount';
 import { DiscountService } from '../services/discount.service';
-import { NgForm } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WineService } from '../services/wine.service';
 import { VarietalService } from '../services/varietal.service';
@@ -10,6 +10,7 @@ import { Wine } from 'src/app/Model/wine';
 import { WineType } from 'src/app/Model/winetype';
 import { Varietal } from 'src/app/Model/varietal';
 import { ToastrService } from 'ngx-toastr';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-wine',
@@ -87,7 +88,12 @@ wineToDeleteDetails: any;
 wineToDelete: any = null;
 selectedFile: File | null = null;
 
-
+wineRestockLimitField = new FormControl('', [
+  Validators.required,
+  Validators.min(1),
+  Validators.max(999),
+  Validators.pattern(/^\d+$/)
+]);
 
 //save wine picture
 onFileSelected(event: Event): void {

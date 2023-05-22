@@ -31,7 +31,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let wine of wines">
-      <td><img [src]="wine.imageUrl" alt="Wine image" class="wine-image"></td>
+      <td><img [src]="wine.imageUrl"></td>
       <td>{{ wine.name }}</td>
       <td>{{ wine.description }}</td>
       <td>{{ wine.vintage }}</td>
@@ -99,11 +99,11 @@
 
           <div class="mb-3">
             <label for="wineRestockLimit" class="form-label">Restock Limit</label>
-            <input type="number" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.restockLimit"
-              name="wineRestockLimit" required [min]="0.01" #wineRestockLimitField="ngModel">
+            <input type="text" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.restockLimit" 
+            name="wineRestockLimit" required pattern="^[0-9]+$" #wineRestockLimitField="ngModel">
             <div *ngIf="wineRestockLimitField.invalid && wineRestockLimitField.touched" class="alert alert-danger">
               <div *ngIf="wineRestockLimitField.errors?.['required']">Restock limit is required.</div>
-              <div *ngIf="wineRestockLimitField.errors?.['min']">Restock limit cannot be zero.</div>
+              <div *ngIf="wineRestockLimitField.errors?.['pattern']">Restock limit must be a whole number.</div>
             </div>
           </div>
           
