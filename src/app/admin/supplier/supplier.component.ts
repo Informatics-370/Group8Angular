@@ -111,6 +111,7 @@ loadSuppliers(): void {
             error: (error: any) => { 
             console.error(error)
             this.toastr.error('Error, please try again', 'Add');
+            this.closeSupplierModal();
       }
           });
         }
@@ -135,13 +136,14 @@ loadSuppliers(): void {
     this.supplierService.deleteSupplier(id).subscribe({
       next: () => {
       this.suppliers = this.suppliers.filter(x => x.supplierID !== id)
-      this.toastr.success('Successfully deleted', 'Supplier');
+      this.toastr.success('Successfully deleted', 'Supplier');      
       this.showDeleteSupplierModal = false;
     },
       error: (error: any) => { 
       console.error(error)
       this.toastr.error('Deletion failed, please try again', 'Error');
-      }
+      this.showDeleteSupplierModal = false;
+    }
     });
   }
 

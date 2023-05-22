@@ -100,6 +100,7 @@ async submitBlacklistCForm(form: NgForm): Promise<void> {
     } catch (error) {
       console.error(error);
       this.toastr.error('Error occurred please try again', 'Customer');
+      this.closeBlacklistCModal();
     }
   }
 }
@@ -126,11 +127,11 @@ async deleteBlacklistC(): Promise<void> {
     await this.blacklistService.deleteBlacklistC(this.blacklistCToDeleteDetails.blacklistID);
     this.blacklistC = this.blacklistC.filter(x => x.blacklistID !== this.blacklistCToDeleteDetails.blacklistID);
     this.toastr.success('Successfully removed', 'Customer');
-    this.closeDeleteBlacklistCModal();
     }catch (error){ 
     this.toastr.error('Removal failed, please try again', 'Error');
     console.log("Blacklist Customer to remove is null, undefined, or has an undefined BlacklistID property.");
   }  
+  this.closeDeleteBlacklistCModal();
 }
 }
 
