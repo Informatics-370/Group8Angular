@@ -21,7 +21,7 @@ import { Validators } from '@angular/forms';
 
 export class WineComponent implements OnInit {
 
-
+  tempWine: Wine = new Wine();
   constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService) { }
 
   ngOnInit(): void {
@@ -113,7 +113,15 @@ openAddWineModal() {
 openEditWineModal(id: number) {
   console.log('Opening edit wine modal for ID:', id);
   this.editingWine = true;
-  this.currentWine = this.wines.find(wine => wine.wineID === id)!;
+  let wineToEdit = this.wines.find(wine => wine.wineID === id);
+  if (wineToEdit) {
+    this.tempWine = {
+      ...wineToEdit,
+      wineTypeName: this.getWinetypeName(wineToEdit.wineTypeID),
+      varietalName: this.getVarietalName(wineToEdit.varietalID)
+    };
+    this.currentWine = this.tempWine;
+  }
   this.showWineModal = true;
 }
 
@@ -145,9 +153,9 @@ async submitWineForm(form: NgForm): Promise<void> {
         formData.append('imageFile', this.selectedFile, this.selectedFile.name);
       }
 
-      for (const key in this.currentWine) {
-        if (this.currentWine.hasOwnProperty(key)) {
-          formData.append(key, (this.currentWine as any)[key]);
+      for (const key in this.tempWine) {
+        if (this.tempWine.hasOwnProperty(key)) {
+          formData.append(key, (this.tempWine as any)[key]);
         }
       }
 
@@ -173,7 +181,6 @@ async submitWineForm(form: NgForm): Promise<void> {
     }
   }
 }
-
 
 
 // Delete Wine
