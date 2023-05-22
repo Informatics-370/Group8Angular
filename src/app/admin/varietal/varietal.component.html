@@ -37,6 +37,10 @@
     </tbody>
   </table>
 
+  <div class="text-center" *ngIf="varietals.length === 0">
+    <h3>No varietals currently in your system.</h3>
+  </div>
+
   <!-- Add/Edit Varietal Modal -->
   <div class="modal" tabindex="-1" [ngClass]="{'show': showVarietalModal}"
   [ngStyle]="{'display': showVarietalModal ? 'block' : 'none'}">

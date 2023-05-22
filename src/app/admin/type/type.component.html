@@ -35,6 +35,10 @@
     </tbody>
   </table>
 
+  <div class="text-center" *ngIf="winetypes.length === 0">
+    <h3>No wine types currently in your system.</h3>
+  </div>
+
   <!-- Add/Edit Winetype Modal -->
   <div class="modal" tabindex="-1" [ngClass]="{'show': showWinetypeModal}"
   [ngStyle]="{'display': showWinetypeModal ? 'block' : 'none'}">

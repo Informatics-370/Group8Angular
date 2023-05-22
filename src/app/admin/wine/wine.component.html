@@ -52,6 +52,10 @@
   </tbody>
 </table>
 
+<div class="text-center" *ngIf="wines.length === 0">
+  <h3>No wines currently in your system.</h3>
+</div>
+
 
 
 
@@ -237,6 +241,10 @@
     </tr>
   </tbody>
 </table>
+
+<div class="text-center" *ngIf="discounts.length === 0">
+  <h3>No discounts currently in your system.</h3>
+</div>
 
 
 <!-- Add/Edit Discount Modal -->
