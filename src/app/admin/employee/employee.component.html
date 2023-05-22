@@ -95,21 +95,23 @@
             <!--! PHONE NUMBER -->
             <div class="mb-3">
               <label for="phonenumber" class="form-label">Phone number:</label>
-              <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phone_Number" name="phonenumber" required>
+              <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phone_Number" name="phonenumber" required pattern="^[0-9]{10}$">
               <div *ngIf="employeeForm.controls['phonenumber'].invalid && employeeForm.controls['phonenumber'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['phonenumber'].errors?.['required']">Phone number is required.</div>
+                <div *ngIf="employeeForm.controls['phonenumber'].errors?.['pattern']">Phone number must be exactly 10 digits.</div>
               </div>
             </div>
-  
+
             <!--! ID NUMBER -->
             <div class="mb-3">
               <label for="idnumber" class="form-label">ID Number:</label>
-              <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idnumber" required pattern="^[0-9]+$">
+              <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idnumber" required pattern="^[0-9]{13}$">
               <div *ngIf="employeeForm.controls['idnumber'].invalid && employeeForm.controls['idnumber'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['idnumber'].errors?.['required']">ID Number is required.</div>
-                <div *ngIf="employeeForm.controls['idnumber'].errors?.['pattern']">ID Number should contain only numerical values.</div>
+                <div *ngIf="employeeForm.controls['idnumber'].errors?.['pattern']">ID Number must be exactly 13 digits.</div>
               </div>
             </div>
+
 
   
             <!--! HIRE DATE -->
