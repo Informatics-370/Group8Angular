@@ -33,7 +33,7 @@ export class FaqComponent implements OnInit {
       next: (data: FAQ[]) => this.faqs = data,
       error: (error: any) => {
         console.error(error);
-        this.toastr.error('Error, please try again', 'VAT Table');
+        this.toastr.error('Error, please try again', 'FAQ Table');
       }
     });
   }

@@ -124,4 +124,17 @@ export class VatComponent implements OnInit {
       }
     }
   }
+
+  deleteVAT(id: number): void {
+    this.vatService.deleteVAT(id).subscribe({
+      next: () => {
+        this.vats = this.vats.filter(vat => vat.vatid !== id);
+        this.toastr.success('Successfully deleted', 'Delete');
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Error, please try again', 'Delete');
+      }
+    });
+  }
 }
