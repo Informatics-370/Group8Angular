@@ -106,6 +106,7 @@ async submitWORForm(form: NgForm): Promise<void> {
     } catch (error) {
       console.error(error);
       this.toastr.error('Error occurred, please try again', 'Write-Off Reason');
+      this.closeWORModal();
     }
   }
 }
@@ -132,11 +133,11 @@ async deleteWOR(): Promise<void> {
     await this.writeORService.deleteWriteOR(this.wORToDeleteDetails.writeOff_ReasonID);
     this.writeOffReason = this.writeOffReason.filter(x => x.writeOff_ReasonID !== this.wORToDeleteDetails.writeOff_ReasonID);
     this.toastr.success('Successfully deleted', 'Write-Off Reason');
-    this.closeDeleteWORModal();
   } catch (error) {
     this.toastr.error('Deletion failed, please try again', 'Error');
     console.log("Write off Reason to Delete is null, undefined, or has an undefined writeOff_ReasonID property.");
   }
+  this.closeDeleteWORModal();
 }
 }
 
