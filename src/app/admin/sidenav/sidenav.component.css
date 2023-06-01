@@ -1,14 +1,11 @@
 @import '~bootstrap-icons/font/bootstrap-icons.css';
+
 .sidebar {
   display: flex;
   flex-direction: column;
   background-color: rgb(3, 3, 172);
   color: white;
   height: 100vh;
-}
-
-.sidebar .nav {
-  margin-left: 100;
 }
 
 .sidebar .nav-link {
@@ -33,7 +30,7 @@
 }
 
 .sidebar .nav-link:hover span {
-  transform: translateX(5px); /* Adjust the translation to move to the right */
+  transform: translateX(5px);
 }
 
 .sidebar .nav-link::before {
@@ -41,17 +38,18 @@
   position: absolute;
   top: 0;
   left: 0;
-  transform: translateX(-50%) scale(0.8); /* Adjust the scale and translation */
+  transform: translateX(-50%) scale(0.8);
   width: 200%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.2);
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Adjust the transition timing and duration */
+  transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .sidebar .nav-link:hover::before {
   opacity: 1;
-  transform: translateX(10%); /* Adjust the translation to move to the right */
+  transform: translateX(10%);
 }
 
 .sidebar .nav-link:active {

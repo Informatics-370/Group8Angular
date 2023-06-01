@@ -18,7 +18,6 @@
   <thead>
     <tr>
       <!-- <th scope="col">ID</th> -->
-      <th scope="col">Image</th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
       <th scope="col">Vintage</th>
@@ -31,7 +30,6 @@
   </thead>
   <tbody>
     <tr *ngFor="let wine of wines">
-      <td><img [src]="wine.imageUrl"></td>
       <td>{{ wine.name }}</td>
       <td>{{ wine.description }}</td>
       <td>{{ wine.vintage }}</td>
@@ -152,13 +150,7 @@
               <div *ngIf="wineVarietalField.errors?.['required']">Wine varietal is required.</div>
             </div>
           </div>
-          
-
-          <div class="mb-3">
-            <label for="imageUrl" class="form-label">Image</label>
-            <input type="file" class="form-control" id="imageUrl" (change)="onFileSelected($event)" name="imageUrl" accept="image/*" required>
-          </div>
-          
+                    
 
         </form>
       </div>
@@ -196,130 +188,3 @@
 </div>
 
 <!-- Wine END --------------------------------------------------------------------------------------------------------------------->
-<!-- Discount ------------------------------------------------------------------------------------------------------------------------------------------------------------>
-<!-- Discount button -->
-<div class="row align-items-center mb-3">
-  <div class="col-md-6">
-    <h2>Discount</h2>
-  </div>
-  <div class="col-md-6 text-end">
-    <button class="btn btn-success btn-sm" (click)="openAddDiscountModal()">
-      <i class="fas fa-plus"></i> Add
-    </button>
-  </div>
-</div>
-
-
-<!--Discount table -->
-<table class="table table-striped">
-
-  <thead>
-    <tr>
-      <th scope="col">Code</th>
-      <th scope="col">Description</th>
-      <th scope="col">Percentage %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let discount of discounts">
-      <td>{{ discount.discountCode }}</td>
-      <td>{{ discount.discountDescription }}</td>
-      <td>{{ discount.discountPercentage }}</td>
-      <td>
-        <button class="btn btn-primary"
-          (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
-          style="margin-right: 4px;">
-          <i class="fas fa-pencil-alt"></i>
-        </button>
-
-        <button class="btn btn-danger" (click)="discount.discountID !== undefined && openDeleteDiscountModal(discount)">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="text-center" *ngIf="discounts.length === 0">
-  <h3>No discounts currently in your system.</h3>
-</div>
-
-
-<!-- Add/Edit Discount Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showDiscountModal}" [ngStyle]="{'display': showDiscountModal ? 'block' : 'none'}">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{editingDiscount ? 'Edit Discount' : 'Add Discount'}}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeDiscountModal()"></button>
-      </div>
-      <div class="modal-body">
-        <form #discountForm="ngForm" (ngSubmit)="submitDiscountForm(discountForm)">
-
-          <div class="mb-3">
-            <label for="discountCode" class="form-label">Discount Code</label>
-            <input type="text" class="form-control" id="discountCode" [(ngModel)]="currentDiscount.discountCode"
-              name="discountCode" required disabled>
-          </div>
-
-          <div class="mb-3">
-            <label for="discountDescription" class="form-label">Discount Description</label>
-            <input type="text" class="form-control" id="discountDescription"
-              [(ngModel)]="currentDiscount.discountDescription" name="discountDescription" required #discountDescriptionField="ngModel">
-            <div *ngIf="discountDescriptionField.invalid && discountDescriptionField.touched" class="alert alert-danger">
-              <div *ngIf="discountDescriptionField.errors?.['required']">Discount description is required.</div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="discountAmount" class="form-label">Discount Percentage Amount</label>
-            <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountPercentage"
-              name="discountAmount" required [min]="0.01" [max]="100" #discountAmountField="ngModel">
-            <div *ngIf="discountAmountField.invalid && discountAmountField.touched" class="alert alert-danger">
-              <div *ngIf="discountAmountField.errors?.['required']">Discount amount is required.</div>
-              <div *ngIf="discountAmountField.errors?.['min']">Discount amount cannot be zero.</div>
-              <div *ngIf="discountAmountField.errors?.['max']">Discount amount cannot be more than 100.</div>
-            </div>
-          </div>
-          
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeDiscountModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="discountForm.invalid" (click)="submitDiscountForm(discountForm)">
-          {{editingDiscount ? 'Save Changes' : 'Save'}}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Delete discount modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteDiscountModal}"
-  [ngStyle]="{'display': showDeleteDiscountModal ? 'block' : 'none'}">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Delete Confirmation</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteModal()"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this discount?
-        <p>Discount Code: {{ discountToDeleteDetails?.discountCode }}</p>
-        <p>Discount Description: {{ discountToDeleteDetails?.discountDescription }}</p>
-        <p>Discount Percentage Amount: {{ discountToDeleteDetails?.discountAmount }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="deleteDiscount()">Yes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Discount ---------------------------------------------------------------------------------------------------------------------------------------------------------->

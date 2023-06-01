@@ -14,11 +14,18 @@ export class DiscountComponent {
 
 constructor(private toastr : ToastrService, private router: Router,  private discountService: DiscountService) { }
 
+ngOnInit(): void {
+  this.loadDiscounts();
+}
 
-  // DISCOUNT------------------------------------------------------------------------------------------------------------------------------------------------------------//
-  //===================================================================================================================================================================.//
-
-
+async loadDiscounts(): Promise<void> {
+  try {
+    this.discounts = await this.discountService.getDiscounts();
+  } catch (error) {
+    console.error(error);
+    this.toastr.error('Error, please try again', 'Discount Table');
+  }
+}
   //Discount variables needed
   discounts: Discount[] = [];
   currentDiscount: Discount = new Discount();
@@ -95,12 +102,12 @@ constructor(private toastr : ToastrService, private router: Router,  private dis
             // Update the original Discount object with the changes made to the clone
             this.discounts[index] = this.currentDiscount;
           }
-          this.toastr.success('Successfully updated', 'Successful');
+          this.toastr.success('Successfully updated', 'Update');
         } else {
           // Add Discount
           const data = await this.discountService.addDiscount(this.currentDiscount);
           this.discounts.push(data);
-          this.toastr.success('Successfully added', 'Successful');
+          this.toastr.success('Successfully added', 'Add');
         }
         this.closeDiscountModal();
         if (!this.editingDiscount) {
@@ -119,7 +126,7 @@ constructor(private toastr : ToastrService, private router: Router,  private dis
         await this.discountService.deleteDiscount(this.discountToDelete);
         console.log(this.discountToDelete);
         this.discounts = this.discounts.filter(discount => discount.discountID !== this.discountToDelete);
-        this.toastr.success('Successfully deleted', 'Successful');
+        this.toastr.success('Successfully deleted', 'Delete');
       } catch (error) {
         console.error('Error deleting Discount:', error);
         this.toastr.error('Error, please try again', 'Delete');
@@ -129,4 +136,5 @@ constructor(private toastr : ToastrService, private router: Router,  private dis
   }
 
   // Discount END-----------------------------------------------------------------------------------------------------.>
+
 }

@@ -7,7 +7,6 @@ export class Wine {
   description: string;
   vintage: string;
   restockLimit: number;
-  imageFile: File | null; // Property to store the selected image file
   imageUrl: string;
   wineTastingNote: string;
   winePrice: number;
@@ -29,7 +28,6 @@ export class Wine {
     wineType: WineType = new WineType(),
     varietalID: number = 0,
     varietal: Varietal = new Varietal(),
-    imageFile: File | null = null // Add the parameter to the constructor
   ) {
     this.wineID = wineID;
     this.name = name;
@@ -43,7 +41,6 @@ export class Wine {
     this.wineType = wineType;
     this.varietalID = varietalID;
     this.varietal = varietal;
-    this.imageFile = imageFile; // Assign the parameter to the property
   }
 
   get wineTypeName(): string | undefined {
