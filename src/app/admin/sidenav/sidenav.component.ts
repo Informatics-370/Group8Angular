@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 })
 export class SidenavComponent {
   showWineSubnav = false;
+  showEventSubnav = false;
+
   sidebarOpen = false;
 
   toggleSidebar() {

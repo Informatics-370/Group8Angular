@@ -28,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarietalComponent } from './admin/varietal/varietal.component';
 import { TypeComponent } from './admin/type/type.component';
 import { DiscountComponent } from './admin/discount/discount.component';
+import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { DiscountComponent } from './admin/discount/discount.component';
     VarietalComponent,
     TypeComponent,
     DiscountComponent,
+    EarlyBirdComponent,
   ],
   imports: [
     BrowserModule,
