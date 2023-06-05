@@ -38,7 +38,7 @@
         <span>Inventory</span>
       </a>
     </li>
-    <li class="nav-item dropdown" (click)="showEventSubnav = !showEventSubnav">
+    <li class="nav-item" (click)="showEventSubnav = !showEventSubnav">
       <a class="nav-link">
         <i class="bi bi-calendar-event me-2"></i>
         <span>Event</span>
@@ -48,6 +48,16 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/event">
             <span>Event</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/eventtype">
+            <span>Type</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/eventprice">
+            <span>Price</span>
           </a>
         </li>
         <li class="nav-item">
@@ -70,12 +80,6 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" routerLink="/report" routerLinkActive="active">
-        <i class="bi bi-file-earmark-bar-graph me-2"></i>
-        <span>Report</span>
-      </a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" routerLink="/blacklist" routerLinkActive="active">
         <i class="bi bi-x-circle me-2"></i>
         <span>Blacklist</span>
@@ -93,6 +97,7 @@
         Employees
       </a>
     </li>
-  </ul>
-</div>
-
+    </ul>
+    </div>
+    
+       
