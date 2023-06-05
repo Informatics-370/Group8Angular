@@ -157,6 +157,7 @@ async submitWineForm(form: NgForm): Promise<void> {
       }  else {
         const createdWine = await this.wineService.addWine(formData);
         this.wines.push(createdWine);
+        console.log(createdWine);
         this.toastr.success('Wine has been added successfully.', 'Wine Form');
       }
 
