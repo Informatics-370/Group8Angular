@@ -13,6 +13,8 @@ import { VarietalComponent } from './admin/varietal/varietal.component';
 import { TypeComponent } from './admin/type/type.component';
 import { DiscountComponent } from './admin/discount/discount.component';
 import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
+import { EventTypeComponent } from './admin/event-type/event-type.component';
+import { EventPriceComponent } from './admin/event-price/event-price.component';
 
 
 
@@ -30,7 +32,9 @@ const routes: Routes = [
   {path: 'varietal', component: VarietalComponent},
   {path: 'type', component: TypeComponent},
   {path: 'discount', component: DiscountComponent},
-  {path: 'earlybird', component: EarlyBirdComponent}
+  {path: 'earlybird', component: EarlyBirdComponent},
+  {path: 'eventtype', component:EventTypeComponent},
+  {path: 'eventprice', component: EventPriceComponent},
 
 ];
 

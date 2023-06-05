@@ -29,6 +29,8 @@ import { VarietalComponent } from './admin/varietal/varietal.component';
 import { TypeComponent } from './admin/type/type.component';
 import { DiscountComponent } from './admin/discount/discount.component';
 import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
+import { EventTypeComponent } from './admin/event-type/event-type.component';
+import { EventPriceComponent } from './admin/event-price/event-price.component';
 
 
 @NgModule({
@@ -49,6 +51,8 @@ import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
     TypeComponent,
     DiscountComponent,
     EarlyBirdComponent,
+    EventTypeComponent,
+    EventPriceComponent,
   ],
   imports: [
     BrowserModule,

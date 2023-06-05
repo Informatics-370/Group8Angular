@@ -1,0 +1,118 @@
+<!-- EventType -->
+<!-- EventType button -->
+<div class="row align-items-center mb-3">
+    <div class="col-md-6">
+      <h2>Event Type</h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-success btn-sm" (click)="openAddEventTypeModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+  </div>
+  
+  <!--EventType table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let eventType of eventTypes">
+        <td>{{ eventType.eventTypeName }}</td>
+        <td>{{ eventType.eventDescription }}</td>
+        <td>
+          <button class="btn btn-primary"
+            (click)="eventType.eventTypeID !== undefined && openEditEventTypeModal(eventType.eventTypeID)"
+            style="margin-right: 4px;">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+  
+          <button class="btn btn-danger" (click)="eventType.eventTypeID !== undefined && openDeleteEventTypeModal(eventType)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="text-center" *ngIf="eventTypes.length === 0">
+    <h3>No event types currently in your system.</h3>
+  </div>
+  
+  <!-- Add/Edit EventType Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showEventTypeModal}" [ngStyle]="{'display': showEventTypeModal ? 'block' : 'none'}">
+    <!-- ... Same as your EarlyBird modal, but adapted for EventType ... -->
+  </div>
+  
+  <!-- Delete EventType modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteEventTypeModal}"
+  [ngStyle]="{'display': showDeleteEventTypeModal ? 'block' : 'none'}">
+    <!-- ... Same as your EarlyBird delete modal, but adapted for EventType ... -->
+  </div>
+  
+
+<!-- Add/Edit EventType Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showEventTypeModal}" [ngStyle]="{'display': showEventTypeModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{editingEventType ? 'Edit EventType' : 'Add EventType'}}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeEventTypeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #eventTypeForm="ngForm" (ngSubmit)="submitEventTypeForm(eventTypeForm)">
+            <div class="mb-3">
+              <label for="name" class="form-label">Event Type Name</label>
+              <input type="text" class="form-control" id="name" [(ngModel)]="currentEventType.eventTypeName"
+                name="name" required #name="ngModel">
+              <div *ngIf="name.invalid && name.touched" class="alert alert-danger">
+                <div *ngIf="name.errors?.['required']">Event Type Name is required.</div>
+              </div>
+            </div>
+  
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <input type="text" class="form-control" id="description" [(ngModel)]="currentEventType.eventDescription" name="description"
+                required #description="ngModel">
+              <div *ngIf="description.invalid && description.touched" class="alert alert-danger">
+                <div *ngIf="description.errors?.['required']">Description is required.</div>
+              </div>
+            </div>
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeEventTypeModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="eventTypeForm.invalid">{{editingEventType ? 'Save Changes' : 'Save'}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Delete EventType modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteEventTypeModal}"
+  [ngStyle]="{'display': showDeleteEventTypeModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteEventTypeModal()"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this Event Type?
+        <p></p>
+        <p>ID: {{ eventTypeToDeleteDetails?.eventTypeID }}</p>
+        <p>Name: {{ eventTypeToDeleteDetails?.eventTypeName }}</p>
+        <p>Description: {{ eventTypeToDeleteDetails?.eventDescription }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteEventTypeModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteEventType()">Yes</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  
