@@ -79,6 +79,7 @@ wineToDeleteDetails: any;
 wineToDelete: any = null;
 selectedFile: File | null = null;
 
+
 wineRestockLimitField = new FormControl('', [
   Validators.required,
   Validators.min(1),
@@ -86,13 +87,18 @@ wineRestockLimitField = new FormControl('', [
   Validators.pattern(/^\d+$/)
 ]);
 
-//save wine picture
+
 onFileSelected(event: Event): void {
   const target = event.target as HTMLInputElement;
   if (target.files !== null) {
     this.selectedFile = target.files[0];
   }
 }
+
+getObjectURL(file: File): string {
+  return URL.createObjectURL(file);
+}
+
 
 // Modal-related methods
 openAddWineModal() {
@@ -146,6 +152,10 @@ async submitWineForm(form: NgForm): Promise<void> {
         }
       }
 
+      if (this.selectedFile) {
+        formData.append('File', this.selectedFile);
+      }
+
       if (this.editingWine) {
         await this.wineService.updateWine(this.currentWine.wineID!, formData);
         const updatedWine = await this.wineService.getWine(this.currentWine.wineID!); // Fetch the updated wine.
@@ -154,7 +164,7 @@ async submitWineForm(form: NgForm): Promise<void> {
           this.wines[index] = updatedWine; // Update the wine in the wines array.
         }
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
-      }  else {
+      } else {
         const createdWine = await this.wineService.addWine(formData);
         this.wines.push(createdWine);
         console.log(createdWine);

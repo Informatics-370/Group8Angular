@@ -18,6 +18,7 @@
   <thead>
     <tr>
       <!-- <th scope="col">ID</th> -->
+      <th scope="col">Image</th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
       <th scope="col">Vintage</th>
@@ -30,14 +31,19 @@
   </thead>
   <tbody>
     <tr *ngFor="let wine of wines">
-      <td>{{ wine.name }}</td>
-      <td>{{ wine.description }}</td>
-      <td>{{ wine.vintage }}</td>
-      <td>{{ getVarietalName(wine.varietalID) }}</td> <!-- Added Varietal data -->
-      <td>{{ getWinetypeName(wine.wineTypeID) }}</td> <!-- Added Type data -->
-      <td>{{ wine.restockLimit }}</td>
-      <td>{{ wine.winePrice }}</td>
       <td>
+        <div *ngIf="wine.filePath" class="image-container mb-3">
+          <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+        </div>
+      </td>
+      <td class="align-middle">{{ wine.name }}</td>
+      <td class="align-middle">{{ wine.description }}</td>
+      <td class="align-middle">{{ wine.vintage }}</td>
+      <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td> <!-- Added Varietal data -->
+      <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td> <!-- Added Type data -->
+      <td class="align-middle">{{ wine.restockLimit }}</td>
+      <td class="align-middle">{{ wine.winePrice }}</td>
+      <td class="align-middle">
         <button class="btn btn-primary" (click)="wine.wineID !== undefined && openEditWineModal(wine.wineID)"
           style="margin-right: 4px;">
           <i class="fas fa-pencil-alt"></i>
@@ -150,7 +156,15 @@
               <div *ngIf="wineVarietalField.errors?.['required']">Wine varietal is required.</div>
             </div>
           </div>
-                    
+                   
+          <div class="mb-3">
+            <label for="wineImage" class="form-label">Wine Image</label>
+            <input type="file" class="form-control" id="wineImage" (change)="onFileSelected($event)">
+          </div>
+
+          <div *ngIf="selectedFile" class="mb-3">
+            <img [src]="getObjectURL(selectedFile)" alt="Selected Image" class="img-thumbnail">
+          </div>
 
         </form>
       </div>
