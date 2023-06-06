@@ -18,10 +18,11 @@ import { SidenavComponent } from './admin/sidenav/sidenav.component';
 import { VatComponent } from './admin/vat/vat.component';
 
 //ClientModule
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivileges.component';
 import { EmployeeComponent } from './admin/employee/employee.component';
 
+//Successfull and error message popups
 import { ToastrModule } from 'ngx-toastr';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,6 +32,9 @@ import { DiscountComponent } from './admin/discount/discount.component';
 import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
 import { EventTypeComponent } from './admin/event-type/event-type.component';
 import { EventPriceComponent } from './admin/event-price/event-price.component';
+import { SpinnerComponent } from './admin/spinner/spinner.component';
+import { HttpInterceptorInterceptor } from './admin/http.interceptor';
+import { SpinnerService } from './admin/services/spinner.service';
 
 
 @NgModule({
@@ -53,6 +57,7 @@ import { EventPriceComponent } from './admin/event-price/event-price.component';
     EarlyBirdComponent,
     EventTypeComponent,
     EventPriceComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +71,15 @@ import { EventPriceComponent } from './admin/event-price/event-price.component';
       preventDuplicates: true,}),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    SpinnerService,
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: HttpInterceptorInterceptor,
+        multi: true
+    }
+    
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
