@@ -94,9 +94,9 @@ openEditEventModal(id: number) {
   if (eventToEdit) {
     this.tempEvent = {
       ...eventToEdit,
-      eventTypeName: this.getEventTypeName(eventToEdit.eventTypeID),
-      eventPriceAmount: this.getEventPriceAmount(eventToEdit.eventPriceID),
-      earlyBirdPercentage: this.getEarlyBirdPercentage(eventToEdit.earlyBirdID)
+      // eventTypeName: this.getEventTypeName(eventToEdit.eventTypeID),
+      // eventPriceAmount: this.getEventPriceAmount(eventToEdit.eventPriceID),
+      // earlyBirdPercentage: this.getEarlyBirdPercentage(eventToEdit.earlyBirdID)
     };
     this.currentEvent = this.tempEvent;
   }
@@ -141,6 +141,15 @@ async submitEventForm(form: NgForm): Promise<void> {
         console.log(this.currentEvent);
         const createdEvent = await this.eventService.addEvent(formData);
         this.events.push(createdEvent);
+
+        // Validate and format eventPrice
+        const eventPriceToAdd = new EventPrice();
+        eventPriceToAdd.amount = createdEvent.eventPrice;
+        eventPriceToAdd.date = createdEvent.eventDate;
+
+        const addedEventPrice = await this.eventPriceService.addEventPrice(eventPriceToAdd);
+        this.eventPrices.push(addedEventPrice);
+
         this.toastr.success('Event has been added successfully.', 'Event Form');
       }
 
@@ -152,6 +161,7 @@ async submitEventForm(form: NgForm): Promise<void> {
     }
   }
 }
+
 
 
 

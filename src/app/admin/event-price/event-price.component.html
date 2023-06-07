@@ -1,14 +1,17 @@
+<br>
+<br>
+
 <!-- EventPrice ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 <!-- EventPrice button -->
 <div class="row align-items-center mb-3">
     <div class="col-md-6">
-      <h2>Event Price</h2>
+      <h2>Event Price audit log</h2>
     </div>
-    <div class="col-md-6 text-end">
+    <!-- <div class="col-md-6 text-end">
       <button class="btn btn-success btn-sm" (click)="openAddEventPriceModal()">
         <i class="fas fa-plus"></i> Add
       </button>
-    </div>
+    </div> -->
 </div>
   
 <!--EventPrice table -->
@@ -23,7 +26,7 @@
       <tr *ngFor="let eventPrice of eventPrices">
         <td>{{ eventPrice.amount }}</td>
         <td>{{ eventPrice.date | date }}</td>
-        <td>
+        <!-- <td>
           <button class="btn btn-primary"
             (click)="eventPrice.eventPriceID !== undefined && openEditEventPriceModal(eventPrice.eventPriceID)"
             style="margin-right: 4px;">
@@ -33,7 +36,7 @@
           <button class="btn btn-danger" (click)="eventPrice.eventPriceID !== undefined && openDeleteEventPriceModal(eventPrice)">
             <i class="fas fa-trash-alt"></i>
           </button>
-        </td>
+        </td> -->
       </tr>
     </tbody>
 </table>
@@ -44,7 +47,7 @@
 <!-- EventPrice ---------------------------------------------------------------------------------------------------------------------------------------------------------->
 
 <!-- Add/Edit EventPrice Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showEventPriceModal}" [ngStyle]="{'display': showEventPriceModal ? 'block' : 'none'}">
+<!-- <div class="modal" tabindex="-1" [ngClass]="{'show': showEventPriceModal}" [ngStyle]="{'display': showEventPriceModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -79,7 +82,7 @@
     </div>
   </div>
   
-  <!-- Delete EventPrice modal -->
+  Delete EventPrice modal
   <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteEventPriceModal}"
     [ngStyle]="{'display': showDeleteEventPriceModal ? 'block' : 'none'}">
     <div class="modal-dialog">
@@ -101,4 +104,4 @@
       </div>
     </div>
   </div>
-  
+   -->
