@@ -16,6 +16,20 @@ import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
 import { EventTypeComponent } from './admin/event-type/event-type.component';
 import { EventPriceComponent } from './admin/event-price/event-price.component';
 
+//Client side
+import { ClientHomeComponent } from './customer/client-home/client-home.component';
+import { ClientEventsComponent } from './customer/client-events/client-events.component';
+import { ClientProductsComponent } from './customer/client-products/client-products.component';
+import { MyRefundsComponent } from './customer/my-refunds/my-refunds.component';
+import { OrdersComponent } from './customer/orders/orders.component';
+import { RefundRequestComponent } from './customer/refund-request/refund-request.component';
+import { TicketsComponent } from './customer/tickets/tickets.component';
+import { UserInformationComponent } from './customer/user-information/user-information.component';
+import { UsernameAndPasswordComponent } from './customer/username-and-password/username-and-password.component';
+import { WishlistComponent } from './customer/wishlist/wishlist.component';
+import { CartComponent } from './customer/cart/cart.component';
+
+
 
 
 const routes: Routes = [
@@ -34,7 +48,18 @@ const routes: Routes = [
   {path: 'discount', component: DiscountComponent},
   {path: 'earlybird', component: EarlyBirdComponent},
   {path: 'eventtype', component:EventTypeComponent},
-  {path: 'eventprice', component: EventPriceComponent},
+  {path: 'eventprice', component: EventPriceComponent}, //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS
+  {path: 'clienthome', component: ClientHomeComponent},
+  {path: 'clientevents', component: ClientEventsComponent},
+  {path: 'clientproducts', component: ClientProductsComponent},
+  {path: 'myrefunds', component: MyRefundsComponent},
+  {path: 'orders', component: OrdersComponent},
+  {path: 'refundrequest', component: RefundRequestComponent},
+  {path: 'tickets', component: TicketsComponent},
+  {path: 'userinformation', component: UserInformationComponent},
+  {path: 'usernameandpassword', component: UsernameAndPasswordComponent},
+  {path: 'wishlist', component: WishlistComponent},
+  {path: 'cart', component: CartComponent}
 
 ];
 

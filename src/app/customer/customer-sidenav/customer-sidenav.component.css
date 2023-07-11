@@ -1,0 +1,65 @@
+@import '~bootstrap-icons/font/bootstrap-icons.css';
+
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  background-color: #B55933;
+  color: white;
+  height: 100vh;
+}
+
+.sidenav .nav-link {
+  color: white;
+  border-radius: 0;
+  font-size: 20px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.sidenav .nav-link span {
+  display: inline-block;
+  transform-origin: center center;
+}
+
+.sidenav .nav-link:hover {
+  background-color: white;
+  color: #B55933;
+  border-radius: 0;
+}
+
+.sidenav .nav-link:hover span {
+  transform: translateX(5px);
+}
+
+.sidenav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%) scale(0.8);
+  width: 200%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.sidenav .nav-link:hover::before {
+  opacity: 1;
+  transform: translateX(10%);
+}
+
+.sidenav .nav-link:active {
+  color: #B55933;
+  background-color: white;
+  border-radius: 0;
+}
+
+.sidenav .active {
+  background-color: white;
+  color: #B55933;
+  border-radius: 0;
+}
