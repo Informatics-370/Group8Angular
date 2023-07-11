@@ -35,6 +35,19 @@ import { EventPriceComponent } from './admin/event-price/event-price.component';
 import { SpinnerComponent } from './admin/spinner/spinner.component';
 import { HttpInterceptorInterceptor } from './admin/http.interceptor';
 import { SpinnerService } from './admin/services/spinner.service';
+import { ClientHomeComponent } from './customer/client-home/client-home.component';
+import { ClientProductsComponent } from './customer/client-products/client-products.component';
+import { ClientEventsComponent } from './customer/client-events/client-events.component';
+import { UserInformationComponent } from './customer/user-information/user-information.component';
+import { UsernameAndPasswordComponent } from './customer/username-and-password/username-and-password.component';
+import { OrdersComponent } from './customer/orders/orders.component';
+import { TicketsComponent } from './customer/tickets/tickets.component';
+import { RefundRequestComponent } from './customer/refund-request/refund-request.component';
+import { MyRefundsComponent } from './customer/my-refunds/my-refunds.component';
+import { WishlistComponent } from './customer/wishlist/wishlist.component';
+import { NavbarComponent } from './customer/navbar/navbar.component';
+import { CustomerSidenavComponent } from './customer/customer-sidenav/customer-sidenav.component';
+import { CartComponent } from './customer/cart/cart.component';
 
 
 @NgModule({
@@ -58,6 +71,19 @@ import { SpinnerService } from './admin/services/spinner.service';
     EventTypeComponent,
     EventPriceComponent,
     SpinnerComponent,
+    ClientHomeComponent,
+    ClientProductsComponent,
+    ClientEventsComponent,
+    UserInformationComponent,
+    UsernameAndPasswordComponent,
+    OrdersComponent,
+    TicketsComponent,
+    RefundRequestComponent,
+    MyRefundsComponent,
+    WishlistComponent,
+    NavbarComponent,
+    CustomerSidenavComponent,
+    CartComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,7 @@
+.spaced-item {
+    margin-right: 20px;  /* adjust as necessary */
+  }
+
+  .spaced-item:last-child {
+    margin-right: 0;
+  }

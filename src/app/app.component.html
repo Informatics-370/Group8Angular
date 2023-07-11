@@ -1,4 +1,4 @@
-<div class="container-fluid sidebar-container">
+<div *ngIf="isAdmin" class="container-fluid sidebar-container">
   <div class="row">
     <div class="col-3 col-md-2">
       <app-sidenav></app-sidenav>
@@ -9,4 +9,18 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="!isAdmin">
+  <app-navbar></app-navbar>
+  <div class="row">
+    <div class="col-3 col-md-2">
+      <app-customer-sidenav></app-customer-sidenav>
+    </div>
+    <div class="col-9 col-md-10">
+      <router-outlet></router-outlet>
+      <app-spinner></app-spinner>
+    </div>
+  </div>
+</div>
+
 
