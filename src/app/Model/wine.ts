@@ -4,9 +4,9 @@ import { Varietal } from "./varietal";
 export class Wine {
   wineID: number;
   name: string;
-  description: string;
+  // description: string;
   vintage: string;
-  restockLimit: number;
+  // restockLimit: number;
   filePath: string; 
   wineTastingNote: string;
   winePrice: number;
@@ -31,9 +31,9 @@ export class Wine {
   ) {
     this.wineID = wineID;
     this.name = name;
-    this.description = description;
+    // this.description = description;
     this.vintage = vintage;
-    this.restockLimit = restockLimit;
+    // this.restockLimit = restockLimit;
     this.filePath = filePath;
     this.wineTastingNote = wineTastingNote;
     this.winePrice = winePrice;
