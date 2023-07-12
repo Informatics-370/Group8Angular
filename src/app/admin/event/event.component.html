@@ -1,3 +1,6 @@
+<br>
+<br>
+
 <!-- Event Table -->
 <div class="row align-items-center mb-3">
     <div class="col-md-6">
@@ -18,9 +21,12 @@
         <th scope="col">Date</th>
         <th scope="col">Tickets Available</th>
         <th scope="col">Tickets Sold</th>
-        <th scope="col">Price (ZAR)</th>
-        <th scope="col">Event Type</th>
-        <th scope="col">Early Bird Discount (%)</th>
+       <th scope="col">Price (ZAR)</th>
+
+        <!-- <th scope="col">Event Type</th>
+        <th scope="col">Early Bird Discount (%)</th>  -->
+
+
         <th scope="col"></th>
       </tr>
     </thead>
@@ -31,9 +37,11 @@
         <td>{{ event.eventDate | date:'short' }}</td>
         <td>{{ event.tickets_Available }}</td>
         <td>{{ event.tickets_Sold }}</td>
-        <td>{{ event.eventPrice.amount }}</td>
-        <td>{{ event.eventTypeName }}</td>
-        <td>{{ event.earlyBirdPercentage }}</td>
+         <td>{{ event.eventPrice }}</td>
+
+        <!-- <td>{{ event.eventTypeName }}</td>
+        <td>{{ event.earlyBirdPercentage }}</td> -->
+
         <td>
           <button class="btn btn-primary" (click)="event.eventID !== undefined && openEditEventModal(event.eventID)"
             style="margin-right: 4px;">
@@ -75,8 +83,8 @@
 
         <div class="mb-3">
           <label for="eventDescription" class="form-label">Event Description</label>
-          <input type="text" class="form-control" id="eventDescription" [(ngModel)]="currentEvent.description"
-            name="eventDescription" required #eventDescriptionField="ngModel">
+          <textarea type="text" class="form-control" id="eventDescription" [(ngModel)]="currentEvent.description"
+            name="eventDescription" required #eventDescriptionField="ngModel"></textarea>
           <div *ngIf="eventDescriptionField.invalid && eventDescriptionField.touched" class="alert alert-danger">
             <div *ngIf="eventDescriptionField.errors?.['required']">Event description is required.</div>
           </div>
@@ -101,35 +109,18 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="eventType" class="form-label">Event Type</label>
-            <select class="form-control" id="eventType" [(ngModel)]="currentEvent.eventType.eventTypeID" name="eventType" required #eventTypeField="ngModel">
-              <option *ngFor="let eventType of eventTypes" [value]="eventType.eventTypeID">{{ eventType.eventTypeName }}</option>
-            </select>
-            <div *ngIf="eventTypeField.invalid && eventTypeField.touched" class="alert alert-danger">
-              <div *ngIf="eventTypeField.errors?.['required']">Event type is required.</div>
-            </div>
-          </div>
+            
           
           <div class="mb-3">
             <label for="eventPrice" class="form-label">Event Price</label>
-            <select class="form-control" id="eventPrice" [(ngModel)]="currentEvent.eventPrice.eventPriceID" name="eventPrice" required #eventPriceField="ngModel">
-              <option *ngFor="let eventPrice of eventPrices" [value]="eventPrice.eventPriceID">{{ eventPrice.amount }}</option>
-            </select>
+            <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.eventPrice" name="eventPrice" required #eventPriceField="ngModel">
             <div *ngIf="eventPriceField.invalid && eventPriceField.touched" class="alert alert-danger">
-              <div *ngIf="eventPriceField.errors?.['required']">Event price is required.</div>
+                <div *ngIf="eventPriceField.errors?.['required']">Event price is required.</div>
             </div>
-          </div>
+        </div>
+        
           
-          <div class="mb-3">
-            <label for="earlyBirdPercentage" class="form-label">Early Bird Discount (%)</label>
-            <select class="form-control" id="earlyBirdPercentage" [(ngModel)]="currentEvent.earlyBird.earlyBirdID" name="earlyBirdPercentage" required #earlyBirdPercentageField="ngModel">
-              <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{ earlyBird.percentage }}</option>
-            </select>
-            <div *ngIf="earlyBirdPercentageField.invalid && earlyBirdPercentageField.touched" class="alert alert-danger">
-              <div *ngIf="earlyBirdPercentageField.errors?.['required']">Early bird discount is required.</div>
-            </div>
-          </div>
+        
           
 
       </form>
@@ -171,4 +162,5 @@
   </div>
   
   <!-- Event END -->
-  
+
+ 
