@@ -17,9 +17,8 @@ export class VarietalComponent {
 
   ngOnInit(): void {
     this.loadVarietals();
-    
   }
-  //Varietal variables needed
+
   varietals: Varietal[] = [];
   currentVarietal: Varietal = new Varietal();
   showVarietalModal: boolean = false;
@@ -37,7 +36,6 @@ export class VarietalComponent {
     }
   }
 
-  // Modal-related methods
   openAddVarietalModal() {
     this.editingVarietal = false;
     this.currentVarietal = new Varietal();
@@ -45,13 +43,10 @@ export class VarietalComponent {
   }
 
   openEditVarietalModal(id: number) {
-    console.log('Opening edit varietal modal for ID:', id);
     this.editingVarietal = true;
-    // We need to make a deep copy of the varietal, not reference the same object
     this.currentVarietal = JSON.parse(JSON.stringify(this.varietals.find(varietal => varietal.varietalID === id)!));
     this.showVarietalModal = true;
   }
-  
 
   closeVarietalModal() {
     this.showVarietalModal = false;
@@ -59,7 +54,6 @@ export class VarietalComponent {
 
   openDeleteVarietalModal(varietal: any): void {
     this.varietalToDelete = varietal.VarietalID;
-    console.log("Varietal : ", this.varietalToDelete)
     this.varietalToDeleteDetails = varietal;
     this.showDeleteVarietalModal = true;
   }
@@ -68,50 +62,44 @@ export class VarietalComponent {
     this.showDeleteVarietalModal = false;
   }
 
-  // CRUD Varietal
-
-  // Create and Edit Varietal
- async submitVarietalForm(form: NgForm): Promise<void> {
-  console.log('Submitting form with editingVarietal flag:', this.editingVarietal);
-  if (form.valid) {
-    try {
-      if (this.editingVarietal) {
-        // Update Varietal
-        await this.varietalService.updateVarietal(this.currentVarietal.varietalID!, this.currentVarietal);
-        const index = this.varietals.findIndex(varietal => varietal.varietalID === this.currentVarietal.varietalID);
-        if (index !== -1) {
-          this.varietals[index] = this.currentVarietal;
+  async submitVarietalForm(form: NgForm): Promise<void> {
+    if (form.valid) {
+      try {
+        if (this.editingVarietal) {
+          await this.varietalService.updateVarietal(this.currentVarietal.varietalID!, this.currentVarietal);
+          const index = this.varietals.findIndex(varietal => varietal.varietalID === this.currentVarietal.varietalID);
+          if (index !== -1) {
+            this.varietals[index] = this.currentVarietal;
+          }
+          this.toastr.success('Varietal has been updated successfully.', 'Successful');
+        } else {
+          const data = await this.varietalService.addVarietal(this.currentVarietal);
+          this.varietals.push(data);
+          this.toastr.success('Varietal has been added successfully.', 'Successful');
         }
-        // Toastr success message for update
-        this.toastr.success('Varietal has been updated successfully.', 'Successful');
-      } else {
-        // Add Varietal
-        const data = await this.varietalService.addVarietal(this.currentVarietal);
-        this.varietals.push(data);
-        // Toastr success message for addition
-        this.toastr.success('Varietal has been added successfully.', 'Successful');
+        this.closeVarietalModal();
+        if (!this.editingVarietal) {
+          form.resetForm();
+        }
+      } catch (error) {
+        console.error(error);
+        this.toastr.error('An error occurred, please try again.', 'Error');
       }
-      this.closeVarietalModal();
-      if (!this.editingVarietal) {
-        form.resetForm();
-      }
-    } catch (error) {
-      console.error(error);
-      // Toastr error message
-      this.toastr.error('An error occurred, please try again.', 'Error');
     }
   }
-}
 
-
-  // Delete Varietal
   async deleteVarietal(): Promise<void> {
-      // Delete the varietal if there are no referencing wines
+    try {
       await this.varietalService.deleteVarietal(this.varietalToDeleteDetails.varietalID);
       this.varietals = this.varietals.filter(varietal => varietal.varietalID !== this.varietalToDeleteDetails.varietalID);
       this.closeDeleteVarietalModal();
       this.toastr.success('Varietal deleted successfully.', 'Successful');
-      console.log("Varietal to delete is null, undefined, or has an undefined VarietalID property.");
+    } catch (error) {
+      console.error(error);
+    
+        this.toastr.warning('An error occurred, varietal referenced by wine.', 'Error');
+      
+      this.closeDeleteVarietalModal();
     }
   }
-  
+}

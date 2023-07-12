@@ -22,6 +22,8 @@ import { Validators } from '@angular/forms';
 export class WineComponent implements OnInit {
 
   tempWine: Wine = new Wine();
+ 
+
   constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService) { }
 
   ngOnInit(): void {
@@ -36,12 +38,15 @@ export class WineComponent implements OnInit {
 
   async loadWines(): Promise<void> {
     try {
-      this.wines = await this.wineService.getWines();
+      this.allWines = await this.wineService.getWines();
+      this.filterWines();
     } catch (error) {
       console.error(error);
       this.toastr.error('Error, please try again', 'Wine Table');
     }
   }
+
+  
   async loadVarietals(): Promise<void> {
     try {
       this.varietals = await this.varietalService.getVarietals();
@@ -70,7 +75,8 @@ export class WineComponent implements OnInit {
 
   //Wine----------------------------------------------------------------------------------------------------------------------------.>
   // Wine variables needed
-wines: Wine[] = [];
+  allWines: Wine[] = [];
+  wines: Wine[] = [];
 currentWine: Wine = new Wine();
 showWineModal: boolean = false;
 editingWine: boolean = false;
@@ -78,6 +84,8 @@ showDeleteWineModal = false;
 wineToDeleteDetails: any;
 wineToDelete: any = null;
 selectedFile: File | null = null;
+searchQuery: string = '';
+
 
 
 wineRestockLimitField = new FormControl('', [
@@ -102,9 +110,13 @@ getObjectURL(file: File): string {
 
 // Modal-related methods
 openAddWineModal() {
-  this.editingWine = false;
-  this.currentWine = new Wine();
-  this.showWineModal = true;
+  if (this.varietals.length === 0 || this.winetypes.length === 0) {
+    this.toastr.warning('Please add varietal and wine type before adding a wine.', 'Wine Form');
+  } else {
+    this.editingWine = false;
+    this.currentWine = new Wine();
+    this.showWineModal = true;
+  }
 }
 
 openEditWineModal(id: number) {
@@ -164,6 +176,7 @@ async submitWineForm(form: NgForm): Promise<void> {
           this.wines[index] = updatedWine; // Update the wine in the wines array.
         }
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
+        this.filterWines(); // Call filterWines() after adding/updating a wine
       } else {
         const createdWine = await this.wineService.addWine(formData);
         this.wines.push(createdWine);
@@ -201,6 +214,24 @@ async deleteWine(): Promise<void> {
     this.toastr.error('An error occurred, please try again.', 'Error');
   }
 }
+
+filterWines(): void {
+  if (this.searchQuery.trim() !== '') {
+    const query = this.searchQuery.toLowerCase().trim();
+    this.wines = this.allWines.filter(wine =>
+      wine.name.toLowerCase().includes(query) ||
+      wine.vintage.toString().includes(query) ||
+      wine.varietalID.toString().includes(query) ||
+      wine.wineTypeID.toString().includes(query) ||
+      wine.winePrice.toString().includes(query)
+    );
+  } else {
+    this.wines = [...this.allWines]; // if searchQuery is empty, show all wines
+  }
+}
+
+
+
 
 // Wine END-----------------------------------------------------------------------------------------------------.>
 

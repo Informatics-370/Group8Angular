@@ -2,10 +2,19 @@
 <br>
 <!-- Wine --------------------------------------------------------------------------------------------------------------------->
 
+
+
 <!-- Wine Table -->
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
     <h2>Wine</h2>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search Wines" [(ngModel)]="searchQuery" (input)="filterWines()">
+      </div>
+    </div>
+    
   </div>
   <div class="col-md-6 text-end">
     <button class="btn btn-success btn-sm" (click)="openAddWineModal()">
@@ -20,11 +29,11 @@
       <!-- <th scope="col">ID</th> -->
       <th scope="col">Image</th>
       <th scope="col">Name</th>
-      <th scope="col">Description</th>
+      <!-- <th scope="col">Description</th> -->
       <th scope="col">Vintage</th>
       <th scope="col">Varietal</th>
       <th scope="col">Type</th>
-      <th scope="col">Restock Limit</th>
+      <!-- <th scope="col">Restock Limit</th> -->
       <th scope="col">Price (ZAR)</th>
       <th scope="col"></th>
     </tr>
@@ -37,11 +46,11 @@
         </div>
       </td>
       <td class="align-middle">{{ wine.name }}</td>
-      <td class="align-middle">{{ wine.description }}</td>
+      <!-- <td class="align-middle">{{ wine.description }}</td> -->
       <td class="align-middle">{{ wine.vintage }}</td>
       <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td> <!-- Added Varietal data -->
       <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td> <!-- Added Type data -->
-      <td class="align-middle">{{ wine.restockLimit }}</td>
+      <!-- <td class="align-middle">{{ wine.restockLimit }}</td> -->
       <td class="align-middle">{{ wine.winePrice }}</td>
       <td class="align-middle">
         <button class="btn btn-primary" (click)="wine.wineID !== undefined && openEditWineModal(wine.wineID)"
@@ -83,14 +92,14 @@
             </div>
           </div>          
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="wineDescription" class="form-label">Wine Description</label>
-            <input type="text" class="form-control" id="wineDescription" [(ngModel)]="currentWine.description"
-              name="wineDescription" required #wineDescriptionField="ngModel">
+            <textarea type="text" class="form-control" id="wineDescription" [(ngModel)]="currentWine.description"
+              name="wineDescription" required #wineDescriptionField="ngModel"></textarea>
             <div *ngIf="wineDescriptionField.invalid && wineDescriptionField.touched" class="alert alert-danger">
               <div *ngIf="wineDescriptionField.errors?.['required']">Wine description is required.</div>
             </div>
-          </div>
+          </div> -->
           
           <div class="mb-3">
             <label for="wineVintage" class="form-label">Wine Vintage</label>
@@ -101,7 +110,7 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="wineRestockLimit" class="form-label">Restock Limit</label>
             <input type="text" class="form-control" id="wineRestockLimit" [(ngModel)]="currentWine.restockLimit" 
             name="wineRestockLimit" required pattern="^[0-9]+$" #wineRestockLimitField="ngModel">
@@ -109,14 +118,14 @@
               <div *ngIf="wineRestockLimitField.errors?.['required']">Restock limit is required.</div>
               <div *ngIf="wineRestockLimitField.errors?.['pattern']">Restock limit must be a whole number.</div>
             </div>
-          </div>
+          </div> -->
           
           
 
           <div class="mb-3">
             <label for="wineTastingNote" class="form-label">Wine Tasting Note</label>
-            <input type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
-              name="wineTastingNote" required #wineTastingNoteField="ngModel">
+            <textarea type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
+              name="wineTastingNote" required #wineTastingNoteField="ngModel"></textarea>
             <div *ngIf="wineTastingNoteField.invalid && wineTastingNoteField.touched" class="alert alert-danger">
               <div *ngIf="wineTastingNoteField.errors?.['required']">Wine tasting note is required.</div>
             </div>
@@ -190,8 +199,8 @@
       </div>
       <div class="modal-body">
         Are you sure you want to delete this wine?
+        <p></p>
         <p>Wine Name: {{ wineToDeleteDetails?.name }}</p>
-        <p>Wine Description: {{ wineToDeleteDetails?.description }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteWineModal()">No</button>

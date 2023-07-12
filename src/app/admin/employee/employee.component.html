@@ -66,6 +66,7 @@
               <label for="name" class="form-label">First Name:</label>
               <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="Name" required pattern="^[A-Za-z]+$">
               <div *ngIf="employeeForm.controls['Name'].invalid && employeeForm.controls['Name'].touched" class="alert alert-danger">
+                
                 <div *ngIf="employeeForm.controls['Name'].errors?.['required']">First Name is required.</div>
                 <div *ngIf="employeeForm.controls['Name'].errors?.['pattern']">First Name should not contain numerical values.</div>
               </div>
