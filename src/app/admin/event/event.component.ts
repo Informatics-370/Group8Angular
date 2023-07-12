@@ -94,10 +94,9 @@ openEditEventModal(id: number) {
   if (eventToEdit) {
     this.tempEvent = {
       ...eventToEdit,
-      // eventTypeName: this.getEventTypeName(eventToEdit.eventTypeID),
-      // eventPriceAmount: this.getEventPriceAmount(eventToEdit.eventPriceID),
-      // earlyBirdPercentage: this.getEarlyBirdPercentage(eventToEdit.earlyBirdID)
+      imagePath: eventToEdit.imagePath,
     };
+    this.currentEvent = this.tempEvent;
     this.currentEvent = this.tempEvent;
   }
   this.showEventModal = true;

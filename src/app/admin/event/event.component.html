@@ -16,32 +16,25 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th scope="col">Image</th>
         <th scope="col">Name</th>
         <th scope="col">Description</th>
         <th scope="col">Date</th>
         <th scope="col">Tickets Available</th>
         <th scope="col">Tickets Sold</th>
        <th scope="col">Price (ZAR)</th>
-
-        <!-- <th scope="col">Event Type</th>
-        <th scope="col">Early Bird Discount (%)</th>  -->
-
-
         <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let event of events">
+        <td><img [src]="event.imagePath" alt="{{ event.eventName }}'s Image" width="140" height="100"></td>
         <td>{{ event.eventName }}</td>
         <td>{{ event.description }}</td>
         <td>{{ event.eventDate | date:'short' }}</td>
         <td>{{ event.tickets_Available }}</td>
         <td>{{ event.tickets_Sold }}</td>
          <td>{{ event.eventPrice }}</td>
-
-        <!-- <td>{{ event.eventTypeName }}</td>
-        <td>{{ event.earlyBirdPercentage }}</td> -->
-
         <td>
           <button class="btn btn-primary" (click)="event.eventID !== undefined && openEditEventModal(event.eventID)"
             style="margin-right: 4px;">
@@ -120,7 +113,10 @@
         </div>
         
           
-        
+        <div class="mb-3">
+          <label for="imagePath" class="form-label">Image Path</label>
+          <input type="text" class="form-control" id="imagePath" [(ngModel)]="currentEvent.imagePath" name="imagePath">
+        </div>
           
 
       </form>

@@ -11,14 +11,7 @@ export class Event {
     tickets_Sold: number;
     description: string;
     eventPrice : number;
-    // image_URL: string;
-    // eventPriceID: number;
-    // eventPrice: EventPrice;
-    // eventTypeID: number;
-    // eventType: EventType;
-    // // bookings: Booking[];
-    // earlyBirdID: number;
-    // earlyBird: EarlyBird;
+    imagePath: string;
 
     constructor(
         eventID: number = 0,
@@ -27,15 +20,8 @@ export class Event {
         tickets_Available: number = 0,
         tickets_Sold: number = 0,
         description: string = '',
-        eventPrice : number= 0
-        // image_URL: string = '',
-        // eventPriceID: number = 0,
-        // eventPrice: EventPrice = new EventPrice(),
-        // eventTypeID: number = 0,
-        // eventType: EventType = new EventType(),
-        // // bookings: Booking[] = [],
-        // earlyBirdID: number | null = null,
-        // earlyBird: EarlyBird | null = null,
+        eventPrice : number= 0,
+        imagePath: string = ''
     ) {
         this.eventID = eventID;
         this.eventName = eventName;
@@ -44,25 +30,7 @@ export class Event {
         this.tickets_Sold = tickets_Sold;
         this.description = description;
         this.eventPrice = eventPrice;
-        // this.image_URL = image_URL;
-        // this.eventPriceID = eventPriceID;
-        // this.eventPrice = eventPrice;
-        // this.eventTypeID = eventTypeID;
-        // this.eventType = eventType;
-        // // this.bookings = bookings;
-        // this.earlyBirdID = earlyBirdID;
-        // this.earlyBird = earlyBird;
+        this.imagePath = imagePath;
+
     }
-
-    // get eventTypeName(): string | undefined {
-    //     return this.eventType?.eventTypeName;
-    // }
-
-    // get eventPriceAmount(): number | undefined {
-    //     return this.eventPrice?.amount;
-    // }
-
-    // get earlyBirdPercentage(): number | undefined {
-    //     return this.earlyBird?.percentage;
-    // }
 }
