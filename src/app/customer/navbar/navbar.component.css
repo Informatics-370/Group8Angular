@@ -1,7 +1,16 @@
-.spaced-item {
-    margin-right: 20px;  /* adjust as necessary */
-  }
+#nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+}
 
-  .spaced-item:last-child {
-    margin-right: 0;
-  }
+.spaced-item {
+  margin-right: 20px;
+}
+
+.spaced-item:last-child {
+  margin-right: 0;
+}
