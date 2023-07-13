@@ -4,6 +4,71 @@
 <br>
 <div class="row align-items-center">
   <div class="col">
+    <h2>Inventory on Hand</h2>
+  </div>
+<div class="col text-end">    
+  <button class="btn btn-success" (click)="openAddInventoryModal()">
+    <i class="fas fa-plus"></i> Add
+  </button>
+</div>
+</div>
+
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
+
+<!--************************************************************ Table for View Inventory ******************************************************************************-->
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col" class="header-cell">Name</th>
+      <th scope="col" class="header-cell">Variental</th>    
+      <th scope="col" class="header-cell">Type</th>
+      <th scope="col" class="header-cell">Price</th>
+      <th scope="col" class="header-cell">Stock Limit</th>
+      <th scope="col" class="header-cell">Quantity on Hand</th>     
+    </tr>
+  </thead>
+  <tbody>      
+      <tr *ngFor="let x of inventory">
+        <td>{{ x.name }}</td>
+        <td>{{ x.varietal }}</td>
+        <td>{{ x.wineType }}</td>
+        <td>{{ x.winePrice }}</td>
+        <td>{{ x.stockLimit }}</td>
+        <td>{{ x.quantityOnHand }}</td>
+      <td>
+        <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.inventoryID !== undefined && openEditInventoryModal(x.inventoryID)">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn btn-danger" (click)="x.inventoryID!== undefined && openDeleteInventoryModal(x)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        <button>
+          <i class="bi bi-arrow-up-circle"></i>
+        </button>
+        <button>
+          <i class="bi bi-arrow-down-circle"></i>
+        </button>
+      </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="text-center" *ngIf="writeOffReason.length === 0">
+    <h3>No Inventory on hand in current system.</h3>
+  </div>
+
+<!--************************************************************ Table for View Inventory ******************************************************************************-->
+
+
+
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
+<br>
+<br>
+<div class="row align-items-center">
+  <div class="col">
     <h2>Write Off Reason</h2>
   </div>
 <div class="col text-end">    
@@ -14,6 +79,7 @@
 </div>
 
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
 
 
 <!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
