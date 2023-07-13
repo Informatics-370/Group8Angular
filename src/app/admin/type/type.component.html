@@ -62,8 +62,8 @@
 
           <div class="mb-3">
             <label for="winetypeDescription" class="form-label">Winetype Description</label>
-            <input type="text" class="form-control" id="winetypeDescription"
-              [(ngModel)]="currentWinetype.description" name="winetypeDescription" required #winetypeDescriptionField="ngModel">
+            <textarea type="text" class="form-control" id="winetypeDescription"
+              [(ngModel)]="currentWinetype.description" name="winetypeDescription" required #winetypeDescriptionField="ngModel"></textarea>
             <div *ngIf="winetypeDescriptionField.invalid && winetypeDescriptionField.touched" class="alert alert-danger">
               <div *ngIf="winetypeDescriptionField.errors?.['required']">Wine Type description is required.</div>
             </div>

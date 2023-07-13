@@ -1,1 +1,63 @@
-<p>client-products works!</p>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3">
+        <div class="col" *ngFor="let wine of wines">
+            <div class="card mb-3 shadow-sm">
+                <div class="row g-0">
+                    <div class="col-lg-4 col-md-12">
+                        <img src="{{ wine.filePath }}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-lg-8 col-md-12">
+                        <div class="card-body">
+                            <h4 class="card-title"><b>{{ wine.name }}</b></h4>
+                            <p class="card-text">R{{ wine.winePrice }}.00</p>
+                            <p></p>
+                             <!-- Description button -->
+                             <button class="btn-description" data-bs-toggle="modal" [attr.data-bs-target]="'#descriptionModal' + wine.wineID">Description</button>
+                             <p></p>
+                            <br>
+                            <div class="cart-icons">
+                                <i class="bi bi-cart-dash-fill" (click)="decrementCounter()"></i>
+                                <span class="mx-3">{{ counter }}</span>
+                                <i class="bi bi-cart-plus-fill" (click)="incrementCounter()"></i>
+                               
+                            </div>
+                            <br>
+                            <!-- Add to Cart button -->
+                            <button class="btn-custom" >Add to cart</button>
+                            <button class="btn-wishlist">Add to Wishlist</button>
+                            <br>
+                            
+
+                            <!-- Modal -->
+                            <div class="modal fade" [id]="'descriptionModal' + wine.wineID" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title" id="descriptionModalLabel">{{ wine.name }} Description</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h3><b>Vintage:</b></h3>
+                                            <p>{{ wine.vintage }}</p>
+                                            
+                                            <h3><b>Varietal:</b></h3>
+                                            <p>{{ wine.varietal.name }}</p>
+                                            <p>{{wine.varietal.description}}</p>
+
+                                            <h3><b>Wine type:</b></h3>
+                                            <p>{{ wine.wineType.name }}</p>
+                                            <p>{{ wine.wineType.description }}</p>
+
+                                            <h3><b>Tasting note</b></h3>
+                                            <p>{{ wine.wineTastingNote }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

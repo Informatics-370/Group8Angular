@@ -13,14 +13,12 @@
 <div *ngIf="!isAdmin">
   <app-navbar></app-navbar>
   <div class="row">
-    <div class="col-3 col-md-2">
+    <div class="col-3 col-md-2" *ngIf="showCustomerSideNav">
       <app-customer-sidenav></app-customer-sidenav>
     </div>
-    <div class="col-9 col-md-10">
+    <div [ngClass]="{'col-12': !showCustomerSideNav, 'col-9 col-md-10': showCustomerSideNav}">
       <router-outlet></router-outlet>
       <app-spinner></app-spinner>
     </div>
   </div>
 </div>
-
-
