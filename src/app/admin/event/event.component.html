@@ -112,12 +112,16 @@
             </div>
         </div>
         
-          
+  <!---------------------------------------------------------------------------------------------------------->        
         <div class="mb-3">
-          <label for="imagePath" class="form-label">Image Path</label>
-          <input type="text" class="form-control" id="imagePath" [(ngModel)]="currentEvent.imagePath" name="imagePath">
+          <label for="wineImage" class="form-label">Wine Image</label>
+          <input type="file" class="form-control" id="eventImage" (change)="onFileSelected($event)">
         </div>
-          
+
+        <div *ngIf="selectedFile" class="mb-3">
+          <img [src]="getObjectURL(selectedFile)" alt="Selected Image" class="img-thumbnail">
+        </div>
+  <!---------------------------------------------------------------------------------------------------------->  
 
       </form>
     </div>
@@ -129,10 +133,7 @@
   </div>
 </div>
 </div>
-
-
-  
-  
+ 
   
   <!-- Delete Event Modal -->
   <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteEventModal}"

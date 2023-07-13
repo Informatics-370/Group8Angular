@@ -21,6 +21,8 @@ import { EarlyBird } from 'src/app/Model/earlybird';
 })
 export class EventComponent {
 
+  selectedFile: File | null = null;
+
   tempEvent: Event = new Event();
   constructor(private toastr: ToastrService, private eventService: EventService, private eventTypeService: EventTypeService, private eventPriceService: EventPriceService, private earlyBirdService: EarlyBirdService) { }
   
@@ -128,6 +130,10 @@ async submitEventForm(form: NgForm): Promise<void> {
         }
       }
 
+      if (this.selectedFile) {
+        formData.append('ImagePath', this.selectedFile, this.selectedFile.name);
+    }
+
       if (this.editingEvent) {
         await this.eventService.updateEvent(this.currentEvent.eventID, formData);
         const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID); // Fetch the updated event.
@@ -161,9 +167,16 @@ async submitEventForm(form: NgForm): Promise<void> {
   }
 }
 
+getObjectURL(file: File): string {
+  return URL.createObjectURL(file);
+}
 
-
-
+onFileSelected(event: any) {
+  if (event.target.files && event.target.files[0]) {
+    this.selectedFile = event.target.files[0];
+    this.currentEvent.imagePath = this.selectedFile?.name ?? '';
+  }
+}
 
 async deleteEvent(): Promise<void> {
   try {

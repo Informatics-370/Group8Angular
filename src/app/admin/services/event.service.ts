@@ -34,4 +34,6 @@ export class EventService {
   async deleteEvent(id: number): Promise<any> {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
+
+  
 }
