@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 
@@ -9,7 +9,7 @@ import { Router, NavigationEnd } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent{
+export class AppComponent {
   isAdmin = false;
   showCustomerSideNav = false;
 
@@ -36,11 +36,23 @@ export class AppComponent{
           '/eventprice'
         ];
 
+        const custroutes = [
+          '/userinformation',
+          '/orders',
+          '/tickets',
+          '/myrefunds',
+          '/refundrequest',
+          '/wishlist',
+          '/usernameandpassword'
+
+        ]
+
         // Check if the new URL is part of the admin system
         this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
 
         // Check if the new URL is '/userinformation'
-        this.showCustomerSideNav = event.urlAfterRedirects === '/userinformation';
+        this.showCustomerSideNav = custroutes.some(route => event.urlAfterRedirects.startsWith(route));
+
       }
     });
   }
