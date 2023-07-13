@@ -114,7 +114,7 @@
         
   <!---------------------------------------------------------------------------------------------------------->        
         <div class="mb-3">
-          <label for="wineImage" class="form-label">Wine Image</label>
+          <label for="wineImage" class="form-label">Event Image</label>
           <input type="file" class="form-control" id="eventImage" (change)="onFileSelected($event)">
         </div>
 
@@ -147,6 +147,7 @@
         <div class="modal-body">
           Are you sure you want to delete this event?
           <br>
+          <p></p>
           <p>Event Name: {{ eventToDeleteDetails?.name }}</p>
           <p>Event Description: {{ eventToDeleteDetails?.description }}</p>
         </div>
