@@ -64,8 +64,8 @@
 
           <div class="mb-3">
             <label for="varietalDescription" class="form-label">Varietal Description</label>
-            <input type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
-              name="varietalDescription" required #descField="ngModel">
+            <textarea type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
+              name="varietalDescription" required #descField="ngModel"></textarea>
             <div *ngIf="descField.invalid && descField.touched" class="alert alert-danger">
               <div *ngIf="descField.errors?.['required']">Varietal description is required.</div>
             </div>

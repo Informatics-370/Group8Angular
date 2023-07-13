@@ -8,7 +8,7 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class CustomerSidenavComponent {
 
-  showSidebar: boolean = false;
+  showSidebar: boolean = true;
 
   constructor(private router: Router) {}
 

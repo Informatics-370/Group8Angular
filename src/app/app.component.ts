@@ -11,9 +11,10 @@ import { Router, NavigationEnd } from '@angular/router';
 
 export class AppComponent{
   isAdmin = false;
+  showCustomerSideNav = false;
+
 
   constructor(private router: Router) {
-
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // List of admin routes
@@ -34,12 +35,16 @@ export class AppComponent{
           '/eventtype',
           '/eventprice'
         ];
-    
+
         // Check if the new URL is part of the admin system
         this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
+
+        // Check if the new URL is '/userinformation'
+        this.showCustomerSideNav = event.urlAfterRedirects === '/userinformation';
       }
     });
   }
+
 
   toggleSidebar() {
     document.body.classList.toggle('sidebar-open');
