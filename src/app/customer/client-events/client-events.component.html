@@ -1,1 +1,23 @@
-<p>client-events works!</p>
+<div class="container-fluid">
+    <div class="row card-deck">
+      <div class="col-md-6 mb-4" *ngFor="let event of events">
+        <div class="card event-card">
+          <img class="card-img-top" [src]="event.imagePath" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ event.eventName }}</h5>
+            <p class="card-text">{{ event.description }}</p>
+            <p class="card-text"><small class="text-muted">{{ event.eventDate | date:'short' }}</small></p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Tickets Available: {{ event.tickets_Available }}</li>
+            <li class="list-group-item">Tickets Sold: {{ event.tickets_Sold }}</li>
+            <li class="list-group-item">Price: {{ event.eventPrice }} ZAR</li>
+          </ul>
+          <div class="card-footer text-center">
+            <button type="button" class="btn btn-primary buy-button">Buy Ticket</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
