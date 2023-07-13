@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { WriteOffReason } from 'src/app/Model/writeOffReason';
 import { WriteORService } from '../services/writeOffReason.service';
+import { InventoryService } from '../services/inventory.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Inventory } from 'src/app/Model/inventory';
 
 @Component({
   selector: 'app-inventory',
@@ -11,6 +13,18 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./inventory.component.css']
 })
 export class InventoryComponent implements OnInit{
+
+  // Inventory Variables
+    inventory: Inventory[] = [];
+    showInventoryModal: boolean = false;
+    editingInventory: boolean = false;
+    currentInventory: Inventory = new Inventory();
+    inventoryToDelete: any = null;
+    inventoryToDeleteDetails: any;
+    showDeleteInventoryModal = false;
+  // Inventory Variables
+
+  // Write Off Reasons Variables
     writeOffReason: WriteOffReason[] = [];
     showWORModal: boolean = false;
     editingWOR: boolean = false;
@@ -18,9 +32,10 @@ export class InventoryComponent implements OnInit{
     wORToDelete: any = null;
     wORToDeleteDetails: any;
     showDeleteWORModal = false;
-    showSelectorModal = false;
+    // Write Off Reasons Variables
+    
 
-    constructor(private writeORService: WriteORService, private router: Router, private toastr: ToastrService) {}
+    constructor(private writeORService: WriteORService, private router: Router, private toastr: ToastrService, private inventoryService: InventoryService) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
 
@@ -31,7 +46,7 @@ export class InventoryComponent implements OnInit{
 // **********************************************************When the page is called these methods are automatically called*************************************************
 
 
-// ****************** Methods to display the list of Write Off Reasons *****************************************************************************************************
+// ****************** Methods to display *****************************************************************************************************
 
 
     async loadWORs(): Promise<void> {
@@ -43,20 +58,101 @@ export class InventoryComponent implements OnInit{
       }
       };
 
-// ****************** Methods to display the list of Write Off Reasons *****************************************************************************************************
+      async loadIventory(): Promise<void> {
+        try {
+          this.inventory = await this.inventoryService.getFullInventory();
+        } catch (error) {
+          console.error(error);
+          this.toastr.error('Error, please try again', 'Inventory Table');
+        }
+        };
+
+// ****************** Methods to display *****************************************************************************************************
 
 
-//******************* Modal-related methods *********************************************************************************************************************************
+//******************* Inventory Modal-related methods *********************************************************************************************************************************
 
-openSelectorModal() {
-  this.showSelectorModal = true;
+openAddInventoryModal() {
+  this.editingInventory = false;
+  this.currentInventory = new Inventory();
+  this.showInventoryModal = true;
 }
 
-closeSelectorModal(): void {
-  this.showSelectorModal = false;
+closeInventoryModal() {
+  this.showInventoryModal = false;
 }
 
-//******************* Add/Edit Modal-related methods *********************************************************************************************************************************
+openEditInventoryModal(id: number) {
+  console.log('Opening edit Inventory modal for ID:', id);
+  this.editingInventory = true;
+
+  const originalInventory = this.inventory.find(x => x.inventoryID === id);
+    if (originalInventory) {
+      // Clone the original Inventory Details object and assign it to currentInventory
+      //this.currentInventory = {...originalInventory};
+    }
+
+    this.showInventoryModal = true;
+}
+
+async submitInventoryForm(form: NgForm): Promise<void> {
+  console.log('Submitting form with editing Inventory flag:', this.editingInventory);
+  if (form.valid) {
+    try {
+      if (this.editingInventory) {
+        // Update WriteOffReason 
+        await this.inventoryService.updateIventory(this.currentInventory.inventoryID!, this.currentInventory);
+        const index = this.inventory.findIndex(x => x.inventoryID === this.currentInventory.inventoryID);
+        if (index !== -1) {
+          this.inventory[index] = this.currentInventory;
+        }
+        this.toastr.success('Successfully updated', 'Write-Off Reason');
+      } else {
+        // Add WriteOffReason 
+        const data = await this.inventoryService.addIvetory(this.currentInventory);
+        this.inventory.push(data);
+        this.toastr.success('Successfully added', 'Inventory Reason');
+      }
+      this.closeWORModal();
+      if (!this.editingInventory) {
+        form.resetForm();
+      }
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error occurred, please try again', 'Write-Off Reason');
+      this.closeWORModal();
+    }
+  }
+}
+
+openDeleteInventoryModal(inv: any): void {
+  this.inventoryToDelete = inv.inventoryID;
+  console.log("Inventory : ", this.inventoryToDelete)
+  this.inventoryToDeleteDetails = inv;
+  this.showDeleteInventoryModal = true;
+}
+
+closeDeleteInventoryModal(): void {
+  this.showDeleteInventoryModal = false;
+}
+
+async deleteInventory(): Promise<void> {
+  if (this.inventoryToDeleteDetails && this.inventoryToDeleteDetails.inventoryID !== undefined) {
+    try{
+    await this.writeORService.deleteWriteOR(this.inventoryToDeleteDetails.inventoryID);
+    this.inventory = this.inventory.filter(x => x.inventoryID !== this.inventoryToDeleteDetails.inventoryID);
+    this.toastr.success('Successfully deleted', 'Write-Off Reason');
+  } catch (error) {
+    this.toastr.error('Deletion failed, please try again', 'Error');
+    console.log("Write off Reason to Delete is null, undefined, or has an undefined inventoryID property.");
+  }
+  this.closeDeleteInventoryModal();
+}
+}
+
+//******************* Inventory Modal-related methods *********************************************************************************************************************************
+
+//******************* Write off Reason Modal-related methods *********************************************************************************************************************************
 
 openAddWORModal() {
   this.editingWOR = false;
@@ -111,10 +207,6 @@ async submitWORForm(form: NgForm): Promise<void> {
   }
 }
 
-//******************* Add/Edit Modal-related methods *********************************************************************************************************************************
-
-
-//******************* Delete Modal-related methods *********************************************************************************************************************************
 
 openDeleteWORModal(writeOffR: any): void {
   this.wORToDelete = writeOffR.writeOff_ReasonID;
@@ -141,7 +233,7 @@ async deleteWOR(): Promise<void> {
 }
 }
 
-//******************* Delete Modal-related methods *********************************************************************************************************************************
+//******************* Write off Reason Modal-related methods *********************************************************************************************************************************
 
 
 //******************* Modal-related methods *********************************************************************************************************************************
