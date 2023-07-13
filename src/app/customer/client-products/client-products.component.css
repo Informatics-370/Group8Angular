@@ -2,86 +2,80 @@
 
 .card {
     border: none;
-    width: 500px; /* adjust as needed */
-    height: 300px; /* adjust as needed */
-    box-shadow: 0px 4px 15px rgba(181, 89, 51, 0.2); /* adjust as needed */
+    width: 100%; /* Adjust as needed */
+    height: 100%; /* Adjust as needed */
+    box-shadow: 0px 4px 15px rgba(181, 89, 51, 0.2); /* Adjust as needed */
   }
   
-  .cart-icons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 150px; /* adjust as needed */
+  #card-img {
+    margin-top: 30px; /* Adjust the margin top value as needed */
   }
   
-  .cart-icons .bi {
-    font-size: 24px; /* adjust as needed */
-    color: #B55933; /* replace 'blue' with the color you prefer */
-    
-  }
+  /* Rest of the CSS rules... */
+  
+.cart-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px; /* Adjust as needed */
+}
 
-  .cart-icons .bi:hover {
-    color: #B55933; /* The color when the cart is hovered */
-    transform: scale(1.2); /* Increase the size of the cart when hovered */
-    transition: all 0.3s ease; /* Transition effect */
-  }
-  
+.cart-icons .bi {
+  font-size: 24px; /* Adjust as needed */
+  color: #B55933; /* Replace 'blue' with the color you prefer */
+}
 
-  .btn-custom {
-    background-color: #B55933;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    margin-right: 8px;
-  }
-  
- 
-  
-  .btn-custom:hover {
-    background-color: #903D25;
-  }
-  
- 
-  .btn-wishlist {
-    background-color: white;
-    color: #B54E33;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    margin-right: 8px;
-  }
-  
-  .btn-wishlist:hover {
-    background-color: #F7F7F7;
-    border-color: #B55933 ;
-  }
+.cart-icons .bi:hover {
+  color: #B55933; /* The color when the cart is hovered */
+  transform: scale(1.2); /* Increase the size of the cart when hovered */
+  transition: all 0.3s ease; /* Transition effect */
+}
 
-  .row-cols-1.row-cols-md-3 > .col {
-    margin-bottom: 20px; /* Adjust the value as needed */
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
+.btn-custom {
+  background-color: #B55933;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-right: 8px;
+}
 
-  .btn-description {
-    background-color: white;
-    color: #B54E33;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    margin-right: 8px;
-    border-color: #903D25;
-  }
-  
- 
-  
-  .btn-description:hover {
-    background-color: #F7F7F7;
-    border-color: #B55933 ;
-  }
-  
-  
-  
-  
+.btn-custom:hover {
+  background-color: #903D25;
+}
+
+.btn-wishlist {
+  background-color: white;
+  color: #B54E33;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-right: 8px;
+}
+
+.btn-wishlist:hover {
+  background-color: #F7F7F7;
+  border-color: #B55933;
+}
+
+.row-cols-1.row-cols-md-3 > .col {
+  margin-bottom: 20px; /* Adjust the value as needed */
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-description {
+  background-color: white;
+  color: #B54E33;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-right: 8px;
+  border-color: #903D25;
+}
+
+.btn-description:hover {
+  background-color: #F7F7F7;
+  border-color: #B55933;
+}

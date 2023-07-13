@@ -106,6 +106,7 @@ openEditEventModal(id: number) {
 
 closeEventModal() {
   this.showEventModal = false;
+  this.ngOnInit();
 }
 
 openDeleteEventModal(event: any): void {
