@@ -24,7 +24,8 @@ export class EventComponent {
   selectedFile: File | null = null;
 
   tempEvent: Event = new Event();
-  minDate!: string;
+  minDateTime!: string;
+
 
   constructor(private toastr: ToastrService, private eventService: EventService, private eventTypeService: EventTypeService, private eventPriceService: EventPriceService, private earlyBirdService: EarlyBirdService) { }
   
@@ -36,17 +37,19 @@ export class EventComponent {
     } catch (error) {
       console.error(error);
     }
-    const today = new Date();
-    this.minDate = this.formatDate(today);
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Convert local time to UTC
+    this.minDateTime = now.toISOString().slice(0, 16);
+
   }
 
-  formatDate(date: Date): string {
+  formatDateTime(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
-
+  
   async loadEventData(): Promise<void> {
     this.events = await this.eventService.getEvents();
   }
