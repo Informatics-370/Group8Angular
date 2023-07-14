@@ -7,6 +7,32 @@
   #btnEvent{
     height: 100%;
     width: 100%;
- 
   }
   
+  .image-overlay {
+    position: relative;
+}
+
+.image-overlay .glassy-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Adjust as needed */
+    height: 60px; /* Adjust as needed */
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-overlay .glassy-background h1 {
+    margin: 0;
+    color: white;
+    text-align: center;
+    font-size: 2em;
+}
+
+
