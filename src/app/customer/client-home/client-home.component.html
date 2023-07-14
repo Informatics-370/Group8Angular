@@ -1,50 +1,66 @@
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="assets/vineyard2.jpg" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="assets/2.jpg" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="assets/1.jpg" class="d-block w-100" alt="...">
-      </div>
-      <div class="glassy-background">
-        <h1>The Promenade</h1>
-      </div>
-    <br/>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
   </div>
-
-  
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-4 p-0 image-overlay">
-        <img src="assets/wineglass2.png" class="img-fluid" alt="About Us Image">
-      </div>
-      <div class="col-sm-8 d-flex align-items-center">
-        <section id="about-us" class="py-5">
-          <h1 class="display-4 mb-4 text-center">Welcome to The Promenade</h1>
-          <p class="lead text-center">Indulge in a world of refined flavors and unforgettable experiences. At The Promenade, we curate moments that celebrate the art of fine wine, accompanied by exceptional catering and an extensive selection of drinks. Join us and let us awaken your senses, elevate your experiences, and create memories that will linger long after the last sip is taken.</p>
-        </section>
-      </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="assets/vineyard2.jpg" class="d-block w-100" alt="...">
     </div>
+    <!-- <div class="carousel-item">
+      <img src="assets/2.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="assets/1.jpg" class="d-block w-100" alt="...">
+    </div> -->
+  </div>
+  <div class="image-overlay">
+    <div class="overlay-text">
+      <h1>The Promenade</h1>
+    </div>
+  </div>
+  <br/>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>
 
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 p-0 image-overlay">
+      <img src="assets/wineglass2.png" class="img-fluid" alt="About Us Image">
+    </div>
+    <div class="col-sm-6 d-flex align-items-center">
+      <section id="about-us" class="py-5">
+        <h1 class="text-center">About Us</h1>
+        <br/>
+        <p class="lead text-center">Indulge in a world of refined flavors and unforgettable experiences. At The Promenade, we curate moments that celebrate the art of fine wine, accompanied by exceptional catering and an extensive selection of drinks. Join us and let us awaken your senses, elevate your experiences, and create memories that will linger long after the last sip is taken.</p>
+      </section>
+    </div>
+  </div>
+</div>
 
+<br/>
+<div class="container-fluid">
+  <div class="row no-gutters">
+    <div class="col-md-6">
+      <div class="image-container">
+        <img src="assets/ourwines.jpeg" alt="Image 1" class="foggy-image" >
+        <button class="main-button" routerLink="/clientproducts">WINES</button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="image-container">
+        <img src="assets/tastingevent.jpg" alt="Image 2" class="foggy-image">
+        <button class="main-button" routerLink="/clientevents">EVENTS</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  
-    

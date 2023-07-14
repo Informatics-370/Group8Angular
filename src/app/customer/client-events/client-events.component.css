@@ -1,28 +1,60 @@
+.row-heading {
+    background-color: #B55933;
+    padding: 20px 0;
+  }
+  
+  .row-heading h1 {
+    font-size: 4rem;
+    color: white;
+    text-align: center;
+  }
+
 .card-deck {
     margin: 15px;
-}
-
-.event-card {
+  }
+  
+  .event-card {
     height: 100%;
     display: flex;
     flex-direction: column;
-}
-
-.event-card .card-body {
+    border: none;
+    box-shadow: 0 0 10px rgba(105, 102, 102, 0.8);
+    border-radius: 10px; /* Add border radius for a rounded look */
+    overflow: hidden; /* Ensure content doesn't overflow */
+  }
+  
+  .event-card .card-body {
     flex: 1;
-}
-
-.event-card .card-title {
+    padding: 20px;
+    background-color: #f8f8f8;
+  }
+  
+  .event-card .card-title {
     font-size: 1.5em;
     font-weight: bold;
-}
-
-.event-card img {
-    object-fit: cover;  /* This will ensure images cover the area without distorting their aspect ratios */
-    height: 400px;  /* Adjust based on your needs */
+    margin-bottom: 10px;
+  }
+  
+  .event-card img {
+    object-fit: cover;
+    height: 400px;
     width: 100%;
-}
-
-.buy-button {
-    margin-top: 10px;
-}
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .buy-button {
+    margin-top: 20px;
+    background-color: #B55933;
+    border: none;
+  }
+  
+  .buy-button:hover {
+    background-color: #8B3B20;
+  }
+  
+  .card-footer {
+    background-color: #f8f8f8;
+    padding: 10px;
+  }
+  

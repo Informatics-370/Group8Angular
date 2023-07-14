@@ -25,4 +25,13 @@ export class ClientEventsComponent {
     this.events = await this.eventService.getEvents();
   }
 
+  formatDate(eventDate: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    };
+    return eventDate.toLocaleDateString('en-US', options);
+  }
+
 }

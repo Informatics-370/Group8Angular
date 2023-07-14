@@ -33,7 +33,7 @@ import { CartComponent } from './customer/cart/cart.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/wine', pathMatch: 'full' },
+  { path: '', redirectTo: '/clienthome', pathMatch: 'full' },
   { path: 'wine', component: WineComponent },
   { path: 'inventory', component: InventoryComponent },
   { path: 'event', component: EventComponent },
