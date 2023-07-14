@@ -42,7 +42,10 @@
     <tr *ngFor="let wine of wines">
       <td>
         <div *ngIf="wine.filePath" class="image-container mb-3">
-          <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+          &nbsp; 
+          &nbsp;
+          &nbsp;
+           <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
         </div>
       </td>
       <td class="align-middle">{{ wine.name }}</td>

@@ -24,15 +24,27 @@ export class EventComponent {
   selectedFile: File | null = null;
 
   tempEvent: Event = new Event();
+  minDate!: string;
+
   constructor(private toastr: ToastrService, private eventService: EventService, private eventTypeService: EventTypeService, private eventPriceService: EventPriceService, private earlyBirdService: EarlyBirdService) { }
   
   async ngOnInit(): Promise<void> {
+    
     try {
       await this.loadEventData();
       await this.loadDropdownData();
     } catch (error) {
       console.error(error);
     }
+    const today = new Date();
+    this.minDate = this.formatDate(today);
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
   async loadEventData(): Promise<void> {

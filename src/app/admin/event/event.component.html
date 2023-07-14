@@ -84,13 +84,15 @@
         </div>
 
         <div class="mb-3">
-          <label for="eventDate" class="form-label">Event Date</label>
-          <input type="date" class="form-control" id="eventDate" [(ngModel)]="currentEvent.eventDate"
-            name="eventDate" required #eventDateField="ngModel">
+          <label for="eventDate" class="form-label">Event Date and Time</label>
+          <input type="datetime-local" class="form-control" id="eventDate" [(ngModel)]="currentEvent.eventDate"
+            name="eventDate" required #eventDateField="ngModel" [min]="minDate">
           <div *ngIf="eventDateField.invalid && eventDateField.touched" class="alert alert-danger">
-            <div *ngIf="eventDateField.errors?.['required']">Event date is required.</div>
+            <div *ngIf="eventDateField.errors?.['required']">Event date and time are required.</div>
           </div>
         </div>
+        
+        
 
          <!-- Add the 'Tickets Available' field -->
          <div class="mb-3">
