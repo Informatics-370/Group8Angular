@@ -3,6 +3,10 @@ body, html {
   padding: 0;
 }
 
+.selector {
+  font-family: 'Cinzel Decorative', cursive;
+}
+
 h1 {
   font-size: 4rem;
   color: #B55933;

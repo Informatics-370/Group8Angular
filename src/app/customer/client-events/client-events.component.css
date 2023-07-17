@@ -3,6 +3,10 @@
     padding: 20px 0;
   }
   
+  .selector {
+    font-family: 'Cinzel Decorative', cursive;
+  }
+  
   .row-heading h1 {
     font-size: 4rem;
     color: white;
