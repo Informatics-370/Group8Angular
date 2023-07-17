@@ -28,6 +28,7 @@ import { UserInformationComponent } from './customer/user-information/user-infor
 import { UsernameAndPasswordComponent } from './customer/username-and-password/username-and-password.component';
 import { WishlistComponent } from './customer/wishlist/wishlist.component';
 import { CartComponent } from './customer/cart/cart.component';
+import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.component';
 
 
 
@@ -59,7 +60,8 @@ const routes: Routes = [
   {path: 'userinformation', component: UserInformationComponent},
   {path: 'usernameandpassword', component: UsernameAndPasswordComponent},
   {path: 'wishlist', component: WishlistComponent},
-  {path: 'cart', component: CartComponent}
+  {path: 'cart', component: CartComponent},
+  {path: 'customerfaq', component: CustomerFaqComponent}
 
 ];
 

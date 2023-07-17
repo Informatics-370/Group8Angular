@@ -48,6 +48,7 @@ import { WishlistComponent } from './customer/wishlist/wishlist.component';
 import { NavbarComponent } from './customer/navbar/navbar.component';
 import { CustomerSidenavComponent } from './customer/customer-sidenav/customer-sidenav.component';
 import { CartComponent } from './customer/cart/cart.component';
+import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.component';
 
 
 @NgModule({
@@ -84,6 +85,7 @@ import { CartComponent } from './customer/cart/cart.component';
     NavbarComponent,
     CustomerSidenavComponent,
     CartComponent,
+    CustomerFaqComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel+Decorative">
+<div class="container-fluid">
+    <div class="row row-heading">
+      <div class="col">
+        <br/>
+        <h1 class="selector">FAQ's</h1>
+      </div>
+    </div>
+  </div>
+<br>
+<br>
+<div *ngFor="let faq of faqs" class="faq-item">
+    <h3 class="question">{{ faq.question }}</h3>
+    <p class="answer">{{ faq.answer }}</p>
+  </div>
+  

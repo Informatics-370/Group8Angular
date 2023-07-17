@@ -13,6 +13,8 @@ import { UserInformationComponent } from './user-information/user-information.co
 import { UsernameAndPasswordComponent } from './username-and-password/username-and-password.component';
 import { WishlistComponent } from './wishlist/wishlist.component';
 import { CartComponent } from './cart/cart.component';
+import { CustomerFaqComponent } from './customer-faq/customer-faq.component';
+
 
 const routes: Routes = [
   {path: 'clienthome', component: ClientHomeComponent},
@@ -25,7 +27,9 @@ const routes: Routes = [
   {path: 'userinformation', component: UserInformationComponent},
   {path: 'usernameandpassword', component: UsernameAndPasswordComponent},
   {path: 'wishlist', component: WishlistComponent},
-  {path: 'cart', component: CartComponent}
+  {path: 'cart', component: CartComponent},
+  {path: 'customerfaq', component: CustomerFaqComponent}
+
 ];
 
 @NgModule({

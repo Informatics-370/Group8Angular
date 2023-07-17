@@ -14,3 +14,12 @@
 .spaced-item:last-child {
   margin-right: 0;
 } */
+
+
+.navbar-custom-links {
+  font-size: 1.2rem; /* Adjust the font size as needed */
+}
+
+.nav-item.spaced-item {
+  margin-right: 15px; /* Adjust the spacing between links as needed */
+}
