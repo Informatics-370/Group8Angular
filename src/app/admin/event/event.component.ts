@@ -134,6 +134,10 @@ closeDeleteEventModal(): void {
   this.showDeleteEventModal = false;
 }
 
+getEarlyBirdById(id: number): EarlyBird | undefined {
+  return this.earlyBirds.find(earlyBird => earlyBird.earlyBirdID === id);
+}
+
 // CRUD Event
 async submitEventForm(form: NgForm): Promise<void> {
   if (form.valid) {
@@ -145,7 +149,6 @@ async submitEventForm(form: NgForm): Promise<void> {
           formData.append(key, (this.currentEvent as any)[key]);
         }
       }
-
       if (this.selectedFile) {
         formData.append('ImagePath', this.selectedFile, this.selectedFile.name);
     }
