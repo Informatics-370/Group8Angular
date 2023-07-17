@@ -2,6 +2,7 @@ import { EarlyBird } from "./earlybird";
 // import { EventType } from "./eventtype";
 import { EventPrice } from "./eventprice";
 // import { Booking } from "./booking";
+import { EarlyBirdComponent } from "../admin/early-bird/early-bird.component";
 
 export class Event {
     eventID: number;
@@ -12,6 +13,8 @@ export class Event {
     description: string;
     eventPrice : number;
     imagePath: string;
+    earlyBirdID: number; 
+    earlyBird: EarlyBird = new EarlyBird();
 
     constructor(
         eventID: number = 0,
@@ -21,7 +24,8 @@ export class Event {
         tickets_Sold: number = 0,
         description: string = '',
         eventPrice : number= 0,
-        imagePath: string = ''
+        imagePath: string = '',
+        earlyBirdID: number = 0 
     ) {
         this.eventID = eventID;
         this.eventName = eventName;
@@ -31,6 +35,6 @@ export class Event {
         this.description = description;
         this.eventPrice = eventPrice;
         this.imagePath = imagePath;
-
+        this.earlyBirdID = earlyBirdID;  // Corrected this line
     }
 }
