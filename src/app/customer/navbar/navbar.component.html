@@ -44,21 +44,28 @@
             <a class="nav-link" routerLink="/customerfaq" style="color: #B55933;">FAQ</a>
           </li>
   
-          <!-- User Icon -->
-          <li class="nav-item spaced-item">
-            <a class="nav-link" href="#" style="color: #B55933; font-size: 1.6rem;" data-bs-toggle="modal" data-bs-target="#loginModal">
-              <i class="bi bi-person-circle"></i> {{userName}}
-            </a>
-          </li>
-  
-          <!-- Cart Icon -->
-          <li class="nav-item spaced-item">
-            <a class="nav-link" href="#" style="color: #B55933; font-size: 1.6rem;"><i class="bi bi-cart3"></i></a>
-          </li>
-  
-          <li class="nav-item spaced-item">
-            <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
-          </li>
+
+<!-- Cart Icon -->
+<li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
+  <a class="nav-link" href="#" style="color: #B55933; font-size: 1.6rem;"><i class="bi bi-cart3"></i></a>
+</li>
+
+<!-- User Icon -->
+<li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
+  <a class="nav-link" routerLink="/userinformation" style="color: #B55933; font-size: 1.6rem;">
+    <i class="bi bi-person-circle"></i> {{dataService.userValue?.username}}
+  </a>
+</li>
+
+<!-- Admin Icon -->
+<li class="nav-item spaced-item" *ngIf="['Admin', 'SuperUser', 'Employee'].includes(dataService.userValue?.role ?? '')">
+  <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
+</li>
+
+<!-- Login Button -->
+<li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
+  <a class="nav-link" href="#" style="color: #007bff;" data-bs-toggle="modal" data-bs-target="#loginModal">LOGIN</a>
+</li>
         </ul>
       </div>
     </div>
