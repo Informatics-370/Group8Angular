@@ -4,6 +4,8 @@ import { DataServiceService } from '../services/data-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
+import { UserViewModel } from 'src/app/Model/userviewmodel';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-navbar',
@@ -17,8 +19,11 @@ export class NavbarComponent {
   show2FACodeInput = false;
   twoFactorCode = '';
   showLoginModal = false;
+  userData: UserViewModel;
 
-  constructor(private dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
+  constructor(private dataService: DataServiceService, private toastr: ToastrService, private router: Router){
+    this.userData = { email: '', username: '', token: '' };
+   }
 
   ngOnInit() {
     console.log('Initial value of twoFactorCode:', this.twoFactorCode); // Add this line
@@ -53,15 +58,16 @@ export class NavbarComponent {
     loginCredentials.password = this.password;
     console.log(loginCredentials);
 
-    this.dataService.Login(loginCredentials).subscribe((result: any) => {
-      var sent = result.message;
 
-      if (sent === "Two-factor authentication code has been sent to your email.") {
-        this.show2FACodeInput = true;
+    ///////////////////////////////////////////////////////////Hierdie verander omdat ek die date service moes verander
+    this.dataService.Login(loginCredentials).subscribe((response: HttpResponse<string>) => {
+      const result = response.body;
+      if (result === "Two-factor authentication code has been sent to your email.") {
+          this.show2FACodeInput = true;
       } else {
-        console.log("nah");
+          console.log("nah");
       }
-    });
+  });
   }
 
   submitTwoFactorCode() {
@@ -101,6 +107,15 @@ export class NavbarComponent {
     var accessToken = result.value.token;
 
     localStorage.setItem('Token', JSON.stringify(accessToken));
+
+    // Store user data ///////////////////////////////////////////////////////////Hierdie ingesit
+    this.userData = {
+      email: result.email,
+      username: result.username,
+      token: result.token
+  };
+
+  console.log(this.userData);
 
     let auth = localStorage.getItem('Token');
     console.log(auth);

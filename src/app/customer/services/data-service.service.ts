@@ -37,7 +37,9 @@ export class DataServiceService {
 
   Login(loginCredentials: Login): Observable<any> {
     console.log("You have reached this point");
-    return this.httpClient.post<any>(`${this.apiUrl}/Login`, loginCredentials);
+
+     ///////////////////////////////////////////////////////////Hierdie verander
+    return this.httpClient.post(`${this.apiUrl}/Login`, loginCredentials, { observe: 'response', responseType: 'text' as 'json' });
   }
 
   VerifyCode(TFACredentials : TwoFactorAuth): Observable<any>{
@@ -46,7 +48,7 @@ export class DataServiceService {
   }
 
   GetUserIdByEmail(email: string): Observable<string> {
-    return this.httpClient.get<string>(`${this.apiUrl}/GetUserByEmail/${email}`)
+    return this.httpClient.get<string>(`${this.apiUrl}/GetUserIdByEmail/${email}`)
       .pipe(
         map((response: any) => response.userId) // Extract the userId from the response
       );
