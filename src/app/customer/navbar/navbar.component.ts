@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { Register } from 'src/app/Model/register';
+import { UserViewModel } from 'src/app/Model/userviewmodel';
 
 @Component({
   selector: 'app-navbar',
@@ -37,7 +38,7 @@ export class NavbarComponent {
   enableTwoFactorAuth: boolean = true;
 //? this is for Register
 
-  constructor(private dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
+  constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
 
   ngOnInit() {
     console.log('Initial value of twoFactorCode:', this.twoFactorCode); // Add this line
@@ -130,9 +131,17 @@ export class NavbarComponent {
       const parsedAuth = JSON.parse(auth);
       if (parsedAuth !== null) {
         this.toastr.success('Yay');
-  
         this.router.navigate(['/clienthome']);
-        this.userName = result.userNameValue;
+        
+        // Create a new UserViewModel from the response
+        let uvw: UserViewModel = {
+          username: result.userNameValue, // Adjust these property names as necessary
+          email: result.email, // Adjust these property names as necessary
+          token: parsedAuth,
+          role: result.role
+        };
+    
+        this.dataService.login(uvw);  // use the DataServiceService to set user details
       }
     } else {
       console.log('Token not found in localStorage');
