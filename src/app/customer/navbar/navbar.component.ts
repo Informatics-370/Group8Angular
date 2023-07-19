@@ -12,6 +12,8 @@ import { Register } from 'src/app/Model/register';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  userName = '';
+
   //! This is for Login 
   email = '';
   password = '';
@@ -69,18 +71,19 @@ export class NavbarComponent {
     loginCredentials.email = this.email;
     loginCredentials.password = this.password;
     console.log(loginCredentials);
-
+  
     this.dataService.Login(loginCredentials).subscribe((result: any) => {
       var sent = result.message;
-
+  
       if (sent === "Two-factor authentication code has been sent to your email.") {
         this.show2FACodeInput = true;
       } else {
         console.log(result);
-        this.showLoginModal = false;
+        this.handleSuccessfulLogin(result);
       }
     });
   }
+  
 
   submitTwoFactorCode() {
     console.log(this.twoFactorCode);
@@ -117,27 +120,28 @@ export class NavbarComponent {
   
   handleSuccessfulLogin(result: any) {
     var accessToken = result.tokenValue;
-
+  
     localStorage.setItem('Token', JSON.stringify(accessToken));
-
+  
     let auth = localStorage.getItem('Token');
     console.log(auth);
-
+  
     if (auth !== null) {
       const parsedAuth = JSON.parse(auth);
-      if(parsedAuth !== null){
+      if (parsedAuth !== null) {
         this.toastr.success('Yay');
-        this.showLoginModal = false;
+  
         this.router.navigate(['/clienthome']);
+        this.userName = result.userNameValue;
       }
-      }else{
+    } else {
       console.log('Token not found in localStorage');
     }
   }
+  
 
 
   //! Register
-
   openRegisterModal(){
     this.showLoginModal = false;
     this.showRegisterModal = true;
@@ -188,12 +192,12 @@ export class NavbarComponent {
             this.toastr.info("Please log into the account you just created to authorize it via 2 Factor Authentication");
           }else{
           this.toastr.success('Registration successful');
-          this.clearRegisterFields();
+          
           this.showRegisterModal = false;
           this.router.navigate(['/clienthome']);
+
           this.dataService.Login(autoLoginCredentials).subscribe((result: any) => {
             this.toastr.success('Login successful');
-
             var accessToken = result.tokenValue;
             localStorage.setItem('Token', JSON.stringify(accessToken));
           });
