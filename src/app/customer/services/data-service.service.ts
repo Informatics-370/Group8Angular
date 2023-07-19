@@ -5,6 +5,7 @@ import { Login } from 'src/app/Model/login';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { environment } from 'src/app/environment';
 import { map } from 'rxjs/operators';
+import { Register } from 'src/app/Model/register';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,12 @@ export class DataServiceService {
         map((response: any) => response.userId) // Extract the userId from the response
       );
   }
+
+  Register(registerCredentials: Register): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Register`, registerCredentials, { responseType: 'text' as 'json' });
+  }
+  
+  
 
   
 }

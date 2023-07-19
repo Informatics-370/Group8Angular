@@ -4,6 +4,7 @@ import { DataServiceService } from '../services/data-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
+import { Register } from 'src/app/Model/register';
 
 @Component({
   selector: 'app-navbar',
@@ -11,12 +12,28 @@ import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  //! This is for Login 
   email = '';
   password = '';
   passwordTouched = false;
   show2FACodeInput = false;
   twoFactorCode = '';
   showLoginModal = false;
+//! This is for Login 
+
+//? This is for Register
+  showRegisterModal = false;
+  title: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  phoneNumber: string = '';
+  idNumber: string = '';
+  gender: string = '';
+  displayName: string = '';
+  remail: string = '';
+  rpassword: string = '';
+  enableTwoFactorAuth: boolean = true;
+//? this is for Register
 
   constructor(private dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
 
@@ -59,7 +76,8 @@ export class NavbarComponent {
       if (sent === "Two-factor authentication code has been sent to your email.") {
         this.show2FACodeInput = true;
       } else {
-        console.log("nah");
+        console.log(result);
+        this.showLoginModal = false;
       }
     });
   }
@@ -98,7 +116,7 @@ export class NavbarComponent {
   }
   
   handleSuccessfulLogin(result: any) {
-    var accessToken = result.value.token;
+    var accessToken = result.tokenValue;
 
     localStorage.setItem('Token', JSON.stringify(accessToken));
 
@@ -115,5 +133,79 @@ export class NavbarComponent {
       }else{
       console.log('Token not found in localStorage');
     }
+  }
+
+
+  //! Register
+
+  openRegisterModal(){
+    this.showLoginModal = false;
+    this.showRegisterModal = true;
+  }
+
+  clearRegisterFields() {
+    this.title = '';
+    this.firstName = '';
+    this.lastName = '';
+    this.phoneNumber = '';
+    this.idNumber = '';
+    this.gender = '';
+    this.displayName = '';
+    this.remail = '';
+    this.rpassword = '';
+    this.enableTwoFactorAuth = true;
+  }
+
+  register() {
+    this.showRegisterModal = true;
+    const registerCredentials = new Register();
+
+    registerCredentials.Title = this.title;
+    registerCredentials.FirstName = this.firstName;
+    registerCredentials.LastName = this.lastName;
+    registerCredentials.PhoneNumber = this.phoneNumber;
+    registerCredentials.IDNumber = this.idNumber;
+    registerCredentials.Gender = this.gender;
+    registerCredentials.DisplayName = this.displayName;
+    registerCredentials.Email = this.remail;
+    registerCredentials.Password = this.rpassword;
+    registerCredentials.EnableTwoFactorAuth = this.enableTwoFactorAuth;
+
+    const autoLoginCredentials = new Login();
+    autoLoginCredentials.email = this.remail;
+    autoLoginCredentials.password = this.rpassword;
+
+
+    this.dataService.Register(registerCredentials).subscribe(
+      (result: string) => {
+        console.log(result);
+    
+        if (result === "Your account has been created!") {
+          if(this.enableTwoFactorAuth == true){
+            this.toastr.success('Registration successful');
+            this.showRegisterModal = false;
+            this.showLoginModal = true;
+            this.toastr.info("Please log into the account you just created to authorize it via 2 Factor Authentication");
+          }else{
+          this.toastr.success('Registration successful');
+          this.clearRegisterFields();
+          this.showRegisterModal = false;
+          this.router.navigate(['/clienthome']);
+          this.dataService.Login(autoLoginCredentials).subscribe((result: any) => {
+            this.toastr.success('Login successful');
+
+            var accessToken = result.tokenValue;
+            localStorage.setItem('Token', JSON.stringify(accessToken));
+          });
+          }
+        } else {
+          this.toastr.error('Registration failed');
+        }
+      },
+      (error: any) => {
+        console.error(error.message);
+        this.toastr.error('Registration failed');
+      }
+    );
   }
 }

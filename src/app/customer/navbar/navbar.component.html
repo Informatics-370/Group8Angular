@@ -95,7 +95,7 @@
           </div>
           <div class="mb-3">
             <small>Don't have an account? Register
-              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal" (click)="openRegisterModal()">
                 here
               </a>
             </small>
@@ -109,6 +109,68 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="show2FACodeInput ? 'modal' : null">
               {{ show2FACodeInput ? 'Submit' : 'Login' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" #registerModal id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true" (hidden.bs.modal)="clearRegisterFields()" [ngClass]="{'show': showRegisterModal}" [ngStyle]="{'display': showRegisterModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Register</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="register()">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Enter title" required [(ngModel)]="title" name="title" #titleInput>
+          </div>
+          <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required [(ngModel)]="firstName" name="firstName" #firstNameInput>
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required [(ngModel)]="lastName" name="lastName" #lastNameInput>
+          </div>
+          <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number" required [(ngModel)]="phoneNumber" name="phoneNumber" #phoneNumberInput>
+          </div>
+          <div class="mb-3">
+            <label for="idNumber" class="form-label">ID Number</label>
+            <input type="text" class="form-control" id="idNumber" placeholder="Enter ID number" required [(ngModel)]="idNumber" name="idNumber" #idNumberInput>
+          </div>
+          <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <input type="text" class="form-control" id="gender" placeholder="Enter gender" required [(ngModel)]="gender" name="gender" #genderInput>
+          </div>
+          <div class="mb-3">
+            <label for="displayName" class="form-label">Display Name</label>
+            <input type="text" class="form-control" id="displayName" placeholder="Enter display name" required [(ngModel)]="displayName" name="displayName" #displayNameInput>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="remail" placeholder="Enter email" required [(ngModel)]="remail" name="remail" #remailInput>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="rpassword" placeholder="Enter password" required [(ngModel)]="rpassword" name="rpassword" #rpasswordInput>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="enableTwoFactorAuth" name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
+            <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null">
+              Register
             </button>
           </div>
         </form>
