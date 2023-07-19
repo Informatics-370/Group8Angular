@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { Register } from 'src/app/Model/register';
+import { UserViewModel } from 'src/app/Model/userviewmodel';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +21,7 @@ export class NavbarComponent {
   show2FACodeInput = false;
   twoFactorCode = '';
   showLoginModal = false;
+  userData: UserViewModel;
 //! This is for Login 
 
 //? This is for Register
@@ -35,7 +38,9 @@ export class NavbarComponent {
   enableTwoFactorAuth: boolean = true;
 //? this is for Register
 
-  constructor(private dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
+  constructor(private dataService: DataServiceService, private toastr: ToastrService, private router: Router){
+    this.userData = { email: '', username: '', token: '' };
+   }
 
   ngOnInit() {
     console.log('Initial value of twoFactorCode:', this.twoFactorCode); // Add this line
@@ -101,10 +106,7 @@ export class NavbarComponent {
             this.handleSuccessfulLogin(result);
           },
           (error: any) => {
-            console.error(error);
-            console.error(error.error);
-            // Clear the code input for the user to enter again
-            this.twoFactorCode = '';
+            console.error('Failed to verify code: ', error);
           }
         );
       },
@@ -116,22 +118,29 @@ export class NavbarComponent {
   }
   
   handleSuccessfulLogin(result: any) {
-    var accessToken = result.tokenValue;
-
-    localStorage.setItem('Token', JSON.stringify(accessToken));
-
-    let auth = localStorage.getItem('Token');
-    console.log(auth);
-
-    if (auth !== null) {
-      const parsedAuth = JSON.parse(auth);
-      if(parsedAuth !== null){
+    if (result && result.token && typeof result.token === 'object') {
+      var accessToken = result.token.token; // try accessing token with .token.token
+  
+      localStorage.setItem('Token', JSON.stringify({ token: accessToken }));
+  
+      let auth = localStorage.getItem('Token');
+      console.log(auth);
+  
+      if (auth !== null) {
         this.toastr.success('Yay');
         this.showLoginModal = false;
         this.router.navigate(['/clienthome']);
+        this.userData = {
+          email: result.email,  // Access email directly from the result
+          username: result.username, // Access username directly from the result
+          token: accessToken 
+        };
+        console.log(this.userData);
+      } else {
+        console.log('Token not found in localStorage');
       }
-      }else{
-      console.log('Token not found in localStorage');
+    } else {
+      console.error('Unexpected result format: ', result);
     }
   }
 

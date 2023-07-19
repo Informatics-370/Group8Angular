@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Login } from 'src/app/Model/login';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { environment } from 'src/app/environment';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Register } from 'src/app/Model/register';
 
 @Injectable({
@@ -43,7 +43,10 @@ export class DataServiceService {
 
   VerifyCode(TFACredentials : TwoFactorAuth): Observable<any>{
     console.log("Code");
-    return this.httpClient.post<any>(`${this.apiUrl}/VerifyCode`, TFACredentials);
+    return this.httpClient.post<any>(`${this.apiUrl}/VerifyCode`, TFACredentials)
+      .pipe(
+        tap((response: any) => console.log('VerifyCode response:', response)) // Add this line
+      );
   }
 
   GetUserIdByEmail(email: string): Observable<string> {
@@ -56,8 +59,5 @@ export class DataServiceService {
   Register(registerCredentials: Register): Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Register`, registerCredentials, { responseType: 'text' as 'json' });
   }
-  
-  
-
   
 }
