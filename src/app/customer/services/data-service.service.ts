@@ -12,7 +12,7 @@ import { UserViewModel } from 'src/app/Model/userviewmodel';
 export interface DecodedToken {
   unique_name: string; // this will contain the username
   sub: string; // this will contain the email
-  role: string;
+  roles: string[];
 }
 
 @Injectable({
@@ -80,11 +80,12 @@ getUserFromToken(): UserViewModel | null {
     return null;
   }
   let decodedToken: DecodedToken = jwt_decode(token);
+  let roles: string[] = Array.isArray(decodedToken.roles) ? decodedToken.roles : [decodedToken.roles]; // Handle single role
   return { 
     username: decodedToken.unique_name, 
     email: decodedToken.sub,
-    token: token ,
-    role: decodedToken.role
+    token: token,
+    roles: decodedToken.roles
   };
 }
 

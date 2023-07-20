@@ -44,6 +44,10 @@
             <a class="nav-link" routerLink="/customerfaq" style="color: #B55933;">FAQ</a>
           </li>
   
+<!-- Admin Icon -->
+<li class="nav-item spaced-item" *ngIf="isAdmin()">
+  <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
+</li>
 
 <!-- Cart Icon -->
 <li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
@@ -55,11 +59,6 @@
   <a class="nav-link" routerLink="/userinformation" style="color: #B55933; font-size: 1.6rem;">
     <i class="bi bi-person-circle"></i> {{dataService.userValue?.username}}
   </a>
-</li>
-
-<!-- Admin Icon -->
-<li class="nav-item spaced-item" *ngIf="['Admin', 'SuperUser', 'Employee'].includes(dataService.userValue?.role ?? '')">
-  <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
 </li>
 
 <!-- Login Button -->
