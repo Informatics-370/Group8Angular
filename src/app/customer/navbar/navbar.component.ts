@@ -133,12 +133,11 @@ export class NavbarComponent {
         this.toastr.success('Yay');
         this.router.navigate(['/clienthome']);
         
-        // Create a new UserViewModel from the response
         let uvw: UserViewModel = {
           username: result.userNameValue, // Adjust these property names as necessary
           email: result.email, // Adjust these property names as necessary
           token: parsedAuth,
-          role: result.role
+          roles: result.roles// Handle single role
         };
     
         this.dataService.login(uvw);  // use the DataServiceService to set user details
@@ -148,7 +147,13 @@ export class NavbarComponent {
     }
   }
   
-
+  isAdmin(): boolean {
+    const roles = this.dataService.userValue?.roles;
+    if (!roles) {
+      return false;
+    }
+    return roles.some(role => ['Admin', 'Superuser', 'Employee'].includes(role));
+  }
 
   //! Register
   openRegisterModal(){

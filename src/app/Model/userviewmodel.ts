@@ -2,5 +2,5 @@ export interface UserViewModel {
     email: string;
     username: string;
     token: string;
-    role: string;
+    roles: string[];
   }

@@ -9,7 +9,7 @@ import jwt_decode from 'jwt-decode';
 export class ClientHomeComponent implements OnInit {
   images = ['assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg'];
 
-  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtY2xhcmVubWFyY285OThAZ21haWwuY29tIiwianRpIjoiYmRmODVjN2YtYWZkYi00OTczLTk4NTktYTViYzkyOGZmNDZhIiwidW5pcXVlX25hbWUiOiJNYXJjbyIsInJvbGVzIjoiQ3VzdG9tZXIiLCJleHAiOjE2ODk4NjQ4NDIsImlzcyI6ImxvY2FsaG9zdCIsImF1ZCI6ImxvY2FsaG9zdCJ9.6ph8NX99myRHXhw9XlV6Q6tZNdk6I0aAuFM9IonExzY";
+  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJpbmRhLmJsb2VtQHByb21lbmFkZS5jb20iLCJqdGkiOiI3NTExMTA5NS03NmY3LTQ5YjgtYjljMy1kYWQxNDdjN2RiZWUiLCJ1bmlxdWVfbmFtZSI6Ik1hcmluZGEiLCJyb2xlcyI6WyJTdXBlcnVzZXIiLCJDdXN0b21lciJdLCJleHAiOjE2ODk5MzU0OTMsImlzcyI6ImxvY2FsaG9zdCIsImF1ZCI6ImxvY2FsaG9zdCJ9.OGJ1EVWGUnV-OcVsRdmo1zFA9ENa1xYPB9QTkBA1LsA";
   decodedToken: any;
   userRole: string | undefined;
   email: string | undefined;
