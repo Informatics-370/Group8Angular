@@ -7,6 +7,7 @@ import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { Register } from 'src/app/Model/register';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
 
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -41,7 +42,7 @@ export class NavbarComponent {
   constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
 
   ngOnInit() {
-    console.log('Initial value of twoFactorCode:', this.twoFactorCode); // Add this line
+    this.dataService.getUserFromToken();
   }
 
   isPasswordInvalid(): boolean {
@@ -87,8 +88,6 @@ export class NavbarComponent {
   
 
   submitTwoFactorCode() {
-    console.log(this.twoFactorCode);
-    console.log('Submit Two-Factor Code function called');
     this.dataService.GetUserIdByEmail(this.email).subscribe(
       (response: any) => {
         console.log(response);
@@ -141,6 +140,9 @@ export class NavbarComponent {
         };
     
         this.dataService.login(uvw);  // use the DataServiceService to set user details
+        console.log("here");
+        this.showLoginModal = false;
+        console.log("herehere");
       }
     } else {
       console.log('Token not found in localStorage');
@@ -149,7 +151,7 @@ export class NavbarComponent {
   
   isAdmin(): boolean {
     const roles = this.dataService.userValue?.roles;
-    if (!roles) {
+    if (!roles || !Array.isArray(roles)) {
       return false;
     }
     return roles.some(role => ['Admin', 'Superuser', 'Employee'].includes(role));
@@ -208,12 +210,13 @@ export class NavbarComponent {
           this.toastr.success('Registration successful');
           
           this.showRegisterModal = false;
-          this.router.navigate(['/clienthome']);
 
           this.dataService.Login(autoLoginCredentials).subscribe((result: any) => {
             this.toastr.success('Login successful');
             var accessToken = result.tokenValue;
             localStorage.setItem('Token', JSON.stringify(accessToken));
+            this.dataService.getUserFromToken();
+            this.router.navigate(['/clienthome']);
           });
           }
         } else {
