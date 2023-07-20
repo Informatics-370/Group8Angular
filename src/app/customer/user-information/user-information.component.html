@@ -1,1 +1,15 @@
-<p>user-information works!..........................................................................................................</p>
+<ng-container *ngIf="user">
+    <h1>Hello, {{ user.title }}. {{ user.first_Name }} {{ user.last_Name }}</h1>
+  
+    <h2>Account details:</h2>
+    <ul>
+      <li>Title: {{ user.title }}</li>
+      <li>First name: {{ user.first_Name }}</li>
+      <li>Last name: {{ user.last_Name }}</li>
+      <li>Email: {{ user.email }}</li>
+      <li>Phone number: {{ user.phoneNumber }}</li>
+      <li>ID Number: {{ user.iD_Number }}</li>
+      <li>Gender: {{ user.gender }}</li>
+      <li>TFA enabled: {{ user.twoFactorEnabled ? 'Yes' : 'No' }}</li>
+    </ul>
+  </ng-container>
