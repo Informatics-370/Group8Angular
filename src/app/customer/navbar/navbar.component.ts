@@ -140,9 +140,8 @@ export class NavbarComponent {
         };
     
         this.dataService.login(uvw);  // use the DataServiceService to set user details
-        console.log("here");
         this.showLoginModal = false;
-        console.log("herehere");
+        location.reload();
       }
     } else {
       console.log('Token not found in localStorage');

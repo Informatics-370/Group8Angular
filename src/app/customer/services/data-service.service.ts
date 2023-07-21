@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { Register } from 'src/app/Model/register';
 import jwt_decode from "jwt-decode";
 import { UserViewModel } from 'src/app/Model/userviewmodel';
+import { loginUpdateViewModel } from 'src/app/Model/loginUpdateViewModel';
 
 export interface DecodedToken {
   unique_name: string; // this will contain the username
@@ -88,6 +89,7 @@ export class DataServiceService {
   }
 
   LogOut(): Observable<any> {
+    console.log(this.headers);
     return this.httpClient.post(`${this.userUrl}/Logout`, null, { headers: this.headers });
   }
 
@@ -95,6 +97,9 @@ export class DataServiceService {
     return this.httpClient.get(`${this.custUrl}/GetUser/${email}`, { headers: this.headers });
   }
 
+  updateLoginDetails(id: string, loginCredentials: loginUpdateViewModel){
+    return this.httpClient.put<any>(`${this.userUrl}/UpdateLoginDetails/${id}`, loginCredentials, { headers: this.headers });
+  }
 
 
 
