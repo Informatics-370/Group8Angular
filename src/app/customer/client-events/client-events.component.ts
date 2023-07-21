@@ -3,6 +3,8 @@ import { EarlyBirdService } from 'src/app/admin/services/earlybird.service';
 import { EventService } from 'src/app/admin/services/event.service';
 import { EarlyBird } from 'src/app/Model/earlybird';
 import { Event } from 'src/app/Model/event';
+import { PaymentService } from '../services/payment.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-client-events',
@@ -14,7 +16,7 @@ export class ClientEventsComponent {
   events: Event[] = [];
   earlyBirds: EarlyBird[] = [];
 
-  constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService ) { }
+  constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService,  private paymentService: PaymentService ) { }
 
   async ngOnInit(): Promise<void> {
     try {
@@ -47,4 +49,34 @@ export class ClientEventsComponent {
     });
   }
 
+  onBuyTicket(event: Event) {
+    this.paymentService.initiatePayment(event).subscribe(
+      (payfastRequest: any) => {
+        // Create a form
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://www.payfast.co.za/eng/process';
+        form.target = '_self';
+  
+        // Add the form fields
+        for (const key in payfastRequest) {
+          if (payfastRequest.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = payfastRequest[key];
+            form.appendChild(hiddenField);
+          }
+        }
+  
+        // Add the form to the page and submit it
+        document.body.appendChild(form);
+        form.submit();
+      },
+      (error: HttpErrorResponse) => {
+        console.error(error);
+      }
+    );
+  }
+  
 }
