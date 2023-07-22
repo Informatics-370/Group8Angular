@@ -3,7 +3,6 @@ import { DataServiceService } from '../services/data-service.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { loginUpdateViewModel } from 'src/app/Model/loginUpdateViewModel';
-import { pipe } from 'rxjs';
 import { CustomerSidenavComponent } from '../customer-sidenav/customer-sidenav.component';
 
 @Component({

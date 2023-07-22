@@ -91,11 +91,24 @@
         <span>VAT</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/employees" routerLinkActive="active">
-        <i class="bi bi-person-circle me-2"></i>
-        Employees
+    <li class="nav-item" (click)="showEmpSubnav = !showEmpSubnav">
+      <a class="nav-link">
+        <i class="bi bi-basket me-2"></i>
+        <span style="margin-top: 10px;">Account</span>
+        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
+      <ul *ngIf="showEmpSubnav" class="nav flex-column ml-3 sub-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/employees">
+            <span>Employees</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/systemprivileges">
+            <span>System Privileges</span>
+          </a>
+        </li>
+      </ul>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/clienthome" routerLinkActive="active">
@@ -107,3 +120,4 @@
     </div>
     
        
+    

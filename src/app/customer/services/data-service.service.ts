@@ -9,11 +9,12 @@ import { Register } from 'src/app/Model/register';
 import jwt_decode from "jwt-decode";
 import { UserViewModel } from 'src/app/Model/userviewmodel';
 import { loginUpdateViewModel } from 'src/app/Model/loginUpdateViewModel';
+import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 
 export interface DecodedToken {
   unique_name: string; // this will contain the username
   sub: string; // this will contain the email
-  roles: string[];
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string[];
 }
 
 @Injectable({
@@ -75,14 +76,15 @@ export class DataServiceService {
       return null;
     }
     const decodedToken: DecodedToken = jwt_decode(token);
-    const roles: string[] = Array.isArray(decodedToken.roles) ? decodedToken.roles : [decodedToken.roles]; // Handle single role
+    const roles: string[] = Array.isArray(decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]) ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] : [decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]]; // Handle single role
     return {
       username: decodedToken.unique_name,
       email: decodedToken.sub,
       token: token,
-      roles: decodedToken.roles
+      roles: roles
     };
   }
+
 
   login(user: UserViewModel) {
     this.userSubject.next(user);
@@ -99,6 +101,11 @@ export class DataServiceService {
 
   updateLoginDetails(id: string, loginCredentials: loginUpdateViewModel){
     return this.httpClient.put<any>(`${this.userUrl}/UpdateLoginDetails/${id}`, loginCredentials, { headers: this.headers });
+  }
+
+
+  forgotPassword(forgotPasswordViewModel: ForgotPasswordViewModel){
+    return this.httpClient.post(`${this.userUrl}/ForgotPassword`, forgotPasswordViewModel);
   }
 
 

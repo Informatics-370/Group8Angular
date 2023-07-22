@@ -28,6 +28,7 @@ export class AppComponent {
           '/blacklist',
           '/vat',
           '/employees',
+          '/systemprivileges',
           '/varietal',
           '/type',
           '/discount',

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { Employee } from 'src/app/Model/employee';
-import { SystemPrivilege } from 'src/app/Model/systemprivilege';
 import { environment } from 'src/app/environment';
 
 @Injectable({

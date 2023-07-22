@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import { EmployeeService } from '../services/employee.service';
 import { Employee } from 'src/app/Model/employee';
 import { SystemprivilegeService } from '../services/systemprivilege.service';
-import { SystemPrivilege } from 'src/app/Model/systemprivilege';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-employee',
@@ -22,11 +21,10 @@ export class EmployeeComponent {
   employeeToDelete: any = null;
   maxDate!: string;
 
-  constructor(private employeeService: EmployeeService, private privilegeService: SystemprivilegeService, private toastr : ToastrService){ }
+  constructor(private employeeService: EmployeeService, private toastr : ToastrService){ }
 
   ngOnInit(): void { 
     this.getEmployees();
-    this.getSystemPrivileges();
     const today = new Date();
     this.maxDate = this.formatDate(today);
   }
@@ -107,7 +105,7 @@ export class EmployeeComponent {
         }
       } catch (error) {
         console.error(error);
-        this.toastr.error("‘Adding a new employee failed, please try again later.", "Add Employee")
+        this.toastr.error("Adding a new employee failed, please try again later.", "Add Employee")
       }
     }
 }
@@ -130,106 +128,6 @@ export class EmployeeComponent {
   // TODO WAS EVERYTHING TO DO WITH EMPLOYEE \\
 
 
-  // ? EVERYTHING TO DO WITH SYSTEMPRIVILEGES \\
-
-  systemPrivileges: SystemPrivilege[] = [];
-  currentSystemPrivilege: SystemPrivilege = new SystemPrivilege();
-  showSystemPrivilegeModal: boolean = false;
-  editingSystemPrivilege: boolean = false;
-  showDeleteSystemPrivilegeModal = false;
-  systemPrivilegeToDeleteDetails: any;
-  systemPrivilegeToDelete: any = null;
-
-
-
-  getSystemPrivileges(){
-    this.privilegeService.GetSystemPrivileges().subscribe(
-      (result: SystemPrivilege[]) => {
-        this.systemPrivileges = result;
-        console.log(this.systemPrivileges);
-      },
-      (error: any) => {
-        console.error(error);
-        this.toastr.error("Failed to retrieve system privilege info", "System Privilege");
-      }
-    );
-  }
-
-  openAddSystemPrivilegeModal() {
-    this.editingSystemPrivilege = false;
-    this.currentSystemPrivilege = new SystemPrivilege();
-    this.showSystemPrivilegeModal = true;
-  }
-
-  openEditSystemPrivilegeModal(id: number) {
-    console.log('Opening edit early bird modal for ID:', id);
-    this.editingSystemPrivilege = true;
-    // Find the original SystemPrivilege object
-    const originalSystemPrivilege = this.systemPrivileges.find(systemPrivilege => systemPrivilege.systemPrivilegeID === id);
-    if (originalSystemPrivilege) {
-      // Clone the original SystemPrivilege object and assign it to currentSystemPrivilege
-      this.currentSystemPrivilege = {...originalSystemPrivilege};
-    }
-    this.showSystemPrivilegeModal = true;
-}
-
-  closeSystemPrivilegeModal() {
-    this.showSystemPrivilegeModal = false;
-  }
-
-  openDeleteSystemPrivilegeModal(systemPrivilege: any): void {
-    this.systemPrivilegeToDelete = systemPrivilege.systemPrivilegeID;
-    console.log("System privilege : ", this.systemPrivilegeToDelete)
-    this.systemPrivilegeToDeleteDetails = systemPrivilege;
-    this.showDeleteSystemPrivilegeModal = true;
-  }
-
-  closeDeleteSystemPrivilegeModal(): void {
-    this.showDeleteSystemPrivilegeModal = false;
-  }
-
-  async submitSystemPrivilegeForm(form: NgForm): Promise<void> {
-    console.log('Submitting form with editingSystemPrivilege flag:', this.editingSystemPrivilege);
-    if (form.valid) {
-      try {
-        if (this.editingSystemPrivilege) {
-          await this.privilegeService.UpdateSystemPrivilege(this.currentSystemPrivilege.systemPrivilegeID!, this.currentSystemPrivilege);
-          const index = this.systemPrivileges.findIndex(systemPrivilege => systemPrivilege.systemPrivilegeID === this.currentSystemPrivilege.systemPrivilegeID);
-          if (index !== -1) {
-            // Update the original SystemPrivilege object with the changes made to the clone
-            this.systemPrivileges[index] = this.currentSystemPrivilege;
-            this.toastr.success("System privilege has been updated successfully", "System privilege update");
-          }
-        } else {
-          const data = await this.privilegeService.AddSystemPrivilege(this.currentSystemPrivilege);
-          this.systemPrivileges.push(data);
-          this.toastr.success("A new system privilege has been added to the system", "System Privilege added");
-        }
-        this.closeSystemPrivilegeModal();
-        if (!this.editingSystemPrivilege) {
-          form.resetForm();
-        }
-      } catch (error) {
-        console.error(error);
-        this.toastr.error("Adding a new system privilege failed, please try again later.", "System privilege add failed");
-      }
-    }
-}
-
-  async deleteSystemPrivilege(): Promise<void> {
-    if (this.systemPrivilegeToDelete != null) {
-      try {
-        await this.privilegeService.DeleteSystemPrivilege(this.systemPrivilegeToDelete);
-        console.log(this.systemPrivilegeToDelete);
-        this.systemPrivileges = this.systemPrivileges.filter(SystemPrivilege => SystemPrivilege.systemPrivilegeID !== this.systemPrivilegeToDelete);
-        this.toastr.success("The system privilege has been deleted.", "System privilege deleted");
-      } catch (error) {
-        console.error('Error deleting SystemPrivilege:', error);
-        this.toastr.error("Deleting the selected system privilege account failed, please try again later.", "System privilege delete failed");
-      }
-      this.closeDeleteSystemPrivilegeModal();
-    }
-  }
-
+  
 }
   

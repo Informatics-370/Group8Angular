@@ -1,1 +1,114 @@
-<p>systemprivileges works!</p>
+<!-- TODO: SystemPrivileges ---------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<br>
+<br>
+<!-- System Privileges -->
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
+    <h2>System Privileges</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    <button class="btn btn-success btn-sm" (click)="openAddSystemPrivilegeModal()">
+      <i class="fas fa-plus"></i> Add
+    </button>
+  </div>
+</div>
+
+<!-- System Privileges table -->
+<div *ngIf="systemPrivileges.length === 0" class="text-center">
+  <h3>No system privileges are currently in your system.</h3>
+</div>
+
+<table class="table table-striped" *ngIf="systemPrivileges.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">Privilege Name</th>
+      <th scope="col">Privilege Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let priv of systemPrivileges">
+      <td>{{ priv.name }}</td>
+      <td>{{ priv.description }}</td>
+      <td>
+        <button class="btn btn-primary"
+          (click)="priv.id !== undefined && openEditSystemPrivilegeModal(priv.id)"
+          style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+
+        <button class="btn btn-danger" (click)="priv.id !== undefined && openDeleteSystemPrivilegeModal(priv)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  
+  <!-- Add/Edit SystemPrivilege Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{'show': showSystemPrivilegeModal}" [ngStyle]="{'display': showSystemPrivilegeModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{editingSystemPrivilege ? 'Edit SystemPrivilege' : 'Add SystemPrivilege'}}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemPrivilegeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm)">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="sysPrivName" [(ngModel)]="currentSystemPrivilege.name"
+                name="name" required pattern="^[A-Za-z,\s]+$">
+                <div *ngIf="systemPrivilegeForm.controls['name'] && systemPrivilegeForm.controls['name'].invalid && systemPrivilegeForm.controls['name'].touched" class="alert alert-danger">
+                    <div *ngIf="systemPrivilegeForm.controls['name'].errors?.['required']">Name is required.</div>
+                    <div *ngIf="systemPrivilegeForm.controls['name'].errors?.['pattern']">Name should not contain numerical values.</div>
+                  </div>
+            </div>
+  
+            <div class="mb-3">
+              <label for="limit" class="form-label">Description</label>
+              <input type="text" class="form-control" id="limit" [(ngModel)]="currentSystemPrivilege.description"
+                name="description" required pattern="^[A-Za-z,\s]+$">
+                <div *ngIf="systemPrivilegeForm.controls['description'] && systemPrivilegeForm.controls['description'].invalid && systemPrivilegeForm.controls['description'].touched" class="alert alert-danger">
+                    <div *ngIf="systemPrivilegeForm.controls['description'].errors?.['required']">Description is required.</div>
+                    <div *ngIf="systemPrivilegeForm.controls['description'].errors?.['pattern']">Description should not contain numerical values.</div>
+                  </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeSystemPrivilegeModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="systemPrivilegeForm.invalid">
+                {{editingSystemPrivilege ? 'Save Changes' : 'Save'}}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- Delete EarlyBird modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSystemPrivilegeModal}"
+[ngStyle]="{'display': showDeleteSystemPrivilegeModal ? 'block' : 'none'}">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Delete Confirmation</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteSystemPrivilegeModal()"></button>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to delete this System privilege?
+      <p></p>
+      <p>ID: {{ systemPrivilegeToDeleteDetails?.id }}</p>
+      <p>Name: {{ systemPrivilegeToDeleteDetails?.name }}</p>
+      <p>Description: {{ systemPrivilegeToDeleteDetails?.description }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeDeleteSystemPrivilegeModal()">No</button>
+      <button type="button" class="btn btn-primary" (click)="deleteSystemPrivilege()">Yes</button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- SystemPrivileges ---------------------------------------------------------------------------------------------------------------------------------------------------------->

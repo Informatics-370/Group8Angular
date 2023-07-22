@@ -108,7 +108,7 @@
           </div>
           <div class="mb-3">
             <small>
-              <a href="#">Forgot password?</a>
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" (click)="openForgotPasswordModal()">Forgot password?</a>
             </small>
           </div>
           <div class="modal-footer">
@@ -184,3 +184,28 @@
     </div>
   </div>
 </div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" #forgotPasswordModal id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true" (hidden.bs.modal)="clearForgotPasswordFields()" [ngClass]="{'show': showForgotPasswordModal}" [ngStyle]="{'display': showForgotPasswordModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="sendPasswordResetLink()" (ngModelChange)="clearForgotPasswordFields()">
+          <div class="mb-3">
+            <label for="forgotPasswordEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="forgotPasswordEmail" placeholder="Enter your email" required [(ngModel)]="forgotPasswordEmail" name="forgotPasswordEmail" #forgotPasswordEmailInput>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Send Reset Link</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
