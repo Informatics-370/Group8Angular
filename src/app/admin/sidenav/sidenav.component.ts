@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 export class SidenavComponent {
   showWineSubnav = false;
   showEventSubnav = false;
+  showEmpSubnav = false;
 
   sidebarOpen = false;
 

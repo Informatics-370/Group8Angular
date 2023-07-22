@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { Register } from 'src/app/Model/register';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
+import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 
 
 @Component({
@@ -39,10 +40,17 @@ export class NavbarComponent {
   enableTwoFactorAuth: boolean = true;
 //? this is for Register
 
+//TODO This is for ForgotPassword
+  showForgotPasswordModal: boolean = false;
+  forgotPasswordEmail: string = '';
+//TODO This is for ForgotPassword
+
   constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
 
   ngOnInit() {
     this.dataService.getUserFromToken();
+    console.log(this.dataService.getUserFromToken());
+    console.log(this.isAdmin());
   }
 
   isPasswordInvalid(): boolean {
@@ -141,7 +149,6 @@ export class NavbarComponent {
     
         this.dataService.login(uvw);  // use the DataServiceService to set user details
         this.showLoginModal = false;
-        location.reload();
       }
     } else {
       console.log('Token not found in localStorage');
@@ -227,5 +234,41 @@ export class NavbarComponent {
         this.toastr.error('Registration failed');
       }
     );
+  }
+
+
+  openForgotPasswordModal() {
+    this.showForgotPasswordModal = true;
+    this.showLoginModal = false;
+  }
+
+  // Method to close the forgotPasswordModal
+  closeForgotPasswordModal() {
+    this.showForgotPasswordModal = false;
+  }
+
+  // Method to send the password reset link
+  sendPasswordResetLink() {
+    if (this.forgotPasswordEmail) {
+      this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
+      console.log('Sending password reset link to: ', this.forgotPasswordEmail);
+      var frgPs = new ForgotPasswordViewModel();
+      frgPs.email = this.forgotPasswordEmail;
+      this.dataService.forgotPassword(frgPs).subscribe((result: any) => {
+        this.handleSuccessfulLogin(result);
+      },
+      (error: any) => {
+        console.error(error);
+        console.error(error.error);
+      }
+    );
+      this.closeForgotPasswordModal();
+    } else {
+      console.log('Please enter a valid email address.');
+    }
+  }
+
+  clearForgotPasswordFields() {
+    this.forgotPasswordEmail = ''; // Clear the email field
   }
 }

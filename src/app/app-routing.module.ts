@@ -29,6 +29,7 @@ import { UsernameAndPasswordComponent } from './customer/username-and-password/u
 import { WishlistComponent } from './customer/wishlist/wishlist.component';
 import { CartComponent } from './customer/cart/cart.component';
 import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.component';
+import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivileges.component';
 
 
 
@@ -44,6 +45,7 @@ const routes: Routes = [
   { path: 'blacklist', component: BlacklistComponent },
   { path: 'vat', component: VatComponent},
   { path: 'employees', component: EmployeeComponent},
+  { path: 'systemprivileges', component: SystemprivilegesComponent},
   {path: 'varietal', component: VarietalComponent},
   {path: 'type', component: TypeComponent},
   {path: 'discount', component: DiscountComponent},
