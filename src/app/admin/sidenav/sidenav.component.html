@@ -94,18 +94,28 @@
     <li class="nav-item" (click)="showEmpSubnav = !showEmpSubnav">
       <a class="nav-link">
         <i class="bi bi-basket me-2"></i>
-        <span style="margin-top: 10px;">Account</span>
+        <span style="margin-top: 10px;">Accounts</span>
         <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
       <ul *ngIf="showEmpSubnav" class="nav flex-column ml-3 sub-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/systemprivileges">
+            <span>System Privileges</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/superuser">
+            <span>Superuser</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/employees">
             <span>Employees</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/systemprivileges">
-            <span>System Privileges</span>
+          <a class="nav-link" routerLink="/customers">
+            <span>Customers</span>
           </a>
         </li>
       </ul>

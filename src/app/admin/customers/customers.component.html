@@ -1,0 +1,67 @@
+<br>
+<br>
+<!-- Customers -->
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
+    <h2>Customer Accounts</h2>
+  </div>
+</div>
+
+<!-- Customer table -->
+<div class="text-center" *ngIf="customers.length === 0">
+  <h3>No customer details are currently in your system.</h3>
+</div>
+
+<table class="table table-striped" *ngIf="customers.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone Number</th>
+      <th scope="col">ID Number</th>
+      <th scope="col">Date Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of customers">
+      <td>{{ emp.first_Name }}</td>
+      <td>{{ emp.last_Name }}</td>
+      <td>{{ emp.email }}</td>
+      <td>{{ emp.phoneNumber }}</td>
+      <td>{{ emp.iD_Number }}</td>
+      <td>{{ emp.date_Created }}</td>
+      <td>
+        <button class="btn btn-danger" (click)="emp.id !== undefined && openDeleteCustomerModal(emp)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+ <!-- Delete Customer modal -->
+ <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteCustomerModal}"
+ [ngStyle]="{'display': showDeleteCustomerModal ? 'block' : 'none'}">
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title">Delete Confirmation</h5>
+       <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteCustomerModal()"></button>
+     </div>
+     <div class="modal-body">
+       Are you sure you want to delete this Customer?
+       <p></p>
+       <p>ID: {{ customerToDeleteDetails?.id }}</p>
+       <p>Name: {{ customerToDeleteDetails?.first_Name }}</p>
+       <p>Surname: {{ customerToDeleteDetails?.last_Name }}</p>
+     </div>
+     <div class="modal-footer">
+       <button type="button" class="btn btn-secondary" (click)="closeDeleteCustomerModal()">No</button>
+       <button type="button" class="btn btn-primary" (click)="deleteCustomer()">Yes</button>
+     </div>
+   </div>
+ </div>
+ </div>
+  
