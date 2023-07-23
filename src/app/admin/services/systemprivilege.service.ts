@@ -38,7 +38,8 @@ export class SystemprivilegeService {
   
 
   async GetSystemPrivilege(id: string): Promise<SystemPrivilege> {
-    return firstValueFrom(this.httpClient.get<SystemPrivilege>(`${this.apiUrl}/${id}`));
+    this.setHeaders();
+    return firstValueFrom(this.httpClient.get<SystemPrivilege>(`${this.apiUrl}/${id}`, { headers: this.headers }));
   }
 
   AddSystemPrivilege(systemPrivlege: SystemPrivilege): Observable<any> {
