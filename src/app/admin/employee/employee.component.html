@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<!-- System Privileges table -->
+<!-- Employee table -->
 <div class="text-center" *ngIf="employees.length === 0">
   <h3>No employee details are currently in your system.</h3>
 </div>
@@ -33,17 +33,17 @@
       <td>{{ emp.first_Name }}</td>
       <td>{{ emp.last_Name }}</td>
       <td>{{ emp.email }}</td>
-      <td>{{ emp.phone_Number }}</td>
+      <td>{{ emp.phoneNumber }}</td>
       <td>{{ emp.iD_Number }}</td>
       <td>{{ emp.hire_Date }}</td>
       <td>
         <button class="btn btn-primary"
-          (click)="emp.employeeID !== undefined && openEditEmployeeModal(emp.employeeID)"
+          (click)="emp.id !== undefined && openEditEmployeeModal(emp.id)"
           style="margin-right: 4px;">
           <i class="fas fa-pencil-alt"></i>
         </button>
 
-        <button class="btn btn-danger" (click)="emp.employeeID !== undefined && openDeleteEmployeeModal(emp)">
+        <button class="btn btn-danger" (click)="emp.id !== undefined && openDeleteEmployeeModal(emp)">
           <i class="fas fa-trash-alt"></i>
         </button>
       </td>
@@ -52,38 +52,67 @@
 </table>
   
   <!-- Add/Edit Employee Modal -->
-  <div class="modal" tabindex="-1" [ngClass]="{'show': showEmployeeModal}" [ngStyle]="{'display': showEmployeeModal ? 'block' : 'none'}">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{editingEmployee ? 'Edit Employee' : 'Add Employee'}}</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeEmployeeModal()"></button>
-        </div>
-        <div class="modal-body">
-          <form #employeeForm="ngForm" (ngSubmit)="submitEmployeeForm(employeeForm)">
-            <!--! FIRST NAME -->
-            <div class="mb-3">
-              <label for="name" class="form-label">First Name:</label>
-              <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="Name" required pattern="^[A-Za-z]+$">
-              <div *ngIf="employeeForm.controls['Name'].invalid && employeeForm.controls['Name'].touched" class="alert alert-danger">
-                
-                <div *ngIf="employeeForm.controls['Name'].errors?.['required']">First Name is required.</div>
-                <div *ngIf="employeeForm.controls['Name'].errors?.['pattern']">First Name should not contain numerical values.</div>
-              </div>
+<div class="modal" tabindex="-1" [ngClass]="{'show': showEmployeeModal}" [ngStyle]="{'display': showEmployeeModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingEmployee ? 'Edit Employee' : 'Add Employee'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeEmployeeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #employeeForm="ngForm" (ngSubmit)="submitEmployeeForm(employeeForm)">
+          <!-- FIRST NAME -->
+          <div class="mb-3">
+            <label for="firstName" class="form-label">First Name:</label>
+            <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="firstName" required pattern="^[A-Za-z]+$">
+            <div *ngIf="employeeForm.controls['firstName'].invalid && employeeForm.controls['firstName'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['firstName'].errors?.['required']">First Name is required.</div>
+              <div *ngIf="employeeForm.controls['firstName'].errors?.['pattern']">First Name should not contain numerical values.</div>
             </div>
-            
-            <!--! LAST NAME -->
-            <div class="mb-3">
-              <label for="surname" class="form-label">Last Name:</label>
-              <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="Surname" required pattern="^[A-Za-z]+$">
-              <div *ngIf="employeeForm.controls['Surname'].invalid && employeeForm.controls['Surname'].touched" class="alert alert-danger">
-                <div *ngIf="employeeForm.controls['Surname'].errors?.['required']">Last Name is required.</div>
-                <div *ngIf="employeeForm.controls['Surname'].errors?.['pattern']">Last Name should not contain numerical values.</div>
-              </div>
+          </div>
+          
+          <!-- LAST NAME -->
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name:</label>
+            <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z]+$">
+            <div *ngIf="employeeForm.controls['lastName'].invalid && employeeForm.controls['lastName'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
+              <div *ngIf="employeeForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
             </div>
-            
-  
-            <!--! EMAIL -->
+          </div>
+
+          <!--! PHONE NUMBER -->
+          <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone number:</label>
+            <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
+            <div *ngIf="employeeForm.controls['phoneNumber'].invalid && employeeForm.controls['phoneNumber'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
+              <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 digits.</div>
+            </div>
+          </div>
+
+          <!--! ID NUMBER -->
+          <div class="mb-3">
+            <label for="idNumber" class="form-label">ID Number:</label>
+            <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idNumber" required pattern="^[0-9]{13}$">
+            <div *ngIf="employeeForm.controls['idNumber'].invalid && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['idNumber'].errors?.['required']">ID Number is required.</div>
+              <div *ngIf="employeeForm.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.</div>
+            </div>
+          </div>
+
+          <!-- Display fields only for adding new employee (not editing) -->
+          <ng-container *ngIf="!editingEmployee">
+            <!-- TITLE -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="empTitle" [(ngModel)]="currentEmployee.title" name="title" required>
+            <div *ngIf="employeeForm.controls['title'].invalid && employeeForm.controls['title'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['title'].errors?.['required']">Title is required.</div>
+            </div>
+          </div>
+
+            <!-- EMAIL -->
             <div class="mb-3">
               <label for="email" class="form-label">Email: </label>
               <input type="email" class="form-control" id="empEmail" [(ngModel)]="currentEmployee.email" name="email" required>
@@ -92,49 +121,47 @@
                 <div *ngIf="employeeForm.controls['email'].errors?.['email']">Invalid email format.</div>
               </div>
             </div>
-  
-            <!--! PHONE NUMBER -->
+
+            <!-- DISPLAY NAME -->
             <div class="mb-3">
-              <label for="phonenumber" class="form-label">Phone number:</label>
-              <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phone_Number" name="phonenumber" required pattern="^[0-9]{10}$">
-              <div *ngIf="employeeForm.controls['phonenumber'].invalid && employeeForm.controls['phonenumber'].touched" class="alert alert-danger">
-                <div *ngIf="employeeForm.controls['phonenumber'].errors?.['required']">Phone number is required.</div>
-                <div *ngIf="employeeForm.controls['phonenumber'].errors?.['pattern']">Phone number must be exactly 10 digits.</div>
+              <label for="displayName" class="form-label">Display Name:</label>
+              <input type="text" class="form-control" id="empDisplayName" [(ngModel)]="currentEmployee.username" name="displayName" required>
+              <div *ngIf="employeeForm.controls['displayName'].invalid && employeeForm.controls['displayName'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['displayName'].errors?.['required']">Display Name is required.</div>
               </div>
             </div>
 
-            <!--! ID NUMBER -->
+            <!-- PASSWORD -->
             <div class="mb-3">
-              <label for="idnumber" class="form-label">ID Number:</label>
-              <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idnumber" required pattern="^[0-9]{13}$">
-              <div *ngIf="employeeForm.controls['idnumber'].invalid && employeeForm.controls['idnumber'].touched" class="alert alert-danger">
-                <div *ngIf="employeeForm.controls['idnumber'].errors?.['required']">ID Number is required.</div>
-                <div *ngIf="employeeForm.controls['idnumber'].errors?.['pattern']">ID Number must be exactly 13 digits.</div>
+              <label for="password" class="form-label">Password:</label>
+              <input type="password" class="form-control" id="empPassword" [(ngModel)]="currentEmployee.password" name="password" required disabled>
+              <div *ngIf="employeeForm.controls['password'].invalid && employeeForm.controls['password'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['password'].errors?.['required']">Password is required.</div>
               </div>
             </div>
 
-
-  
-            <!--! HIRE DATE -->
+             <!-- GENDER -->
             <div class="mb-3">
-              <label for="hiredate" class="form-label">Hire Date:</label>
-              <input type="date" class="form-control" id="empHireDate" [(ngModel)]="currentEmployee.hire_Date" name="hiredate" required [max]="maxDate">
-              <div *ngIf="employeeForm.controls['hiredate'].invalid && employeeForm.controls['hiredate'].touched" class="alert alert-danger">
-                <div *ngIf="employeeForm.controls['hiredate'].errors?.['required']">Hire Date is required.</div>
+              <label for="gender" class="form-label">Gender:</label>
+              <input type="text" class="form-control" id="empGender" [(ngModel)]="currentEmployee.gender" name="gender" required>
+              <div *ngIf="employeeForm.controls['gender'].invalid && employeeForm.controls['gender'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['gender'].errors?.['required']">Gender is required.</div>
               </div>
             </div>
-  
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="closeEmployeeModal()">Close</button>
-              <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">
-                {{editingEmployee ? 'Save Changes' : 'Save'}}
-              </button>
-            </div>
-          </form>
-        </div>
+          </ng-container>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEmployeeModal()">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">
+              {{editingEmployee ? 'Save Changes' : 'Save'}}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
+
   
   
   <!-- Delete Employee modal -->
@@ -149,7 +176,7 @@
     <div class="modal-body">
       Are you sure you want to delete this Employee?
       <p></p>
-      <p>ID: {{ employeeToDeleteDetails?.employeeID }}</p>
+      <p>ID: {{ employeeToDeleteDetails?.id }}</p>
       <p>Name: {{ employeeToDeleteDetails?.first_Name }}</p>
       <p>Surname: {{ employeeToDeleteDetails?.last_Name }}</p>
     </div>

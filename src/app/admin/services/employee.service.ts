@@ -1,37 +1,61 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { Employee } from 'src/app/Model/employee';
+import { EmployeeRegistrationViewModel } from 'src/app/Model/employeeRegisterViewModel';
 import { environment } from 'src/app/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
+  private headers: HttpHeaders | undefined;
   private apiUrl = `${environment.baseApiUrl}api/Employees`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
+
+  private setHeaders() {
+    this.headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+    });
+
+    // Retrieve the token from localStorage
+    let token = localStorage.getItem('Token');
+    if (token) {  
+      token = JSON.parse(token);
+        this.headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+    }
+}
+
 
   GetEmployees(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    this.setHeaders();
+    return this.httpClient.get(`${this.apiUrl}/GetEmployees`, { headers: this.headers });
   }
 
-  async GetEmployee(id: number): Promise<Employee> {
-    return firstValueFrom(this.http.get<Employee>(`${this.apiUrl}/${id}`));
+  async GetEmployee(id: string): Promise<Employee> {
+    this.setHeaders();
+    return firstValueFrom(this.httpClient.get<Employee>(`${this.apiUrl}/${id}`, { headers: this.headers }));
   }
 
-  async AddEmployee(employee: Employee): Promise<Employee> {
-    return firstValueFrom(this.http.post<Employee>(this.apiUrl, employee));
+  AddEmployee(employee: EmployeeRegistrationViewModel): Observable<any> {
+    this.setHeaders();
+    return this.httpClient.post(`${this.apiUrl}/AddEmployee`, employee, { headers: this.headers });
   }
 
-  async UpdateEmployee(id: number, employee: Employee): Promise<any> {
+  UpdateEmployee(id: string, employee: Employee): Observable<any> {
+    this.setHeaders();
     console.log('Updating employee with ID:', id, 'and data:', employee);
-    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, employee));
+    return this.httpClient.put(`${this.apiUrl}/${id}`, employee, { headers: this.headers });
   }
   
 
-  async DeleteEmployee(id: number): Promise<any> {
-    return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
+  DeleteEmployee(id: string): Observable<any> {
+    this.setHeaders();
+    return this.httpClient.delete(`${this.apiUrl}/DeleteEmployee/${id}`, { headers: this.headers });
   } 
 }
 
