@@ -20,6 +20,7 @@ export class CartComponent implements OnInit {
 
   wines: Wine[] = [];  // This will hold wines details
   cartTotal = 0;
+  
 
   constructor(private cartService: CartService, private wineService: WineService) { }  // Inject WineService
 
@@ -27,11 +28,21 @@ export class CartComponent implements OnInit {
     let token = localStorage.getItem('Token') || '';
     let decodedToken = jwt_decode(token) as DecodedToken;
     let email = decodedToken.sub;
-    
+    await this.loadWines();
     await this.loadCart(email);
     console.log(email);
+    console.log(this.cart)
   }
 
+
+  async loadWines(): Promise<void> {
+    try {
+      this.wines = await this.wineService.getWines();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   loadCart(email: string): void {
     this.cartService.getCart(email).subscribe(
       (cart: Cart) => {
