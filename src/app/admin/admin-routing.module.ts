@@ -18,6 +18,8 @@ import { EventPriceComponent } from './event-price/event-price.component';
 import { WineComponent } from './wine/wine.component';
 import { Routes } from '@angular/router';
 import { SystemprivilegesComponent } from './systemprivileges/systemprivileges.component';
+import { SuperuserComponent } from './superuser/superuser.component';
+import { CustomersComponent } from './customers/customers.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -36,7 +38,9 @@ const routes: Routes = [
   {path: 'earlybird', component: EarlyBirdComponent},
   {path: 'eventtype', component:EventTypeComponent},
   {path: 'eventprice', component: EventPriceComponent},
-  {path: 'systemprivileges', component: SystemprivilegesComponent}
+  {path: 'systemprivileges', component: SystemprivilegesComponent},
+  {path: 'superuser', component: SuperuserComponent},
+  {path: 'customers', component: CustomersComponent}
 ];
 
 @NgModule({

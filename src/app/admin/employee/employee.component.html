@@ -65,7 +65,7 @@
           <div class="mb-3">
             <label for="firstName" class="form-label">First Name:</label>
             <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="firstName" required pattern="^[A-Za-z]+$">
-            <div *ngIf="employeeForm.controls['firstName'].invalid && employeeForm.controls['firstName'].touched" class="alert alert-danger">
+            <div *ngIf="employeeForm.controls['firstName']?.invalid && employeeForm.controls['firstName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['firstName'].errors?.['required']">First Name is required.</div>
               <div *ngIf="employeeForm.controls['firstName'].errors?.['pattern']">First Name should not contain numerical values.</div>
             </div>
@@ -75,7 +75,7 @@
           <div class="mb-3">
             <label for="lastName" class="form-label">Last Name:</label>
             <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z]+$">
-            <div *ngIf="employeeForm.controls['lastName'].invalid && employeeForm.controls['lastName'].touched" class="alert alert-danger">
+            <div *ngIf="employeeForm.controls['lastName']?.invalid && employeeForm.controls['lastName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
               <div *ngIf="employeeForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
             </div>
@@ -85,7 +85,7 @@
           <div class="mb-3">
             <label for="phoneNumber" class="form-label">Phone number:</label>
             <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
-            <div *ngIf="employeeForm.controls['phoneNumber'].invalid && employeeForm.controls['phoneNumber'].touched" class="alert alert-danger">
+            <div *ngIf="employeeForm.controls['phoneNumber']?.invalid && employeeForm.controls['phoneNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
               <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 digits.</div>
             </div>
@@ -95,7 +95,7 @@
           <div class="mb-3">
             <label for="idNumber" class="form-label">ID Number:</label>
             <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idNumber" required pattern="^[0-9]{13}$">
-            <div *ngIf="employeeForm.controls['idNumber'].invalid && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
+            <div *ngIf="employeeForm.controls['idNumber']?.invalid && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['required']">ID Number is required.</div>
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.</div>
             </div>
@@ -107,7 +107,7 @@
           <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
             <input type="text" class="form-control" id="empTitle" [(ngModel)]="currentEmployee.title" name="title" required>
-            <div *ngIf="employeeForm.controls['title'].invalid && employeeForm.controls['title'].touched" class="alert alert-danger">
+            <div *ngIf="employeeForm.controls['title']?.invalid && employeeForm.controls['title'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['title'].errors?.['required']">Title is required.</div>
             </div>
           </div>
@@ -116,7 +116,7 @@
             <div class="mb-3">
               <label for="email" class="form-label">Email: </label>
               <input type="email" class="form-control" id="empEmail" [(ngModel)]="currentEmployee.email" name="email" required>
-              <div *ngIf="employeeForm.controls['email'].invalid && employeeForm.controls['email'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['email']?.invalid && employeeForm.controls['email'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['email'].errors?.['required']">Email is required.</div>
                 <div *ngIf="employeeForm.controls['email'].errors?.['email']">Invalid email format.</div>
               </div>
@@ -126,7 +126,7 @@
             <div class="mb-3">
               <label for="displayName" class="form-label">Display Name:</label>
               <input type="text" class="form-control" id="empDisplayName" [(ngModel)]="currentEmployee.username" name="displayName" required>
-              <div *ngIf="employeeForm.controls['displayName'].invalid && employeeForm.controls['displayName'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['displayName']?.invalid && employeeForm.controls['displayName'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['displayName'].errors?.['required']">Display Name is required.</div>
               </div>
             </div>
@@ -135,7 +135,7 @@
             <div class="mb-3">
               <label for="password" class="form-label">Password:</label>
               <input type="password" class="form-control" id="empPassword" [(ngModel)]="currentEmployee.password" name="password" required disabled>
-              <div *ngIf="employeeForm.controls['password'].invalid && employeeForm.controls['password'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['password']?.invalid && employeeForm.controls['password'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['password'].errors?.['required']">Password is required.</div>
               </div>
             </div>
@@ -144,7 +144,7 @@
             <div class="mb-3">
               <label for="gender" class="form-label">Gender:</label>
               <input type="text" class="form-control" id="empGender" [(ngModel)]="currentEmployee.gender" name="gender" required>
-              <div *ngIf="employeeForm.controls['gender'].invalid && employeeForm.controls['gender'].touched" class="alert alert-danger">
+              <div *ngIf="employeeForm.controls['gender']?.invalid && employeeForm.controls['gender'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['gender'].errors?.['required']">Gender is required.</div>
               </div>
             </div>
@@ -152,7 +152,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeEmployeeModal()">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">
+            <button type="submit" class="btn btn-primary" [disabled]="employeeForm?.invalid">
               {{editingEmployee ? 'Save Changes' : 'Save'}}
             </button>
           </div>

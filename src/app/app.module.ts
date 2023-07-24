@@ -49,6 +49,8 @@ import { NavbarComponent } from './customer/navbar/navbar.component';
 import { CustomerSidenavComponent } from './customer/customer-sidenav/customer-sidenav.component';
 import { CartComponent } from './customer/cart/cart.component';
 import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.component';
+import { SuperuserComponent } from './admin/superuser/superuser.component';
+import { CustomersComponent } from './admin/customers/customers.component';
 
 
 @NgModule({
@@ -86,6 +88,8 @@ import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.compo
     CustomerSidenavComponent,
     CartComponent,
     CustomerFaqComponent,
+    SuperuserComponent,
+    CustomersComponent,
   ],
   imports: [
     BrowserModule,

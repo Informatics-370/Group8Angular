@@ -34,7 +34,9 @@ export class AppComponent {
           '/discount',
           '/earlybird',
           '/eventtype',
-          '/eventprice'
+          '/eventprice',
+          '/superuser',
+          '/customers'
         ];
 
         const custroutes = [
