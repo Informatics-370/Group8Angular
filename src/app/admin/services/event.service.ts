@@ -35,5 +35,10 @@ export class EventService {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 
+purchaseTicket(eventID: number): Promise<any> {
+  const url = `${this.apiUrl}/purchase/${eventID}`;
+  return firstValueFrom(this.http.post<any>(url, {}));
+}
+
   
 }

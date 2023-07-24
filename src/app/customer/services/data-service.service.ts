@@ -153,4 +153,9 @@ export class DataServiceService {
     }
     return false;
   }
+
+  isUserLoggedIn(): boolean {
+    const token = localStorage.getItem('Token');
+    return token !== null;
+  }
 }
