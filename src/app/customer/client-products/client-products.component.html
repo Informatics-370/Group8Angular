@@ -1,12 +1,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel+Decorative">
 <div class="container-fluid">
     <div class="row row-heading">
-      <div class="col">
-        <br/>
-        <h1 class="selector">Our Wines</h1>
-      </div>
+        <div class="col">
+            <br />
+            <h1 class="selector">Our Wines</h1>
+        </div>
     </div>
-  </div>
+</div>
 <br>
 <br>
 
@@ -23,35 +23,41 @@
                             <h4 class="card-title"><b>{{ wine.name }}</b></h4>
                             <p class="card-text">R{{ wine.winePrice }}.00</p>
                             <p></p>
-                             <!-- Description button -->
-                             <button class="btn-description" data-bs-toggle="modal" [attr.data-bs-target]="'#descriptionModal' + wine.wineID">Description</button>
-                             <p></p>
+                            <!-- Description button -->
+                            <button class="btn-description" data-bs-toggle="modal"
+                                [attr.data-bs-target]="'#descriptionModal' + wine.wineID">Description</button>
+                            <p></p>
                             <br>
+                            <!-- Inside your ngFor loop -->
                             <div class="cart-icons">
-                                <i class="bi bi-cart-dash-fill" (click)="decrementCounter()"></i>
-                                <span class="mx-3">{{ counter }}</span>
-                                <i class="bi bi-cart-plus-fill" (click)="incrementCounter()"></i>
-                               
+                                <i class="bi bi-cart-dash-fill" (click)="decrementCounter(wine.wineID)"></i>
+                                <span class="mx-3">{{ getQuantity(wine.wineID) }}</span>
+                                <i class="bi bi-cart-plus-fill" (click)="incrementCounter(wine.wineID)"></i>
                             </div>
+
                             <br>
                             <!-- Add to Cart button -->
-                            <button class="btn-custom" >Add to cart</button>
+                            <button class="btn-custom" (click)="addToCart(wine)">Add to cart</button>
+
                             <button class="btn-wishlist">Add to Wishlist</button>
                             <br>
-                            
+
 
                             <!-- Modal -->
-                            <div class="modal fade" [id]="'descriptionModal' + wine.wineID" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+                            <div class="modal fade" [id]="'descriptionModal' + wine.wineID" tabindex="-1"
+                                aria-labelledby="descriptionModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h2 class="modal-title" id="descriptionModalLabel">{{ wine.name }} Description</h2>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <h2 class="modal-title" id="descriptionModalLabel">{{ wine.name }}
+                                                Description</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <h3><b>Vintage:</b></h3>
                                             <p>{{ wine.vintage }}</p>
-                                            
+
                                             <h3><b>Varietal:</b></h3>
                                             <p>{{ wine.varietal.name }}</p>
                                             <p>{{wine.varietal.description}}</p>
@@ -73,5 +79,3 @@
         </div>
     </div>
 </div>
-
-

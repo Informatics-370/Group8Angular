@@ -1,1 +1,69 @@
-<p>cart works!</p>
+<div class="container">
+    <div class="row justify-content-start">
+        <div class="col-md-6"> <!-- Changed from 8 to 6 -->
+            <div class="card mt-5">
+                <div class="card-header text-left">
+                    <h2>Your Cart</h2>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="cart && cart.cartItems.length > 0; else noItems">
+                        <table class="table" style="border-color: #B55933;">
+                            <thead>
+                                <tr style="color: #B54E33;">
+                                    <th scope="col" class="text-left">#</th>
+                                    <th scope="col" class="text-left">Wine Name</th>
+                                    <th scope="col" class="text-left">Quantity</th>
+                                    <th scope="col" class="text-left">Actions</th>
+                                    <th scope="col" class="text-left">Wine Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of cart.cartItems; let i = index">
+                                    <th scope="row" class="text-left">{{ i + 1 }}</th>
+                                    <td class="text-left">
+                                        {{getWineDetails(item.wineID)?.name}}
+                                    </td>
+                                    <td class="text-left">{{item.quantity}}</td>
+                                    <td class="text-left">
+                                        <i class="bi bi-plus-circle-fill" (click)="incrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
+                                        <i class="bi bi-dash-circle" (click)="decrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
+                                    </td>
+                                    <td class="text-left">
+                                        {{getWineDetails(item.wineID)?.winePrice}}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <ng-template #noItems>
+                        <h2>There are no items in your cart</h2>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart total table -->
+  <div class="row justify-content-start">
+    <div class="col-md-6">
+      <div class="card mt-5">
+        <div class="card-header text-left">
+          <h2>Order Total</h2>
+        </div>
+        <div class="card-body">
+          <table class="table" style="border-color: #B55933;">
+            <tbody>
+              <tr style="color: #B54E33;">
+                <td class="text-left">Total</td>
+                <td class="text-left">{{cartTotal}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
