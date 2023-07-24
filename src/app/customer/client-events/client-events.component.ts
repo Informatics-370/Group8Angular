@@ -55,7 +55,7 @@ export class ClientEventsComponent {
         // Create a form
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = 'https://www.payfast.co.za/eng/process';
+        form.action = 'https://sandbox.payfast.co.za/eng/process';
         form.target = '_self';
   
         // Add the form fields
@@ -72,9 +72,14 @@ export class ClientEventsComponent {
         // Add the form to the page and submit it
         document.body.appendChild(form);
         form.submit();
+        
       },
       (error: HttpErrorResponse) => {
-        console.error(error);
+        if (error.error === 'User is not logged in') {
+          console.error('User is not logged in');
+        } else {
+          console.error(error);
+        }
       }
     );
   }
