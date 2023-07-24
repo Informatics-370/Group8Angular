@@ -36,6 +36,7 @@ import { CustomersComponent } from './admin/customers/customers.component';
 
 
 
+
 const routes: Routes = [
   { path: '', redirectTo: '/clienthome', pathMatch: 'full' },
   { path: 'wine', component: WineComponent },
@@ -67,8 +68,8 @@ const routes: Routes = [
   {path: 'usernameandpassword', component: UsernameAndPasswordComponent},
   {path: 'wishlist', component: WishlistComponent},
   {path: 'cart', component: CartComponent},
-  {path: 'customerfaq', component: CustomerFaqComponent}
-
+  {path: 'customerfaq', component: CustomerFaqComponent},
+  {path: 'cart', component: CartComponent}
 ];
 
 @NgModule({

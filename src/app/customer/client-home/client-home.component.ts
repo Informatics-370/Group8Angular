@@ -23,7 +23,7 @@ export class ClientHomeComponent implements OnInit {
     // Extract user information from the decoded token
     this.email = this.decodedToken.sub; // Assuming the email claim is named 'sub'
     this.userRole = this.decodedToken.roles;
-   this.userName = this.decodedToken.unique_name;
+    this.userName = this.decodedToken.unique_name;
    
     // Output the extracted information to the console
     console.log(this.userRole);

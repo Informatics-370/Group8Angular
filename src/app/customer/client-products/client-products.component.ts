@@ -5,6 +5,9 @@ import { Varietal } from 'src/app/Model/varietal';
 import { WineService } from 'src/app/admin/services/wine.service';
 import { VarietalService } from 'src/app/admin/services/varietal.service';
 import { WinetypeService } from 'src/app/admin/services/winetype.service';
+import { CartService } from '../services/cart.service';
+import jwtDecode from 'jwt-decode';
+import { DecodedToken } from '../services/data-service.service';
 
 @Component({
   selector: 'app-client-products',
@@ -19,12 +22,15 @@ export class ClientProductsComponent implements OnInit {
   winetypes: WineType[] = [];
   varietals: Varietal[] = [];
   dataLoaded = false;
+  quantityMap: Map<number, number> = new Map<number, number>();
+
 
 
   constructor(
     private wineService: WineService,
     private varietalService: VarietalService,
-    private winetypeService: WinetypeService
+    private winetypeService: WinetypeService,
+    private cartService : CartService
   ) { } // Inject the WineService, VarietalService, and WinetypeService
 
   ngOnInit() {
@@ -33,15 +39,23 @@ export class ClientProductsComponent implements OnInit {
     this.loadWinetypes();
     }
     
-    incrementCounter() {
-    this.counter++;
+    incrementCounter(wineId: number): void {
+      let quantity = this.quantityMap.get(wineId) || 0;
+      this.quantityMap.set(wineId, ++quantity);
     }
     
-    decrementCounter() {
-    if (this.counter > 0) {
-    this.counter--;
+    decrementCounter(wineId: number): void {
+      let quantity = this.quantityMap.get(wineId);
+      if (quantity && quantity > 0) {
+        this.quantityMap.set(wineId, --quantity);
+      }
     }
+
+    getQuantity(wineId: number): number {
+      return this.quantityMap.get(wineId) || 0;
     }
+    
+    
 
   loadWines() {
     this.wineService.getWines().then((wines: Wine[]) => {
@@ -103,4 +117,41 @@ export class ClientProductsComponent implements OnInit {
       wine.varietal = this.varietals.find(varietal => varietal.varietalID === wine.varietalID) || new Varietal();
     }
   }
-}
+
+  //Cart functionality
+
+  addToCart(wine: Wine) {
+    // Decode token to get email
+    const token = localStorage.getItem('Token') || '';
+    const decoded = jwtDecode(token) as DecodedToken;
+    const email = decoded.sub; // the property might be different, adjust it to match your token structure
+    
+    // Fetch or create cart for the user here if necessary
+  
+    // Create cartItem
+    const cartItem = {
+      cartItemID: 0,  // generate or fetch ID if necessary
+      cartID: 0,  // fetch the user's cart ID
+      wineID: wine.wineID,
+      quantity: this.getQuantity(wine.wineID),
+      wine: wine,  // Use the wine object directly here
+      cart: {
+        cartID: 0,  // fetch the user's cart ID
+        customerID: email,  // the user's email
+        cartItems: []  // add cart items if necessary
+      }
+    };
+  
+    this.cartService.addToCart(email, cartItem).subscribe(
+      () => {
+        console.log('Wine added to cart!');
+      },
+      error => {
+        console.log('Failed to add wine to cart');
+      }
+    );
+  }
+  
+  }
+
+
