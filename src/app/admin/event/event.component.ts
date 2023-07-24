@@ -114,7 +114,6 @@ openEditEventModal(id: number) {
       imagePath: eventToEdit.imagePath,
     };
     this.currentEvent = this.tempEvent;
-    this.currentEvent = this.tempEvent;
   }
   this.showEventModal = true;
 }
