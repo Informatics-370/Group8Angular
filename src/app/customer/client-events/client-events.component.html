@@ -26,7 +26,7 @@
           <p class="card-text label" *ngIf="event.earlyBird">EarlyBird:</p>
           <p class="card-text content" *ngIf="event.earlyBird">{{ event.earlyBird.percentage }}% discount for earlybirds</p>
           <div>
-            <button type="button" class="btn btn-primary buy-button" (click)="onBuyTicket(event)">Buy Ticket</button>
+            <button type="button" class="btn btn-primary buy-button" (click)="handleTicketPurchase(event)">Buy Ticket</button>
           </div>
 
           <!-- <div>

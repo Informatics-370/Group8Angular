@@ -1,10 +1,9 @@
 export interface TicketPurchase {
-    id?: number;
-    userId: string;
-    purchaseDate: Date;
-    eventDate?: Date;
-    cost: number;
-    email: string;
+    userEmail: string;
     eventId: number;
-    success?: boolean; // add this line
+    eventDate: Date;
+    purchaseDate: Date;
+    ticketPrice: number;
+    eventName: string;  // New field
+    description: string;  // New field
 }
