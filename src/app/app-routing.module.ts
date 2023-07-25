@@ -32,6 +32,7 @@ import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.compo
 import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivileges.component';
 import { SuperuserComponent } from './admin/superuser/superuser.component';
 import { CustomersComponent } from './admin/customers/customers.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
 
 
 
@@ -51,6 +52,7 @@ const routes: Routes = [
   { path: 'systemprivileges', component: SystemprivilegesComponent},
   { path: 'superuser', component: SuperuserComponent},
   { path: 'customers', component: CustomersComponent},
+  { path: 'users', component: UserManagementComponent},
   {path: 'varietal', component: VarietalComponent},
   {path: 'type', component: TypeComponent},
   {path: 'discount', component: DiscountComponent},

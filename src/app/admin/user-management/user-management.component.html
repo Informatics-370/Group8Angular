@@ -1,0 +1,40 @@
+<!-- User Roles -->
+<div class="row align-items-center mb-3">
+    <div class="col-md-6">
+      <h2>User Access</h2>
+    </div>
+</div>
+  
+<!-- User Roles table -->
+<div class="text-center" *ngIf="users.length === 0">
+  <h3>No user roles are currently in your system.</h3>
+</div>
+  
+<table class="table table-striped" *ngIf="users.length > 0">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th *ngFor="let role of roles">{{role}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.userEmail}}</td>
+      <td *ngFor="let role of roles">
+        <input type="checkbox" 
+               [value]="role" 
+               [checked]="user.privileges.includes(role)"
+               [disabled]="!isEditable(user)"
+               (change)="onRoleChange($event, user, role)">
+      </td>
+      <td>
+        <button class="btn btn-primary"
+          (click)="toggleEditMode(user)"
+          style="margin-right: 4px;">
+          <i class="fas fa-pencil-alt" *ngIf="!isEditable(user)"></i>
+          <span *ngIf="isEditable(user)">Save</span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
