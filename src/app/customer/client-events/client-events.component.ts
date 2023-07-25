@@ -7,6 +7,7 @@ import { PaymentService } from '../services/payment.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { DataServiceService } from '../services/data-service.service';
+import { TicketPurchase } from 'src/app/Model/TicketPurchase';
 
 @Component({
   selector: 'app-client-events',
@@ -17,6 +18,7 @@ export class ClientEventsComponent {
 
   events: Event[] = [];
   earlyBirds: EarlyBird[] = [];
+  purchasedEvents: string[] = [];
 
   constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService,  private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService ) { }
 
@@ -24,6 +26,11 @@ export class ClientEventsComponent {
     try {
       await this.loadEventData();
       await this.loadEarlyBirdData();
+  
+      // Check if the user is logged in
+      if (this.loginService.userValue?.email) {
+        this.purchasedEvents = (await this.paymentService.getUserPurchases(this.loginService.userValue.email).toPromise()) ?? [];
+      }
     } catch (error) {
       console.error(error);
     }
@@ -31,6 +38,10 @@ export class ClientEventsComponent {
 
   async loadEventData(): Promise<void> {
     this.events = await this.eventService.getEvents();
+  }
+
+  isPurchased(eventId: string): boolean {
+    return this.purchasedEvents.includes(eventId);
   }
 
   formatDate(eventDate: Date): string {
@@ -50,6 +61,11 @@ export class ClientEventsComponent {
       event.earlyBird = this.earlyBirds.find(earlyBird => earlyBird.earlyBirdID === event.earlyBirdID) || new EarlyBird();
     });
   }
+
+
+
+
+
 
 
   async onBuyTicket(event: Event) {
@@ -92,7 +108,19 @@ export class ClientEventsComponent {
     this.toastr.error('An error occurred, please try again.', 'Purchase');
     return;
   }
-    
+      // start the payment process with the final price
+  const ticketPurchase: TicketPurchase = {
+    userEmail: this.loginService.userValue?.email ?? '',
+    eventId: event.eventID,
+    eventDate: event.eventDate,
+    purchaseDate: new Date(),
+    ticketPrice: event.eventPrice,
+    eventName: event.eventName,  // New field
+    description: event.description,  // New field
+  };
+
+  
+
       this.paymentService.initiatePayment(event).subscribe(
         (payfastRequest: any) => {
           // Create a form
@@ -131,6 +159,49 @@ export class ClientEventsComponent {
       
     }
   
+
+
+
+    saveTicketPurchase(event: Event) {
+ // Ensure eventDate is a Date object
+ event.eventDate = new Date(event.eventDate);
+
+ // Get the event's date
+ const eventDate = event.eventDate;
+
+ // Create a new date object with only the year, month, and day
+ const dateOnly = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+
+      // Start the payment process with the final price
+      const ticketPurchase: TicketPurchase = {
+        userEmail: this.loginService.userValue?.email ?? '',
+        eventId: event.eventID,
+        eventDate: dateOnly,
+        purchaseDate: new Date(),
+        ticketPrice: event.eventPrice,
+        eventName: event.eventName,  // New field
+        description: event.description,  // New field
+      };
+    
+      // Save the ticket purchase
+      this.paymentService.saveTicketPurchase(ticketPurchase).subscribe(
+        (response) => {
+          // Handle the success response, such as navigating the user to another page
+          console.log(response);
+          this.toastr.success('Ticket purchase saved successfully.', 'Purchase');
+        },
+        (error: HttpErrorResponse) => {
+          // Handle the error response
+          console.error(error);
+          this.toastr.error('An error occurred while saving ticket purchase, please try again.', 'Purchase');
+        }
+      );
+    }
+
+
+
+
+
   async purchaseTicket(eventID: number): Promise<void> {
     try {
       const response = await this.eventService.purchaseTicket(eventID);
@@ -145,4 +216,27 @@ export class ClientEventsComponent {
     }
   }
 
+
+  async handleTicketPurchase(event: Event) {
+    const isUserLoggedIn = this.loginService.isUserLoggedIn(); 
+  
+    // If there is no user, show toastr notification and return
+    if (!isUserLoggedIn) {
+      this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
+      return;
+    }
+  
+    try {
+      await this.onBuyTicket(event); // Buying ticket process
+  
+      // After successful buying process, save the ticket purchase in the database
+      this.saveTicketPurchase(event);
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('An error occurred, please try again.', 'Purchase');
+      return;
+    }
+  }
+  
+  
 }

@@ -1,1 +1,23 @@
-<p>tickets works!</p>
+<div *ngIf="purchasedTickets.length === 0" class="my-5 text-center">
+    <p class="lead">You have not purchased any tickets yet.</p>
+  </div>
+  <div *ngFor="let ticket of purchasedTickets" class="my-3">
+    <div class="card" style="max-width: 800px; background-color: #f2f2f2;">
+      <div class="card-body">
+        <div class="card-header bg-light">
+          <h2 class="card-title">{{ ticket.eventName }}</h2>
+        </div>
+        <div class="card-body">
+          <h5 class="card-subtitle mb-2">Event Date: {{ ticket.eventDate | date:'longDate' }}</h5>
+          <p class="card-text">Description: {{ ticket.description }}</p>
+        </div>
+        <div >
+          <h6 class="text-dark">Purchased on: {{ ticket.purchaseDate | date:'longDate' }}</h6>
+        </div>
+        <div >
+          <h4 class="text-success">Price: {{ ticket.ticketPrice }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  

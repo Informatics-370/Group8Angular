@@ -5,6 +5,7 @@ import { Event } from 'src/app/Model/event';
 import { Observable, switchMap, throwError } from 'rxjs';
 import { DataServiceService } from './data-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { TicketPurchase } from 'src/app/Model/TicketPurchase';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class PaymentService {
   httpClient: any;
   headers: any;
 
-  constructor(private http: HttpClient, public dataService: DataServiceService, private toastr: ToastrService) { }
+  constructor(private http: HttpClient, public dataService: DataServiceService, private toastr: ToastrService, private loginService: DataServiceService) { }
 
   initiatePayment(event: Event): Observable<any>{
     if (!this.dataService.userValue) {
@@ -48,6 +49,33 @@ export class PaymentService {
 
 
   buyTicket(ticket: any): Observable<any> {
-    return this.httpClient.post('api/Tickets', ticket, {headers: this.headers});
+    // use the baseApiUrl from your environment
+    const apiUrl = `${environment.baseApiUrl}api/Tickets`;
+
+    return this.httpClient.post(apiUrl, ticket, {headers: this.headers});
+}
+
+  saveTicketPurchase(ticketPurchase: TicketPurchase) {
+    // use the baseApiUrl from your environment
+    const apiUrl = `${environment.baseApiUrl}api/TicketPurchases`;
+
+    return this.http.post<TicketPurchase>(apiUrl, ticketPurchase);
+}
+
+getUserPurchases(userEmail: string): Observable<string[]> {
+  const apiUrl = `${environment.baseApiUrl}api/TicketPurchases/User/${userEmail}`;
+
+  return this.http.get<string[]>(apiUrl);
+}
+
+getPurchasedTickets(): Observable<TicketPurchase[]> {
+  const userEmail = this.loginService.userValue?.email;
+  if (!userEmail) {
+    this.toastr.warning('Please log in to view purchased tickets.', 'Warning');
+    return throwError('User is not logged in');
   }
+
+  const apiUrl = `${environment.baseApiUrl}api/TicketPurchases/User/${userEmail}`;
+  return this.http.get<TicketPurchase[]>(apiUrl);
+}
 }
