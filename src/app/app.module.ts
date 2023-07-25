@@ -51,6 +51,7 @@ import { CartComponent } from './customer/cart/cart.component';
 import { CustomerFaqComponent } from './customer/customer-faq/customer-faq.component';
 import { SuperuserComponent } from './admin/superuser/superuser.component';
 import { CustomersComponent } from './admin/customers/customers.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { CustomersComponent } from './admin/customers/customers.component';
     CustomerFaqComponent,
     SuperuserComponent,
     CustomersComponent,
+    UserManagementComponent,
   ],
   imports: [
     BrowserModule,

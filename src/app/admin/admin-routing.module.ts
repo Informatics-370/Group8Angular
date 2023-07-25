@@ -20,6 +20,7 @@ import { Routes } from '@angular/router';
 import { SystemprivilegesComponent } from './systemprivileges/systemprivileges.component';
 import { SuperuserComponent } from './superuser/superuser.component';
 import { CustomersComponent } from './customers/customers.component';
+import { UserManagementComponent } from './user-management/user-management.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -40,7 +41,8 @@ const routes: Routes = [
   {path: 'eventprice', component: EventPriceComponent},
   {path: 'systemprivileges', component: SystemprivilegesComponent},
   {path: 'superuser', component: SuperuserComponent},
-  {path: 'customers', component: CustomersComponent}
+  {path: 'customers', component: CustomersComponent},
+  {path: 'users', component: UserManagementComponent}
 ];
 
 @NgModule({
