@@ -15,6 +15,7 @@ import { DiscountComponent } from './admin/discount/discount.component';
 import { EarlyBirdComponent } from './admin/early-bird/early-bird.component';
 import { EventTypeComponent } from './admin/event-type/event-type.component';
 import { EventPriceComponent } from './admin/event-price/event-price.component';
+import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.component';
 
 //Client side
 import { ClientHomeComponent } from './customer/client-home/client-home.component';
@@ -71,7 +72,8 @@ const routes: Routes = [
   {path: 'wishlist', component: WishlistComponent},
   {path: 'cart', component: CartComponent},
   {path: 'customerfaq', component: CustomerFaqComponent},
-  {path: 'cart', component: CartComponent}
+  {path: 'cart', component: CartComponent},
+  {path: 'supplierOrder', component : SupplierOrderComponent}
 ];
 
 @NgModule({

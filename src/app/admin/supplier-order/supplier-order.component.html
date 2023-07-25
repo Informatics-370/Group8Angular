@@ -1,0 +1,142 @@
+<!-- Supplier Orders -->
+<div class="row align-items-center mb-3">
+    <div class="col-md-6">
+        <h2>Supplier Orders</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <button class="btn btn-success btn-sm" (click)="openAddSupplierOrderModal()">
+            <i class="fas fa-plus"></i> Add
+        </button>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Wine Name</th> <!-- Header -->
+                <th scope="col">Quantity Ordered</th>
+                <th scope="col">Date Ordered</th>
+                <th scope="col">Supplier Name</th>
+                <th scope="col">Ordered</th>
+                <th scope="col">Paid</th>
+                <th scope="col">Received</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of supplierOrders">
+                <td>{{ order.wineName }}</td> <!-- Corresponding data -->
+                <td>{{ order.quantity_Ordered }}</td>
+                <td>{{ order.dateOrdered | date:'short' }}</td>
+                <td>{{ getSupplierName(order.supplierID) ?? 'Unknown Supplier' }}</td>
+                <td><input type="checkbox" [(ngModel)]="order.ordered" (change)="updateOrder(order)"></td>
+                <td><input type="checkbox" [(ngModel)]="order.paid" (change)="updateOrder(order)"></td>
+                <td><input type="checkbox" [(ngModel)]="order.received" (change)="updateOrder(order)"></td>
+                <!-- Action button -->
+                <td>
+                    <!-- <button class="btn btn-primary" (click)="openEditSupplierOrderModal(order)">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button> -->
+                    <button class="btn btn-danger" (click)="openDeleteSupplierOrderModal(order)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center" *ngIf="supplierOrders.length === 0">
+    <h3>No supplier orders currently in your system.</h3>
+</div>
+
+<!-- Add Supplier Order Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showAddSupplierOrderModal}"
+    [ngStyle]="{'display': showAddSupplierOrderModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Supplier Order</h5>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="closeAddSupplierOrderModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form #addSupplierOrderForm="ngForm" (ngSubmit)="createOrder(addSupplierOrderForm.value)">
+                    <!-- In your Add Supplier Order Modal form -->
+                    <div class="mb-3">
+                        <label for="wineName" class="form-label">Wine Name</label>
+                        <input *ngIf="selectedOrder" type="text" class="form-control" id="wineName" name="wineName"
+                            [(ngModel)]="selectedOrder.wineName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="wineYear" class="form-label">Wine Year</label>
+                        <input *ngIf="selectedOrder" type="text" class="form-control" id="wineYear" name="wineYear"
+                            [(ngModel)]="selectedOrder.wineYear" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="wineType" class="form-label">Wine Type</label>
+                        <input *ngIf="selectedOrder" type="text" class="form-control" id="wineType" name="wineType"
+                            [(ngModel)]="selectedOrder.wineType" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="winePrice" class="form-label">Wine Price</label>
+                        <input *ngIf="selectedOrder" type="number" class="form-control" id="winePrice" name="winePrice"
+                            [(ngModel)]="selectedOrder.winePrice" min="1" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
+                        <input *ngIf="selectedOrder" type="number" class="form-control" id="quantityOrdered"
+                            name="quantity_Ordered" [(ngModel)]="selectedOrder.quantity_Ordered" min="1" required>
+                    </div>
+
+                    <div *ngIf="selectedOrder">
+                        <label for="quantityOrdered" class="form-label">Supplier</label>
+
+                        <select id="supplierID" name="supplierID" [(ngModel)]="selectedOrder.supplierID"
+                            class="form-control">
+                            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierID">{{supplier.name}}
+                            </option>
+                        </select>
+                    </div>
+
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeAddSupplierOrderModal()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="addSupplierOrderForm.invalid"
+                    (click)="createOrder(addSupplierOrderForm.value)">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Supplier Order Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSupplierOrderModal}"
+    [ngStyle]="{'display': showDeleteSupplierOrderModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="closeDeleteSupplierOrderModal()"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this supplier order?
+                <!-- <br>
+                <p></p>
+                <p>Order ID: {{ supplierOrderToDelete?.supplierOrderID }}</p>
+                <p>Quantity Ordered: {{ supplierOrderToDelete?.quantity_Ordered }}</p>
+                <p>Supplier ID: {{ supplierOrderToDelete?.supplierID }}</p> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeDeleteSupplierOrderModal()">No</button>
+                <button type="button" class="btn btn-primary" (click)="deleteOrder()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+

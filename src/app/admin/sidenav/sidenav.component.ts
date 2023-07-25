@@ -9,6 +9,7 @@ export class SidenavComponent {
   showWineSubnav = false;
   showEventSubnav = false;
   showEmpSubnav = false;
+  showSupplierSubnav = false;
 
   sidebarOpen = false;
 

@@ -73,11 +73,24 @@
         <span>FAQ</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/supplier" routerLinkActive="active">
+    <li class="nav-item" (click)="showSupplierSubnav = !showSupplierSubnav">
+      <a class="nav-link">
         <i class="bi bi-truck me-2"></i>
         <span>Supplier</span>
+        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
+      <ul *ngIf="showSupplierSubnav" class="nav flex-column ml-3 sub-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/supplier">
+            <span>Suppliers</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/supplierOrder">
+            <span>Orders</span>
+          </a>
+        </li>
+      </ul>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/blacklist" routerLinkActive="active">
@@ -123,6 +136,7 @@
             <span>Manage accounts</span>
           </a>
         </li>
+        
       </ul>
     </li>
     <li class="nav-item">
