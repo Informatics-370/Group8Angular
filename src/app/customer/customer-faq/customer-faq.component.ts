@@ -27,4 +27,18 @@ export class CustomerFaqComponent {
       }
     );
   }
+
+  shownAnswers = new Set<number>(); // Initialize an empty Set
+
+  isAnswerShown(index: number): boolean {
+    return this.shownAnswers.has(index);
+  }
+
+  toggleAnswer(index: number): void {
+    if (this.isAnswerShown(index)) {
+      this.shownAnswers.delete(index);
+    } else {
+      this.shownAnswers.add(index);
+    }
+  }
 }
