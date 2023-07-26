@@ -12,10 +12,6 @@
     color: white;
     text-align: center;
   }
-
-  .faq-item {
-    margin-bottom: 20px;
-  }
   
   .question {
     font-size: 1.5em;
@@ -28,4 +24,31 @@
     font-size: 1.2em;
     margin-right: 10px; /* Add right margin for spacing */
   }
-  
+
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq {
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    padding: 20px 0;
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 2, 1fr);
+    grid-gap: 20px;
+  }
+
+  .question-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }

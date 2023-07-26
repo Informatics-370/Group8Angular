@@ -9,8 +9,17 @@
   </div>
 <br>
 <br>
-<div *ngFor="let faq of faqs" class="faq-item">
-    <h3 class="question">{{ faq.question }}</h3>
-    <p class="answer">{{ faq.answer }}</p>
+<div class="faq-container">
+  <div class="faq-grid">
+    <div class="faq" *ngFor="let faq of faqs; let i = index">
+      <button class="question-btn" (click)="toggleAnswer(i)">
+        {{ faq.question }}
+      </button>
+      <p class="answer" *ngIf="isAnswerShown(i)">{{ faq.answer }}</p>
+    </div>
   </div>
+</div>
+
+
+
   
