@@ -1,3 +1,15 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel+Decorative">
+<div class="container-fluid">
+    <div class="row row-heading">
+      <div class="col">
+        <br/>
+        <h1 class="selector">Cart</h1>
+      </div>
+    </div>
+  </div>
+<br>
+<br>
+<div class="container-fluid">
 <div class="container">
     <div class="row justify-content-start">
         <div class="col-md-6"> <!-- Changed from 8 to 6 -->
@@ -46,25 +58,32 @@
         </div>
     </div>
 
-    <!-- Cart total table -->
-  <div class="row justify-content-start">
-    <div class="col-md-6">
-      <div class="card mt-5">
-        <div class="card-header text-left">
-          <h2>Order Total</h2>
+<!-- Cart total table -->
+<div class="row justify-content-start">
+  <div class="col-md-6">
+    <div class="card mt-5">
+      <div class="card-header text-left">
+        <h2>Order Total</h2>
+      </div>
+      <div class="card-body">
+        <table class="table" style="border-color: #B55933;">
+          <tbody>
+            <tr style="color: #B54E33;">
+              <td class="text-left">Total</td>
+              <td class="text-left">{{cartTotal}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Discount Code -->
+        <div class="input-group mb-3">
+          <input type="text" [(ngModel)]="discountCode" class="form-control" placeholder="Enter discount code">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" (click)="onApplyDiscountCode()">Apply Discount</button>
+          </div>
         </div>
-        <div class="card-body">
-          <table class="table" style="border-color: #B55933;">
-            <tbody>
-              <tr style="color: #B54E33;">
-                <td class="text-left">Total</td>
-                <td class="text-left">{{cartTotal}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Payment button -->
+        <button type="button" class="btn btn-primary" (click)="onProceedToPayment()">Proceed to Payment</button>
       </div>
     </div>
   </div>
 </div>
-
