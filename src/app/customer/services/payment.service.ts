@@ -6,6 +6,7 @@ import { Observable, switchMap, throwError } from 'rxjs';
 import { DataServiceService } from './data-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
+import { WinePurchase } from 'src/app/Model/WinePurchase';
 
 @Injectable({
   providedIn: 'root'
@@ -78,4 +79,59 @@ getPurchasedTickets(): Observable<TicketPurchase[]> {
   const apiUrl = `${environment.baseApiUrl}api/TicketPurchases/User/${userEmail}`;
   return this.http.get<TicketPurchase[]>(apiUrl);
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// initiateWinePayment(winePurchase: WinePurchase): Observable<any>{
+//   if (!this.dataService.userValue) {
+//     this.toastr.error('Please login to make a payment.');
+//     return throwError('User is not logged in');
+//   }
+
+//   const user = this.dataService.userValue;
+//   if (user) {
+//     return this.dataService.getUser(user.email).pipe(
+//       switchMap((result: any) => {
+//         const userDetails = result.user;
+//         return this.http.post(this.apiUrl, {
+//           amount: winePurchase.ticketPrice,
+//           item_name: winePurchase.productName,
+//           email_address: userDetails.email,
+//           cell_number: userDetails.phoneNumber
+//         });
+//       })
+//     );
+//   } else {
+//     return throwError('User details are not available');
+//   }
+// }
+
+initiateWinePayment(winePurchase: WinePurchase): Observable<any> {
+  if (!this.dataService.userValue) {
+    // If the user is not logged in, display an error message.
+    this.toastr.error('Please login to make a payment.');
+    return throwError('User is not logged in');
+  }
+
+  // Fetch the user's email and phone number
+  const user = this.dataService.userValue;
+  if (user) {
+    return this.dataService.getUser(user.email).pipe(
+      switchMap((result: any) => {
+        const userDetails = result.user;
+        return this.http.post(this.apiUrl, {
+          amount: winePurchase.ticketPrice,
+          item_name: winePurchase.productName,
+          email_address: userDetails.email,
+          cell_number: userDetails.phoneNumber // assuming the property name is phoneNumber
+        });
+      })
+    );
+  } else {
+    // Handle the case where the user details are not available...
+    // You need to return an Observable here too. For now, let's return an Observable that immediately errors.
+    return throwError('User details are not available');
+  }
+}
+
 }

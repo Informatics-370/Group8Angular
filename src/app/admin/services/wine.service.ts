@@ -48,6 +48,10 @@ export class WineService {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 
+  purchaseWine(wineID: number): Promise<any> {
+    const url = `${this.apiUrl}/purchase/${wineID}`;
+    return firstValueFrom(this.http.post<any>(url, {}));
+  }
 }
 
 

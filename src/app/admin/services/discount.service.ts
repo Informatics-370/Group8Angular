@@ -34,4 +34,8 @@ export class DiscountService {
   async deleteDiscount(id: number): Promise<any> {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
+
+  async validateDiscountCode(code: string): Promise<Discount> {
+    return firstValueFrom(this.http.post<Discount>(`${this.apiUrl}/Validate`, { Code: code }));
+  }
 }
