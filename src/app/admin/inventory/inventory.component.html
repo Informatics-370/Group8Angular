@@ -39,12 +39,10 @@
         <td>{{ x.stockLimit }}</td>
         <td>{{ x.quantityOnHand }}</td>
         <td>
-          <button>
-            <i class="bi bi-arrow-up-circle" (click)="increaseQuantity(x)"></i>
-          </button>
-          <button>
-            <i class="bi bi-arrow-down-circle" (click)="decreaseQuantity(x)"></i>
-          </button>
+         
+          <i class="bi bi-dash-circle text-primary fs-3" (click)="decreaseQuantity(x)"></i>
+          <i class="bi bi-plus-circle-fill text-primary fs-3" (click)="increaseQuantity(x)"></i>
+          
         </td>
       <td>
         <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.inventoryID !== undefined && openEditInventoryModal(x.inventoryID)">
