@@ -112,7 +112,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
   if (form.valid) {
     try {
       if (this.editingInventory) {
-        // Update WriteOffReason 
+        // Update inventory 
         await this.inventoryService.updateInventory(this.currentInventory.inventoryID!, this.currentInventory);
         const index = this.inventory.findIndex(x => x.inventoryID === this.currentInventory.inventoryID);
         if (index !== -1) {
@@ -120,7 +120,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
         }
         this.toastr.success('Successfully updated', 'Inventory Reason');
       } else {
-        // Add WriteOffReason 
+        // Add inventory
         const data = await this.inventoryService.addInventory(this.currentInventory);
         this.inventory.push(data);
         this.toastr.success('Successfully added', 'Inventory Reason');
@@ -137,10 +137,12 @@ async submitInventoryForm(form: NgForm): Promise<void> {
   }
 }
 
-openDeleteInventoryModal(inv: any): void {
-  this.inventoryToDelete = inv.inventoryID;
+//******************* Delete Modal-related methods *********************************************************************************************************************************
+
+openDeleteInventoryModal(inventory: any): void {
+  this.inventoryToDelete = inventory.inventoryID;
   console.log("Inventory : ", this.inventoryToDelete)
-  this.inventoryToDeleteDetails = inv;
+  this.inventoryToDeleteDetails = inventory;
   this.showDeleteInventoryModal = true;
 }
 
@@ -151,16 +153,50 @@ closeDeleteInventoryModal(): void {
 async deleteInventory(): Promise<void> {
   if (this.inventoryToDeleteDetails && this.inventoryToDeleteDetails.inventoryID !== undefined) {
     try{
-    await this.writeORService.deleteWriteOR(this.inventoryToDeleteDetails.inventoryID);
+    await this.inventoryService.deleteInventory(this.inventoryToDeleteDetails.inventoryID);
     this.inventory = this.inventory.filter(x => x.inventoryID !== this.inventoryToDeleteDetails.inventoryID);
-    this.toastr.success('Successfully deleted', 'Write-Off Reason');
+    this.toastr.success('Successfully deleted', 'Inventory');
   } catch (error) {
     this.toastr.error('Deletion failed, please try again', 'Error');
-    console.log("Write off Reason to Delete is null, undefined, or has an undefined inventoryID property.");
+    console.log("Inventory to Delete is null, undefined, or has an undefined inventoryID property.");
   }
   this.closeDeleteInventoryModal();
 }
 }
+
+//******************* Delete Modal-related methods *********************************************************************************************************************************
+
+// Function to increase the Quantity on Hand for a specific wine
+increaseQuantity(item: any) {
+  if (item.quantityOnHand > 0) {
+    item.quantityOnHand++;
+    // Update the inventory using the service
+    this.inventoryService.updateInventory(item.inventoryID, item)
+      .then(() => {
+        this.toastr.success('Quantity increased successfully', 'Inventory');
+      })
+      .catch((error) => {
+        console.error(error);
+        this.toastr.error('Error occurred while updating quantity', 'Inventory Reason');
+      });
+  }
+}
+
+decreaseQuantity(item: any) {
+  if (item.quantityOnHand > 0) {
+    item.quantityOnHand--;
+    // Update the inventory using the service
+    this.inventoryService.updateInventory(item.inventoryID, item)
+      .then(() => {
+        this.toastr.success('Quantity decreased successfully', 'Inventory');
+      })
+      .catch((error) => {
+        console.error(error);
+        this.toastr.error('Error occurred while updating quantity', 'Inventory Reason');
+      });
+  }
+}
+
 
 //******************* Inventory Modal-related methods *********************************************************************************************************************************
 
