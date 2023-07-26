@@ -25,16 +25,16 @@ export class InventoryService {
     return firstValueFrom(this.http.get<Inventory>(`${this.apiUrl}/${id}`));
   }
 
-  async addIvetory(inventory: Inventory): Promise<Inventory> {
+  async addInventory(inventory: Inventory): Promise<Inventory> {
     return firstValueFrom(this.http.post<Inventory>(this.apiUrl, inventory));
   }
 
-  async updateIventory(id: number, inventory: Inventory): Promise<any> {
+  async updateInventory(id: number, inventory: Inventory): Promise<any> {
     console.log('Updating Write Off Reason with ID:', id, 'and data:', inventory);
     return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, inventory));
   }
 
-  async deleteIventory(id: number): Promise<any> {
+  async deleteInventory(id: number): Promise<any> {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 

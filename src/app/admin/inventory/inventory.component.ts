@@ -41,6 +41,7 @@ export class InventoryComponent implements OnInit{
 
     ngOnInit(): void {
       this.loadWORs();
+      this.loadInventory();
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -58,7 +59,7 @@ export class InventoryComponent implements OnInit{
       }
       };
 
-      async loadIventory(): Promise<void> {
+      async loadInventory(): Promise<void> {
         try {
           this.inventory = await this.inventoryService.getFullInventory();
         } catch (error) {
@@ -82,17 +83,28 @@ closeInventoryModal() {
   this.showInventoryModal = false;
 }
 
+// openEditInventoryModal(id: number) {
+//   console.log('Opening edit Inventory modal for ID:', id);
+//   this.editingInventory = true;
+
+//   const originalInventory = this.inventory.find(x => x.inventoryID === id);
+//     if (originalInventory) {
+//       // Clone the original Inventory Details object and assign it to currentInventory
+//       //this.currentInventory = {...originalInventory};
+//     }
+
+//     this.showInventoryModal = true;
+// }
+
 openEditInventoryModal(id: number) {
-  console.log('Opening edit Inventory modal for ID:', id);
   this.editingInventory = true;
 
   const originalInventory = this.inventory.find(x => x.inventoryID === id);
-    if (originalInventory) {
-      // Clone the original Inventory Details object and assign it to currentInventory
-      //this.currentInventory = {...originalInventory};
-    }
-
-    this.showInventoryModal = true;
+  if (originalInventory) {
+    // Clone the original Customer Details object and assign it to currentBlacklistC
+    this.currentInventory = {...originalInventory};
+  }
+  this.showInventoryModal = true;
 }
 
 async submitInventoryForm(form: NgForm): Promise<void> {
@@ -101,26 +113,26 @@ async submitInventoryForm(form: NgForm): Promise<void> {
     try {
       if (this.editingInventory) {
         // Update WriteOffReason 
-        await this.inventoryService.updateIventory(this.currentInventory.inventoryID!, this.currentInventory);
+        await this.inventoryService.updateInventory(this.currentInventory.inventoryID!, this.currentInventory);
         const index = this.inventory.findIndex(x => x.inventoryID === this.currentInventory.inventoryID);
         if (index !== -1) {
           this.inventory[index] = this.currentInventory;
         }
-        this.toastr.success('Successfully updated', 'Write-Off Reason');
+        this.toastr.success('Successfully updated', 'Inventory Reason');
       } else {
         // Add WriteOffReason 
-        const data = await this.inventoryService.addIvetory(this.currentInventory);
+        const data = await this.inventoryService.addInventory(this.currentInventory);
         this.inventory.push(data);
         this.toastr.success('Successfully added', 'Inventory Reason');
       }
-      this.closeWORModal();
+      this.closeInventoryModal();
       if (!this.editingInventory) {
         form.resetForm();
       }
     } catch (error) {
       console.error(error);
-      this.toastr.error('Error occurred, please try again', 'Write-Off Reason');
-      this.closeWORModal();
+      this.toastr.error('Error occurred, please try again', 'Inventory Reason');
+      this.closeInventoryModal();
     }
   }
 }

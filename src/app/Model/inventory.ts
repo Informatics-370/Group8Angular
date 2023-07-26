@@ -8,10 +8,14 @@ export class Inventory {
   varietalID: number;
   varietal: Varietal;
   wineTypeID: number;
-  wineType: WineType;
+  wineType: string;
   winePrice: number;
   stockLimit: number;
   quantityOnHand: number;
+  wineName: string;
+  wineVarietal: string;
+  
+
   
 
   constructor(
@@ -21,10 +25,12 @@ export class Inventory {
     varietalID: number = 0,
     varietal: Varietal = new Varietal(),
     wineTypeID: number = 0,
-    wineType: WineType = new WineType(),
+    wineType: string = "",
     winePrice: number = 0,
     stockLimit: number = 0,
-    quantityOnHand: number =0    
+    quantityOnHand: number =0,
+    wineName: string = "",
+    wineVarietal: string = ""    
   ) {
     this.inventoryID = inventoryID;
     this.wineID = wineID;
@@ -36,13 +42,7 @@ export class Inventory {
     this.varietal = varietal;
     this.stockLimit = stockLimit;
     this.quantityOnHand = quantityOnHand;
-  }
-
-  get wineTypeName(): string | undefined {
-    return this.wineType?.name;
-  }
-
-  get varietalName(): string | undefined {
-    return this.varietal?.name;
+    this.wineName = wineName;
+    this.wineVarietal = wineVarietal;
   }
 }

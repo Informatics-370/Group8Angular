@@ -22,34 +22,37 @@
   <thead>
     <tr>
       <th scope="col" class="header-cell">Name</th>
-      <th scope="col" class="header-cell">Variental</th>    
+      <th scope="col" class="header-cell">Varietal</th>
       <th scope="col" class="header-cell">Type</th>
       <th scope="col" class="header-cell">Price</th>
       <th scope="col" class="header-cell">Stock Limit</th>
-      <th scope="col" class="header-cell">Quantity on Hand</th>     
+      <th scope="col" class="header-cell">Quantity on Hand</th>
+      <th scope="col" class="header-cell">Adjust QOH</th>
     </tr>
   </thead>
-  <tbody>      
+  <tbody>
       <tr *ngFor="let x of inventory">
-        <td>{{ x.name }}</td>
-        <td>{{ x.varietal }}</td>
+        <td>{{ x.wineName }}</td>
+        <td>{{ x.wineVarietal }}</td>
         <td>{{ x.wineType }}</td>
         <td>{{ x.winePrice }}</td>
         <td>{{ x.stockLimit }}</td>
         <td>{{ x.quantityOnHand }}</td>
+        <td>
+          <button>
+            <i class="bi bi-arrow-up-circle"></i>
+          </button>
+          <button>
+            <i class="bi bi-arrow-down-circle"></i>
+          </button>
+        </td>
       <td>
         <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.inventoryID !== undefined && openEditInventoryModal(x.inventoryID)">
           <i class="fas fa-pencil-alt"></i>
         </button>
         <button class="btn btn-danger" (click)="x.inventoryID!== undefined && openDeleteInventoryModal(x)">
           <i class="fas fa-trash-alt"></i>
-        </button>
-        <button>
-          <i class="bi bi-arrow-up-circle"></i>
-        </button>
-        <button>
-          <i class="bi bi-arrow-down-circle"></i>
-        </button>
+        </button>        
       </td>
       </tr>
     </tbody>
@@ -60,6 +63,80 @@
   </div>
 
 <!--************************************************************ Table for View Inventory ******************************************************************************-->
+
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showInventoryModal}" [ngStyle]="{'display': showInventoryModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingInventory ? 'Edit Inventory' : 'Add Inventory'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeInventoryModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #inventoryForm="ngForm" (ngSubmit)="submitInventoryForm(inventoryForm)">
+          <div class="mb-3">
+            <label for="wineName" class="form-label">Wine Name</label>
+            <input type="text" class="form-control" id="wineName" [(ngModel)]="currentInventory.wineName" name="wineName" required #nameField="ngModel">
+            <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
+              <div *ngIf="nameField.errors?.['required']">Name is required.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="wineType" class="form-label">Wine Type</label>
+            <input type="text" class="form-control" id="wineType" [(ngModel)]="currentInventory.wineType" name="wineType" required #wineTypeField="ngModel">
+            <div *ngIf="wineTypeField.invalid && wineTypeField.touched" class="alert alert-danger">
+              <div *ngIf="wineTypeField.errors?.['required']">Wine Type is required.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="wineVarietal" class="form-label">Wine Varietal</label>
+            <input type="text" class="form-control" id="wineVarietal" [(ngModel)]="currentInventory.wineVarietal" name="wineVarietal" required #wineVarietalField="ngModel">
+            <div *ngIf="wineVarietalField.invalid && wineVarietalField.touched" class="alert alert-danger">
+              <div *ngIf="wineVarietalField.errors?.['required']">Wine Varietal is required.</div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="winePrice" class="form-label">Wine Price</label>
+            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentInventory.winePrice" name="winePrice" required #winePriceField="ngModel">
+            <div *ngIf="winePriceField.invalid && winePriceField.touched" class="alert alert-danger">
+              <div *ngIf="winePriceField.errors?.['required']">Wine Price is required.</div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="stockLimit" class="form-label">Stock Limit</label>
+            <input type="number" class="form-control" id="stockLimit" [(ngModel)]="currentInventory.stockLimit" name="stockLimit" required #stockLimitField="ngModel">
+            <div *ngIf="stockLimitField.invalid && stockLimitField.touched" class="alert alert-danger">
+              <div *ngIf="stockLimitField.errors?.['required']">Stock Limit is required.</div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="quantityOnHand" class="form-label">Quantity On Hand</label>
+            <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required #quantityOnHandField="ngModel">
+            <div *ngIf="quantityOnHandField.invalid && quantityOnHandField.touched" class="alert alert-danger">
+              <div *ngIf="quantityOnHandField.errors?.['required']">Quantity On Hand is required.</div>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeInventoryModal()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="inventoryForm.invalid" (click)="submitInventoryForm(inventoryForm)">
+          {{editingInventory ? 'Save Changes' : 'Save'}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
 
 
 
