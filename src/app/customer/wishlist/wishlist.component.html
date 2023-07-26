@@ -1,1 +1,65 @@
-<p>wishlist works!</p>
+<!-- Wishlist Table -->
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
+    <h2>Wishlist</h2>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Image</th>
+      <th scope="col">Name</th>
+      <th scope="col">Vintage</th>
+      <th scope="col">Varietal</th>
+      <th scope="col">Type</th>
+      <th scope="col">Price (ZAR)</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let wine of wines; let i = index">
+      <td>
+        <div *ngIf="wine.filePath" class="image-container mb-3">
+          <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+        </div>
+      </td>
+      <td class="align-middle">{{ wine.name }}</td>
+      <td class="align-middle">{{ wine.vintage }}</td>
+      <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td>
+      <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
+      <td class="align-middle">{{ wine.winePrice }}</td>
+      <td class="align-middle">
+        <button class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
+          <i class="fas fa-trash-alt"></i> Remove
+        </button>                
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="text-center" *ngIf="wines.length === 0">
+  <h3>No wines currently in your wishlist.</h3>
+</div>
+
+<!-- Delete Wine from Wishlist modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWineModal}"
+  [ngStyle]="{'display': showDeleteWineModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Remove Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteWineModal()"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to remove this wine from your wishlist?
+        <p></p>
+        <p>Wine Name: {{ wineToDeleteDetails?.name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteWineModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteWishlistItem()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>

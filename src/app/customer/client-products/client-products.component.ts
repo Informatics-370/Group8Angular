@@ -8,6 +8,7 @@ import { WinetypeService } from 'src/app/admin/services/winetype.service';
 import { CartService } from '../services/cart.service';
 import jwtDecode from 'jwt-decode';
 import { DecodedToken } from '../services/data-service.service';
+import { WishlistService } from '../services/wishlist.service';
 
 @Component({
   selector: 'app-client-products',
@@ -30,7 +31,8 @@ export class ClientProductsComponent implements OnInit {
     private wineService: WineService,
     private varietalService: VarietalService,
     private winetypeService: WinetypeService,
-    private cartService : CartService
+    private cartService : CartService,
+    private wishlistService : WishlistService
   ) { } // Inject the WineService, VarietalService, and WinetypeService
 
   ngOnInit() {
@@ -117,6 +119,31 @@ export class ClientProductsComponent implements OnInit {
       wine.varietal = this.varietals.find(varietal => varietal.varietalID === wine.varietalID) || new Varietal();
     }
   }
+
+  addToWishlist(wine: Wine) {
+    // Decode token to get email
+    const token = localStorage.getItem('Token') || '';
+    const decoded = jwtDecode(token) as DecodedToken;
+    const email = decoded.sub; // the property might be different, adjust it to match your token structure
+    
+    // Create wishlistItem
+    const wishlistItem = {
+      wishlistItemID: 0,  // generate or fetch ID if necessary
+      wineID: wine.wineID,
+      wishlistID: 0,  // fetch the user's wishlist ID if necessary
+    };
+  
+    this.wishlistService.addToWishlist(email, wishlistItem).subscribe(
+      () => {
+        console.log('Wine added to wishlist!');
+      },
+      error => {
+        console.log('Failed to add wine to wishlist');
+      }
+    );
+  }
+  
+  
 
   //Cart functionality
 

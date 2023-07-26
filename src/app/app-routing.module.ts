@@ -39,6 +39,7 @@ import { UserManagementComponent } from './admin/user-management/user-management
 
 
 
+
 const routes: Routes = [
   { path: '', redirectTo: '/clienthome', pathMatch: 'full' },
   { path: 'wine', component: WineComponent },
@@ -73,7 +74,9 @@ const routes: Routes = [
   {path: 'cart', component: CartComponent},
   {path: 'customerfaq', component: CustomerFaqComponent},
   {path: 'cart', component: CartComponent},
-  {path: 'supplierOrder', component : SupplierOrderComponent}
+  {path: 'supplierOrder', component : SupplierOrderComponent},
+ 
+  
 ];
 
 @NgModule({
