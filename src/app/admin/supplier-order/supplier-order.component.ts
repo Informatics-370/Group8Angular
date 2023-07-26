@@ -92,6 +92,11 @@ deleteOrder(): void {
 }
 
 updateOrder(order: SupplierOrder): void {
+  // if the 'paid' checkbox was unticked, the 'received' checkbox should also be unticked
+  if (!order.paid) {
+    order.received = false;
+  }
+  
   this.supplierOrderService.updateSupplierOrder(order.supplierOrderID!, order).subscribe(() => {
     const index = this.supplierOrders.findIndex(o => o.supplierOrderID === order.supplierOrderID);
     if (index !== -1) {
@@ -100,6 +105,7 @@ updateOrder(order: SupplierOrder): void {
     this.selectedOrder = null; // clear selection
   });
 }
+
 
 
 }
