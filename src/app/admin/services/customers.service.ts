@@ -11,33 +11,37 @@ export class CustomersService {
   private headers: HttpHeaders | undefined;
   private apiUrl = `${environment.baseApiUrl}api/Customers`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   private setHeaders() {
     this.headers = new HttpHeaders({
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     });
 
     // Retrieve the token from localStorage
     let token = localStorage.getItem('Token');
-    if (token) {  
+    if (token) {
       token = JSON.parse(token);
-        this.headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        });
+      this.headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
     }
-}
-
+  }
 
   GetCustomers(): Observable<any> {
     this.setHeaders();
     return this.httpClient.get(`${this.apiUrl}/GetCustomers`, { headers: this.headers });
   }
 
-  async GetCustomer(id: string): Promise<Customer> {
+  GetCustomer(email: string): Observable<any> {
     this.setHeaders();
-    return firstValueFrom(this.httpClient.get<Customer>(`${this.apiUrl}/${id}`, { headers: this.headers }));
+    return this.httpClient.get(`${this.apiUrl}/GetUser/${email}`, { headers: this.headers });
+  }
+
+  UpdateCustomer(id: string, customer: Customer): Observable<Customer> {
+    this.setHeaders();
+    return this.httpClient.put<Customer>(`${this.apiUrl}/${id}`, customer, { headers: this.headers });
   }
 
   DeleteCustomer(id: string): Observable<any> {

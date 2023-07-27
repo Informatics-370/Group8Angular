@@ -137,8 +137,6 @@ export class NavbarComponent {
     if (auth !== null) {
       const parsedAuth = JSON.parse(auth);
       if (parsedAuth !== null) {
-        this.toastr.success('Yay');
-        this.router.navigate(['/clienthome']);
         
         let uvw: UserViewModel = {
           username: result.userNameValue, // Adjust these property names as necessary
@@ -148,7 +146,8 @@ export class NavbarComponent {
         };
     
         this.dataService.login(uvw);  // use the DataServiceService to set user details
-        this.showLoginModal = false;
+        this.clearFields();
+        location.reload();
       }
     } else {
       console.log('Token not found in localStorage');
@@ -207,7 +206,7 @@ export class NavbarComponent {
         console.log(result);
     
         if (result === "Your account has been created!") {
-          if(this.enableTwoFactorAuth == true){
+          if(registerCredentials.EnableTwoFactorAuth == true){
             this.toastr.success('Registration successful');
             this.showRegisterModal = false;
             this.showLoginModal = true;
@@ -223,6 +222,7 @@ export class NavbarComponent {
             localStorage.setItem('Token', JSON.stringify(accessToken));
             this.dataService.getUserFromToken();
             this.router.navigate(['/clienthome']);
+            location.reload();
           });
           }
         } else {

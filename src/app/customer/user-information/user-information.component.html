@@ -1,15 +1,142 @@
 <ng-container *ngIf="user">
-    <h1>Hello, {{ user.title }}. {{ user.first_Name }} {{ user.last_Name }}</h1>
-  
-    <h2>Account details:</h2>
-    <ul>
-      <li>Title: {{ user.title }}</li>
-      <li>First name: {{ user.first_Name }}</li>
-      <li>Last name: {{ user.last_Name }}</li>
-      <li>Email: {{ user.email }}</li>
-      <li>Phone number: {{ user.phoneNumber }}</li>
-      <li>ID Number: {{ user.iD_Number }}</li>
-      <li>Gender: {{ user.gender }}</li>
-      <li>TFA enabled: {{ user.twoFactorEnabled ? 'Yes' : 'No' }}</li>
-    </ul>
-  </ng-container>
+  <h1>Hello, {{ user.title }}. {{ user.first_Name }} {{ user.last_Name }}</h1>
+
+  <h2>Account details:</h2>
+  <ul>
+    <!-- Display information -->
+    <li>Title: {{ user.title }}</li>
+    <li>First name: {{ user.first_Name }}</li>
+    <li>Last name: {{ user.last_Name }}</li>
+    <li>Email: {{ user.email }}</li>
+    <li>Phone number: {{ user.phoneNumber }}</li>
+    <li>ID Number: {{ user.iD_Number }}</li>
+    <li>Gender: {{ user.gender }}</li>
+    <li>TwoFactorAuth: {{user.twoFactorEnabled}}</li>
+  </ul>
+
+  <!-- Edit and Delete Buttons -->
+  <div class="d-flex gap-3">
+    <button class="btn btn-primary" (click)="openEditCustomerModal()">
+      Edit Account
+    </button>
+
+    <button class="btn btn-danger" (click)="user.id !== undefined && openDeleteCustomerModal(user)">
+      Delete Account
+    </button>
+  </div>
+</ng-container>
+
+<!-- Edit Customer Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showEditCustomerModal}" [ngStyle]="{'display': showEditCustomerModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Customer</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeEditCustomerModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #editCustomerForm="ngForm" (ngSubmit)="submitEditCustomerForm(editCustomerForm)">
+          <!-- TITLE -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="editTitle" [(ngModel)]="user!.title" name="title" required>
+            <div *ngIf="editCustomerForm.controls['title']?.invalid && editCustomerForm.controls['title'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['title'].errors?.['required']">Title is required.</div>
+            </div>
+          </div>
+
+          <!-- FIRST NAME -->
+          <div class="mb-3">
+            <label for="title" class="form-label">First Name:</label>
+            <input type="text" class="form-control" id="editName" [(ngModel)]="user!.first_Name" name="first_Name" required>
+            <div *ngIf="editCustomerForm.controls['first_Name']?.invalid && editCustomerForm.controls['first_Name'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['first_Name'].errors?.['required']">First name is required.</div>
+            </div>
+          </div>
+
+          <!-- LAST NAME -->
+          <div class="mb-3">
+            <label for="last_Name" class="form-label">Last Name:</label>
+            <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required>
+            <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
+            </div>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="text" class="form-control" id="editEmail" [(ngModel)]="user!.email" name="email" required>
+            <div *ngIf="editCustomerForm.controls['email']?.invalid && editCustomerForm.controls['email'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['email'].errors?.['required']">Email is required.</div>
+            </div>
+          </div>
+
+          <!-- PHONE NUMBER -->
+          <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone Number:</label>
+            <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required>
+            <div *ngIf="editCustomerForm.controls['phoneNumber']?.invalid && editCustomerForm.controls['phoneNumber'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['required']">Phone Number is required.</div>
+            </div>
+          </div>
+
+          <!-- ID NUMBER -->
+          <div class="mb-3">
+            <label for="iD_Number" class="form-label">ID Number:</label>
+            <input type="text" class="form-control" id="editiD_Number" [(ngModel)]="user!.iD_Number" name="iD_Number" required>
+            <div *ngIf="editCustomerForm.controls['iD_Number']?.invalid && editCustomerForm.controls['iD_Number'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['required']">ID Number is required.</div>
+            </div>
+          </div>
+
+          <!-- GENDER -->
+          <div class="mb-3">
+            <label for="gender" class="form-label">Gender:</label>
+            <input type="text" class="form-control" id="editGender" [(ngModel)]="user!.gender" name="gender" required>
+            <div *ngIf="editCustomerForm.controls['gender']?.invalid && editCustomerForm.controls['gender'].touched" class="alert alert-danger">
+              <div *ngIf="editCustomerForm.controls['gender'].errors?.['required']">Gender is required.</div>
+            </div>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="user!.twoFactorEnabled" name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
+            <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
+          </div>
+
+          <!-- OTHER FIELDS (First Name, Last Name, Email, Phone Number, ID Number, Gender) -->
+          <!-- You can use the same pattern as the EmployeeComponent.html for other fields if needed -->
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEditCustomerModal()">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="editCustomerForm?.invalid">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Customer Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteCustomerModal}" [ngStyle]="{'display': showDeleteCustomerModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteCustomerModal()"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this Customer?
+        <p></p>
+        <p>ID: {{ user?.id }}</p>
+        <p>Name: {{ user?.first_Name }} {{ user?.last_Name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteCustomerModal()">No</button>
+        <button type="button" class="btn btn-danger" (click)="deleteCustomer()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
