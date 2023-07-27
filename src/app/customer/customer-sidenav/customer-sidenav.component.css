@@ -63,3 +63,22 @@
   color: #B55933;
   border-radius: 0;
 }
+
+
+.modal-content {
+  background: #f8f9fa;
+  border-radius: 0.3rem;
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}

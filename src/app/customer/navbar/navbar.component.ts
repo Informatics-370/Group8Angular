@@ -45,6 +45,10 @@ export class NavbarComponent {
   forgotPasswordEmail: string = '';
 //TODO This is for ForgotPassword
 
+titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
+genders = ['Male', 'Female', 'Other'];
+
+
   constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
 
   ngOnInit() {

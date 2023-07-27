@@ -137,7 +137,9 @@
         <form (ngSubmit)="register()">
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" placeholder="Enter title" required [(ngModel)]="title" name="title" #titleInput>
+            <select class="form-control" id="title" required [(ngModel)]="title" name="title" #titleInput>
+              <option *ngFor="let title of titles" [value]="title">{{title}}</option>
+            </select>
           </div>
           <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
@@ -157,7 +159,9 @@
           </div>
           <div class="mb-3">
             <label for="gender" class="form-label">Gender</label>
-            <input type="text" class="form-control" id="gender" placeholder="Enter gender" required [(ngModel)]="gender" name="gender" #genderInput>
+            <select class="form-control" id="gender" required [(ngModel)]="gender" name="gender" #genderInput>
+              <option *ngFor="let gender of genders" [value]="gender">{{gender}}</option>
+            </select>
           </div>
           <div class="mb-3">
             <label for="displayName" class="form-label">Display Name</label>
