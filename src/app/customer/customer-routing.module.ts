@@ -14,10 +14,14 @@ import { UsernameAndPasswordComponent } from './username-and-password/username-a
 import { WishlistComponent } from './wishlist/wishlist.component';
 import { CartComponent } from './cart/cart.component';
 import { CustomerFaqComponent } from './customer-faq/customer-faq.component';
+import { ClientAboutComponent } from './client-about/client-about.component';
+import { ClientContactComponent } from './client-contact/client-contact.component';
 
 
 const routes: Routes = [
   {path: 'clienthome', component: ClientHomeComponent},
+  {path: 'clientabout', component: ClientAboutComponent },
+  {path: 'clientcontact', component: ClientContactComponent },
   {path: 'clientevents', component: ClientEventsComponent},
   {path: 'clientproducts', component: ClientProductsComponent},
   {path: 'myrefunds', component: MyRefundsComponent},

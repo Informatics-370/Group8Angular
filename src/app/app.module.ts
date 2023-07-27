@@ -53,6 +53,8 @@ import { SuperuserComponent } from './admin/superuser/superuser.component';
 import { CustomersComponent } from './admin/customers/customers.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.component';
+import { ClientAboutComponent } from './customer/client-about/client-about.component';
+import { ClientContactComponent } from './customer/client-contact/client-contact.component';
 
 
 @NgModule({
@@ -94,6 +96,8 @@ import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.co
     CustomersComponent,
     UserManagementComponent,
     SupplierOrderComponent,
+    ClientAboutComponent,
+    ClientContactComponent,
   ],
   imports: [
     BrowserModule,
