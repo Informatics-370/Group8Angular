@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { DataServiceService } from '../services/data-service.service';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
+import { BlacklistService } from 'src/app/admin/services/blacklist.service';
 
 @Component({
   selector: 'app-client-events',
@@ -20,7 +21,7 @@ export class ClientEventsComponent {
   earlyBirds: EarlyBird[] = [];
   purchasedEvents: string[] = [];
 
-  constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService,  private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService ) { }
+  constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService,  private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService,private blacklistService: BlacklistService ) { }
 
   async ngOnInit(): Promise<void> {
     try {
@@ -219,10 +220,19 @@ export class ClientEventsComponent {
 
   async handleTicketPurchase(event: Event) {
     const isUserLoggedIn = this.loginService.isUserLoggedIn(); 
-  
+
     // If there is no user, show toastr notification and return
     if (!isUserLoggedIn) {
       this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
+      return;
+    }
+  
+    const userEmail = this.loginService.userValue?.email ?? '';
+  
+    // Check if user is on the blacklist
+    const isBlacklisted = await this.blacklistService.checkBlacklist(userEmail);
+    if (isBlacklisted) {
+      this.toastr.error('You are on the Blacklist and cannot attend events.', 'Purchase');
       return;
     }
   
