@@ -22,6 +22,7 @@ import { SuperuserComponent } from './superuser/superuser.component';
 import { CustomersComponent } from './customers/customers.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { SupplierOrderComponent } from './supplier-order/supplier-order.component';
+import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -44,7 +45,9 @@ const routes: Routes = [
   {path: 'superuser', component: SuperuserComponent},
   {path: 'customers', component: CustomersComponent},
   {path: 'users', component: UserManagementComponent},
-  {path:'supplierOrder', component: SupplierOrderComponent}
+  {path:'supplierOrder', component: SupplierOrderComponent},
+  {path: 'adminOrder', component: AdminOrdersComponent},
+
 ];
 
 @NgModule({

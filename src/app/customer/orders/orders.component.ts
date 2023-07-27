@@ -31,7 +31,7 @@ export class OrdersComponent implements OnInit {
       this.orders = await this.orderService.getOrdersForUser(email).toPromise() || [];
     } catch (error) {
       console.error('Error:', error);
-      this.toastr.error('Could not load order history.', 'Error');
+      // this.toastr.error('Could not load order history.', 'Error');
     }
   }
   
@@ -41,7 +41,7 @@ export class OrdersComponent implements OnInit {
       this.wines = await this.wineService.getWines();
     } catch (error) {
       console.error('Error:', error);
-      this.toastr.error('Could not load wines.', 'Error');
+      // this.toastr.error('Could not load wines.', 'Error');
     }
   }
 
