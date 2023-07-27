@@ -12,6 +12,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PaymentService } from '../services/payment.service';
 import { DiscountService } from 'src/app/admin/services/discount.service';
 import { Discount } from 'src/app/Model/discount';
+import { OrderService } from '../services/order.service';
+import { Order } from 'src/app/Model/order';
 
 @Component({
   selector: 'app-cart',
@@ -30,7 +32,7 @@ export class CartComponent implements OnInit {
 
   
 
-  constructor(private cartService: CartService, private wineService: WineService, private toastr: ToastrService, private loginService: DataServiceService,private paymentService: PaymentService, private discountService: DiscountService   ) { }  // Inject WineService
+  constructor(private cartService: CartService, private wineService: WineService, private toastr: ToastrService, private loginService: DataServiceService,private paymentService: PaymentService, private discountService: DiscountService, private orderService: OrderService   ) { }  // Inject WineService
 
   async ngOnInit(): Promise<void> {
     let token = localStorage.getItem('Token') || '';
@@ -162,6 +164,18 @@ async onProceedToPayment(): Promise<void> {
       // Add the form to the page and submit it
       document.body.appendChild(form);
       form.submit();
+
+      // Call to create the order after the payment gateway is launched
+      this.orderService.createOrder(winePurchase.userEmail).subscribe(
+        (order: Order) => {
+          console.log('Order created successfully: ', order);
+        },
+        error => {
+          console.error('Error:', error);
+          this.toastr.error('Could not create order.', 'Error');
+        }
+      );
+
     },
     (error: HttpErrorResponse) => {
       if (error.error === 'User is not logged in') {

@@ -37,7 +37,8 @@ export class AppComponent {
           '/eventprice',
           '/superuser',
           '/customers',
-          '/users'
+          '/users',
+          '/adminOrder'
         ];
 
         const custroutes = [
