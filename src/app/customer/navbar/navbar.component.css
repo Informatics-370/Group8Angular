@@ -1,25 +1,18 @@
-/* #nav-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background-color: white;
-}
-
-.spaced-item {
-  margin-right: 20px;
-}
-
-.spaced-item:last-child {
-  margin-right: 0;
-} */
-
-
 .navbar-custom-links {
   font-size: 1.2rem; /* Adjust the font size as needed */
+
 }
 
 .nav-item.spaced-item {
   margin-right: 15px; /* Adjust the spacing between links as needed */
+}
+
+.nav-link {
+  font-family: 'Cinzel Decorative', cursive;
+  font-weight: 700;
+}
+
+.nav-link:hover {
+ 
+
 }
