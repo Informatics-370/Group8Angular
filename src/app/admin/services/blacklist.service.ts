@@ -38,6 +38,10 @@ export class BlacklistService {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 
+  //Check if user is in Blacklist table
+  async checkBlacklist(email: string): Promise<boolean> {
+    return firstValueFrom(this.http.get<boolean>(`${this.apiUrl}/check/${email}`));
+  }
 }
 
 

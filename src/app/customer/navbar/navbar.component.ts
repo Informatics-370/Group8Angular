@@ -26,6 +26,11 @@ export class NavbarComponent {
   showLoginModal = false;
 //! This is for Login 
 
+
+//View password entered
+showPassword: boolean = false;
+
+
 //? This is for Register
   showRegisterModal = false;
   title: string = '';
@@ -79,6 +84,10 @@ genders = ['Male', 'Female', 'Other'];
     this.showLoginModal = false;
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
   login() {
     this.showLoginModal = true;
     const loginCredentials = new Login();
@@ -86,16 +95,27 @@ genders = ['Male', 'Female', 'Other'];
     loginCredentials.password = this.password;
     console.log(loginCredentials);
   
-    this.dataService.Login(loginCredentials).subscribe((result: any) => {
-      var sent = result.message;
+    this.dataService.Login(loginCredentials).subscribe(
+      (result: any) => {
+        var sent = result.message;
   
-      if (sent === "Two-factor authentication code has been sent to your email.") {
-        this.show2FACodeInput = true;
-      } else {
-        console.log(result);
-        this.handleSuccessfulLogin(result);
+        if (sent === "Two-factor authentication code has been sent to your email.") {
+          this.show2FACodeInput = true;
+        } else {
+          console.log(result);
+          this.handleSuccessfulLogin(result);
+        }
+      },
+      (error) => {
+        if (error.status === 400) {
+          // Login was not successful, show error toastr
+          this.toastr.error('Invalid username or password');
+        } else {
+          // Another error occurred, you can add handling for that here
+          this.toastr.error('Invalid username or password');
+        }
       }
-    });
+    );
   }
   
 

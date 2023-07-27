@@ -9,28 +9,34 @@
         <span style="margin-top: 10px;">Wine</span>
         <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
-      <ul *ngIf="showWineSubnav" class="nav flex-column ml-3 sub-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/wine">
-            <span>Wine</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/varietal">
-            <span>Varietal</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/type">
-            <span>Type</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/discount">
-            <span>Discount</span>
-          </a>
-        </li>
-      </ul>
+<!-- UL with Wine Subnav -->
+<ul *ngIf="showWineSubnav" class="nav flex-column ml-3 sub-nav">
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/wine">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Wine</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/varietal">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Varietal</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/type">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Type</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/discount">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Discount</span>
+    </a>
+  </li>
+</ul>
+ 
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/inventory" routerLinkActive="active">
@@ -44,28 +50,29 @@
         <span>Event</span>
         <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
-      <ul *ngIf="showEventSubnav" class="nav flex-column ml-3 sub-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/event">
-            <span>Event</span>
-          </a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" routerLink="/eventtype">
-            <span>Type</span>
-          </a>
-        </li> -->
-        <!-- <li class="nav-item">
-          <a class="nav-link" routerLink="/eventprice">
-            <span>Price</span>
-          </a>
-        </li> -->
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/earlybird">
-            <span>Early Bird</span>
-          </a>
-        </li>
-      </ul>
+      
+<!-- UL with Event Subnav -->
+<ul *ngIf="showEventSubnav" class="nav flex-column ml-3 sub-nav">
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/event">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Event</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/eventtype">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Type</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/earlybird">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span style="margin-left: 15px;">Early Bird</span>
+    </a>
+  </li>
+</ul>
+
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/adminOrder" routerLinkActive="active">
@@ -86,14 +93,16 @@
         <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
       <ul *ngIf="showSupplierSubnav" class="nav flex-column ml-3 sub-nav">
-        <li class="nav-item">
+        <li class="nav-item" style="background-color: rgb(59, 59, 255);">
           <a class="nav-link" routerLink="/supplier">
-            <span>Suppliers</span>
+            <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+            <span style="margin-left: 15px;">Suppliers</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="background-color: rgb(59, 59, 255);">
           <a class="nav-link" routerLink="/supplierOrder">
-            <span>Orders</span>
+            <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+            <span style="margin-left: 15px;">Orders</span>
           </a>
         </li>
       </ul>
@@ -116,34 +125,38 @@
         <span style="margin-top: 10px;">Accounts</span>
         <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
-      <ul *ngIf="showEmpSubnav" class="nav flex-column ml-3 sub-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/systemprivileges">
-            <span>System Privileges</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/superuser">
-            <span>Superuser</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/employees">
-            <span>Employees</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/customers">
-            <span>Customers</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/users">
-            <span>Manage accounts</span>
-          </a>
-        </li>
-        
-      </ul>
+<ul *ngIf="showEmpSubnav" class="nav flex-column ml-3 sub-nav">
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/systemprivileges">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span>System Privileges</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/superuser">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span>Superuser</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/employees">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span>Employees</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/customers">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span>Customers</span>
+    </a>
+  </li>
+  <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+    <a class="nav-link" routerLink="/users">
+      <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+      <span>Manage accounts</span>
+    </a>
+  </li>
+</ul>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/clienthome" routerLinkActive="active">

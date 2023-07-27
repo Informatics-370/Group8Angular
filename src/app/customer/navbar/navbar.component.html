@@ -1,4 +1,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel+Decorative">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
 
 <nav id="nav-bar" class="navbar navbar-expand-lg navbar-light w-100" style="background-color: white;">
     <div class="container d-flex align-items-center justify-content-between">
@@ -71,59 +73,66 @@
       </div>
     </div>
   </nav>
-  
-<!-- Login Modal -->
-<div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" (hidden.bs.modal)="clearFields()" [ngClass]="{'show': showLoginModal}" [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginModalLabel">Login</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
-          <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email" name="email" #emailInput>
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter password" required
-              [(ngModel)]="password" name="password" #passwordInput
-              (blur)="validatePassword()" (focus)="clearPasswordError()">
-            <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
-              Invalid password format.
-            </div>
-          </div>
-          <div *ngIf="show2FACodeInput">
+
+<!--Login Modal-->
+  <div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" (hidden.bs.modal)="clearFields()" [ngClass]="{'show': showLoginModal}" [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
             <div class="mb-3">
-              <label for="twoFactorCode" class="form-label">Two-Factor Code</label>
-              <input type="text" class="form-control" id="twoFactorCode" [(ngModel)]="twoFactorCode" placeholder="Enter code" required name="twoFactorCode" #twoFactorInput>
+              <label for="email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email" name="email" #emailInput>
             </div>
+            <div class="mb-3 position-relative">
+              <label for="password" class="form-label">Password</label>
+              <div style="position:relative;">
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" placeholder="Enter password" required
+                      [(ngModel)]="password" name="password" #passwordInput
+                      (blur)="validatePassword()" (focus)="clearPasswordError()" style="padding-right: 50px;">
+                  <i class="fas fa-eye position-absolute top-50 end-0 translate-middle-y" style="cursor: pointer; right: 10px; font-size: 15px;" (click)="togglePasswordVisibility()"></i>
+              </div>
+              <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
+                  Invalid password format.
+              </div>
           </div>
-          <div class="mb-3">
-            <small>Don't have an account? Register
-              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal" (click)="openRegisterModal()">
-                here
-              </a>
-            </small>
-          </div>
-          <div class="mb-3">
-            <small>
-              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" (click)="openForgotPasswordModal()">Forgot password?</a>
-            </small>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="show2FACodeInput ? 'modal' : null">
-              {{ show2FACodeInput ? 'Submit' : 'Login' }}
-            </button>
-          </div>
-        </form>
+          
+          
+          
+            <div *ngIf="show2FACodeInput">
+              <div class="mb-3">
+                <label for="twoFactorCode" class="form-label">Two-Factor Code</label>
+                <input type="text" class="form-control" id="twoFactorCode" [(ngModel)]="twoFactorCode" placeholder="Enter code" required name="twoFactorCode" #twoFactorInput>
+              </div>
+            </div>
+            <div class="mb-3">
+              <small>Don't have an account? Register
+                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal" (click)="openRegisterModal()">
+                  here
+                </a>
+              </small>
+            </div>
+            <div class="mb-3">
+              <small>
+                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" (click)="openForgotPasswordModal()">Forgot password?</a>
+              </small>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="show2FACodeInput ? 'modal' : null">
+                {{ show2FACodeInput ? 'Submit' : 'Login' }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  
 
 <!-- Register Modal -->
 <div class="modal fade" #registerModal id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true" (hidden.bs.modal)="clearRegisterFields()" [ngClass]="{'show': showRegisterModal}" [ngStyle]="{'display': showRegisterModal ? 'block' : 'none'}">

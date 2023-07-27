@@ -1,10 +1,19 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-client-home',
   templateUrl: './client-home.component.html',
-  styleUrls: ['./client-home.component.css']
+  styleUrls: ['./client-home.component.css'],
+    animations: [
+      trigger('floatUp', [
+        transition(':enter', [
+          style({ transform: 'translateY(100%)', opacity: 0 }),
+          animate('0.6s ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
+        ])
+      ])
+    ]
 })
 export class ClientHomeComponent implements OnInit {
   images = ['assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg'];
@@ -31,4 +40,5 @@ export class ClientHomeComponent implements OnInit {
     console.log(this.userName);
     
   }
+  
 }
