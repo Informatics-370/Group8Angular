@@ -24,4 +24,13 @@ export class OrderService {
   getOrder(id: number): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}/Order/${id}`);
   }
+
+  getAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}/AllOrders`);
+  }
+
+  // Add a function for the put request here
+  updateOrderStatus(orderId: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/UpdateOrder/${orderId}`, null);
+  }
 }

@@ -1,17 +1,27 @@
 <div *ngIf="orders.length === 0" class="my-5 text-center">
-    <p class="lead">You have not placed any orders yet.</p>
-  </div>
-  
-  <div *ngFor="let order of orders" class="my-3">
-    <div class="card">
-      <div class="card-body">
-        <h2 class="card-title">Order #{{ order.id }}</h2>
-        <h5 class="card-subtitle mb-2">Order Date: {{ order.orderDate | date:'longDate' }}</h5>
-        <div *ngFor="let item of order.orderItems">
-          <p class="card-text">Wine Name: {{ getWineName(item.wineId) }} - Quantity: {{ item.quantity }}</p>
-        </div>
+  <p class="lead">You have not placed any orders yet.</p>
+</div>
+
+<div *ngFor="let order of orders; let i = index" class="my-3">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Order # {{ i + 1 }}</h2>
+      <h5 class="card-subtitle mb-2">Order Date: {{ order.orderDate | date:'longDate' }}</h5>
+      <div *ngFor="let item of order.orderItems">
+        <p class="card-text">Wine Name: {{ getWineName(item.wineId) }} - Quantity: {{ item.quantity }}</p>
+      </div>
+
+      <!-- Order Status Display -->
+      <div [ngClass]="{'green': order.received, 'red': !order.received}" class="dot"></div>
+      <p class="card-text" [ngClass]="{'green': order.received, 'red': !order.received}">
+        {{ order.received ? 'Order ready for pickup' : 'Order being processed' }}
+      </p>
+
+      <br>
+      <br>
+      <div>
+        Order Total: {{ order.orderTotal | number }}
       </div>
     </div>
   </div>
-  
-  
+</div>

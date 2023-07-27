@@ -1,0 +1,43 @@
+<!-- Check if there are any orders -->
+<div *ngIf="orders.length > 0; else noOrders">
+    <!-- Iterate over each order -->
+    <div *ngFor="let order of orders">
+      <!-- Display basic order details in a card-like structure for neatness -->
+      <div class="card mb-3">
+        <div class="card-header bg-primary text-white">Order ID: {{ order.wineOrderId }}</div>
+        <div class="card-body">
+          <p>Order Total: R{{ order.orderTotal }}</p>
+          <p>Customer ID: {{ order.customerId }}</p>
+          <p>Order Date: {{ order.orderDate }}</p>
+  
+          <!-- Add a button to update the order status -->
+          <button class="btn btn-success" (click)="updateOrderStatus(order.wineOrderId)">Received</button>
+  
+          <!-- Create a table for order items -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Wine ID</th>
+                <th scope="col">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Iterate over each order item -->
+              <tr *ngFor="let item of order.orderItems">
+                <td>{{ item.wineId }}</td>
+                <td>{{ item.quantity }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- If there are no orders, display a message -->
+  <ng-template #noOrders>
+    <div class="text-center">
+      <h3>No orders found.</h3>
+    </div>
+  </ng-template>
+  
