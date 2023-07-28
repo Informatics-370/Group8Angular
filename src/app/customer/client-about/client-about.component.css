@@ -1,0 +1,42 @@
+.selector {
+    font-family: 'Cinzel Decorative', cursive;
+  }
+
+  .row-heading {
+    background-color: #B55933;
+    padding: 20px 0;
+  }
+
+  .row-heading h1 {
+    font-size: 4rem;
+    color: white;
+    text-align: center;
+  }
+
+
+  .card {
+border: 2px solid #B55933;
+  }
+  
+  .about {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-right: 10px; /* Add right margin for spacing */
+  }
+  
+  .us {
+    font-size: 1.2em;
+    margin-right: 10px; /* Add right margin for spacing */
+  }
+
+  .centered-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+  }
+
+  .card-limit-width {
+    max-width: 33%;
+  }
+
