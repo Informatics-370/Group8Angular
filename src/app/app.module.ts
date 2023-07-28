@@ -55,6 +55,9 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.component';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { RefundsComponent } from './admin/refunds/refunds.component';
+import { ClientAboutComponent } from './customer/client-about/client-about.component';
+import { ClientContactComponent } from './customer/client-contact/client-contact.component';
+
 
 
 @NgModule({
@@ -97,7 +100,10 @@ import { RefundsComponent } from './admin/refunds/refunds.component';
     UserManagementComponent,
     SupplierOrderComponent,
     AdminOrdersComponent,
+    MarcoChanges,
     RefundsComponent,
+    ClientAboutComponent,
+    ClientContactComponent,
   ],
   imports: [
     BrowserModule,

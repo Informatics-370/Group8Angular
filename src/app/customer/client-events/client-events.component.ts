@@ -182,18 +182,20 @@ export class ClientEventsComponent {
  const eventDate = event.eventDate;
 
  // Create a new date object with only the year, month, and day
- const dateOnly = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+ 
 
       // Start the payment process with the final price
       const ticketPurchase: TicketPurchase = {
         userEmail: this.loginService.userValue?.email ?? '',
         eventId: event.eventID,
-        eventDate: dateOnly,
+        eventDate: event.eventDate,
         purchaseDate: new Date(),
         ticketPrice: event.eventPrice,
         eventName: event.eventName,  // New field
         description: event.description,  // New field
       };
+
+      
     
       // Save the ticket purchase
       this.paymentService.saveTicketPurchase(ticketPurchase).subscribe(

@@ -1,13 +1,12 @@
-
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel+Decorative">
 <div class="container-fluid">
-    <div class="row row-heading">
-      <div class="col">
-        <br/>
-        <h1 class="selector">Our Events</h1>
-      </div>
+  <div class="row row-heading">
+    <div class="col">
+      <br />
+      <h1 class="selector">Our Events</h1>
     </div>
   </div>
+</div>
 <br>
 <br>
 <div class="container-fluid">
@@ -15,17 +14,22 @@
     <div class="col-md-6 mb-4" *ngFor="let event of events" >
       <div class="card event-card">
         <img class="card-img-top" [src]="event.imagePath" alt="Card image cap">
-<div class="card-body d-flex flex-column ">
-  <h5 class="card-title text-center">{{ event.eventName }}</h5>
+        <div class="card-body d-flex flex-column ">
+          <h5 class="card-title text-center">{{ event.eventName }}</h5>
           <p class="card-text price">R{{ event.eventPrice }}</p>
           <p class="card-text label">Description:</p>
           <p class="card-text content">{{ event.description }}</p>
           <p class="card-text label">Date:</p>
-          <p class="card-text content">{{ event.eventDate | date:'d MMMM y' }} at {{ event.eventDate | date:'h:mm' }}</p>
+          <p class="card-text content">{{ event.eventDate | date:'d MMMM y, h:mm a' }}</p>
+          
+
           <p class="card-text label" *ngIf="event.earlyBird">EarlyBird:</p>
-          <p class="card-text content" *ngIf="event.earlyBird">{{ event.earlyBird.percentage }}% discount for earlybirds</p>
+          <p class="card-text content" *ngIf="event.earlyBird">{{ event.earlyBird.percentage }}% discount for earlybirds
+          </p>
+
           <div>
-            <button type="button" class="btn btn-primary buy-button" (click)="handleTicketPurchase(event)">Buy Ticket</button>
+            <button type="button" class="btn btn-primary buy-button" (click)="handleTicketPurchase(event)">Buy
+              Ticket</button>
           </div>
 
           <!-- <div>
@@ -36,7 +40,7 @@
             <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807">
             </script>
           </div> -->
-      
+
         </div>
       </div>
     </div>
@@ -45,4 +49,3 @@
 
 
 
-  

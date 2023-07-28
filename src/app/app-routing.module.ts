@@ -37,6 +37,9 @@ import { SuperuserComponent } from './admin/superuser/superuser.component';
 import { CustomersComponent } from './admin/customers/customers.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { RefundsComponent } from './admin/refunds/refunds.component';
+import { ClientAboutComponent } from './customer/client-about/client-about.component';
+import { ClientContactComponent } from './customer/client-contact/client-contact.component';
+
 
 
 
@@ -64,6 +67,8 @@ const routes: Routes = [
   {path: 'eventtype', component:EventTypeComponent},
   {path: 'eventprice', component: EventPriceComponent}, //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS
   {path: 'clienthome', component: ClientHomeComponent},
+  {path: 'clientabout', component: ClientAboutComponent },
+  {path: 'clientcontact', component: ClientContactComponent },
   {path: 'clientevents', component: ClientEventsComponent},
   {path: 'clientproducts', component: ClientProductsComponent},
   {path: 'myrefunds', component: MyRefundsComponent},
