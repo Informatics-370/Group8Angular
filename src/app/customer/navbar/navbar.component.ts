@@ -109,10 +109,10 @@ genders = ['Male', 'Female', 'Other'];
       (error) => {
         if (error.status === 400) {
           // Login was not successful, show error toastr
-          this.toastr.error('Invalid username or password');
+          this.toastr.error('Invalid username or email address');
         } else {
           // Another error occurred, you can add handling for that here
-          this.toastr.error('Invalid username or password');
+          this.toastr.error('Invalid username or address');
         }
       }
     );
