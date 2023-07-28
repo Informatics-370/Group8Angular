@@ -279,6 +279,8 @@ genders = ['Male', 'Female', 'Other'];
       var frgPs = new ForgotPasswordViewModel();
       frgPs.email = this.forgotPasswordEmail;
       this.dataService.forgotPassword(frgPs).subscribe((result: any) => {
+        this.showForgotPasswordModal = false;
+        this.showLoginModal = true;
         this.handleSuccessfulLogin(result);
       },
       (error: any) => {
