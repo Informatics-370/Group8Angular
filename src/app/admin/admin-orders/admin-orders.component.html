@@ -9,9 +9,10 @@
           <p>Order Total: R{{ order.orderTotal }}</p>
           <p>Customer ID: {{ order.customerId }}</p>
           <p>Order Date: {{ order.orderDate }}</p>
+          <p>Order reference: {{order.orderRefNum | uppercase}}</p>
   
           <!-- Add a button to update the order status -->
-          <button class="btn btn-success" (click)="updateOrderStatus(order.wineOrderId)">Received</button>
+          <button class="btn btn-success" [disabled]="order.received" (click)="updateOrderStatus(order.wineOrderId)">Received</button>
   
           <!-- Create a table for order items -->
           <table class="table table-striped">
