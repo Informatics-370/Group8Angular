@@ -10,8 +10,6 @@ import { PaymentService } from '../services/payment.service';
   styleUrls: ['./tickets.component.css']
 })
 export class TicketsComponent {
-
-
   purchasedTickets: TicketPurchase[] = [];
 
   constructor(private paymentService: PaymentService) { }
@@ -31,4 +29,14 @@ export class TicketsComponent {
       }
     );
   }
+
+  getEventTime(eventDate: string | Date): string {
+    const date = new Date(eventDate);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    
+    // padStart is used to ensure that hours and minutes less than 10 start with a '0'
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+
 }
