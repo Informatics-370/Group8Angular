@@ -6,6 +6,7 @@ import {OrderItem} from './orderItem';
 export interface Order {
     wineOrderId: number;
     orderTotal: number;
+    orderRefNum: string;
     customerId: string;
     orderDate: Date;
     received : boolean;

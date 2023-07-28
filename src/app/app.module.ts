@@ -100,7 +100,6 @@ import { ClientContactComponent } from './customer/client-contact/client-contact
     UserManagementComponent,
     SupplierOrderComponent,
     AdminOrdersComponent,
-    MarcoChanges,
     RefundsComponent,
     ClientAboutComponent,
     ClientContactComponent,
