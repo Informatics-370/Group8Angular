@@ -30,7 +30,7 @@ export class CartComponent implements OnInit {
 
   discountCode: string = '';
 
-  
+  isDiscountApplied: boolean = false;
 
   constructor(private cartService: CartService, private wineService: WineService, private toastr: ToastrService, private loginService: DataServiceService,private paymentService: PaymentService, private discountService: DiscountService, private orderService: OrderService   ) { }  // Inject WineService
 
@@ -106,23 +106,29 @@ getWineDetails(wineID: number): Wine | undefined {
 
 
 onApplyDiscountCode() {
+  if (this.isDiscountApplied) {
+    return;
+  }
+
   console.log('Sending discount code:', this.discountCode); 
   this.discountService.validateDiscountCode(this.discountCode)
-
-  .then((discount: Discount) => {
-    if (discount && discount.discountPercentage) {
-      // If the discount code is valid, the server will return the discount object
-      // Calculate the new total
-      this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountPercentage / 100);
-      console.log('New cart total:', this.cartTotal);
-    }
-  })
-  .catch(error => {
-    // If the discount code is not valid, the server will return an error
-    // Display the error message to the user
-    console.error('Error applying discount code:', error);
-  });
+    .then((discount: Discount) => {
+      if (discount && discount.discountPercentage) {
+        this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountPercentage / 100);
+        // Round off the cartTotal to two decimal places
+        this.cartTotal = Math.round(this.cartTotal * 100) / 100;
+        console.log('New cart total:', this.cartTotal);
+        this.isDiscountApplied = true;
+        this.toastr.success('Discount code applied successfully!', 'Discount Code'); // Optional success message
+      }
+    })
+    .catch(error => {
+      console.error('Error applying discount code:', error);
+      this.toastr.error('Discount code already used or does not exist', 'Discount Code');
+    });
 }
+
+
 
 
 

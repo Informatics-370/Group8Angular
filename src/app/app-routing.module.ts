@@ -36,7 +36,7 @@ import { SystemprivilegesComponent } from './admin/systemprivileges/systemprivil
 import { SuperuserComponent } from './admin/superuser/superuser.component';
 import { CustomersComponent } from './admin/customers/customers.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
-
+import { RefundsComponent } from './admin/refunds/refunds.component';
 
 
 
@@ -77,7 +77,8 @@ const routes: Routes = [
   {path: 'customerfaq', component: CustomerFaqComponent},
   {path: 'cart', component: CartComponent},
   {path: 'supplierOrder', component : SupplierOrderComponent},
-  {path: 'adminOrder', component: AdminOrdersComponent}
+  {path: 'adminOrder', component: AdminOrdersComponent},
+  {path: 'refunds', component: RefundsComponent}
  
   
 ];

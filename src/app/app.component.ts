@@ -38,7 +38,8 @@ export class AppComponent {
           '/superuser',
           '/customers',
           '/users',
-          '/adminOrder'
+          '/adminOrder',
+          '/refunds'
         ];
 
         const custroutes = [

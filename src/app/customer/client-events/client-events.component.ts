@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { EarlyBirdService } from 'src/app/admin/services/earlybird.service';
 import { EventService } from 'src/app/admin/services/event.service';
 import { EarlyBird } from 'src/app/Model/earlybird';
@@ -15,13 +15,18 @@ import { BlacklistService } from 'src/app/admin/services/blacklist.service';
   templateUrl: './client-events.component.html',
   styleUrls: ['./client-events.component.css']
 })
+
 export class ClientEventsComponent {
 
   events: Event[] = [];
   earlyBirds: EarlyBird[] = [];
   purchasedEvents: string[] = [];
 
+  @ViewChild('noEventsMessage', { static: true }) noEventsMessage!: TemplateRef<any>;
+
   constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService,  private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService,private blacklistService: BlacklistService ) { }
+
+
 
   async ngOnInit(): Promise<void> {
     try {
@@ -38,8 +43,14 @@ export class ClientEventsComponent {
   }
 
   async loadEventData(): Promise<void> {
-    this.events = await this.eventService.getEvents();
+    try {
+      this.events = await this.eventService.getEvents();
+    } catch (error) {
+      console.error('Failed to fetch events:', error);
+      this.events = [];
+    }
   }
+  
 
   isPurchased(eventId: string): boolean {
     return this.purchasedEvents.includes(eventId);
@@ -189,7 +200,7 @@ export class ClientEventsComponent {
         (response) => {
           // Handle the success response, such as navigating the user to another page
           console.log(response);
-          this.toastr.success('Ticket purchase saved successfully.', 'Purchase');
+          this.toastr.success('TYou will be redirected shortly', 'Redirecting...');
         },
         (error: HttpErrorResponse) => {
           // Handle the error response

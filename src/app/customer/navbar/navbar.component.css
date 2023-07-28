@@ -1,3 +1,68 @@
+/* Import Raleway Thin font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap');
+
+#nav-bar {
+  height: 80px; /* Adjust the height of the navbar as needed */
+}
+
+/* Center the navbar content vertically */
+.container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Center the navbar links vertically */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  margin: 0; /* Remove the default margin for the list */
+  padding: 0; /* Remove the default padding for the list */
+  list-style: none; /* Remove the default list-style */
+}
+
+/* Add some spacing between the navbar links */
+.nav-item {
+  margin-right: 20px;
+}
+
+/* Styles for the logo image (optional) */
+.navbar-brand img {
+  vertical-align: middle;
+}
+
+/* Styles for the toggler button (optional) */
+.navbar-toggler {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.navbar-toggler-icon {
+  background-color: #B55933;
+  width: 30px;
+  height: 3px;
+  display: block;
+}
+
+/* Adjust the position of the toggler icon (optional) */
+.navbar-toggler-icon:before,
+.navbar-toggler-icon:after {
+  content: '';
+  background-color: #B55933;
+  width: 30px;
+  height: 3px;
+  position: absolute;
+}
+
+.navbar-toggler-icon:before {
+  top: -8px;
+}
+
+.navbar-toggler-icon:after {
+  bottom: -8px;
+}
+
 .navbar-custom-links {
   font-size: 1.2rem; /* Adjust the font size as needed */
 
@@ -32,5 +97,56 @@
 .btn-primary {
   background-color: #0d6efd;
   border-color: #0d6efd;
+}
+
+/* Common styles for the login button */
+.login-button {
+  display: inline-block;
+  padding: 10px 30px; /* Adjust the padding to make the button longer */
+  border: none;
+  border-radius: 20px; /* adjust the value based on the size you prefer */
+  color: white;
+  background-color: #B55933;
+  text-decoration: none;
+  font-family: 'Raleway Thin', sans-serif; /* Use Raleway Thin font */
+}
+/* Styles for the cylindrical shape */
+.login-button::before,
+.login-button::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 100%;
+  position: absolute;
+  border-radius: 50%;
+  background-color: #B55933;
+  top: 0;
+}
+
+.login-button::before {
+  left: -50%;
+}
+
+.login-button::after {
+  right: -50%;
+}
+
+/* Styles for the flattened top and bottom */
+.login-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button::before,
+.login-button::after {
+  top: 0;
+}
+
+.login-button::before {
+  top: -50%;
+}
+
+.login-button::after {
+  bottom: -50%;
 }
 

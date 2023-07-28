@@ -67,12 +67,13 @@
 
 <!-- Login Button -->
 <li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
-  <a class="nav-link" href="#" style="color: #B55933;" data-bs-toggle="modal" data-bs-target="#loginModal">LOGIN</a>
+  <a class="nav-link login-button plain-text" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">LOGIN</a>
 </li>
+
         </ul>
       </div>
     </div>
-  </nav>
+</nav>
 
 <!--Login Modal-->
   <div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" (hidden.bs.modal)="clearFields()" [ngClass]="{'show': showLoginModal}" [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">

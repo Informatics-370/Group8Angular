@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Discount } from 'src/app/Model/discount';
 import { DiscountService } from '../services/discount.service';
 import { FormControl, NgForm } from '@angular/forms';
@@ -24,7 +24,7 @@ export class WineComponent implements OnInit {
   tempWine: Wine = new Wine();
  
 
-  constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService) { }
+  constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef,) { }
 
   ngOnInit(): void {
     this.loadVarietals();
@@ -169,14 +169,19 @@ async submitWineForm(form: NgForm): Promise<void> {
       }
 
       if (this.editingWine) {
+        // Do not send 'File' key if no new file has been selected
+        if (!this.selectedFile) {
+          formData.delete('File');
+        }
         await this.wineService.updateWine(this.currentWine.wineID!, formData);
         const updatedWine = await this.wineService.getWine(this.currentWine.wineID!); // Fetch the updated wine.
         const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
         if (index !== -1) {
           this.wines[index] = updatedWine; // Update the wine in the wines array.
         }
+        this.changeDetector.detectChanges();
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
-        this.filterWines(); // Call filterWines() after adding/updating a wine
+        this.loadWines(); // Call loadWines() after updating a wine
       } else {
         const createdWine = await this.wineService.addWine(formData);
         this.wines.push(createdWine);
@@ -192,6 +197,7 @@ async submitWineForm(form: NgForm): Promise<void> {
     }
   }
 }
+
 
 
 // Delete Wine
