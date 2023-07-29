@@ -1,20 +1,20 @@
 <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col" class="header-cell">Wine Name</th>
+        <th scope="col" class="header-cell">Id</th>
+        <th scope="col" class="header-cell">OrderId</th>
         <th scope="col" class="header-cell">Email</th>
-        <th scope="col" class="header-cell">Description</th>
         <th scope="col" class="header-cell">Requested On</th>
         <th scope="col" class="header-cell">Cost</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let request of refundRequests">
-        <td>{{ getWineName(request.wineId)}}</td>
+        <td>{{request.id}}</td>
+        <td>{{request.orderId}}</td>
         <td>{{request.email}}</td>
-        <td>{{request.description}}</td>
         <td>{{request.requestedOn | date:'short'}}</td>
-        <td>R{{request.cost}}</td>
+        <td>{{request.cost | currency}}</td>
       </tr>
     </tbody>
   </table>

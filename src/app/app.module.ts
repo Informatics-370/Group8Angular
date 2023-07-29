@@ -57,6 +57,7 @@ import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.componen
 import { RefundsComponent } from './admin/refunds/refunds.component';
 import { ClientAboutComponent } from './customer/client-about/client-about.component';
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
+import { RefundRequestsComponent } from './admin/refund-requests/refund-requests.component';
 
 
 
@@ -103,6 +104,7 @@ import { ClientContactComponent } from './customer/client-contact/client-contact
     RefundsComponent,
     ClientAboutComponent,
     ClientContactComponent,
+    RefundRequestsComponent,
   ],
   imports: [
     BrowserModule,
