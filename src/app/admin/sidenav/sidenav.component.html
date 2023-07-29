@@ -40,12 +40,28 @@
 </ul>
  
     </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/inventory" routerLinkActive="active">
-        <i class="bi bi-box-seam me-2"></i>
+    <li class="nav-item" (click)="showInventorySubnav = !showInventorySubnav">
+      <a class="nav-link">
+        <i class="bi bi-calendar-event me-2"></i>
         <span>Inventory</span>
+        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
       </a>
-    </li>
+          <ul *ngIf="showInventorySubnav" class="nav flex-column ml-3 sub-nav">
+            <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+              <a class="nav-link" routerLink="/inventory">
+                <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+                <span style="margin-left: 15px;">Inventory</span>
+              </a>
+            </li>
+            <li class="nav-item" style="background-color: rgb(59, 59, 255);">
+              <a class="nav-link" routerLink="/writeoff">
+                <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
+                <span style="margin-left: 15px;">Write-Off Reasons</span>
+              </a>
+            </li>
+          </ul>
+      </li>
+
     <li class="nav-item" (click)="showEventSubnav = !showEventSubnav">
       <a class="nav-link">
         <i class="bi bi-calendar-event me-2"></i>

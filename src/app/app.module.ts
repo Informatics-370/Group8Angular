@@ -59,6 +59,7 @@ import { ClientAboutComponent } from './customer/client-about/client-about.compo
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
 import { RefundRequestsComponent } from './admin/refund-requests/refund-requests.component';
 import { UserRefundsComponent } from './customer/user-refunds/user-refunds.component';
+import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 
 
 
@@ -107,6 +108,7 @@ import { UserRefundsComponent } from './customer/user-refunds/user-refunds.compo
     ClientContactComponent,
     RefundRequestsComponent,
     UserRefundsComponent,
+    WriteoffComponent,
   ],
   imports: [
     BrowserModule,
