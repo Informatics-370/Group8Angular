@@ -1,0 +1,110 @@
+
+<br>
+<br>
+<div class="row align-items-center">
+  <div class="col">
+    <h2>Write Off Reason</h2>
+  </div>
+<div class="col text-end">    
+  <button class="btn btn-success" (click)="openAddWORModal()">
+    <i class="fas fa-plus"></i> Add
+  </button>
+</div>
+</div>
+
+<!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+
+
+
+<!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col" class="header-cell">Description</th>
+      <th scope="col" class="header-cell">Date of Last Update</th>      
+    </tr>
+  </thead>
+  <tbody>      
+      <tr *ngFor="let x of writeOffReason">
+        <td>{{ x.description }}</td>
+        <td>{{ x.date_of_last_update }}</td>
+      <td>
+        <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.writeOff_ReasonID !== undefined && openEditWORModal(x.writeOff_ReasonID)">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn btn-danger" (click)="x.writeOff_ReasonID!== undefined && openDeleteWORModal(x)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="text-center" *ngIf="writeOffReason.length === 0">
+    <h3>No write-off reasons currently in your system.</h3>
+  </div>
+
+<!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
+
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showWORModal}"
+  [ngStyle]="{'display': showWORModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editingWOR ? 'Edit Write Off Reason' : 'Add Write Off Reason'}}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeWORModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form #writeORForm="ngForm" (ngSubmit)="submitWORForm(writeORForm)">        
+
+          <div class="mb-3">
+            <label for="WriteOffReason" class="form-label">Write Off Reason Description</label>
+            <input type="text" class="form-control" id="WriteOffReason" [(ngModel)]="currentWOR.description"
+              name="writeOffReason" required #reasonField="ngModel">
+          </div>   
+          <div *ngIf="reasonField.invalid && reasonField.touched" class="alert alert-danger">
+            <div *ngIf="reasonField.errors?.['required']">Descriptions is required.</div>
+          </div>              
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeWORModal()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="writeORForm.invalid" (click)="submitWORForm(writeORForm)">{{editingWOR ?
+          'Save Changes' : 'Save'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
+
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWORModal}"
+  [ngStyle]="{'display': showDeleteWORModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteWORModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this Write Off Reason?</p>
+        <p>Description: {{ wORToDeleteDetails?.description }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteWORModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteWOR()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--************************************************************ Delete Modal *************************************************************************************************-->

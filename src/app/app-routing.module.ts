@@ -39,6 +39,7 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { RefundsComponent } from './admin/refunds/refunds.component';
 import { ClientAboutComponent } from './customer/client-about/client-about.component';
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
+import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 
 
 
@@ -60,6 +61,7 @@ const routes: Routes = [
   { path: 'superuser', component: SuperuserComponent},
   { path: 'customers', component: CustomersComponent},
   { path: 'users', component: UserManagementComponent},
+  { path: 'writeoff', component: WriteoffComponent},
   {path: 'varietal', component: VarietalComponent},
   {path: 'type', component: TypeComponent},
   {path: 'discount', component: DiscountComponent},
