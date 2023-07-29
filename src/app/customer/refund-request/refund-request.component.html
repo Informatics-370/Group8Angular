@@ -6,6 +6,7 @@
         <th scope="col" class="header-cell">Description</th>
         <th scope="col" class="header-cell">Requested On</th>
         <th scope="col" class="header-cell">Cost</th>
+        <th scope="col" class="header-cell">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -15,6 +16,9 @@
         <td>{{request.description}}</td>
         <td>{{request.requestedOn | date:'short'}}</td>
         <td>R{{request.cost}}</td>
+        <select [(ngModel)]="selectedStatuses[request.id]" (change)="updateStatus(request.id, selectedStatuses[request.id])">
+          <option *ngFor="let status of refundStatuses" [value]="status">{{status}}</option>
+        </select>
       </tr>
     </tbody>
   </table>

@@ -40,7 +40,8 @@ export class AppComponent {
           '/users',
           '/adminOrder',
           '/refunds',
-          '/refundrequests'
+          '/refundrequests',
+
         ];
 
         const custroutes = [
@@ -50,7 +51,8 @@ export class AppComponent {
           '/myrefunds',
           '/refundrequest',
           '/wishlist',
-          '/usernameandpassword'
+          '/usernameandpassword',
+          '/userrefunds'
 
         ]
 

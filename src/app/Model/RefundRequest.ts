@@ -1,3 +1,9 @@
+export enum RefundStatus {
+  InProgress = 0,
+  Approved = 1,
+  NotApproved = 2
+}
+
 export interface RefundRequest {
     id: number;
     wineId: number;
@@ -5,5 +11,6 @@ export interface RefundRequest {
     email: string;
     requestedOn: Date;
     cost: number;
-    description: string; // Add this
-  }
+    description: string;
+    status: RefundStatus;
+}
