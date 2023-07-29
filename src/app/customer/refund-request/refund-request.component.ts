@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RefundRequest } from 'src/app/Model/RefundRequest';
+import { RefundRequest, RefundStatus } from 'src/app/Model/RefundRequest';
 import { OrderService } from '../services/order.service';
 import { RefundService } from '../services/refund.service';
 import { Wine } from 'src/app/Model/wine';
@@ -26,11 +26,13 @@ export class RefundRequestComponent {
     }
 }
 
+refundStatuses = ["In Progress", "Approved", "Not Approved"];
+
 async getRefundRequests(): Promise<void> {
   this.refundRequests = await this.refundService.getRefundRequests().toPromise() || [];
+  this.refundRequests.forEach(request => this.selectedStatuses[request.id] = RefundStatus[request.status]);
 }
-  
-  
+   
   async loadWines(): Promise<void> {
     try {
       this.wines = await this.wineService.getWines();
@@ -44,4 +46,27 @@ async getRefundRequests(): Promise<void> {
     const wine = this.wines.find(w => w.wineID === wineId);
     return wine ? wine.name : 'Unknown';
   }
+
+  ////////////////////////////REFUND STATUS/////////////////////////////////////
+ 
+  selectedStatuses: { [id: number]: string } = {};
+
+ 
+
+  async updateStatus(id: number, status: string): Promise<void> {
+    try {
+        const statusAsNumber = RefundStatus[status as keyof typeof RefundStatus];
+        await this.refundService.updateStatus(id, statusAsNumber).toPromise();
+        // After updating the status on the server, update it locally
+        const request = this.refundRequests.find(r => r.id === id);
+        if (request) {
+            request.status = statusAsNumber;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        // Display an error message to the user
+    }
+  }
+  
 }
+

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RefundRequest } from 'src/app/Model/RefundRequest';
+import { RefundRequest, RefundStatus } from 'src/app/Model/RefundRequest';
 import { environment } from 'src/app/environment';
 
 @Injectable({
@@ -21,5 +21,13 @@ export class RefundService {
   
     getRefundRequests(): Observable<RefundRequest[]> {
       return this.http.get<RefundRequest[]>(`${this.baseUrl}`);
+    }
+
+    getUserRefundRequests(email: string): Observable<RefundRequest[]> {
+      return this.http.get<RefundRequest[]>(`${this.baseUrl}/${email}`);
+    }
+
+    updateStatus(id: number, status: RefundStatus): Observable<any> {
+      return this.http.put(`${this.baseUrl}/${id}/status`, { status: status as number });
     }
 }

@@ -84,7 +84,8 @@ const routes: Routes = [
   {path: 'supplierOrder', component : SupplierOrderComponent},
   {path: 'adminOrder', component: AdminOrdersComponent},
   {path: 'refunds', component: RefundsComponent},
-  {path: 'refundrequests', component: RefundRequestComponent}
+  {path: 'refundrequests', component: RefundRequestComponent},
+  {path: 'userrefunds', component: MyRefundsComponent}
  
   
 ];

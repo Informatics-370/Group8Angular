@@ -1,1 +1,22 @@
-<p>my-refunds works!</p>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="header-cell">Wine Name</th>
+        <th scope="col" class="header-cell">Email</th>
+        <th scope="col" class="header-cell">Description</th>
+        <th scope="col" class="header-cell">Requested On</th>
+        <th scope="col" class="header-cell">Cost</th>
+        <th scope="col" class="header-cell">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of refundRequests">
+        <td>{{ getWineName(request.wineId)}}</td>
+        <td>{{request.email}}</td>
+        <td>{{request.description}}</td>
+        <td>{{request.requestedOn | date:'short'}}</td>
+        <td>R{{request.cost}}</td>
+        <td>{{getStatusName(request.status)}}</td>
+      </tr>
+    </tbody>
+  </table>
