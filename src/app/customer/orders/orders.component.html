@@ -24,7 +24,7 @@
       <div>
         Order Total: {{ order.orderTotal | number }}
       </div>
-      <button (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">Request Refund</button>
+      <button class="btn btn-secondary" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">Request Refund</button>
 
     </div>
   </div>
@@ -42,7 +42,7 @@
         <form #refundForm="ngForm" (ngSubmit)="submitRefundForm(refundForm)">
           <div class="mb-3">
             <label for="refundDescription" class="form-label">Reason for refund</label>
-            <input type="text" class="form-control" id="refundDescription" [(ngModel)]="currentRefundDescription" name="refundDescription" required #descriptionField="ngModel">
+            <input type="text" class="form-control" id="refundDescription" [(ngModel)]="currentRefundDescription" name="refundDescription" required #descriptionField="ngModel" placeholder="Please enter the reason for the refund request here">
             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="alert alert-danger">
               <div *ngIf="descriptionField.errors?.['required']">Description is required.</div>
             </div>
