@@ -96,6 +96,10 @@ updateOrder(order: SupplierOrder): void {
   if (!order.paid) {
     order.received = false;
   }
+  if (!order.ordered) {
+    order.paid = false;
+    order.received = false;
+  }
   
   this.supplierOrderService.updateSupplierOrder(order.supplierOrderID!, order).subscribe(() => {
     const index = this.supplierOrders.findIndex(o => o.supplierOrderID === order.supplierOrderID);
