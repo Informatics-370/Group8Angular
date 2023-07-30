@@ -9,13 +9,17 @@ import { CartService } from '../services/cart.service';
 import jwtDecode from 'jwt-decode';
 import { DecodedToken } from '../services/data-service.service';
 import { WishlistService } from '../services/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-client-products',
   templateUrl: './client-products.component.html',
   styleUrls: ['./client-products.component.css']
 })
+
 export class ClientProductsComponent implements OnInit {
+  
   // variables
   counter = 0;
   // wine: Wine[] = [];
@@ -32,7 +36,8 @@ export class ClientProductsComponent implements OnInit {
     private varietalService: VarietalService,
     private winetypeService: WinetypeService,
     private cartService : CartService,
-    private wishlistService : WishlistService
+    private wishlistService : WishlistService,
+    private toastr: ToastrService
   ) { } // Inject the WineService, VarietalService, and WinetypeService
 
   ngOnInit() {
@@ -148,6 +153,13 @@ export class ClientProductsComponent implements OnInit {
   //Cart functionality
 
   addToCart(wine: Wine) {
+    const quantity = this.getQuantity(wine.wineID);
+    
+    if (quantity < 1) {
+        // Show warning toast and return
+        this.toastr.warning('Invalid amount selected. Please select at least one bottle before adding to the cart.');
+        return;
+    }
     // Decode token to get email
     const token = localStorage.getItem('Token') || '';
     const decoded = jwtDecode(token) as DecodedToken;

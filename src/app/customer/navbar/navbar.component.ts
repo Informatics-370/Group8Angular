@@ -7,6 +7,7 @@ import { TwoFactorAuth } from 'src/app/Model/twofactorauth';
 import { Register } from 'src/app/Model/register';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
 import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
+import { ScrollServiceService } from '../services/scroll-service.service';
 
 
 @Component({
@@ -54,7 +55,7 @@ titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
 genders = ['Male', 'Female', 'Other'];
 
 
-  constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router){ }
+  constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router, private scrollService: ScrollServiceService){ }
 
   ngOnInit() {
     this.dataService.getUserFromToken();
@@ -296,5 +297,9 @@ genders = ['Male', 'Female', 'Other'];
 
   clearForgotPasswordFields() {
     this.forgotPasswordEmail = ''; // Clear the email field
+  }
+
+  scrollToContact() {
+    this.scrollService.changeTarget('contact');
   }
 }

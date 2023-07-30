@@ -1,0 +1,44 @@
+<div id="assistant">
+    <button id="assistant-popup-button" (click)="openSupportPopup()">
+      Chat Support?
+    </button>
+    <div id="assistant-popup" [style.display]="isOpen ? 'block' : 'none'">
+      <div id="assistant-popup-header">
+        Your friendly Assistant
+        <button id="assistant-popup-close-button" (click)="openSupportPopup()">
+         X
+        </button>
+      </div>
+      <div id="assistant-popup-body">
+        <div class="messages" #scrollMe>
+          <div *ngFor="let message of messages" class="message">
+            <div [class]="message.type">
+              {{ message.message }}
+            </div>
+          </div>
+          <div
+            *ngIf="loading"
+            class="message"
+            style="width: 100%; display: block"
+          >
+            <div [class]="'client'">...</div>
+          </div>
+        </div>
+      </div>
+      <form id="assistant-popup-footer" [formGroup]="chatForm">
+        <input
+          formControlName="message"
+          type="text"
+          id="assistant-popup-input"
+          placeholder="Type your message here..."
+        />
+        <button
+          id="assistant-popup-submit-button"
+          [disabled]="!chatForm.valid"
+          (click)="sendMessage()"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>

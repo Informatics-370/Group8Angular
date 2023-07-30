@@ -1,42 +1,91 @@
+.row-heading {
+  background-color: #B55933;
+  padding: 20px 0;
+}
+
 .selector {
-    font-family: 'Cinzel Decorative', cursive;
-  }
+  font-family: 'Cinzel Decorative', cursive;
+}
 
-  .row-heading {
-    background-color: #B55933;
-    padding: 20px 0;
-  }
+.row-heading h1 {
+  font-size: 4rem;
+  color: white;
+  text-align: center;
+}
 
-  .row-heading h1 {
-    font-size: 4rem;
-    color: white;
-    text-align: center;
-  }
+.about {
+  font-family: 'Cinzel Decorative', cursive;
+  color: #444;
+  text-align: center;
+}
 
+.us {
+  font-family: 'Cinzel Decorative', cursive;
+  color: #000000;
+  opacity: 0; /* Set the initial opacity to 0 to hide the text */
+  transition: opacity 0.2s; /* Add a transition for smooth opacity change */
+}
 
-  .card {
-border: 2px solid #B55933;
-  }
-  
-  .about {
-    font-size: 1.5em;
-    font-weight: bold;
-    text-decoration: underline;
-    margin-right: 10px; /* Add right margin for spacing */
-  }
-  
-  .us {
-    font-size: 1.2em;
-    margin-right: 10px; /* Add right margin for spacing */
-  }
+.card:hover .us {
+  opacity: 1; /* Show the text on hover */
+}
 
-  .centered-card {
-    display: flex;
-    justify-content: center;
-    align-items: center;    
-  }
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 0 rgba(0,0,0,0.1);
+  overflow: hidden; /* Add this to clip the content to card boundaries */
+}
 
-  .card-limit-width {
-    max-width: 33%;
-  }
+.card:hover {
+  transform: scale(1.02);
+  transition: transform .2s;
+}
 
+.card-image {
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  height: 30vh; /* Adjust this value as per your needs */
+  transition: opacity 0.2s; /* Add a transition for smooth opacity change */
+  position: relative; /* Add this to make .card-title-overlay position correctly */
+}
+
+.card-title-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 25vh;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card:hover .card-title-overlay {
+  opacity: 0; /* Hide the title on hover */
+}
+
+.card-body {
+  opacity: 0; /* Set initial opacity to hide the card body */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Light white background color */
+  padding: 20px;
+  min-height: 30vh; /* Make it same as card-image height */
+  display: flex; /* Add these lines to center the text vertically */
+  align-items: center; /* Add these lines to center the text vertically */
+  justify-content: center; /* Add these lines to center the text vertically */
+  transition: opacity 0.2s; /* Add a transition for smooth opacity change */
+}
+
+.card:hover .card-body {
+  opacity: 1; /* Show the card body on hover */
+}

@@ -40,6 +40,7 @@ import { RefundsComponent } from './admin/refunds/refunds.component';
 import { ClientAboutComponent } from './customer/client-about/client-about.component';
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
+import { ChatbotComponent } from './customer/chatbot/chatbot.component';
 
 
 
@@ -87,7 +88,8 @@ const routes: Routes = [
   {path: 'adminOrder', component: AdminOrdersComponent},
   {path: 'refunds', component: RefundsComponent},
   {path: 'refundrequests', component: RefundRequestComponent},
-  {path: 'userrefunds', component: MyRefundsComponent}
+  {path: 'userrefunds', component: MyRefundsComponent},
+  {path: 'chatbot', component: ChatbotComponent},
  
   
 ];

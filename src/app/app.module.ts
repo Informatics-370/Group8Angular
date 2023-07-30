@@ -60,7 +60,8 @@ import { ClientContactComponent } from './customer/client-contact/client-contact
 import { RefundRequestsComponent } from './admin/refund-requests/refund-requests.component';
 import { UserRefundsComponent } from './customer/user-refunds/user-refunds.component';
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
-
+import { ChatbotComponent } from './customer/chatbot/chatbot.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -109,6 +110,7 @@ import { WriteoffComponent } from './admin/writeoff/writeoff.component';
     RefundRequestsComponent,
     UserRefundsComponent,
     WriteoffComponent,
+    ChatbotComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,7 +122,8 @@ import { WriteoffComponent } from './admin/writeoff/writeoff.component';
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,}),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule
   ],
   providers: [
     SpinnerService,
