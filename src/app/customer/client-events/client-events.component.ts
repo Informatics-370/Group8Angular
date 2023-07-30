@@ -138,7 +138,7 @@ export class ClientEventsComponent {
           // Create a form
           const form = document.createElement('form');
           form.method = 'POST';
-          form.action = 'https://sandbox.payfast.co.za/eng/process';
+          form.action = 'https://www.payfast.co.za/eng/process';
           form.target = '_self';
     
           // Add the form fields

@@ -124,6 +124,7 @@ closeEventModal() {
 }
 
 openDeleteEventModal(event: any): void {
+  console.log(event); // add this line
   this.eventToDelete = event.eventID;
   this.eventToDeleteDetails = event;
   this.showDeleteEventModal = true;

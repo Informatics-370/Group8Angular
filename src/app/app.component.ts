@@ -52,7 +52,8 @@ export class AppComponent {
           '/refundrequest',
           '/wishlist',
           '/usernameandpassword',
-          '/userrefunds'
+          '/userrefunds',
+          '/chatbot'
 
         ]
 
@@ -69,5 +70,11 @@ export class AppComponent {
 
   toggleSidebar() {
     document.body.classList.toggle('sidebar-open');
+  }
+
+  showChat = false;
+
+  toggleChat() {
+    this.showChat = !this.showChat;
   }
 }

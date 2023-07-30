@@ -5,3 +5,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.user {
+    text-align: right;
+    color: blue;
+  }
+  
+  .bot {
+    text-align: left;
+    color: #B55933;
+  }
