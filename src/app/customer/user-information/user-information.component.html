@@ -1,30 +1,34 @@
+<!-- User Information Page -->
 <ng-container *ngIf="user">
-  <h1>Hello, {{ user.title }}. {{ user.first_Name }} {{ user.last_Name }}</h1>
+  <div class="user-info">
+    <h1>Hello, {{ user.title }}. {{ user.first_Name }} {{ user.last_Name }}</h1>
 
-  <h2>Account details:</h2>
-  <ul>
-    <!-- Display information -->
-    <li>Title: {{ user.title }}</li>
-    <li>First name: {{ user.first_Name }}</li>
-    <li>Last name: {{ user.last_Name }}</li>
-    <li>Email: {{ user.email }}</li>
-    <li>Phone number: {{ user.phoneNumber }}</li>
-    <li>ID Number: {{ user.iD_Number }}</li>
-    <li>Gender: {{ user.gender }}</li>
-    <li>TwoFactorAuth: {{user.twoFactorEnabled}}</li>
-  </ul>
+    <h2>Account details:</h2>
+    <ul>
+      <!-- Display information -->
+      <li><strong>Title:</strong> {{ user.title }}</li>
+      <li><strong>First name:</strong> {{ user.first_Name }}</li>
+      <li><strong>Last name:</strong> {{ user.last_Name }}</li>
+      <li><strong>Email:</strong> {{ user.email }}</li>
+      <li><strong>Phone number:</strong> {{ user.phoneNumber }}</li>
+      <li><strong>ID Number:</strong> {{ user.iD_Number }}</li>
+      <li><strong>Gender:</strong> {{ user.gender }}</li>
+      <li><strong>Two-Factor Auth:</strong> {{ user.twoFactorEnabled }}</li>
+    </ul>
 
-  <!-- Edit and Delete Buttons -->
-  <div class="d-flex gap-3">
-    <button class="btn btn-primary" (click)="openEditCustomerModal()">
-      Edit Account
-    </button>
+    <!-- Edit and Delete Buttons -->
+    <div class="d-flex gap-3">
+      <button class="btn btn-primary" (click)="openEditCustomerModal()">
+        Edit Account
+      </button>
 
-    <button class="btn btn-danger" (click)="user.id !== undefined && openDeleteCustomerModal(user)">
-      Delete Account
-    </button>
+      <button class="btn btn-danger" (click)="user.id !== undefined && openDeleteCustomerModal(user)">
+        Delete Account
+      </button>
+    </div>
   </div>
 </ng-container>
+
 
 <!-- Edit Customer Modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showEditCustomerModal}" [ngStyle]="{'display': showEditCustomerModal ? 'block' : 'none'}">
