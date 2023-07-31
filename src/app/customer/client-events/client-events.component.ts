@@ -202,7 +202,7 @@ export class ClientEventsComponent {
         (response) => {
           // Handle the success response, such as navigating the user to another page
           console.log(response);
-          this.toastr.success('TYou will be redirected shortly', 'Redirecting...');
+          this.toastr.success('You will be redirected shortly', 'Redirecting...');
         },
         (error: HttpErrorResponse) => {
           // Handle the error response

@@ -1,0 +1,66 @@
+/* User Information Page Styles */
+.user-info {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .gap-3 {
+    gap: 15px;
+  }
+  
+  /* Add some spacing to buttons */
+  .d-flex gap-3 {
+    margin-top: 20px;
+  }
+  

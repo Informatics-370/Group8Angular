@@ -14,7 +14,7 @@
       <th scope="col">Varietal</th>
       <th scope="col">Type</th>
       <th scope="col">Price (ZAR)</th>
-      <!-- <th scope="col"></th> -->
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -29,11 +29,11 @@
       <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td>
       <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
       <td class="align-middle">{{ wine.winePrice }}</td>
-      <!-- <td class="align-middle">
+      <td class="align-middle">
         <button class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
           <i class="fas fa-trash-alt"></i> Remove
         </button>                
-      </td> -->
+      </td>
     </tr>
   </tbody>
 </table>
