@@ -88,13 +88,21 @@ export class SuperuserComponent {
     if (form.valid) {
       try {
         if (this.editingSuperuser) {
-          await this.superuserService.UpdateSuperuser(this.currentSuperuser.id!, this.currentSuperuser);
-          const index = this.superusers.findIndex(superuser => superuser.id === this.currentSuperuser.id);
-          if (index !== -1) {
-            // Update the original Superuser object with the changes made to the clone
-            this.superusers[index] = this.currentSuperuser;
-            this.toastr.success("Superuser updated.", "Update Superuser");
-          }
+          this.superuserService.UpdateSuperuser(this.currentSuperuser.id!, this.currentSuperuser).subscribe(
+            (data: Superuser) => {
+              const index = this.superusers.findIndex(superuser => superuser.id === data.id);
+              if (index !== -1) {
+                // Update the original Superuser object with the changes made to the clone
+                this.superusers[index] = data;
+                this.toastr.success("Superuser updated.", "Update Superuser");
+              }
+              this.closeSuperuserModal();
+            },
+            (error: any) => {
+              console.error(error);
+              this.toastr.error("Failed to update superuser.", "Update Superuser");
+            }
+          );
         } else {
           const regEmp: SuperuserRegistrationViewModel = new SuperuserRegistrationViewModel();
           
