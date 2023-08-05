@@ -89,13 +89,21 @@ export class EmployeeComponent {
     if (form.valid) {
       try {
         if (this.editingEmployee) {
-          await this.employeeService.UpdateEmployee(this.currentEmployee.id!, this.currentEmployee);
-          const index = this.employees.findIndex(employee => employee.id === this.currentEmployee.id);
-          if (index !== -1) {
-            // Update the original Employee object with the changes made to the clone
-            this.employees[index] = this.currentEmployee;
-            this.toastr.success("Employee updated.", "Update employee");
-          }
+          this.employeeService.UpdateEmployee(this.currentEmployee.id!, this.currentEmployee).subscribe(
+            (data: Employee) => {
+              const index = this.employees.findIndex(employee => employee.id === this.currentEmployee.id);
+              if (index !== -1) {
+                // Update the original Employee object with the changes made to the clone
+                this.employees[index] = data;
+                this.toastr.success("Employee updated.", "Update employee");
+              }
+              this.closeEmployeeModal();
+            },
+            (error: any) => {
+              console.error(error);
+              this.toastr.error("Failed to update superuser.", "Update Superuser");
+            }
+          );
         } else {
           const regEmp: EmployeeRegistrationViewModel = new EmployeeRegistrationViewModel();
           

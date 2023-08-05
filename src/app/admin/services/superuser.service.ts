@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { Employee } from 'src/app/Model/employee';
-import { EmployeeRegistrationViewModel } from 'src/app/Model/employeeRegisterViewModel';
 import { Superuser } from 'src/app/Model/superuser';
 import { SuperuserRegistrationViewModel } from 'src/app/Model/superuserRegisterViewModel';
 import { environment } from 'src/app/environment';
@@ -51,7 +50,7 @@ export class SuperuserService {
   UpdateSuperuser(id: string, superuser: Superuser): Observable<any> {
     this.setHeaders();
     console.log('Updating employee with ID:', id, 'and data:', superuser);
-    return this.httpClient.put(`${this.apiUrl}/${id}`, superuser, { headers: this.headers });
+    return this.httpClient.put(`${this.apiUrl}/UpdateSuperUser/${id}`, superuser, { headers: this.headers });
   }
   
 
