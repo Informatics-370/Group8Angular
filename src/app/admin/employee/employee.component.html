@@ -74,7 +74,7 @@
           <!-- LAST NAME -->
           <div class="mb-3">
             <label for="lastName" class="form-label">Last Name:</label>
-            <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z]+$">
+            <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z ]+$">
             <div *ngIf="employeeForm.controls['lastName']?.invalid && employeeForm.controls['lastName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
               <div *ngIf="employeeForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
@@ -104,13 +104,20 @@
           <!-- Display fields only for adding new employee (not editing) -->
           <ng-container *ngIf="!editingEmployee">
             <!-- TITLE -->
-          <div class="mb-3">
-            <label for="title" class="form-label">Title:</label>
-            <input type="text" class="form-control" id="empTitle" [(ngModel)]="currentEmployee.title" name="title" required>
-            <div *ngIf="employeeForm.controls['title']?.invalid && employeeForm.controls['title'].touched" class="alert alert-danger">
-              <div *ngIf="employeeForm.controls['title'].errors?.['required']">Title is required.</div>
+            <div class="mb-3">
+              <label for="title" class="form-label">Title:</label>
+              <select class="form-select" id="empTitle" [(ngModel)]="currentEmployee.title" name="title" required>
+                <option value="" disabled selected>Select a title</option>
+                <option value="Title 1">Mr</option>
+                <option value="Title 2">Mrs</option>
+                <option value="Title 3">Ms</option>
+                <option value="Title 4">Dr</option>
+              </select>
+              <div *ngIf="employeeForm.controls['title']?.invalid && employeeForm.controls['title'].touched" class="alert alert-danger">
+                <div *ngIf="employeeForm.controls['title'].errors?.['required']">Title is required.</div>
+              </div>
             </div>
-          </div>
+            
 
             <!-- EMAIL -->
             <div class="mb-3">
@@ -141,13 +148,19 @@
             </div>
 
              <!-- GENDER -->
-            <div class="mb-3">
+             <div class="mb-3">
               <label for="gender" class="form-label">Gender:</label>
-              <input type="text" class="form-control" id="empGender" [(ngModel)]="currentEmployee.gender" name="gender" required>
+              <select class="form-select" id="empGender" [(ngModel)]="currentEmployee.gender" name="gender" required>
+                <option value="" disabled selected>Select a gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
               <div *ngIf="employeeForm.controls['gender']?.invalid && employeeForm.controls['gender'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['gender'].errors?.['required']">Gender is required.</div>
               </div>
             </div>
+            
           </ng-container>
 
           <div class="modal-footer">
