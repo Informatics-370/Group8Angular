@@ -157,7 +157,7 @@
           </div>
           <div class="mb-3">
             <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required [(ngModel)]="lastName" name="lastName" #lastNameInput>
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required [(ngModel)]="lastName" name="lastName" #lastNameInput required pattern="^[A-Za-z ]+$">
           </div>
           <div class="mb-3">
             <label for="phoneNumber" class="form-label">Phone Number</label>
