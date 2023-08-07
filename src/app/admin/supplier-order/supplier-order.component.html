@@ -16,18 +16,19 @@
             <tr>
                 <th scope="col">Wine Name</th> <!-- Header -->
                 <th scope="col">Quantity Ordered</th>
+                <th scope="col">Order Price</th>
                 <th scope="col">Date Ordered</th>
                 <th scope="col">Supplier Name</th>
                 <th scope="col">Ordered</th>
                 <th scope="col">Paid</th>
                 <th scope="col">Received</th>
-                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let order of supplierOrders">
                 <td>{{ order.wineName }}</td> <!-- Corresponding data -->
                 <td>{{ order.quantity_Ordered }}</td>
+                <td>R {{ order.orderTotal }}</td>
                 <td>{{ order.dateOrdered | date:'short' }}</td>
                 <td>{{ getSupplierName(order.supplierID) ?? 'Unknown Supplier' }}</td>
                 <td><input type="checkbox" [(ngModel)]="order.ordered" (change)="updateOrder(order)"></td>
@@ -36,16 +37,7 @@
                 </td>
                 <td>
                     <input type="checkbox" [(ngModel)]="order.received" [disabled]="!order.ordered || !order.paid" (change)="updateOrder(order)">
-                </td>
-                <!-- Action button -->
-                <td>
-                    <!-- <button class="btn btn-primary" (click)="openEditSupplierOrderModal(order)">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button> -->
-                    <button class="btn btn-danger" (click)="openDeleteSupplierOrderModal(order)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
+                </td>                
             </tr>
             
             

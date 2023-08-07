@@ -3,6 +3,7 @@ import { SupplierOrderService } from '../services/supplier-order.service';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
 import { Supplier } from 'src/app/Model/supplier';
 import { SupplierService } from '../services/supplier.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-supplier-order',
@@ -17,7 +18,7 @@ export class SupplierOrderComponent implements OnInit {
   showAddSupplierOrderModal = false;
   suppliers: Supplier[] = [];
 
-  constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService) { }
+  constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService) { }
   ngOnInit(): void {
     this.getSupplierOrders();
     this.getSuppliers();
@@ -25,11 +26,16 @@ export class SupplierOrderComponent implements OnInit {
   }
 
   getSupplierOrders(): void {
+    try{
     this.supplierOrderService.getSupplierOrders().subscribe(orders => {
       this.supplierOrders = orders;
       console.log("Orders:", this.supplierOrders); // Check output
-    });
+    });}
+    catch{
+    this.toastr.error('Error, failed to connect to the database', 'Supplier Order Table');
   }
+}
+
 
   getSuppliers(): void {
     this.supplierService.getSuppliers().subscribe(suppliers => {
@@ -66,10 +72,12 @@ closeAddSupplierOrderModal(): void {
 
 createOrder(order: SupplierOrder): void {
   order.dateOrdered = new Date();
+  order.orderTotal = order.winePrice! * order.quantity_Ordered!;
   this.supplierOrderService.createSupplierOrder(order).subscribe(createdOrder => {
       this.supplierOrders.push(createdOrder);
       this.closeAddSupplierOrderModal(); // Close the Add Supplier Order modal after saving
   });
+  this.toastr.success('Successfully added', 'Order');
 }
 
 openDeleteSupplierOrderModal(order: SupplierOrder): void {
@@ -101,6 +109,7 @@ updateOrder(order: SupplierOrder): void {
     order.received = false;
   }
   
+  try{
   this.supplierOrderService.updateSupplierOrder(order.supplierOrderID!, order).subscribe(() => {
     const index = this.supplierOrders.findIndex(o => o.supplierOrderID === order.supplierOrderID);
     if (index !== -1) {
@@ -108,8 +117,9 @@ updateOrder(order: SupplierOrder): void {
     }
     this.selectedOrder = null; // clear selection
   });
+  this.toastr.success('Successfully Updated', 'Order');
+}catch{
+  this.toastr.error('Error occurred please try again', 'Order');
 }
-
-
-
+}
 }
