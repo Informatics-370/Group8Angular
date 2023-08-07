@@ -8,6 +8,7 @@ export class SupplierOrder {
     wineYear: string | undefined;
     wineType: string | undefined;
     winePrice: number | undefined;
+    orderTotal: number | undefined;
     supplierID: number | undefined;
     supplier: Supplier | undefined;
     ordered: boolean = false;
