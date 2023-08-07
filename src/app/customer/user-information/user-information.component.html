@@ -61,9 +61,10 @@
           <!-- LAST NAME -->
           <div class="mb-3">
             <label for="last_Name" class="form-label">Last Name:</label>
-            <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required>
+            <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$"> 
             <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
               <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
+              <div *ngIf="editCustomerForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
             </div>
           </div>
 
