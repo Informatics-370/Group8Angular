@@ -12,6 +12,7 @@ export interface CartItem {
     cartID: number;
     customerID: string;
     cartTotal : number;
+    discountedCart : number;
     cartItems: CartItem[];
   }
   

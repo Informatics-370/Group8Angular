@@ -40,4 +40,9 @@ getCartTotal(email: string): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/${email}/total`);
 }
 
+applyDiscount(email: string, newTotal: number): Observable<any> {
+  return this.http.put<any>(`${this.apiUrl}/${email}/applyDiscount`, newTotal);
+}
+
+
 }

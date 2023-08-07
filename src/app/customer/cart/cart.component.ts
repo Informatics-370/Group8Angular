@@ -115,11 +115,26 @@ onApplyDiscountCode() {
     .then((discount: Discount) => {
       if (discount && discount.discountPercentage) {
         this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountPercentage / 100);
+        
         // Round off the cartTotal to two decimal places
         this.cartTotal = Math.round(this.cartTotal * 100) / 100;
         console.log('New cart total:', this.cartTotal);
         this.isDiscountApplied = true;
-        this.toastr.success('Discount code applied successfully!', 'Discount Code'); // Optional success message
+
+        let token = localStorage.getItem('Token') || '';
+        let decodedToken = jwt_decode(token) as DecodedToken;
+        let email = decodedToken.sub;
+
+        // Call the backend to update the discounted total
+        this.cartService.applyDiscount(email, this.cartTotal).subscribe(
+          () => {
+            this.toastr.success('Discount code applied successfully!', 'Discount Code'); // Optional success message
+          },
+          error => {
+            console.error('Error updating discounted total:', error);
+            this.toastr.error('An error occurred while applying the discount', 'Discount Code'); // Optional error message
+          }
+        );
       }
     })
     .catch(error => {
@@ -127,6 +142,7 @@ onApplyDiscountCode() {
       this.toastr.error('Discount code already used or does not exist', 'Discount Code');
     });
 }
+
 
 
 
