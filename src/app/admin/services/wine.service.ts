@@ -26,7 +26,6 @@ export class WineService {
     if (token) {  
       token = JSON.parse(token);
         this.headers = new HttpHeaders({
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
     }
