@@ -74,7 +74,7 @@
           <!-- LAST NAME -->
           <div class="mb-3">
             <label for="lastName" class="form-label">Last Name:</label>
-            <input type="text" class="form-control" id="supLastName" [(ngModel)]="currentSuperuser.last_Name" name="lastName" required pattern="^[A-Za-z]+$">
+            <input type="text" class="form-control" id="supLastName" [(ngModel)]="currentSuperuser.last_Name" name="lastName" required pattern="^[A-Za-z\s]+$">
             <div *ngIf="superuserForm.controls['lastName']?.invalid && superuserForm.controls['lastName'].touched" class="alert alert-danger">
               <div *ngIf="superuserForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
               <div *ngIf="superuserForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
@@ -106,7 +106,13 @@
             <!-- TITLE -->
           <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
-            <input type="text" class="form-control" id="supTitle" [(ngModel)]="currentSuperuser.title" name="title" required>
+            <select class="form-select" id="empTitle" [(ngModel)]="currentSuperuser.title" name="title" required>
+              <option value="" disabled selected>Select a title</option>
+              <option value="Title 1">Mr</option>
+              <option value="Title 2">Mrs</option>
+              <option value="Title 3">Ms</option>
+              <option value="Title 4">Dr</option>
+            </select>
             <div *ngIf="superuserForm.controls['title']?.invalid && superuserForm.controls['title'].touched" class="alert alert-danger">
               <div *ngIf="superuserForm.controls['title'].errors?.['required']">Title is required.</div>
             </div>
@@ -114,11 +120,11 @@
 
             <!-- EMAIL -->
             <div class="mb-3">
-              <label for="email" class="form-label">Email: </label>
-              <input type="email" class="form-control" id="supEmail" [(ngModel)]="currentSuperuser.email" name="email" required>
+              <label for="email" class="form-label">Email:</label>
+              <input type="text" class="form-control" id="editEmail" [(ngModel)]="currentSuperuser!.email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$">
               <div *ngIf="superuserForm.controls['email']?.invalid && superuserForm.controls['email'].touched" class="alert alert-danger">
                 <div *ngIf="superuserForm.controls['email'].errors?.['required']">Email is required.</div>
-                <div *ngIf="superuserForm.controls['email'].errors?.['email']">Invalid email format.</div>
+                <div *ngIf="superuserForm.controls['email'].errors?.['pattern']">Invalid email format.</div>
               </div>
             </div>
 
@@ -143,7 +149,12 @@
              <!-- GENDER -->
             <div class="mb-3">
               <label for="gender" class="form-label">Gender:</label>
-              <input type="text" class="form-control" id="supGender" [(ngModel)]="currentSuperuser.gender" name="gender" required>
+              <select class="form-select" id="empGender" [(ngModel)]="currentSuperuser.gender" name="gender" required>
+                <option value="" disabled selected>Select a gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
               <div *ngIf="superuserForm.controls['gender']?.invalid && superuserForm.controls['gender'].touched" class="alert alert-danger">
                 <div *ngIf="superuserForm.controls['gender'].errors?.['required']">Gender is required.</div>
               </div>
@@ -179,10 +190,12 @@
       <p>ID: {{ superuserToDeleteDetails?.id }}</p>
       <p>Name: {{ superuserToDeleteDetails?.first_Name }}</p>
       <p>Surname: {{ superuserToDeleteDetails?.last_Name }}</p>
+      <label for="confirmationInput">Type "Confirm" to proceed:</label>
+      <input type="text" id="confirmationInput" [(ngModel)]="deleteConfirmationText" placeholder="Type 'Confirm' here" (focus)="clearConfirmationInput()">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteSuperuserModal()">No</button>
-      <button type="button" class="btn btn-primary" (click)="deleteSuperuser()">Yes</button>
+      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteSuperuser()">Yes</button>
     </div>
   </div>
 </div>

@@ -1,19 +1,40 @@
-import { Component } from '@angular/core';
-import { FAQ } from 'src/app/Model/faq';
+import { Component, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
+import { FAQ } from 'src/app/Model/faq'; // Adjust the import path to match your actual path
 import { FAQService } from 'src/app/admin/services/faq.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-customer-faq',
   templateUrl: './customer-faq.component.html',
   styleUrls: ['./customer-faq.component.css']
 })
-export class CustomerFaqComponent {
+export class CustomerFaqComponent implements AfterViewInit {
   faqs: FAQ[] = [];
+  shownAnswers = new Set<number>(); // Initialize an empty Set
 
-  constructor(private faqService: FAQService) { }
+  constructor(private elementRef: ElementRef, private renderer: Renderer2, private faqService: FAQService, private toastr: ToastrService) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.setupAccordion();
     this.loadFAQs();
+  }
+
+  setupAccordion(): void {
+    const items: HTMLButtonElement[] = this.elementRef.nativeElement.querySelectorAll('.accordion button');
+
+    items.forEach(item => {
+      this.renderer.listen(item, 'click', () => {
+        const itemToggle = item.getAttribute('aria-expanded');
+        
+        items.forEach(otherItem => {
+          this.renderer.setAttribute(otherItem, 'aria-expanded', 'false');
+        });
+        
+        if (itemToggle === 'false') {
+          this.renderer.setAttribute(item, 'aria-expanded', 'true');
+        }
+      });
+    });
   }
 
   loadFAQs(): void {
@@ -23,12 +44,10 @@ export class CustomerFaqComponent {
       },
       (error: any) => {
         console.error(error);
-        // Handle error if necessary
+        this.toastr.error('Error, failed to connect to the database', 'FAQ Table');
       }
     );
   }
-
-  shownAnswers = new Set<number>(); // Initialize an empty Set
 
   isAnswerShown(index: number): boolean {
     return this.shownAnswers.has(index);

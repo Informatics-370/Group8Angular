@@ -168,7 +168,7 @@ async deleteInventory(): Promise<void> {
 
 // Function to increase the Quantity on Hand for a specific wine
 increaseQuantity(item: any) {
-  if (item.quantityOnHand > 0) {
+  if (item.quantityOnHand > -1) {
     item.quantityOnHand++;
     // Update the inventory using the service
     this.inventoryService.updateInventory(item.inventoryID, item)
