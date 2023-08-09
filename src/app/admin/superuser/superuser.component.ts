@@ -21,6 +21,7 @@ export class SuperuserComponent {
   superuserToDeleteDetails: any;
   superuserToDelete: any = null;
   maxDate!: string;
+  deleteConfirmationText: string = 'Confirm';
 
   constructor(private superuserService: SuperuserService, private toastr : ToastrService){ }
 
@@ -28,6 +29,11 @@ export class SuperuserComponent {
     this.getSuperusers();
     const today = new Date();
     this.maxDate = this.formatDate(today);
+    this.clearConfirmationInput();
+  }
+
+  clearConfirmationInput(): void {
+    this.deleteConfirmationText = ''; // Clear the input field
   }
 
   formatDate(date: Date): string {

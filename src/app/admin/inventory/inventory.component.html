@@ -100,25 +100,28 @@
           
           <div class="mb-3">
             <label for="winePrice" class="form-label">Wine Price</label>
-            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentInventory.winePrice" name="winePrice" required #winePriceField="ngModel">
+            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentInventory.winePrice" name="winePrice" required [min]="0.01" #winePriceField="ngModel">
             <div *ngIf="winePriceField.invalid && winePriceField.touched" class="alert alert-danger">
               <div *ngIf="winePriceField.errors?.['required']">Wine Price is required.</div>
+              <div *ngIf="stockLimitField.errors?.['min']">Wine Price cannot be zero or less.</div>
             </div>
           </div>
           
           <div class="mb-3">
             <label for="stockLimit" class="form-label">Stock Limit</label>
-            <input type="number" class="form-control" id="stockLimit" [(ngModel)]="currentInventory.stockLimit" name="stockLimit" required #stockLimitField="ngModel">
+            <input type="number" class="form-control" id="stockLimit" [(ngModel)]="currentInventory.stockLimit" name="stockLimit" required [min]="0.01" #stockLimitField="ngModel">
             <div *ngIf="stockLimitField.invalid && stockLimitField.touched" class="alert alert-danger">
               <div *ngIf="stockLimitField.errors?.['required']">Stock Limit is required.</div>
+              <div *ngIf="stockLimitField.errors?.['min']">Stock Limit cannot be zero or less.</div>
             </div>
           </div>
           
           <div class="mb-3">
             <label for="quantityOnHand" class="form-label">Quantity On Hand</label>
-            <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required #quantityOnHandField="ngModel">
+            <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required [min]="0.01" #quantityOnHandField="ngModel">
             <div *ngIf="quantityOnHandField.invalid && quantityOnHandField.touched" class="alert alert-danger">
               <div *ngIf="quantityOnHandField.errors?.['required']">Quantity On Hand is required.</div>
+              <div *ngIf="stockLimitField.errors?.['min']">Quantity On Hand cannot be zero or less.</div>
             </div>
           </div>
           
