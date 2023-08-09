@@ -85,12 +85,13 @@ async decrementQuantity(cartItemId: number): Promise<void> {
     let decodedToken = jwt_decode(token) as DecodedToken;
     let email = decodedToken.sub;
 
+    
+
     if (!email) return;
 
     try {
       await this.cartService.decrementCartItemQuantity(email, cartItemId).toPromise();
-      await this.loadCart(email);
-     
+      await this.loadCart(email);    
 
     } catch (error) {
       console.log(error);

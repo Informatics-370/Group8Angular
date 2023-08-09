@@ -43,7 +43,7 @@
 
                                     </td>
                                     <td class="text-left">
-                                        {{getWineDetails(item.wineID)?.winePrice}}
+                                        R {{getWineDetails(item.wineID)?.winePrice}}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -71,8 +71,7 @@
           <tbody>
             <tr style="color: #B54E33;">
               <td class="text-left">Total</td>
-              <td class="text-left">{{cartTotal}}</td>
-             
+              <td class="text-left">R {{cartTotal}}</td>             
             </tr>
           </tbody>
         </table>
@@ -85,6 +84,7 @@
         </div>
         <!-- Payment button -->
         <button type="button" class="btn btn-primary" (click)="onProceedToPayment()">Proceed to Payment</button>
+        <p style="font-size: smaller;">*Kindly be advised that we exclusively accommodate orders for on-site collection, as regrettably, a delivery service is not currently available.</p>
       </div>
     </div>
   </div>

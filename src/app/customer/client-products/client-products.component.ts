@@ -46,20 +46,20 @@ export class ClientProductsComponent implements OnInit {
     this.loadWinetypes();
     }
     
-    incrementCounter(wineId: number): void {
-      let quantity = this.quantityMap.get(wineId) || 0;
-      this.quantityMap.set(wineId, ++quantity);
-    }
+    // incrementCounter(wineId: number): void {
+    //   let quantity = this.quantityMap.get(wineId) || 0;
+    //   this.quantityMap.set(wineId, ++quantity);
+    // }
     
-    decrementCounter(wineId: number): void {
-      let quantity = this.quantityMap.get(wineId);
-      if (quantity && quantity > 0) {
-        this.quantityMap.set(wineId, --quantity);
-      }
-    }
+    // decrementCounter(wineId: number): void {
+    //   let quantity = this.quantityMap.get(wineId);
+    //   if (quantity && quantity > 0) {
+    //     this.quantityMap.set(wineId, --quantity);
+    //   }
+    // }
 
     getQuantity(wineId: number): number {
-      return this.quantityMap.get(wineId) || 0;
+      return this.quantityMap.get(wineId) || 1;
     }
     
     
@@ -184,9 +184,11 @@ export class ClientProductsComponent implements OnInit {
     this.cartService.addToCart(email, cartItem).subscribe(
       () => {
         console.log('Wine added to cart!');
+        this.toastr.success('Successfully added to Cart', 'Wine');
       },
       error => {
         console.log('Failed to add wine to cart');
+        this.toastr.success('Failed to add to Cart', 'Wine');
       }
     );
   }
