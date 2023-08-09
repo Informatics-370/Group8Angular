@@ -53,6 +53,11 @@ showPassword: boolean = false;
 
 titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
 genders = ['Male', 'Female', 'Other'];
+confirmPassword: string | undefined;
+
+passwordsMatch(): boolean {
+  return this.confirmPassword === this.rpassword;
+}
 
 
   constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router, private scrollService: ScrollServiceService){ }
@@ -85,7 +90,7 @@ genders = ['Male', 'Female', 'Other'];
     this.showLoginModal = false;
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 

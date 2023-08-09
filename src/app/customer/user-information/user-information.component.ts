@@ -18,6 +18,7 @@ export class UserInformationComponent implements OnInit {
   showDeleteCustomerModal = false;
   customerToDelete: any = null;
   customerToDeleteDetails: any = null;
+  confirmationText: string = 'Confirm'
 
   constructor(
     private dataService: DataServiceService,
@@ -29,7 +30,13 @@ export class UserInformationComponent implements OnInit {
   ngOnInit() {
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    this.clearConfirmationInput();
   }
+
+  clearConfirmationInput(): void {
+    this.confirmationText = ''; // Clear the input field
+  } 
+
 
   loadUserData() {
     const userEmail = this.userDetails?.email;

@@ -136,7 +136,9 @@
   
 
 <!-- Register Modal -->
-<div class="modal fade" #registerModal id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true" (hidden.bs.modal)="clearRegisterFields()" [ngClass]="{'show': showRegisterModal}" [ngStyle]="{'display': showRegisterModal ? 'block' : 'none'}">
+<div class="modal fade" #registerModal id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+  aria-hidden="true" (hidden.bs.modal)="clearRegisterFields()" [ngClass]="{'show': showRegisterModal}"
+  [ngStyle]="{'display': showRegisterModal ? 'block' : 'none'}">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -144,54 +146,134 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="register()">
+        <form #Registerform="ngForm" (ngSubmit)="register()">
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <select class="form-control" id="title" required [(ngModel)]="title" name="title" #titleInput>
+              <option value="" disabled selected>Select a title</option>
               <option *ngFor="let title of titles" [value]="title">{{title}}</option>
             </select>
+            <div *ngIf="Registerform.controls['title']?.invalid && Registerform.controls['title'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['title'].errors?.['required']">Title is required.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required [(ngModel)]="firstName" name="firstName" #firstNameInput>
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required
+              [(ngModel)]="firstName" name="firstName" #firstNameInput>
+            <div *ngIf="Registerform.controls['firstName']?.invalid && Registerform.controls['firstName'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['firstName'].errors?.['required']">First Name is required.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required [(ngModel)]="lastName" name="lastName" #lastNameInput required pattern="^[A-Za-z ]+$">
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required
+              [(ngModel)]="lastName" name="lastName" #lastNameInput required pattern="^[A-Za-z ]+$">
+            <div *ngIf="Registerform.controls['lastName']?.invalid && Registerform.controls['lastName'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['lastName'].errors?.['required']">Last Name is required.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="phoneNumber" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number" required [(ngModel)]="phoneNumber" name="phoneNumber" #phoneNumberInput>
+            <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number"
+              [(ngModel)]="phoneNumber" name="phoneNumber" #phoneNumberInput required pattern="^[0-9]{10}$">
+            <div *ngIf="Registerform.controls['phoneNumber']?.invalid && Registerform.controls['phoneNumber'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
+              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10
+                digits.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="idNumber" class="form-label">ID Number</label>
-            <input type="text" class="form-control" id="idNumber" placeholder="Enter ID number" required [(ngModel)]="idNumber" name="idNumber" #idNumberInput>
+            <input type="text" class="form-control" id="idNumber" placeholder="Enter ID number" [(ngModel)]="idNumber"
+              name="idNumber" required pattern="^[0-9]{13}$">
+            <div *ngIf="Registerform.controls['idNumber']?.invalid && Registerform.controls['idNumber'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['idNumber'].errors?.['required']">ID Number is required.</div>
+              <div *ngIf="Registerform.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.
+              </div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="gender" class="form-label">Gender</label>
             <select class="form-control" id="gender" required [(ngModel)]="gender" name="gender" #genderInput>
+              <option value="" disabled selected>Select a gender</option>
               <option *ngFor="let gender of genders" [value]="gender">{{gender}}</option>
             </select>
+            <div *ngIf="Registerform.controls['gender']?.invalid && Registerform.controls['gender'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['gender'].errors?.['required']">Gender is required.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="displayName" class="form-label">Display Name</label>
-            <input type="text" class="form-control" id="displayName" placeholder="Enter display name" required [(ngModel)]="displayName" name="displayName" #displayNameInput>
+            <input type="text" class="form-control" id="displayName" placeholder="Enter display name" required
+              [(ngModel)]="displayName" name="displayName" #displayNameInput>
+            <div *ngIf="Registerform.controls['displayName']?.invalid && Registerform.controls['displayName'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['displayName'].errors?.['required']">Display Name is required.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="remail" placeholder="Enter email" required [(ngModel)]="remail" name="remail" #remailInput>
+            <input type="email" class="form-control" id="remail" placeholder="Enter email" required [(ngModel)]="remail"
+              name="remail" #remailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+            <div *ngIf="Registerform.controls['remail']?.invalid && Registerform.controls['remail'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Registerform.controls['remail'].errors?.['required']">Email is required.</div>
+              <div *ngIf="Registerform.controls['remail'].errors?.['pattern']">Invalid email format.</div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="rpassword" placeholder="Enter password" required [(ngModel)]="rpassword" name="rpassword" #rpasswordInput>
+            <div class="input-group">
+            <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" id="rpassword" placeholder="Enter password"
+              [(ngModel)]="rpassword" name="rpassword" #rpasswordInput="ngModel" required
+              pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,100}$">
+              <button
+      class="btn btn-outline-secondary"
+      type="button"
+      (click)="togglePasswordVisibility()"
+    >
+      <i class="bi bi-eye-fill {{ showPassword }}"></i>
+    </button>
+            </div>
+            <div *ngIf="rpasswordInput.invalid && (rpasswordInput.touched || rpasswordInput.dirty)"
+              class="alert alert-danger">
+              <div *ngIf="rpasswordInput.errors?.['required']">Password is required.</div>
+              <div *ngIf="rpasswordInput.errors?.['pattern']">
+                Password must consist of the following:
+                <ul>
+                  <li>1 uppercase letter</li>
+                  <li>1 lowercase letter</li>
+                  <li>1 non-alphanumeric character</li>
+                  <li>1 digit</li>
+                  <li>Password must be 8 - 100 characters in length</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password"
+              [(ngModel)]="confirmPassword" name="confirmPassword" required>
+            <div *ngIf="!passwordsMatch() && Registerform.controls['confirmPassword'].touched"
+              class="alert alert-danger">
+              Passwords do not match.
+            </div>
           </div>
           <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="enableTwoFactorAuth" name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
+            <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="enableTwoFactorAuth"
+              name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
             <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null">
+            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null" [disabled]="Registerform.invalid && !passwordsMatch()">
               Register
             </button>
           </div>
