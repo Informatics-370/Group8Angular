@@ -133,6 +133,7 @@ async onBuyTicket(event: Event) {
     ticketPrice: event.eventPrice,
     eventName: event.eventName,  // New field
     description: event.description,  // New field
+    eventDeleted : false
   };
 
   this.paymentService.initiatePayment(event).subscribe(
@@ -195,6 +196,7 @@ async onBuyTicket(event: Event) {
         ticketPrice: event.eventPrice,
         eventName: event.eventName,  // New field
         description: event.description,  // New field
+        eventDeleted : false
       };
 
       

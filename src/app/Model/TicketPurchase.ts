@@ -1,4 +1,5 @@
 export interface TicketPurchase {
+    id?: number;
     userEmail: string;
     eventId: number;
     eventDate: Date;
@@ -6,4 +7,5 @@ export interface TicketPurchase {
     ticketPrice: number;
     eventName: string;  // New field
     description: string;  // New field
+    eventDeleted: boolean;
 }
