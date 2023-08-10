@@ -228,19 +228,16 @@
               <div *ngIf="Registerform.controls['remail'].errors?.['pattern']">Invalid email format.</div>
             </div>
           </div>
+          
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <div class="input-group">
-            <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" id="rpassword" placeholder="Enter password"
-              [(ngModel)]="rpassword" name="rpassword" #rpasswordInput="ngModel" required
-              pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,100}$">
-              <button
-      class="btn btn-outline-secondary"
-      type="button"
-      (click)="togglePasswordVisibility()"
-    >
-      <i class="bi bi-eye-fill {{ showPassword }}"></i>
-    </button>
+              <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" id="rpassword"
+                placeholder="Enter password" [(ngModel)]="rpassword" name="rpassword" #rpasswordInput="ngModel" required
+                pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,100}$">
+              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                <i class="bi bi-eye-fill {{ showPassword }}"></i>
+              </button>
             </div>
             <div *ngIf="rpasswordInput.invalid && (rpasswordInput.touched || rpasswordInput.dirty)"
               class="alert alert-danger">
@@ -257,15 +254,19 @@
               </div>
             </div>
           </div>
+
           <div class="mb-3">
             <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password"
-              [(ngModel)]="confirmPassword" name="confirmPassword" required>
+            <div class="input-group">
+              <input type="password" class="form-control" id="confirmPassword"
+                placeholder="Confirm password" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+            </div>
             <div *ngIf="!passwordsMatch() && Registerform.controls['confirmPassword'].touched"
               class="alert alert-danger">
               Passwords do not match.
             </div>
           </div>
+
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="enableTwoFactorAuth"
               name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
@@ -273,7 +274,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null" [disabled]="Registerform.invalid && !passwordsMatch()">
+            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null"
+              [disabled]="Registerform.invalid">
               Register
             </button>
           </div>
