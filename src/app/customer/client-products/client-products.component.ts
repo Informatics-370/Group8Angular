@@ -141,9 +141,11 @@ export class ClientProductsComponent implements OnInit {
     this.wishlistService.addToWishlist(email, wishlistItem).subscribe(
       () => {
         console.log('Wine added to wishlist!');
+        this.toastr.success('Successfully added to Wishlist', 'Wine');
       },
       error => {
         console.log('Failed to add wine to wishlist');
+        this.toastr.error('Failed  to add Wishlist', 'Wine');
       }
     );
   }
