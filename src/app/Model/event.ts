@@ -13,8 +13,8 @@ export class Event {
     description: string;
     eventPrice : number;
     imagePath: string;
-    earlyBirdID: number; 
-    earlyBird: EarlyBird = new EarlyBird();
+    earlyBirdID?: number; 
+    earlyBird?: EarlyBird = new EarlyBird();
 
     constructor(
         eventID: number = 0,
@@ -25,7 +25,8 @@ export class Event {
         description: string = '',
         eventPrice : number= 0,
         imagePath: string = '',
-        earlyBirdID: number = 0 
+        earlyBirdID?: number, // Made this parameter optional
+        earlyBird?: EarlyBird // Added this parameter
     ) {
         this.eventID = eventID;
         this.eventName = eventName;
@@ -35,6 +36,7 @@ export class Event {
         this.description = description;
         this.eventPrice = eventPrice;
         this.imagePath = imagePath;
-        this.earlyBirdID = earlyBirdID;  // Corrected this line
+        this.earlyBirdID = earlyBirdID;
+        this.earlyBird = earlyBird; // Assigned the parameter value
     }
 }

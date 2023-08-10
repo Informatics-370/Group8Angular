@@ -37,8 +37,9 @@
       <td>{{ event.tickets_Available }}</td>
       <td>{{ event.tickets_Sold }}</td>
       <td>{{ event.eventPrice }}</td>
-      <td>{{ getEarlyBirdById(event.earlyBirdID)?.limit }}</td> <!-- New Column -->
-      <td>{{ getEarlyBirdById(event.earlyBirdID)?.percentage }}</td> 
+      <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.limit : '' }}</td> <!-- New Column -->
+      <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : '' }}</td>
+      
       <td>
         <button class="btn btn-primary" (click)="event.eventID !== undefined && openEditEventModal(event.eventID)"
           style="margin-right: 4px;">
@@ -126,13 +127,12 @@
 
           <div class="mb-3">
             <label for="earlyBird" class="form-label">Early Bird</label>
-            <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" required #earlyBirdField="ngModel" class="form-control">
-                <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets at {{earlyBird.percentage}}%</option>
+            <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" #earlyBirdField="ngModel" class="form-control">
+              <option [value]="null">No Early Bird</option> <!-- Added this line -->
+              <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets at {{earlyBird.percentage}}%</option>
             </select>
-            <div *ngIf="earlyBirdField.invalid && earlyBirdField.touched" class="alert alert-danger">
-                <div *ngIf="earlyBirdField.errors?.['required']">Early Bird selection is required.</div>
-            </div>
-        </div>
+          </div>
+          
         
 
 

@@ -39,100 +39,105 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEditCustomerModal()"></button>
       </div>
       <div class="modal-body">
-        <form #editCustomerForm="ngForm" (ngSubmit)="submitEditCustomerForm(editCustomerForm)">
-          <!-- TITLE -->
-          <div class="mb-3">
-            <label for="title" class="form-label">Title:</label>
-            <select class="form-select" id="editTitle" [(ngModel)]="user!.title" name="title" required>
-              <option value="" disabled selected>Select a title</option>
-              <option value="Mr">Mr</option>
-              <option value="Mrs">Mrs</option>
-              <option value="Ms">Ms</option>
-              <option value="Dr">Dr</option>
-            </select>
-            <div *ngIf="editCustomerForm.controls['title']?.invalid && editCustomerForm.controls['title'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['title'].errors?.['required']">Title is required.</div>
-            </div>
-          </div>
 
-          <!-- FIRST NAME -->
-          <div class="mb-3">
-            <label for="title" class="form-label">First Name:</label>
-            <input type="text" class="form-control" id="editName" [(ngModel)]="user!.first_Name" name="first_Name" required>
-            <div *ngIf="editCustomerForm.controls['first_Name']?.invalid && editCustomerForm.controls['first_Name'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['first_Name'].errors?.['required']">First name is required.</div>
-            </div>
-          </div>
-
-          <!-- LAST NAME -->
-          <div class="mb-3">
-            <label for="last_Name" class="form-label">Last Name:</label>
-            <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$"> 
-            <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
-              <div *ngIf="editCustomerForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
-            </div>
-          </div>
-
-          <!-- EMAIL -->
-          <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="text" class="form-control" id="editEmail" [(ngModel)]="user!.email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
-            <div *ngIf="editCustomerForm.controls['email']?.invalid && editCustomerForm.controls['email'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['email'].errors?.['required']">Email is required.</div>
-              <div *ngIf="editCustomerForm.controls['email'].errors?.['pattern']">Invalid email format.</div>
-            </div>
-          </div>
-
-          <!-- PHONE NUMBER -->
-          <div class="mb-3">
-            <label for="phoneNumber" class="form-label">Phone Number:</label>
-            <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
-            <div *ngIf="editCustomerForm.controls['phoneNumber']?.invalid && editCustomerForm.controls['phoneNumber'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['required']">Phone Number is required.</div>
-              <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['pattern']">Phone Number must be a 10-digit number.</div>
-            </div>
-          </div>
-
-          <!-- ID NUMBER -->
-          <div class="mb-3">
-            <label for="iD_Number" class="form-label">ID Number:</label>
-            <input type="text" class="form-control" id="editiD_Number" [(ngModel)]="user!.iD_Number" name="iD_Number" required pattern="^[0-9]{13}$">
-            <div *ngIf="editCustomerForm.controls['iD_Number']?.invalid && editCustomerForm.controls['iD_Number'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['required']">ID Number is required.</div>
-              <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['pattern']">ID Number must be a 13-digit number.</div>
-            </div>
-          </div>
-
-          <!-- GENDER -->
-          <div class="mb-3">
-            <label for="gender" class="form-label">Gender:</label>
-            <select class="form-select" id="editGender" [(ngModel)]="user!.gender" name="gender" required>
-            <option value="" disabled selected>Select a gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+        <div *ngIf="user">
+          <form #editCustomerForm="ngForm" (ngSubmit)="submitEditCustomerForm(editCustomerForm)">
+            <!-- TITLE -->
+            <div class="mb-3">
+              <label for="title" class="form-label">Title:</label>
+              <select class="form-select" id="editTitle" [(ngModel)]="user!.title" name="title" required>
+                <option value="" disabled selected>Select a title</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Ms">Ms</option>
+                <option value="Dr">Dr</option>
               </select>
-            <div *ngIf="editCustomerForm.controls['gender']?.invalid && editCustomerForm.controls['gender'].touched" class="alert alert-danger">
-              <div *ngIf="editCustomerForm.controls['gender'].errors?.['required']">Gender is required.</div>
+              <div *ngIf="editCustomerForm.controls['title']?.invalid && editCustomerForm.controls['title'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['title'].errors?.['required']">Title is required.</div>
+              </div>
             </div>
-          </div>
-
-          <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="user!.twoFactorEnabled" name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
-            <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
-          </div>
-
-          <!-- OTHER FIELDS (First Name, Last Name, Email, Phone Number, ID Number, Gender) -->
-          <!-- You can use the same pattern as the EmployeeComponent.html for other fields if needed -->
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeEditCustomerModal()">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="editCustomerForm?.invalid">
-              Save Changes
-            </button>
-          </div>
-        </form>
+  
+            <!-- FIRST NAME -->
+            <div class="mb-3">
+              <label for="title" class="form-label">First Name:</label>
+              <input type="text" class="form-control" id="editName" [(ngModel)]="user!.first_Name" name="first_Name" required>
+              <div *ngIf="editCustomerForm.controls['first_Name']?.invalid && editCustomerForm.controls['first_Name'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['first_Name'].errors?.['required']">First name is required.</div>
+              </div>
+            </div>
+  
+            <!-- LAST NAME -->
+            <div class="mb-3">
+              <label for="last_Name" class="form-label">Last Name:</label>
+              <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$"> 
+              <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
+                <div *ngIf="editCustomerForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
+              </div>
+            </div>
+  
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email:</label>
+              <input type="text" class="form-control" id="editEmail" [(ngModel)]="user!.email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+              <div *ngIf="editCustomerForm.controls['email']?.invalid && editCustomerForm.controls['email'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['email'].errors?.['required']">Email is required.</div>
+                <div *ngIf="editCustomerForm.controls['email'].errors?.['pattern']">Invalid email format.</div>
+              </div>
+            </div>
+  
+            <!-- PHONE NUMBER -->
+            <div class="mb-3">
+              <label for="phoneNumber" class="form-label">Phone Number:</label>
+              <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
+              <div *ngIf="editCustomerForm.controls['phoneNumber']?.invalid && editCustomerForm.controls['phoneNumber'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['required']">Phone Number is required.</div>
+                <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['pattern']">Phone Number must be a 10-digit number.</div>
+              </div>
+            </div>
+  
+            <!-- ID NUMBER -->
+            <div class="mb-3">
+              <label for="iD_Number" class="form-label">ID Number:</label>
+              <input type="text" class="form-control" id="editiD_Number" [(ngModel)]="user!.iD_Number" name="iD_Number" required pattern="^[0-9]{13}$">
+              <div *ngIf="editCustomerForm.controls['iD_Number']?.invalid && editCustomerForm.controls['iD_Number'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['required']">ID Number is required.</div>
+                <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['pattern']">ID Number must be a 13-digit number.</div>
+              </div>
+            </div>
+  
+            <!-- GENDER -->
+            <div class="mb-3">
+              <label for="gender" class="form-label">Gender:</label>
+              <select class="form-select" id="editGender" [(ngModel)]="user!.gender" name="gender" required>
+              <option value="" disabled selected>Select a gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              <div *ngIf="editCustomerForm.controls['gender']?.invalid && editCustomerForm.controls['gender'].touched" class="alert alert-danger">
+                <div *ngIf="editCustomerForm.controls['gender'].errors?.['required']">Gender is required.</div>
+              </div>
+            </div>
+  
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="user!.twoFactorEnabled" name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
+              <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
+            </div>
+  
+            <!-- OTHER FIELDS (First Name, Last Name, Email, Phone Number, ID Number, Gender) -->
+            <!-- You can use the same pattern as the EmployeeComponent.html for other fields if needed -->
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeEditCustomerModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="editCustomerForm?.invalid">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+        
+     
       </div>
     </div>
   </div>
