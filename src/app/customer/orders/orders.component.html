@@ -31,7 +31,10 @@
         <div>
           <h4 class="custom-text-size">Order Total: {{ order.orderTotal | number }}</h4>
         </div>
-        <button class="btn btn-outline-danger" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">Request Refund</button>
+        <button *ngIf="!order.isRefunded && checkRefundAvailability(order)" class="btn btn-outline-danger" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">Request Refund</button>
+          <p *ngIf="!order.isRefunded && !checkRefundAvailability(order)" class="text-warning">Refund unavailable</p>
+          <p *ngIf="order.isRefunded" class="text-warning">Refund already placed for this order</p>
+
       </div>
     </div>
   </div>

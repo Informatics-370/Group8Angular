@@ -9,6 +9,7 @@ import { WineType } from 'src/app/Model/winetype';
 import jwt_decode from 'jwt-decode';
 import { WishlistItem } from 'src/app/Model/WishListItem';
 import { ToastrService } from 'ngx-toastr';
+import { CartService } from '../services/cart.service';
 
 interface DecodedToken {
   sub: string;
@@ -28,6 +29,10 @@ export class WishlistComponent implements OnInit {
   wineToDeleteDetails: Wine | null = null; // Store the wine to delete
   wishlistItemToDelete: WishlistItem | null = null; // Store the wishlist item to delete
   wineToDeleteIndex!: number; 
+  userEmail: string = '';
+  showImageModal: boolean = false;
+  currentImage: any;
+
 
 
   constructor(
@@ -35,6 +40,7 @@ export class WishlistComponent implements OnInit {
     private wineService: WineService,
     private varietalService: VarietalService, // Inject VarietalService
     private winetypeService: WinetypeService, // Inject WinetypeService
+    private cartService: CartService,
     private toastr: ToastrService
   ) { }
 
@@ -43,6 +49,7 @@ export class WishlistComponent implements OnInit {
       let token = localStorage.getItem('Token') || '';
       let decodedToken = jwt_decode(token) as DecodedToken;
       let email = decodedToken.sub;
+      this.userEmail = email;
       const wishlist = await this.wishlistService.getWishlist(email).toPromise();
       if (wishlist && wishlist.wishlistItems) {
         this.wishlistItems = wishlist.wishlistItems;
@@ -126,6 +133,25 @@ async removeFromWishlist(wishlistItemID: number | undefined): Promise<void> {
     this.showDeleteWineModal = false;
   }
 
+  addToCart(item: WishlistItem){
+    this.cartService.addToCart(this.userEmail, item).subscribe((result: any) => {
+      console.log(result);
+      this.toastr.success("The wine has been added to your cart", "Added to cart");
+    }, (error: any) => {
+      console.log("ERROR:", error);
+      this.toastr.error("Failed to add wine to cart", "Failed to add wine to cart");
+    })
+  }
+
+  // openImageModal(wine: any) {
+  //   this.currentImage = wine;
+  //   this.showImageModal = true;
+  // }
+  
+  // closeImageModal() {
+  //   this.showImageModal = false;
+  //   this.currentImage = null;
+  // }
   
 
 }

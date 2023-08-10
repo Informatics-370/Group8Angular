@@ -11,4 +11,5 @@ export interface Order {
     orderDate: Date;
     received : boolean;
     orderItems: OrderItem[];
+    isRefunded: boolean;
   }
