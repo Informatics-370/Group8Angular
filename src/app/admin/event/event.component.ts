@@ -146,8 +146,12 @@ getEarlyBirdById(id: number): EarlyBird | undefined {
 }
 
 // CRUD Event
+isSubmitting = false;
+
 async submitEventForm(form: NgForm): Promise<void> {
-  if (form.valid) {
+  if (form.valid && !this.isSubmitting) {  // Check if not currently submitting
+    this.isSubmitting = true; // Set isSubmitting to true to disable the button
+    
     try {
       const formData = new FormData();
 
@@ -158,14 +162,14 @@ async submitEventForm(form: NgForm): Promise<void> {
       }
       if (this.selectedFile) {
         formData.append('ImagePath', this.selectedFile, this.selectedFile.name);
-    }
+      }
 
       if (this.editingEvent) {
         await this.eventService.updateEvent(this.currentEvent.eventID, formData);
-        const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID); // Fetch the updated event.
+        const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID); 
         const index = this.events.findIndex(event => event.eventID === this.currentEvent.eventID);
         if (index !== -1) {
-          this.events[index] = updatedEvent; // Update the event in the events array.
+          this.events[index] = updatedEvent; 
         }
         this.toastr.success('Event has been updated successfully.', 'Event Form');
       } else {
@@ -189,9 +193,12 @@ async submitEventForm(form: NgForm): Promise<void> {
     } catch (error) {
       console.error(error);
       this.toastr.error('An error occurred, please try again.', 'Event Form');
+    } finally {
+      this.isSubmitting = false;  // Set isSubmitting back to false at the end, no matter what happens
     }
   }
 }
+
 
 getObjectURL(file: File): string {
   return URL.createObjectURL(file);

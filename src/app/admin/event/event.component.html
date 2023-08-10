@@ -180,8 +180,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)">{{editingEvent ? 'Save
-          Changes' : 'Save'}}</button>
+        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)" [disabled]="isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
+
       </div>
     </div>
   </div>
