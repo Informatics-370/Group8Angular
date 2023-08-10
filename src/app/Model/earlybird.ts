@@ -5,7 +5,7 @@ export class EarlyBird {
 
     constructor() {
         this.earlyBirdID = 0;
-        this.percentage = 10;
-        this.limit = 10;
+        this.percentage = 0;
+        this.limit = 0;
     }
 }

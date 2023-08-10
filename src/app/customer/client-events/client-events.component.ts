@@ -50,6 +50,12 @@ export class ClientEventsComponent {
       this.events = [];
     }
   }
+
+  getEarlyBirdDiscount(event: Event): number {
+    return event.earlyBird?.percentage ?? 0;
+  }
+  
+  
   
 
   isPurchased(eventId: string): boolean {
