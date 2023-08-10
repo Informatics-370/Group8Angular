@@ -34,7 +34,7 @@ export class WineService {
   // wine crud operations ----------------------------------------------------.>
   async getWines(): Promise<Wine[]> {
     this.setHeaders();
-    return firstValueFrom(this.http.get<Wine[]>(this.apiUrl, {headers: this.headers}));
+    return firstValueFrom(this.http.get<Wine[]>(`${this.apiUrl}/CustomerWines`, {headers: this.headers}));
   }
 
   async getWine(id: number): Promise<Wine> {
