@@ -46,17 +46,17 @@ export class ClientProductsComponent implements OnInit {
     this.loadWinetypes();
     }
     
-    // incrementCounter(wineId: number): void {
-    //   let quantity = this.quantityMap.get(wineId) || 0;
-    //   this.quantityMap.set(wineId, ++quantity);
-    // }
+    incrementCounter(wineId: number): void {
+      let quantity = this.quantityMap.get(wineId) || 1;
+      this.quantityMap.set(wineId, ++quantity);
+    }
     
-    // decrementCounter(wineId: number): void {
-    //   let quantity = this.quantityMap.get(wineId);
-    //   if (quantity && quantity > 0) {
-    //     this.quantityMap.set(wineId, --quantity);
-    //   }
-    // }
+    decrementCounter(wineId: number): void {
+      let quantity = this.quantityMap.get(wineId);
+      if (quantity && quantity > 0) {
+        this.quantityMap.set(wineId, --quantity);
+      }
+    }
 
     getQuantity(wineId: number): number {
       return this.quantityMap.get(wineId) || 1;
