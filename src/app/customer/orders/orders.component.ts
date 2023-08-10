@@ -83,10 +83,15 @@ async requestRefund(orderId: number, wineId: number, description: string): Promi
   try {
     await this.refundService.requestRefund(wineId, email, cost, description).toPromise(); // pass the description
     this.toastr.success('Refund request has been sent.');
+    order.isRefunded = true;
     console.log('Order Total:', order.orderTotal);
   } catch (error) {
     console.error('Error:', error);
-    this.toastr.error('Could not send refund request.', 'Error');
+    if (error && typeof error === 'string') {
+      this.toastr.error(error); // Display the error message from the API
+    } else {
+      this.toastr.error('Could not send refund request.', 'Error');
+    }
   }
 }
 
@@ -113,6 +118,19 @@ async submitRefundForm(form: NgForm): Promise<void> {
       console.error('No order selected for refund.');
       // Display error to user, e.g., using toastr
     }
+  }
+}
+
+checkRefundAvailability(order: Order): boolean {
+  const orderDate = new Date(order.orderDate);
+  const currentTime = new Date();
+  const timeDifferenceInMilliseconds = currentTime.getTime() - orderDate.getTime();
+  let sevenDaysInMillisecond = 7 * 24 * 60 * 60 * 1000;
+  
+  if(timeDifferenceInMilliseconds <= sevenDaysInMillisecond){
+    return true;
+  }else{
+    return false;
   }
 }
 

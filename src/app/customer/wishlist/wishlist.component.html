@@ -21,7 +21,7 @@
     <tr *ngFor="let wine of wines; let i = index">
       <td>
         <div *ngIf="wine.filePath" class="image-container mb-3">
-          <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+          <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;"> <!-- (click)="openImageModal(wine)" "-->
         </div>
       </td>
       <td class="align-middle">{{ wine.name }}</td>
@@ -30,9 +30,12 @@
       <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
       <td class="align-middle">{{ wine.winePrice }}</td>
       <td class="align-middle">
-        <button class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
+        <button style="margin: 5px;" class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
           <i class="fas fa-trash-alt"></i> Remove
-        </button>                
+        </button>    
+        <button style="margin: 5px;" class="btn btn-success" (click)="addToCart(wishlistItems[i])">
+          <i class="fas fa-cart-plus"></i> Add to cart
+        </button>            
       </td>
     </tr>
   </tbody>
@@ -63,3 +66,20 @@
     </div>
   </div>
 </div>
+
+
+<!-- Image Modal -->
+<!-- <div class="modal" tabindex="-1" [ngClass]="{'show': showImageModal}" 
+  [ngStyle]="{'display': showImageModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ currentImage?.name }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeImageModal()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img [src]="currentImage?.filePath" alt="Wine Image" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div> -->
