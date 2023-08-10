@@ -89,3 +89,45 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showApplyDiscountModal}" [ngStyle]="{'display': showApplyDiscountModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Apply Discount Confirmation</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeApplyDiscountModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to apply this discount code?</p>
+        <br>
+        <p>
+          <span class="warning-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i> <!-- Assuming you're using Bootstrap icons -->
+          </span>
+          <span class="warning-text">
+            Note that this will delete the discount code from the database, and it will not be able to be used again.
+          </span>
+        </p>
+        <p>Code: {{ discountCode }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeApplyDiscountModal()">No</button>
+        <button type="button" class="btn btn-primary" (click)="confirmApplyDiscount()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .warning-text {
+    color: #FF0000;  /* Red color for emphasis */
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .warning-icon i {
+    color: #FF0000;  /* Red color to match the text */
+    margin-right: 8px;
+  }
+</style>
