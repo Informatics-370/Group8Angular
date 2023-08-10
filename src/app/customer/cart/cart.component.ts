@@ -118,48 +118,55 @@ export class CartComponent implements OnInit {
     return foundWine;
   }
   //////////////////////////////////////////////////DISCOUNT CALCULATION///////////////////////////////////////////////////////////////////////////
+  showApplyDiscountModal: boolean = false;
 
-
+  openApplyDiscountModal(): void {
+    this.showApplyDiscountModal = true;
+  }
+  
+  closeApplyDiscountModal(): void {
+    this.showApplyDiscountModal = false;
+  }
+  
   onApplyDiscountCode() {
     if (this.isDiscountApplied) {
       return;
     }
-
-    console.log('Sending discount code:', this.discountCode);
-    this.discountService.validateDiscountCode(this.discountCode)
-      .then((discount: Discount) => {
-        if (discount && discount.discountPercentage) {
-          this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountPercentage / 100);
-
-          // Round off the cartTotal to two decimal places
-          this.cartTotal = Math.round(this.cartTotal * 100) / 100;
-          console.log('New cart total:', this.cartTotal);
-          this.isDiscountApplied = true;
-
-          let token = localStorage.getItem('Token') || '';
-          let decodedToken = jwt_decode(token) as DecodedToken;
-          let email = decodedToken.sub;
-
-          // Call the backend to update the discounted total
-          this.cartService.applyDiscount(email, this.cartTotal).subscribe(
-            () => {
-              this.toastr.success('Discount code applied successfully!', 'Discount Code'); // Optional success message
-          
-            },
-            error => {
-              console.error('Error updating discounted total:', error);
-              this.toastr.error('An error occurred while applying the discount', 'Discount Code'); // Optional error message
-            }
-          );
-        }
-      })
-      .catch(error => {
-        console.error('Error applying discount code:', error);
-        this.toastr.error('Discount code already used or does not exist', 'Discount Code');
-      });
+    
+    this.openApplyDiscountModal();
   }
-
-
+  
+  async confirmApplyDiscount(): Promise<void> {
+    console.log('Sending discount code:', this.discountCode);
+    try {
+      let discount: Discount = await this.discountService.validateDiscountCode(this.discountCode);
+      if (discount && discount.discountPercentage) {
+        this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountPercentage / 100);
+        this.cartTotal = Math.round(this.cartTotal * 100) / 100;
+        console.log('New cart total:', this.cartTotal);
+        this.isDiscountApplied = true;
+  
+        let token = localStorage.getItem('Token') || '';
+        let decodedToken = jwt_decode(token) as DecodedToken;
+        let email = decodedToken.sub;
+  
+        this.cartService.applyDiscount(email, this.cartTotal).subscribe(
+          () => {
+            this.toastr.success('Discount code applied successfully!', 'Discount Code');
+            this.closeApplyDiscountModal();
+          },
+          error => {
+            console.error('Error updating discounted total:', error);
+            this.toastr.error('An error occurred while applying the discount', 'Discount Code');
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error applying discount code:', error);
+      this.toastr.error('Discount code already used or does not exist', 'Discount Code');
+    }
+  }
+  
 
 
 
