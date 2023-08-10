@@ -8,6 +8,9 @@ import { Register } from 'src/app/Model/register';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
 import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 import { ScrollServiceService } from '../services/scroll-service.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
 
 
 @Component({
@@ -18,14 +21,14 @@ import { ScrollServiceService } from '../services/scroll-service.service';
 export class NavbarComponent {
   userName = '';
 
-  //! This is for Login 
+  //! This is for Login
   email = '';
   password = '';
   passwordTouched = false;
   show2FACodeInput = false;
   twoFactorCode = '';
   showLoginModal = false;
-//! This is for Login 
+//! This is for Login
 
 
 //View password entered
@@ -100,16 +103,18 @@ passwordsMatch(): boolean {
     loginCredentials.email = this.email;
     loginCredentials.password = this.password;
     console.log(loginCredentials);
-  
+
     this.dataService.Login(loginCredentials).subscribe(
       (result: any) => {
         var sent = result.message;
-  
+
         if (sent === "Two-factor authentication code has been sent to your email.") {
           this.show2FACodeInput = true;
+          this.toastr.success('Successfully Sent','Two-Factor Authentication Email')
         } else {
           console.log(result);
           this.handleSuccessfulLogin(result);
+          
         }
       },
       (error) => {
@@ -123,7 +128,7 @@ passwordsMatch(): boolean {
       }
     );
   }
-  
+
 
   submitTwoFactorCode() {
     this.dataService.GetUserIdByEmail(this.email).subscribe(
@@ -133,9 +138,9 @@ passwordsMatch(): boolean {
         const authUser = new TwoFactorAuth();
         authUser.UserId = userId;
         authUser.Code = this.twoFactorCode;
-  
+
         console.log(authUser);
-  
+
         this.dataService.VerifyCode(authUser).subscribe(
           (result: any) => {
             console.log("Just before handling logins");
@@ -155,35 +160,36 @@ passwordsMatch(): boolean {
       }
     );
   }
-  
+
   handleSuccessfulLogin(result: any) {
     var accessToken = result.tokenValue;
-  
+    
     localStorage.setItem('Token', JSON.stringify(accessToken));
-  
+
     let auth = localStorage.getItem('Token');
     console.log(auth);
-  
+
     if (auth !== null) {
       const parsedAuth = JSON.parse(auth);
       if (parsedAuth !== null) {
-        
+
         let uvw: UserViewModel = {
           username: result.userNameValue, // Adjust these property names as necessary
           email: result.email, // Adjust these property names as necessary
           token: parsedAuth,
           roles: result.roles// Handle single role
         };
-    
+
         this.dataService.login(uvw);  // use the DataServiceService to set user details
         this.clearFields();
         location.reload();
+        this.toastr.success('Successfully', 'Logged in');
       }
     } else {
       console.log('Token not found in localStorage');
     }
   }
-  
+
   isAdmin(): boolean {
     const roles = this.dataService.userValue?.roles;
     if (!roles || !Array.isArray(roles)) {
@@ -234,7 +240,7 @@ passwordsMatch(): boolean {
     this.dataService.Register(registerCredentials).subscribe(
       (result: string) => {
         console.log(result);
-    
+
         if (result === "Your account has been created!") {
           if(registerCredentials.EnableTwoFactorAuth == true){
             this.toastr.success('Registration successful');
@@ -243,7 +249,7 @@ passwordsMatch(): boolean {
             this.toastr.info("Please log into the account you just created to authorize it via 2 Factor Authentication");
           }else{
           this.toastr.success('Registration successful');
-          
+
           this.showRegisterModal = false;
 
           this.dataService.Login(autoLoginCredentials).subscribe((result: any) => {
@@ -277,7 +283,8 @@ passwordsMatch(): boolean {
     this.showForgotPasswordModal = false;
   }
 
-  // Method to send the password reset link
+//////////////////////////////////////////////////////////////////Default Default Default Default Default Default Default Default Default
+  //Method to send the password reset link
   sendPasswordResetLink() {
     if (this.forgotPasswordEmail) {
       this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
@@ -299,6 +306,67 @@ passwordsMatch(): boolean {
       console.log('Please enter a valid email address.');
     }
   }
+
+
+///////////////////////////////////////////////////////////Test
+    // Method to send the password reset link
+  // sendPasswordResetLink() {
+  //   if (this.forgotPasswordEmail) {
+
+  //     var frgPs = new ForgotPasswordViewModel();
+  //     frgPs.email = this.forgotPasswordEmail;
+  //     try{
+  //     this.dataService.forgotPassword(frgPs).subscribe((result: any) => {
+  //       console.log(result)
+  //       this.showForgotPasswordModal = false;
+  //       this.showLoginModal = true;
+  //       this.handleSuccessfulLogin(result);
+  //       this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
+  //     console.log('Sending password reset link to: ', this.forgotPasswordEmail);
+  //     });
+  //   }catch(erro: any){
+  //     console.log(erro)
+  //     console.error('Error sending password reset link:');
+  //              this.toastr.error('An error occurred while sending the password reset link.');
+  //              this.showForgotPasswordModal = true;
+  //   }
+  //     this.closeForgotPasswordModal();
+  //   } else {
+  //     console.log('Please enter a valid email address.');
+  //   }
+  // }
+
+
+/////////////////////////////////////////////////////////////////////Luan
+  // sendPasswordResetLink() {
+  //   if (this.forgotPasswordEmail) {
+
+
+  //     var frgPs = new ForgotPasswordViewModel();
+  //     frgPs.email = this.forgotPasswordEmail;
+  //     this.dataService.forgotPassword(frgPs).pipe(
+  //       catchError((error: any) => {
+  //         console.error('Error sending password reset link:', error);
+  //         this.toastr.error('An error occurred while sending the password reset link.');
+  //         this.showForgotPasswordModal = true;
+  //         return of(null);
+  //       })
+  //     ).subscribe((result: any) => {
+  //       if (result) {
+  //         this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
+  //     console.log('Sending password reset link to: ', this.forgotPasswordEmail);
+  //         this.showForgotPasswordModal = false;
+  //         this.showLoginModal = true;
+  //         this.handleSuccessfulLogin(result);
+  //       }
+  //     });
+
+  //     this.closeForgotPasswordModal();
+  //   } else {
+  //     console.log('Please enter a valid email address.');
+  //   }
+  // }
+
 
   clearForgotPasswordFields() {
     this.forgotPasswordEmail = ''; // Clear the email field

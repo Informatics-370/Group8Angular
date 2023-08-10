@@ -49,6 +49,7 @@ export class CustomerSidenavComponent {
         this.router.navigate(['/clienthome']);
       }else{
         console.log("Logout failed, please try again later");
+        this.toastr.error('Failed please try again', 'Logout')
       }
     });
   }
