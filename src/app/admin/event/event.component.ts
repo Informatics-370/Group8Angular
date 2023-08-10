@@ -98,6 +98,13 @@ getEarlyBirdPercentage(earlyBirdID: number): number {
   return earlyBird?.percentage || 0;
 }
 
+characterCount = 0;
+
+updateCharacterCount(event: any) {
+  this.characterCount = event.target.value.length;
+}
+
+
 // Event modal-related methods
 openAddEventModal() {
   this.editingEvent = false;
