@@ -2,35 +2,45 @@
   <p class="lead">You have not purchased any tickets yet.</p>
 </div>
 
-<!-- Wine Event Tickets -->
-<div *ngFor="let ticket of purchasedTickets" class="my-3">
-  <div class="card" style="max-width: 800px; background-color: #f2f2f2;">
-    <div class="card-header" style="background-color: #54ce20; color: #fff;">
-      <h2 class="card-title">{{ ticket.eventName }}</h2>
-    </div>
-    <div class="card-body">
-      <div class="ticket-detail">
-        <span class="label">Event Date:</span>
-        <span class="data">{{ ticket.eventDate | date:'longDate' }}</span>
+<div class="row"> <!-- Wrap the cards in a row -->
+  <!-- Wine Event Tickets -->
+  <div *ngFor="let ticket of purchasedTickets" class="col-md-6 my-3"> <!-- Set the column width for medium screens and above to 6, so there are two columns -->
+    <div class="card" [style.max-width.px]="800" [style.background-color]="ticket.eventDeleted ? '#ccc' : '#f2f2f2'">
+      <div class="card-header" [style.background-color]="ticket.eventDeleted ? '#ccc' : '#54ce20'" [style.color]="'#fff'">
+        <h2 class="card-title">{{ ticket.eventName }}</h2>
       </div>
-      <div class="ticket-detail">
-        <span class="label">Time:</span>
-        <span class="data">{{ getEventTime(ticket.eventDate) }}</span>
-      </div>
-      <div class="ticket-detail">
-        <span class="label">Description:</span>
-        <p class="data">{{ ticket.description }}</p>
-      </div>
-      <div class="ticket-detail">
-        <span class="label">Purchased on:</span>
-        <span class="data">{{ ticket.purchaseDate | date:'longDate' }}</span>
-      </div>
-      <div class="ticket-detail">
-        <span class="label">Price:</span>
-        <span class="data">R{{ ticket.ticketPrice }}</span>
+      <div class="card-body">
+        <div *ngIf="ticket.eventDeleted" class="text-center my-3">
+          <span *ngIf="ticket.id" class="d-inline">This event ticket is for an event in the past.</span> <!-- Change to inline element -->
+          
+        </div>
+        <!-- Rest of ticket details as before -->
+        <div class="ticket-detail">
+          <span class="label">Event Date:</span>
+          <span class="data">{{ ticket.eventDate | date:'longDate' }}</span>
+        </div>
+        <div class="ticket-detail">
+          <span class="label">Time:</span>
+          <span class="data">{{ getEventTime(ticket.eventDate) }}</span>
+        </div>
+        <div class="ticket-detail">
+          <span class="label">Description:</span>
+          <p class="data">{{ ticket.description }}</p>
+        </div>
+        <div class="ticket-detail">
+          <span class="label">Purchased on:</span>
+          <span class="data">{{ ticket.purchaseDate | date:'longDate' }}</span>
+        </div>
+        <div class="ticket-detail">
+          <span class="label">Price:</span>
+          <span class="data">R{{ ticket.ticketPrice }}</span>
+        </div>
+        <br>
+        <button *ngIf="ticket.id" class="btn btn-danger d-inline" (click)="onDeleteTicket(ticket.id)">Delete ticket</button> <!-- Change button color and set to inline -->
+
+
       </div>
     </div>
   </div>
 </div>
-
 

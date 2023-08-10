@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
-import { ToastrService } from 'ngx-toastr';
+
 import { DataServiceService } from '../services/data-service.service';
 import { PaymentService } from '../services/payment.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-tickets',
@@ -12,7 +13,7 @@ import { PaymentService } from '../services/payment.service';
 export class TicketsComponent {
   purchasedTickets: TicketPurchase[] = [];
 
-  constructor(private paymentService: PaymentService) { }
+  constructor(private paymentService: PaymentService, private toastr : ToastrService) { }
 
   ngOnInit() {
     this.loadUserTickets();
@@ -38,5 +39,25 @@ export class TicketsComponent {
     // padStart is used to ensure that hours and minutes less than 10 start with a '0'
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 }
+
+onDeleteTicket(ticketId: number | undefined): void {
+  if (ticketId === undefined) {
+    this.toastr.error('Ticket ID is not available, cannot delete the ticket.');
+    return;
+  }
+
+  this.paymentService.deletePurchasedTicket(ticketId).subscribe(
+    () => {
+      this.toastr.success('Ticket deleted successfully');
+      // Reload the tickets by calling the loadUserTickets method again
+      this.loadUserTickets();
+    },
+    (error) => {
+      this.toastr.error('Failed to delete the ticket');
+      console.error(error);
+    }
+  );
+}
+
 
 }

@@ -25,14 +25,18 @@
           <p class="card-text label mb-1">Date:</p>
           <p class="card-text content mb-3">{{ event.eventDate | date:'d MMMM y, h:mm a' }}</p>
           <p class="card-text label mb-1" *ngIf="getEarlyBirdDiscount(event) > 0">Early Bird:</p>
-          <p class="card-text content mb-3" *ngIf="getEarlyBirdDiscount(event) > 0">{{ getEarlyBirdDiscount(event) }}% discount for early birds</p>
-          
+          <p class="card-text content mb-3" *ngIf="getEarlyBirdDiscount(event) > 0">{{ getEarlyBirdDiscount(event) }}%
+            discount for early birds</p>
 
-          
-          
-          
+
+
+
+
           <div class="mt-auto">
-            <button type="button" class="btn buy-button w-100" (click)="handleTicketPurchase(event)">Buy Ticket</button>
+            <button type="button" class="btn buy-button w-100" (click)="handleTicketPurchase(event)"
+              [disabled]="event.tickets_Sold >= event.tickets_Available">
+              {{ event.tickets_Sold >= event.tickets_Available ? 'Event Tickets Sold Out' : 'Buy Ticket' }}
+            </button>
           </div>
         </div>
       </div>
@@ -45,7 +49,7 @@
 
 
 
-          <!-- <div>
+<!-- <div>
             <a class="buy-with-crypto"
               href="https://commerce.coinbase.com/checkout/28eb1495-28ce-43fb-a527-57a772244cad">
               Buy with Crypto
@@ -53,5 +57,3 @@
             <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807">
             </script>
           </div> -->
-
-

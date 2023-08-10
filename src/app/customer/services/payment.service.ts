@@ -134,4 +134,11 @@ initiateWinePayment(winePurchase: WinePurchase): Observable<any> {
   }
 }
 
+deletePurchasedTicket(ticketId: number): Observable<any> {
+  const apiUrl = `${environment.baseApiUrl}api/TicketPurchases/CheckAndDelete/${ticketId}`;
+  
+  return this.http.delete(apiUrl);
+}
+
+
 }
