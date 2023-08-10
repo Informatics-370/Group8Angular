@@ -84,11 +84,23 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
-            <div class="mb-3">
+          <form #Loginform="ngForm" (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
+            <!-- <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
               <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email" name="email" #emailInput>
+            </div> -->
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email"
+                name="email" #emailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+              <div *ngIf="Loginform.controls['email']?.invalid && Loginform.controls['email'].touched"
+                class="alert alert-danger">
+                <div *ngIf="Loginform.controls['email'].errors?.['required']">Email is required.</div>
+                <div *ngIf="Loginform.controls['email'].errors?.['pattern']">Invalid email format.</div>
+              </div>
             </div>
+
             <div class="mb-3 position-relative">
               <label for="password" class="form-label">Password</label>
               <div style="position:relative;">
@@ -99,6 +111,14 @@
               </div>
               <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
                   Invalid password format.
+                  Password must consist of the following:
+                <ul>
+                  <li>1 uppercase letter</li>
+                  <li>1 lowercase letter</li>
+                  <li>1 non-alphanumeric character</li>
+                  <li>1 digit</li>
+                  <li>Password must be 8 - 100 characters in length</li>
+                </ul>
               </div>
           </div>
           
@@ -294,11 +314,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="sendPasswordResetLink()" (ngModelChange)="clearForgotPasswordFields()">
+        <form (ngSubmit)="sendPasswordResetLink()" (ngModelChange)="clearForgotPasswordFields()" #Forgotform="ngForm">
           <div class="mb-3">
             <label for="forgotPasswordEmail" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="forgotPasswordEmail" placeholder="Enter your email" required [(ngModel)]="forgotPasswordEmail" name="forgotPasswordEmail" #forgotPasswordEmailInput>
+            <input type="email" class="form-control" id="forgotPasswordEmail" placeholder="Enter your email" required [(ngModel)]="forgotPasswordEmail"
+              name="forgotPasswordEmail" #forgotPasswordEmailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+            <div *ngIf="Forgotform.controls['forgotPasswordEmail']?.invalid && Forgotform.controls['forgotPasswordEmail'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Forgotform.controls['forgotPasswordEmail'].errors?.['required']">Email is required.</div>
+              <div *ngIf="Forgotform.controls['forgotPasswordEmail'].errors?.['pattern']">Invalid email format.</div>
+            </div>
           </div>
+
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary">Send Reset Link</button>
