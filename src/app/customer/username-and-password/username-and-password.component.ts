@@ -14,8 +14,27 @@ export class UsernameAndPasswordComponent {
   userEmail: string = '';
   updatedUser = new loginUpdateViewModel();
   userID: string = '';
+  confirmPassword: string | undefined;
+  newPassword: string ='';
+  showPassword: boolean = false;
+  currentPassword: string = '';
+
+  
 
   constructor(private dataService: DataServiceService, private router: Router, private toastr: ToastrService) {}
+
+
+  passwordsMatch(): boolean {
+    return this.confirmPassword === this.newPassword;
+  }
+
+  cpasswordsMatch(): boolean {
+    return this.newPassword === this.currentPassword;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   ngOnInit() {
     var user = this.dataService.getUserFromToken();
