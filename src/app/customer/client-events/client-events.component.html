@@ -24,8 +24,13 @@
           <p class="card-text content mb-3">{{ event.description }}</p>
           <p class="card-text label mb-1">Date:</p>
           <p class="card-text content mb-3">{{ event.eventDate | date:'d MMMM y, h:mm a' }}</p>
-          <p class="card-text label mb-1" *ngIf="event.earlyBird">Early Bird:</p>
-          <p class="card-text content mb-3" *ngIf="event.earlyBird">{{ event.earlyBird.percentage }}% discount for early birds</p>
+          <p class="card-text label mb-1" *ngIf="getEarlyBirdDiscount(event) > 0">Early Bird:</p>
+          <p class="card-text content mb-3" *ngIf="getEarlyBirdDiscount(event) > 0">{{ getEarlyBirdDiscount(event) }}% discount for early birds</p>
+          
+
+          
+          
+          
           <div class="mt-auto">
             <button type="button" class="btn buy-button w-100" (click)="handleTicketPurchase(event)">Buy Ticket</button>
           </div>
