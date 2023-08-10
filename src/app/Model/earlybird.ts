@@ -1,5 +1,5 @@
 export class EarlyBird {
-    earlyBirdID: number | undefined;
+    earlyBirdID?: number | undefined;
     percentage: number | undefined;
     limit: number | undefined;
 

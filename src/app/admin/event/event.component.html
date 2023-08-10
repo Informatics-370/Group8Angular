@@ -128,7 +128,7 @@
           <div class="mb-3">
             <label for="earlyBird" class="form-label">Early Bird</label>
             <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" #earlyBirdField="ngModel" class="form-control">
-              <option [value]="null">No Early Bird</option> <!-- Added this line -->
+              <option [value]=0>No Early Bird</option> <!-- Added this line -->
               <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets at {{earlyBird.percentage}}%</option>
             </select>
           </div>
