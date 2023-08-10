@@ -285,27 +285,37 @@ passwordsMatch(): boolean {
 
 //////////////////////////////////////////////////////////////////Default Default Default Default Default Default Default Default Default
   //Method to send the password reset link
-  sendPasswordResetLink() {
-    if (this.forgotPasswordEmail) {
-      this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
-      console.log('Sending password reset link to: ', this.forgotPasswordEmail);
-      var frgPs = new ForgotPasswordViewModel();
-      frgPs.email = this.forgotPasswordEmail;
-      this.dataService.forgotPassword(frgPs).subscribe((result: any) => {
+sendPasswordResetLink() {
+  if (this.forgotPasswordEmail) {
+    var frgPs = new ForgotPasswordViewModel();
+    frgPs.email = this.forgotPasswordEmail;
+    this.dataService.forgotPassword(frgPs).subscribe(
+      (result: any) => {
+        this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
+        console.log('Sending password reset link to: ', this.forgotPasswordEmail);
         this.showForgotPasswordModal = false;
         this.showLoginModal = true;
         this.handleSuccessfulLogin(result);
+        console.log('Success');
       },
       (error: any) => {
         console.error(error);
-        console.error(error.error);
+        if (error.status === 404) {
+          this.toastr.error("The email you provided does not exist within our system. \nPlease try again");
+          this.showForgotPasswordModal = true;
+        } else if (error.status === 400) {
+          this.toastr.error("The system failed to send the email. \nPlease try again");
+          this.showForgotPasswordModal = true;
+        } else if(error.status === 500){
+          console.error("Ohhh no... our server.... it's broken!");
+        }
       }
     );
-      this.closeForgotPasswordModal();
-    } else {
-      console.log('Please enter a valid email address.');
-    }
+    this.closeForgotPasswordModal();
+  } else {
+    console.log('Please enter a valid email address.');
   }
+}
 
 
 ///////////////////////////////////////////////////////////Test
