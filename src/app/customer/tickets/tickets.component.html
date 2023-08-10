@@ -36,7 +36,7 @@
           <span class="data">R{{ ticket.ticketPrice }}</span>
         </div>
         <br>
-        <button *ngIf="ticket.id" class="btn btn-danger d-inline" (click)="onDeleteTicket(ticket.id)">Delete ticket</button> <!-- Change button color and set to inline -->
+        <button *ngIf="ticket.eventDeleted" class="btn btn-danger d-inline" (click)="onDeleteTicket(ticket.id)">Delete Ticket</button>
 
 
       </div>
