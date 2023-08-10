@@ -45,4 +45,8 @@ applyDiscount(email: string, newTotal: number): Observable<any> {
 }
 
 
+clearCart(email: string): Observable<any> {
+  return this.http.delete<any>(`${this.apiUrl}/${email}/clear`);
+}
+
 }
