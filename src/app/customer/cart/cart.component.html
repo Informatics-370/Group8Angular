@@ -27,7 +27,7 @@
                                     <th scope="col" class="text-left">Wine Name</th>
                                     <th scope="col" class="text-left">Quantity</th>
                                     <th scope="col" class="text-left">Actions</th>
-                                    <th scope="col" class="text-left">Wine Price</th>
+                                    <th scope="col" class="text-left">Wine Item Price</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +43,7 @@
 
                                     </td>
                                     <td class="text-left">
-                                        R {{getWineDetails(item.wineID)?.winePrice}}
+                                      R {{ item.quantity * (getWineDetails(item.wineID)?.winePrice || 0) }}
                                     </td>
                                     <td></td>
                                 </tr>

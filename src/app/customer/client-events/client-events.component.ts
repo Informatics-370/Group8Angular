@@ -80,16 +80,16 @@ export class ClientEventsComponent {
 
 
 
-  async onBuyTicket(event: Event) {
-    // Get current user
-    const isUserLoggedIn = this.loginService.isUserLoggedIn(); 
-  
-    // If there is no user, show toastr notification and return
-    if (!isUserLoggedIn) {
-      this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
-      return;
-    }
-  
+async onBuyTicket(event: Event) {
+  // Get current user
+  const isUserLoggedIn = this.loginService.isUserLoggedIn(); 
+
+  // If there is no user, show toastr notification and return
+  if (!isUserLoggedIn) {
+    this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
+    return;
+  }
+
   // Check ticket availability and calculate the price
   try {
     const purchaseResponse = await this.eventService.purchaseTicket(event.eventID);
@@ -97,30 +97,28 @@ export class ClientEventsComponent {
       this.toastr.error(purchaseResponse.message, 'Purchase');
       return;
     }
-  
-    // Find the EarlyBird object based on earlyBirdID
-  const earlyBird = event.earlyBird;
-  
-    // Start the payment process with the final price
-    if (event.earlyBird) {
-      if (typeof event.earlyBird.limit !== 'undefined' && event.tickets_Sold < event.earlyBird.limit) {
-        if (typeof event.earlyBird.percentage !== 'undefined') {
-          // Apply early bird discount
-          event.eventPrice = purchaseResponse.price * (1 - event.earlyBird.percentage / 100);
-           // Add Toastr notification for early bird discount
-           this.toastr.success(`Congrats! You qualify for an EarlyBird discount of ${event.earlyBird.percentage}%`, 'Discount');
-        }
-      } else {
-        // Regular price
-        event.eventPrice = purchaseResponse.price;
-      }
+
+    // If Early Bird exists and conditions are met, apply discount
+    if (event.earlyBird 
+        && typeof event.earlyBird.limit !== 'undefined' 
+        && event.tickets_Sold < event.earlyBird.limit 
+        && typeof event.earlyBird.percentage !== 'undefined') {
+
+      // Apply early bird discount
+      event.eventPrice = purchaseResponse.price * (1 - event.earlyBird.percentage / 100);
+      // Add Toastr notification for early bird discount
+      this.toastr.success(`Congrats! You qualify for an EarlyBird discount of ${event.earlyBird.percentage}%`, 'Discount');
+    } else {
+      // Regular price
+      event.eventPrice = purchaseResponse.price;
     }
   } catch (error) {
     console.error(error);
     this.toastr.error('An error occurred, please try again.', 'Purchase');
     return;
   }
-      // start the payment process with the final price
+
+  // Start the payment process with the final price
   const ticketPurchase: TicketPurchase = {
     userEmail: this.loginService.userValue?.email ?? '',
     eventId: event.eventID,
@@ -131,45 +129,43 @@ export class ClientEventsComponent {
     description: event.description,  // New field
   };
 
-  
+  this.paymentService.initiatePayment(event).subscribe(
+    (payfastRequest: any) => {
+      // Create a form
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://www.payfast.co.za/eng/process';
+      form.target = '_self';
 
-      this.paymentService.initiatePayment(event).subscribe(
-        (payfastRequest: any) => {
-          // Create a form
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = 'https://www.payfast.co.za/eng/process';
-          form.target = '_self';
-    
-          // Add the form fields
-          for (const key in payfastRequest) {
-            if (payfastRequest.hasOwnProperty(key)) {
-              const hiddenField = document.createElement('input');
-              hiddenField.type = 'hidden';
-              hiddenField.name = key;
-              hiddenField.value = payfastRequest[key];
-              form.appendChild(hiddenField);
-            }
-          }
-    
-          // Add the form to the page and submit it
-          document.body.appendChild(form);
-          form.submit();
-          
-        },
-        (error: HttpErrorResponse) => {
-          // It's better to handle "User is not logged in" error in payment service
-          // But if for some reason it comes here, then show toastr notification as well
-          if (error.error === 'User is not logged in') {
-            this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
-            console.error('User is not logged in');
-          } else {
-            console.error(error);
-          }
+      // Add the form fields
+      for (const key in payfastRequest) {
+        if (payfastRequest.hasOwnProperty(key)) {
+          const hiddenField = document.createElement('input');
+          hiddenField.type = 'hidden';
+          hiddenField.name = key;
+          hiddenField.value = payfastRequest[key];
+          form.appendChild(hiddenField);
         }
-      );
+      }
+
+      // Add the form to the page and submit it
+      document.body.appendChild(form);
+      form.submit();
       
+    },
+    (error: HttpErrorResponse) => {
+      // It's better to handle "User is not logged in" error in payment service
+      // But if for some reason it comes here, then show toastr notification as well
+      if (error.error === 'User is not logged in') {
+        this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
+        console.error('User is not logged in');
+      } else {
+        console.error(error);
+      }
     }
+  );      
+}
+
   
 
 
