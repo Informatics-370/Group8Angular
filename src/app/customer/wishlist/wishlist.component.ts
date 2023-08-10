@@ -8,6 +8,7 @@ import { Varietal } from 'src/app/Model/varietal';
 import { WineType } from 'src/app/Model/winetype';
 import jwt_decode from 'jwt-decode';
 import { WishlistItem } from 'src/app/Model/WishListItem';
+import { ToastrService } from 'ngx-toastr';
 
 interface DecodedToken {
   sub: string;
@@ -33,7 +34,8 @@ export class WishlistComponent implements OnInit {
     private wishlistService: WishlistService, 
     private wineService: WineService,
     private varietalService: VarietalService, // Inject VarietalService
-    private winetypeService: WinetypeService // Inject WinetypeService
+    private winetypeService: WinetypeService, // Inject WinetypeService
+    private toastr: ToastrService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -96,6 +98,7 @@ async removeFromWishlist(wishlistItemID: number | undefined): Promise<void> {
       this.wines = this.wines.filter(wine => wine.wineID !== this.wishlistItems.find(item => item.wishlistItemID === wishlistItemID)?.wineID);
     } catch (error) {
       console.error(`Failed to remove wine with ID ${wishlistItemID} from wishlist:`, error);
+      this.toastr.error('Failed to Remove from Wihslist', this.wineToDeleteDetails?.name)
     }
   }
 }
@@ -103,13 +106,19 @@ async removeFromWishlist(wishlistItemID: number | undefined): Promise<void> {
 
   async deleteWishlistItem() {
     if (this.wishlistItemToDelete) {
+      try{
       await this.removeFromWishlist(this.wishlistItemToDelete.wishlistItemID);
       const itemIndex = this.wishlistItems.findIndex(item => item.wishlistItemID === this.wishlistItemToDelete?.wishlistItemID);
       const wineIndex = this.wines.findIndex(wine => wine.wineID === this.wishlistItemToDelete?.wineID);
       if (itemIndex !== -1) this.wishlistItems.splice(itemIndex, 1); // Remove the item from the array
       if (wineIndex !== -1) this.wines.splice(wineIndex, 1); // Remove the wine details from the array
-      this.closeDeleteWineModal();
       console.log('deleted:', this.wishlistItemToDelete )
+      this.toastr.success('Successfully Removed from Wihslist', this.wineToDeleteDetails?.name)
+      }catch (error){
+        return;
+      }      
+      this.closeDeleteWineModal();
+      
     }
   }
 
