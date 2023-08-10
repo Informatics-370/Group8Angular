@@ -22,7 +22,7 @@ import { Validators } from '@angular/forms';
 export class WineComponent implements OnInit {
 
   tempWine: Wine = new Wine();
- 
+  isSaving: boolean = false;
 
   constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef,) { }
 
@@ -99,9 +99,20 @@ wineRestockLimitField = new FormControl('', [
 onFileSelected(event: Event): void {
   const target = event.target as HTMLInputElement;
   if (target.files !== null) {
-    this.selectedFile = target.files[0];
+    const file: File = target.files[0];
+    const fileType = file.type;
+
+    // Check if the file type is PNG or JPG
+    if (fileType.match(/image\/*/) === null || (fileType !== 'image/jpeg' && fileType !== 'image/png')) {
+      this.toastr.error('Only PNG or JPG files can be uploaded', 'File Type Error');
+      return; // Exit the method if the file type is not PNG or JPG
+    }
+
+    // If the file type is PNG or JPG, continue processing
+    this.selectedFile = file;
   }
 }
+
 
 getObjectURL(file: File): string {
   return URL.createObjectURL(file);
@@ -153,6 +164,7 @@ closeDeleteWineModal(): void {
 
 // Create and Edit Wine
 async submitWineForm(form: NgForm): Promise<void> {
+  this.isSaving = true;
   console.log('Submitting form with editingWine flag:', this.editingWine);
   if (form.valid) {
     try {
@@ -177,7 +189,11 @@ async submitWineForm(form: NgForm): Promise<void> {
         const updatedWine = await this.wineService.getWine(this.currentWine.wineID!); // Fetch the updated wine.
         const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
         if (index !== -1) {
-          this.wines[index] = updatedWine; // Update the wine in the wines array.
+          this.wines = [
+            ...this.wines.slice(0, index),
+            updatedWine,
+            ...this.wines.slice(index + 1)
+          ];
         }
         this.changeDetector.detectChanges();
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
@@ -191,9 +207,13 @@ async submitWineForm(form: NgForm): Promise<void> {
 
       this.closeWineModal();
       form.resetForm();
+      this.selectedFile = null;
     } catch (error) {
       console.error(error);
       this.toastr.error('An error occurred, please try again.', 'Wine Form');
+    }
+    finally {
+      this.isSaving = false; // Set to false when the saving process is complete
     }
   }
 }
@@ -220,6 +240,8 @@ async deleteWine(): Promise<void> {
     this.toastr.error('An error occurred, please try again.', 'Error');
   }
 }
+
+
 
 filterWines(): void {
   if (this.searchQuery.trim() !== '') {

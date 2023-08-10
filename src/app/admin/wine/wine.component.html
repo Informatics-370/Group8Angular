@@ -182,8 +182,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitWineForm(wineForm)">{{editingWine ?
-          'Save Changes' : 'Save'}}</button>
+        <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
       </div>
     </div>
   </div>
