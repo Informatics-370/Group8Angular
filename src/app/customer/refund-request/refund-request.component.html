@@ -1,3 +1,6 @@
+<br/>
+<br/>
+<h1>Customer Refund Requests</h1>
 <table class="table table-striped">
     <thead>
       <tr>
@@ -5,6 +8,7 @@
         <th scope="col" class="header-cell">Email</th>
         <th scope="col" class="header-cell">Description</th>
         <th scope="col" class="header-cell">Requested On</th>
+        <th scope="col" class="header-cell">Order Reference</th>
         <th scope="col" class="header-cell">Cost</th>
         <th scope="col" class="header-cell">Status</th>
       </tr>
@@ -15,6 +19,7 @@
         <td>{{request.email}}</td>
         <td>{{request.description}}</td>
         <td>{{request.requestedOn | date:'short'}}</td>
+        <td>{{request.orderRefNum}}</td>
         <td>R{{request.cost}}</td>
         <select [(ngModel)]="selectedStatuses[request.id]" (change)="updateStatus(request.id, selectedStatuses[request.id])">
           <option *ngFor="let status of refundStatuses" [value]="status">{{status}}</option>

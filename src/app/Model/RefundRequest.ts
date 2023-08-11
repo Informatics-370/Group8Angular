@@ -1,7 +1,7 @@
 export enum RefundStatus {
   InProgress = 0,
   Approved = 1,
-  NotApproved = 2
+  NotApproved = 2,
 }
 
 export interface RefundRequest {
@@ -13,4 +13,5 @@ export interface RefundRequest {
     cost: number;
     description: string;
     status: RefundStatus;
+    orderRefNum: string;
 }
