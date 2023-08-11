@@ -23,6 +23,7 @@ export class OrdersComponent implements OnInit {
   //Refunds
   showRefundModal: boolean = false;
   currentRefundDescription: string = '';
+  referenceNumber: string = '';
 
   constructor(private orderService: OrderService, private toastr: ToastrService, private wineService : WineService, private refundService: RefundService) { }
 
@@ -37,6 +38,7 @@ export class OrdersComponent implements OnInit {
   async loadOrders(email: string): Promise<void> {
     try {
       this.orders = await this.orderService.getOrdersForUser(email).toPromise() || [];
+      console.log(this.orders);
     } catch (error) {
       console.error('Error:', error);
       // this.toastr.error('Could not load order history.', 'Error');
@@ -55,36 +57,35 @@ export class OrdersComponent implements OnInit {
 
   getWineName(wineId: number): string {
     const wine = this.wines.find(w => w.wineID === wineId);
-    console.log('WineId and Found wine:', wineId, wine);  // Add this line
+    //console.log('WineId and Found wine:', wineId, wine);  // Add this line
     return wine ? wine.name : 'Unknown';
   }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Request a refund
-async requestRefund(orderId: number, wineId: number, description: string): Promise<void> {
+async requestRefund(orderId: number, wineId: number, description: string, refNum: string): Promise<void> {
   let token = localStorage.getItem('Token') || '';
   let decodedToken = jwt_decode(token) as DecodedToken;
   let email = decodedToken.sub;
 
   // Find the corresponding order
   let order = this.orders.find(o => o.wineOrderId === orderId);
-  
   if (!order) {
     console.error('Order not found.');
     this.toastr.error('Order not found.', 'Error');
     return;
   }
-
+  refNum = order.orderRefNum;
   // Use the cost from the order
   let cost = order.orderTotal;
-  console.log('Order Total:', order.orderTotal);
+  //console.log('Order Total:', order.orderTotal);
 
   try {
-    await this.refundService.requestRefund(wineId, email, cost, description).toPromise(); // pass the description
+    await this.refundService.requestRefund(wineId, email, cost, description, refNum).toPromise(); // pass the description
     this.toastr.success('Refund request has been sent.');
     order.isRefunded = true;
-    console.log('Order Total:', order.orderTotal);
+    //console.log('Order Total:', order.orderTotal);
   } catch (error) {
     console.error('Error:', error);
     if (error && typeof error === 'string') {
@@ -111,7 +112,17 @@ closeRefundModal(): void {
 async submitRefundForm(form: NgForm): Promise<void> {
   if (form.valid) {
     if (this.currentOrderId !== null && this.currentWineId !== null) {
-      await this.requestRefund(this.currentOrderId, this.currentWineId, this.currentRefundDescription); 
+      let order = this.orders.find(o => o.wineOrderId === this.currentOrderId);
+        if (!order) {
+          console.error('Order not found.');
+          this.toastr.error('Order not found.', 'Error');
+          return;
+        }
+
+        this.referenceNumber = order.orderRefNum;
+
+
+      await this.requestRefund(this.currentOrderId, this.currentWineId, this.currentRefundDescription, this.referenceNumber); 
       // Added this.currentWineId here and use the stored order ID, wine ID and entered description
       this.closeRefundModal();
     } else {
