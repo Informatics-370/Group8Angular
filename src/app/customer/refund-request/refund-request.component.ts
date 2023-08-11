@@ -30,8 +30,9 @@ refundStatuses = ["In Progress", "Approved", "Not Approved"];
 
 async getRefundRequests(): Promise<void> {
   this.refundRequests = await this.refundService.getRefundRequests().toPromise() || [];
-  this.refundRequests.forEach(request => this.selectedStatuses[request.id] = RefundStatus[request.status]);
+  this.refundRequests.forEach(request => this.selectedStatuses[request.id] = this.refundStatuses[request.status]);
 }
+
    
   async loadWines(): Promise<void> {
     try {
@@ -55,7 +56,10 @@ async getRefundRequests(): Promise<void> {
 
   async updateStatus(id: number, status: string): Promise<void> {
     try {
-        const statusAsNumber = RefundStatus[status as keyof typeof RefundStatus];
+        const statusAsNumber = this.refundStatuses.indexOf(status);
+        if (statusAsNumber === -1) {
+          throw new Error(`Invalid status: ${status}`);
+        }
         await this.refundService.updateStatus(id, statusAsNumber).toPromise();
         // After updating the status on the server, update it locally
         const request = this.refundRequests.find(r => r.id === id);
@@ -67,6 +71,7 @@ async getRefundRequests(): Promise<void> {
         // Display an error message to the user
     }
   }
+  
   
 }
 
