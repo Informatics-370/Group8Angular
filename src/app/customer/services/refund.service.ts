@@ -14,9 +14,9 @@ export class RefundService {
   constructor(private http: HttpClient) { }
 
     //When user requests a refund
-    requestRefund(wineId: number, email: string, cost: number, description: string): Observable<any> {
-      console.log('Request Refund Params:', wineId, email, cost, description);
-      return this.http.post(`${this.baseUrl}/RequestRefund`, { wineId, email, cost, description });
+    requestRefund(wineId: number, email: string, cost: number, description: string, referenceNumber: string): Observable<any> {
+      console.log('Request Refund Params:', wineId, email, cost, description, referenceNumber);
+      return this.http.post(`${this.baseUrl}/RequestRefund`, { wineId, email, cost, description , referenceNumber});
     }
   
     getRefundRequests(): Observable<RefundRequest[]> {
