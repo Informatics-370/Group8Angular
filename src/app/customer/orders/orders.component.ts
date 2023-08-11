@@ -133,7 +133,7 @@ async submitRefundForm(form: NgForm): Promise<void> {
 }
 
 checkRefundAvailability(order: Order): boolean {
-  const orderDate = new Date(order.orderDate);
+  const orderDate = new Date(order.collectedDate);
   const currentTime = new Date();
   const timeDifferenceInMilliseconds = currentTime.getTime() - orderDate.getTime();
   let sevenDaysInMillisecond = 7 * 24 * 60 * 60 * 1000;

@@ -24,7 +24,7 @@ export class AdminOrdersComponent implements OnInit {
       (orders: Order[]) => {
         this.orders = orders.map(order => ({
           ...order,
-          statusUpdated: false // Set statusUpdated as false initially
+          statusUpdated: 0 // Set statusUpdated as false initially
         }));
         console.log(this.orders);
       },
@@ -34,24 +34,21 @@ export class AdminOrdersComponent implements OnInit {
     );
   }
 
-  updateOrderStatus(orderId: number) {
+  updateOrderStatus(orderId: number, status: number) {
     this.orderService.updateOrderStatus(orderId).subscribe(
       response => {
         console.log(response);
 
-        // Find the order and set statusUpdated as true
+        // Find the order and update its status
         const order = this.orders.find(order => order.wineOrderId === orderId);
         if (order) {
-          order.received = true;
-          this.toastr.success('Status updated','Success');
+          order.orderStatus = status;
+          this.toastr.success('Status updated', 'Success');
         }
-
-        // Alternatively, if you want the latest data from the server, uncomment the line below.
-        // this.fetchAllOrders();  // Refresh the orders to reflect the updated status
       },
       error => {
         console.error('Error updating order status:', error);
       }
     );
-  }
+}
 }

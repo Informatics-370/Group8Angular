@@ -11,9 +11,9 @@
           <p>Order Date: {{ order.orderDate }}</p>
           <p>Order reference: {{order.orderRefNum | uppercase}}</p>
   
-          <!-- Add a button to update the order status -->
-          <button class="btn btn-success" [disabled]="order.received" (click)="updateOrderStatus(order.wineOrderId)">Received</button>
-  
+           <!-- Display appropriate buttons based on the order status -->
+      <button class="btn btn-success" [disabled]="order.orderStatus !== 0" (click)="updateOrderStatus(order.wineOrderId, 1)">Mark as Received</button>
+      <button class="btn btn-primary" [disabled]="order.orderStatus !== 1" (click)="updateOrderStatus(order.wineOrderId, 2)">Mark as Collected</button>
           <!-- Create a table for order items -->
           <table class="table table-striped">
             <thead>

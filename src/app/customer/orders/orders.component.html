@@ -14,12 +14,27 @@
       </div>
       <!-- Order Status Display -->
       <div class="d-flex align-items-center mt-2">
-        <div class="ml-3 mt-n1" style="height: 20px; width: 20px; border-radius: 50%;" [ngStyle]="{'background-color': order.received ? 'green' : 'red'}"></div>
+        <div class="ml-3 mt-n1" style="height: 20px; width: 20px; border-radius: 50%;" 
+             [ngStyle]="{
+                         'background-color': 
+                             order.orderStatus === 0 ? 'red' : 
+                             order.orderStatus === 1 ? 'green' : 
+                             'blue'
+                        }">
+        </div>
         <br/>
-        <p class="card-text" [ngClass]="{'text-success': order.received, 'text-danger': !order.received}">
-             {{ order.received ? 'Order ready for pickup' : 'Order being processed' }}
+        <p class="card-text" 
+           [ngClass]="{
+                       'text-danger': order.orderStatus === 0, 
+                       'text-success': order.orderStatus === 1, 
+                       'text-info': order.orderStatus === 2
+                      }">
+          {{ order.orderStatus === 0 ? 'Order being processed' : 
+             order.orderStatus === 1 ? 'Order ready for pickup' : 
+             'Order collected' }}
         </p>
       </div>
+      
       
       <div class="mt-4">
         <h4 class="custom-text-size text-muted">Order Items:</h4>
@@ -31,10 +46,13 @@
         <div>
           <h4 class="custom-text-size">Order Total: {{ order.orderTotal | number }}</h4>
         </div>
-        <button *ngIf="!order.isRefunded && checkRefundAvailability(order)" class="btn btn-outline-danger" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">Request Refund</button>
-          <p *ngIf="!order.isRefunded && !checkRefundAvailability(order)" class="text-warning">Refund unavailable</p>
-          <p *ngIf="order.isRefunded" class="text-warning">Refund already placed for this order</p>
-
+        <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatus === 2" 
+                class="btn btn-outline-danger" 
+                (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">
+          Request Refund
+        </button>
+        <p *ngIf="!order.isRefunded && !checkRefundAvailability(order)" class="text-warning">Refund unavailable</p>
+        <p *ngIf="order.isRefunded" class="text-warning">Refund already placed for this order</p>
       </div>
     </div>
   </div>
