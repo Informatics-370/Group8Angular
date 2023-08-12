@@ -12,4 +12,8 @@ export class ReportComponent {
   showToastr(message: string) {
     this.toastr.info(`Haha, you thought... this ain't coded yet! :)`, message);
   }
+
+  generateWriteOffReport(){
+    
+  }
 }
