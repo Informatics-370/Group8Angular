@@ -5,8 +5,13 @@ import { InventoryService } from '../services/inventory.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+
 import { Inventory } from 'src/app/Model/inventory';
 import { PdfService } from '../services/pdf.service';
+import { Customer } from 'src/app/Model/customer';
+import { CustomersService } from '../services/customers.service';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+
 
 
 @Component({
@@ -18,6 +23,9 @@ export class InventoryComponent implements OnInit{
 
   // Inventory Variables
     inventory: Inventory[] = [];
+
+    user: Customer | undefined; // Define a variable to hold the user data
+    userDetails: any;
     
     showInventoryModal: boolean = false;
     editingInventory: boolean = false;
@@ -42,20 +50,57 @@ export class InventoryComponent implements OnInit{
                 private router: Router,
                 private toastr: ToastrService,
                 private inventoryService: InventoryService,
-                private pdfService: PdfService) {}
+                private pdfService: PdfService,
+                private customerService: CustomersService,
+                private dataService: DataServiceService) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
 
     ngOnInit(): void {
       this.loadWORs();
+
       this.loadInventory();
+      
+      this.userDetails = this.dataService.getUserFromToken();
+      this.loadUserData();
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
 
 
 exportToPdf(): void {
-  this.pdfService.generatePdf(this.inventory);
+  console.log((this.user?.first_Name + ' ' + this.user?.last_Name));
+  
+  const username = (this.user?.first_Name + ' ' + this.user?.last_Name) || 'N/A'; // Get the username from user data
+  const currentDate = this.getCurrentDateFormatted(); // Get the current date
+  this.pdfService.generatePdf(this.inventory, username, currentDate);
+}
+
+loadUserData() {
+  const userEmail = this.userDetails?.email;
+
+  if (userEmail != null) {
+    this.customerService.GetCustomer(userEmail).subscribe(
+      (result: any) => {
+        console.log(result);
+        // Access the user object within the result
+        this.user = result.user; // Assign the user data to the variable
+      },
+      (error: any) => {
+        console.log(error);
+        this.toastr.error('Failed to load user data.');
+        this.router.navigate(['/clienthome']); // Redirect to home or login page if an error occurs
+      }
+    );
+  }
+}
+
+getCurrentDateFormatted(): string {
+  const today = new Date();
+  const day = today.getDate().toString().padStart(2, '0');
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const year = today.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 
