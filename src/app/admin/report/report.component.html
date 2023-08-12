@@ -10,3 +10,28 @@
     <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Inventory')">Inventory</button>
     <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Write-off')">Write-off</button>
 </div>
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showRefundsModal}" [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Please select the dates you wish to create a report for</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeRefundsModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="beginDateInput">Begin Date:</label>
+            <input type="date" id="beginDateInput" [(ngModel)]="beginDate">
+          </div>
+          <div class="form-group">
+            <label for="endDateInput">End Date:</label>
+            <input type="date" id="endDateInput" [(ngModel)]="endDate">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeRefundsModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="generateRefundReport(beginDate, endDate)">Generate Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
