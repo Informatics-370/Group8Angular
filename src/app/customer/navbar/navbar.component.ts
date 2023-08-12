@@ -182,8 +182,11 @@ passwordsMatch(): boolean {
 
         this.dataService.login(uvw);  // use the DataServiceService to set user details
         this.clearFields();
-        location.reload();
         this.toastr.success('Successfully', 'Logged in');
+
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
       }
     } else {
       console.log('Token not found in localStorage');
@@ -316,67 +319,6 @@ sendPasswordResetLink() {
     console.log('Please enter a valid email address.');
   }
 }
-
-
-///////////////////////////////////////////////////////////Test
-    // Method to send the password reset link
-  // sendPasswordResetLink() {
-  //   if (this.forgotPasswordEmail) {
-
-  //     var frgPs = new ForgotPasswordViewModel();
-  //     frgPs.email = this.forgotPasswordEmail;
-  //     try{
-  //     this.dataService.forgotPassword(frgPs).subscribe((result: any) => {
-  //       console.log(result)
-  //       this.showForgotPasswordModal = false;
-  //       this.showLoginModal = true;
-  //       this.handleSuccessfulLogin(result);
-  //       this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
-  //     console.log('Sending password reset link to: ', this.forgotPasswordEmail);
-  //     });
-  //   }catch(erro: any){
-  //     console.log(erro)
-  //     console.error('Error sending password reset link:');
-  //              this.toastr.error('An error occurred while sending the password reset link.');
-  //              this.showForgotPasswordModal = true;
-  //   }
-  //     this.closeForgotPasswordModal();
-  //   } else {
-  //     console.log('Please enter a valid email address.');
-  //   }
-  // }
-
-
-/////////////////////////////////////////////////////////////////////Luan
-  // sendPasswordResetLink() {
-  //   if (this.forgotPasswordEmail) {
-
-
-  //     var frgPs = new ForgotPasswordViewModel();
-  //     frgPs.email = this.forgotPasswordEmail;
-  //     this.dataService.forgotPassword(frgPs).pipe(
-  //       catchError((error: any) => {
-  //         console.error('Error sending password reset link:', error);
-  //         this.toastr.error('An error occurred while sending the password reset link.');
-  //         this.showForgotPasswordModal = true;
-  //         return of(null);
-  //       })
-  //     ).subscribe((result: any) => {
-  //       if (result) {
-  //         this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
-  //     console.log('Sending password reset link to: ', this.forgotPasswordEmail);
-  //         this.showForgotPasswordModal = false;
-  //         this.showLoginModal = true;
-  //         this.handleSuccessfulLogin(result);
-  //       }
-  //     });
-
-  //     this.closeForgotPasswordModal();
-  //   } else {
-  //     console.log('Please enter a valid email address.');
-  //   }
-  // }
-
 
   clearForgotPasswordFields() {
     this.forgotPasswordEmail = ''; // Clear the email field
