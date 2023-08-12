@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Inventory } from 'src/app/Model/inventory';
+import { PdfService } from '../services/pdf.service';
+
 
 @Component({
   selector: 'app-inventory',
@@ -16,6 +18,7 @@ export class InventoryComponent implements OnInit{
 
   // Inventory Variables
     inventory: Inventory[] = [];
+    
     showInventoryModal: boolean = false;
     editingInventory: boolean = false;
     currentInventory: Inventory = new Inventory();
@@ -35,7 +38,11 @@ export class InventoryComponent implements OnInit{
     // Write Off Reasons Variables
     
 
-    constructor(private writeORService: WriteORService, private router: Router, private toastr: ToastrService, private inventoryService: InventoryService) {}
+    constructor(private writeORService: WriteORService,
+                private router: Router,
+                private toastr: ToastrService,
+                private inventoryService: InventoryService,
+                private pdfService: PdfService) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
 
@@ -45,6 +52,11 @@ export class InventoryComponent implements OnInit{
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
+
+
+exportToPdf(): void {
+  this.pdfService.generatePdf(this.inventory);
+}
 
 
 // ****************** Methods to display *****************************************************************************************************
