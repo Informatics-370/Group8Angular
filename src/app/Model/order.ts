@@ -13,4 +13,5 @@ export interface Order {
   orderStatus: number; // renamed from 'received' to 'orderStatus'
   orderItems: OrderItem[];
   isRefunded: boolean;
+  wineId: number;
 }
