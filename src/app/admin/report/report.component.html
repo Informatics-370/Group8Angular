@@ -3,17 +3,13 @@
 <h2>Generate reports</h2>
 
 <div>
-
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Wines')">Wines</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="exportToPdf()">Inventory</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('EVENTS')">Events</button>
-
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Sales')">Sales</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Bookings')">Bookings</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Customer')">Customer</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;"
-    (click)="showToastr('Customer satisfaction')">Customer satisfaction</button>
-    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('REFUNDS')">Refunds</button>
-    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="generateSupplierOrderReport()">Supplier Order</button>
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('REFUNDS')">Refunds</button>
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="generateSupplierOrderReport()">Supplier Order</button>
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="generateBlacklistReport()">Blacklist</button>
 </div>
 
 <div class="modal" tabindex="-1" [ngClass]="{'show': showRefundsModal}"

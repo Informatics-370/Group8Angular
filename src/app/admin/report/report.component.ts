@@ -7,6 +7,7 @@ import { Inventory } from 'src/app/Model/inventory';
 import { InventoryService } from '../services/inventory.service';
 import { Event } from 'src/app/Model/event';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
+import { Blacklist } from 'src/app/Model/blacklist';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class ReportComponent {
   inventory: Inventory[] = [];
   allEvents: Event[] = []; // Add this property to store fetched events
   currentReportType: 'REFUNDS' | 'EVENTS' | null = null;
+  blacklistData: Blacklist[] = [];
 
 
 
@@ -131,6 +133,25 @@ generateSupplierOrderReport(){
     console.log(this.allSuppOrders);
     this.pdfService.generateSupplierOrdersPdf(this.allSuppOrders);
   })
+}
+
+async generateBlacklistReport() {
+  try {
+    let result: Blacklist[] | undefined = await this.dataService.getBlacklist();
+    console.log('Result:', result); // Add this line
+    if (result !== undefined) {
+      this.blacklistData = result;
+      let currentDate = this.getCurrentDateFormatted();
+      this.pdfService.generateBlacklistPdf(this.blacklistData, currentDate);
+      // Do any additional processing or actions here if needed
+    } else {
+      console.error('Received undefined or invalid blacklist data');
+      // Handle the case where the returned data is undefined or invalid
+    }
+  } catch (error) {
+    console.error('Error fetching blacklist data:', error);
+    // Handle error if needed
+  }
 }
 
 }
