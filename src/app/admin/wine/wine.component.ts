@@ -179,64 +179,69 @@ updateDisplay(wine: Wine): void {
 
 // Create and Edit Wine
 async submitWineForm(form: NgForm): Promise<void> {
+  console.log('Inside submitWineForm - Before isSaving:', this.currentWine);
   this.isSaving = true;
   console.log('Submitting form with editingWine flag:', this.editingWine);
-  if (form.valid) {
-    try {
-      const formData = new FormData();
 
-      for (const key in this.currentWine) {
-        if (this.currentWine.hasOwnProperty(key)) {
-          formData.append(key, (this.currentWine as any)[key]);
-        }
+  try {
+    console.log('Form validity:', form.valid);
+    const formData = new FormData();
+
+    for (const key in this.currentWine) {
+      if (this.currentWine.hasOwnProperty(key)) {
+        formData.append(key, (this.currentWine as any)[key]);
       }
-
-      if (this.selectedFile) {
-        formData.append('File', this.selectedFile);
-      }
-
-      if (this.editingWine) {
-        // Do not send 'File' key if no new file has been selected
-        if (!this.selectedFile) {
-          formData.delete('File');
-        }
-        console.log(this.currentWine)
-        this.updateDisplay(this.currentWine)
-        console.log(this.currentWine.displayWine);
-        await this.wineService.updateWine(this.currentWine.wineID!, formData);
-        const updatedWine = await this.wineService.getWine(this.currentWine.wineID!); // Fetch the updated wine.
-        const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
-        if (index !== -1) {
-          this.wines = [
-            ...this.wines.slice(0, index),
-            updatedWine,
-            ...this.wines.slice(index + 1)
-          ];
-        }
-        this.changeDetector.detectChanges();
-        this.toastr.success('Wine has been updated successfully.', 'Wine Form');
-        this.loadWines(); // Call loadWines() after updating a wine
-      } else {
-        let createdWine = await this.wineService.addWine(formData);
-        this.updateDisplay(createdWine)
-        console.log(createdWine.displayWine);
-        this.wines.push(createdWine);
-        console.log(createdWine);
-        this.toastr.success('Wine has been added successfully.', 'Wine Form');
-      }
-
-      this.closeWineModal();
-      form.resetForm();
-      this.selectedFile = null;
-    } catch (error) {
-      console.error(error);
-      this.toastr.error('An error occurred, please try again.', 'Wine Form');
     }
-    finally {
-      this.isSaving = false; // Set to false when the saving process is complete
+
+    if (this.selectedFile) {
+      formData.append('File', this.selectedFile);
     }
+
+    if (this.editingWine) {
+      console.log('Updating existing wine:', this.currentWine);
+      
+      if (!this.selectedFile) {
+        formData.delete('File');
+      }
+      console.log('Before updating display:', this.currentWine);
+      this.updateDisplay(this.currentWine);
+      console.log('After updating display:', this.currentWine.displayWine);
+      
+      await this.wineService.updateWine(this.currentWine.wineID!, formData);
+      const updatedWine = await this.wineService.getWine(this.currentWine.wineID!);
+      const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
+      if (index !== -1) {
+        this.wines = [
+          ...this.wines.slice(0, index),
+          updatedWine,
+          ...this.wines.slice(index + 1)
+        ];
+      }
+      this.changeDetector.detectChanges();
+      this.toastr.success('Wine has been updated successfully.', 'Wine Form');
+      this.loadWines();
+    } else {
+      console.log('Adding new wine:', this.currentWine);
+      let createdWine = await this.wineService.addWine(formData);
+      this.updateDisplay(createdWine);
+      console.log('After updating display:', createdWine.displayWine);
+      this.wines.push(createdWine);
+      console.log('Added wine:', createdWine);
+      this.toastr.success('Wine has been added successfully.', 'Wine Form');
+    }
+
+    this.closeWineModal();
+    form.resetForm();
+    this.selectedFile = null;
+  } catch (error) {
+    console.error('Error:', error);
+    this.toastr.error('An error occurred, please try again.', 'Wine Form');
+  } finally {
+    this.isSaving = false;
+    console.log('Inside submitWineForm - After isSaving:', this.currentWine);
   }
 }
+
 
 
 
