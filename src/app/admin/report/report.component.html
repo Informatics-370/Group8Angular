@@ -12,11 +12,8 @@
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Customer')">Customer</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;"
     (click)="showToastr('Customer satisfaction')">Customer satisfaction</button>
-
-  <button type="button" class="btn btn-primary" style="margin: 2px;"
-    (click)="showToastr('Write-off')">Write-off</button>
-
-
+    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="openRefundsModal()">Write-off</button>
+    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="generateSupplierOrderReport()">Supplier Order</button>
 </div>
 
 <div class="modal" tabindex="-1" [ngClass]="{'show': showRefundsModal}"

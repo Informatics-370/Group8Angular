@@ -37,4 +37,9 @@ export class ReportService {
     this.setHeaders();
     return this.httpClient.get<any>(`${this.apiUrl}/getEventReport/${beginDate}/${endDate}`, { headers: this.headers });
   }
+
+  getSupplierOrder(){
+    this.setHeaders();
+    return this.httpClient.get<any>(`${this.apiUrl}/getAllSupplierOrders`, { headers: this.headers });
+  }
 }
