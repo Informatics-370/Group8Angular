@@ -83,13 +83,11 @@ getWineName(wineID: number): string {
 }
 
 getVarietalName(varietalID: number): string {
-  console.log('Varietal ',varietalID)
   let varietal = this.varietals.find(x => x.varietalID == varietalID);
   return varietal?.name || 'Unknown';
 }
 
-getWinetypeName(wineTypeID: number): string {
-  console.log('Type ', wineTypeID);
+getWinetypeName(wineTypeID?: number): string {
   let winetype = this.winetypes.find(x => x.wineTypeID == wineTypeID);  
   return winetype?.name || 'Unknown';
 }
@@ -217,6 +215,9 @@ openEditInventoryModal(id: number) {
     // Clone the original Customer Details object and assign it to currentBlacklistC
     this.currentInventory = {...originalInventory};
   }
+  this.getVarietalName(this.currentInventory.varietalID);
+  this.getWinePrice(this.currentInventory.wineID);
+  this.getWinetypeName(this.currentInventory.wineTypeID);
   this.showInventoryModal = true;
 }
 
@@ -226,6 +227,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
     try {
       if (this.editingInventory) {
         // Update inventory 
+        console.log(this.currentInventory);
         await this.inventoryService.updateInventory(this.currentInventory.inventoryID!, this.currentInventory);
         const index = this.inventory.findIndex(x => x.inventoryID === this.currentInventory.inventoryID);
         if (index !== -1) {
@@ -236,6 +238,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
         // Add inventory
         const data = await this.inventoryService.addInventory(this.currentInventory);
         this.inventory.push(data);
+        this.loadInventory();
         this.toastr.success('Successfully added', 'Inventory Reason');
       }
       this.closeInventoryModal();
@@ -256,6 +259,7 @@ openDeleteInventoryModal(inventory: any): void {
   this.inventoryToDelete = inventory.inventoryID;
   console.log("Inventory : ", this.inventoryToDelete)
   this.inventoryToDeleteDetails = inventory;
+  console.log(this.inventoryToDeleteDetails);
   this.showDeleteInventoryModal = true;
 }
 
