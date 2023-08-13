@@ -8,6 +8,7 @@ import { environment } from 'src/app/environment';
 export class ReportService {
   private headers: HttpHeaders | undefined;
   private apiUrl = `${environment.baseApiUrl}api/Reports`;
+  
   constructor(private httpClient: HttpClient) { }
 
   private setHeaders() {
@@ -26,9 +27,14 @@ export class ReportService {
     }
   }
 
-
-  getRefunds(beginDate: Date, endDate: Date){
+  getRefunds(beginDate: Date, endDate: Date) {
     this.setHeaders();
-    return this.httpClient.get<any>(`${this.apiUrl}/getRefundReport/${beginDate}/${endDate}`, { headers: this.headers })
+    return this.httpClient.get<any>(`${this.apiUrl}/getRefundReport/${beginDate}/${endDate}`, { headers: this.headers });
   } 
+
+  // New method to get events report
+  getEventsReport(beginDate: Date, endDate: Date) {
+    this.setHeaders();
+    return this.httpClient.get<any>(`${this.apiUrl}/getEventReport/${beginDate}/${endDate}`, { headers: this.headers });
+  }
 }
