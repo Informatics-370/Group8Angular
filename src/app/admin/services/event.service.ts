@@ -40,5 +40,11 @@ purchaseTicket(eventID: number): Promise<any> {
   return firstValueFrom(this.http.post<any>(url, {}));
 }
 
+async toggleEventDisplay(eventID: number): Promise<any> {
+  const url = `${this.apiUrl}/display-toggle/${eventID}`;
+  return firstValueFrom(this.http.put<any>(url, {}));
+}
+
+
   
 }
