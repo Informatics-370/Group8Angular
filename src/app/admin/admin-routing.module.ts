@@ -24,6 +24,7 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { SupplierOrderComponent } from './supplier-order/supplier-order.component';
 import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
 import { WriteoffComponent } from './writeoff/writeoff.component';
+import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -49,6 +50,7 @@ const routes: Routes = [
   {path: 'users', component: UserManagementComponent},
   {path:'supplierOrder', component: SupplierOrderComponent},
   {path: 'adminOrder', component: AdminOrdersComponent},
+  {path: 'auditlogs', component: AuditLogsComponent},
 
 ];
 

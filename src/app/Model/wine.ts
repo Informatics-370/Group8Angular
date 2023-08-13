@@ -14,6 +14,7 @@ export class Wine {
   wineType: WineType;
   varietalID: number;
   varietal: Varietal;
+  displayWine: boolean;
 
   constructor(
     wineID: number = 0,
@@ -27,7 +28,8 @@ export class Wine {
     wineTypeID: number = 0,
     wineType: WineType = new WineType(),
     varietalID: number = 0,
-    varietal: Varietal = new Varietal()
+    varietal: Varietal = new Varietal(),
+    displayWine: boolean = false
   ) {
     this.wineID = wineID;
     this.name = name;
@@ -41,6 +43,7 @@ export class Wine {
     this.wineType = wineType;
     this.varietalID = varietalID;
     this.varietal = varietal;
+    this.displayWine = displayWine;
   }
 
   get wineTypeName(): string | undefined {

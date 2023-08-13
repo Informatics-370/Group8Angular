@@ -17,6 +17,7 @@ import { EventTypeComponent } from './admin/event-type/event-type.component';
 import { EventPriceComponent } from './admin/event-price/event-price.component';
 import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.component';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
+import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
 
 
 //Client side
@@ -41,6 +42,7 @@ import { ClientAboutComponent } from './customer/client-about/client-about.compo
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
+
 
 
 
@@ -90,7 +92,7 @@ const routes: Routes = [
   {path: 'refundrequests', component: RefundRequestComponent},
   {path: 'userrefunds', component: MyRefundsComponent},
   {path: 'chatbot', component: ChatbotComponent},
- 
+  {path: 'auditlogs', component: AuditLogsComponent},
   
 ];
 
