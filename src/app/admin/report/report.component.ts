@@ -6,6 +6,7 @@ import { ReportService } from '../services/report.service';
 import { Inventory } from 'src/app/Model/inventory';
 import { InventoryService } from '../services/inventory.service';
 import { Event } from 'src/app/Model/event';
+import { SupplierOrder } from 'src/app/Model/supplierOrder';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class ReportComponent {
   beginDate: Date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1); // First day of the current month
   endDate: Date = new Date();
   allRefunds: RefundRequest[] = [];
+  allSuppOrders: SupplierOrder[] = [];
   inventory: Inventory[] = [];
   allEvents: Event[] = []; // Add this property to store fetched events
   currentReportType: 'REFUNDS' | 'EVENTS' | null = null;
@@ -115,5 +117,20 @@ export class ReportComponent {
       this.toastr.error('Error fetching event report.', 'Download Report');
     }
   }
+
+
+  openRefundsModal(){
+    this.showRefundsModal = true;
+}
+
+
+generateSupplierOrderReport(){
+  this.dataService.getSupplierOrder().subscribe((result) => {
+    console.log(result);
+    this.allSuppOrders = result;
+    console.log(this.allSuppOrders);
+    this.pdfService.generateSupplierOrdersPdf(this.allSuppOrders);
+  })
+}
 
 }
