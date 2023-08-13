@@ -200,6 +200,7 @@ async submitWineForm(form: NgForm): Promise<void> {
         if (!this.selectedFile) {
           formData.delete('File');
         }
+        console.log(this.currentWine)
         this.updateDisplay(this.currentWine)
         console.log(this.currentWine.displayWine);
         await this.wineService.updateWine(this.currentWine.wineID!, formData);
@@ -485,9 +486,3 @@ filterWines(): void {
   // <!-- Varietal ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 }
-
-
-
-
-
-
