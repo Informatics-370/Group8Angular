@@ -1,8 +1,12 @@
 <br>
 <br>
 <h2>Generate reports</h2>
-
+<div id="chart-container">
+  <canvas id="canvas"></canvas>
+</div>
 <div>
+  <button type="button" class="btn btn-primary" (click)="generateReport()">Generate Report</button>
+
     <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Sales')">Sales</button>
     <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Bookings')">Bookings</button>
     <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Customer')">Customer</button>
@@ -35,3 +39,32 @@
       </div>
     </div>
   </div>
+
+
+
+
+  <!-- Sales Report Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showSalesModal}" [ngStyle]="{'display': showSalesModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Please select the dates for the Sales Report</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeSalesModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="beginDateInput">Begin Date:</label>
+          <input type="date" id="beginDateInput" [(ngModel)]="beginDate">
+        </div>
+        <div class="form-group">
+          <label for="endDateInput">End Date:</label>
+          <input type="date" id="endDateInput" [(ngModel)]="endDate">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeSalesModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="generateSalesChartAndPDF()">Generate Report</button>
+      </div>
+    </div>
+  </div>
+</div>
