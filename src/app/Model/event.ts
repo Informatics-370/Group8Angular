@@ -13,8 +13,11 @@ export class Event {
     description: string;
     eventPrice : number;
     imagePath: string;
+    eventDisplay : boolean;
     earlyBirdID?: number; 
     earlyBird?: EarlyBird = new EarlyBird();
+  isDisplayed: any;
+    
 
     constructor(
         eventID: number = 0,
@@ -25,8 +28,10 @@ export class Event {
         description: string = '',
         eventPrice : number= 0,
         imagePath: string = '',
+        eventDisplay: boolean = true,  // Corrected this line
         earlyBirdID?: number, // Made this parameter optional
-        earlyBird?: EarlyBird // Added this parameter
+        earlyBird?: EarlyBird, // Added this parameter
+       
     ) {
         this.eventID = eventID;
         this.eventName = eventName;
@@ -36,7 +41,9 @@ export class Event {
         this.description = description;
         this.eventPrice = eventPrice;
         this.imagePath = imagePath;
+        this.eventDisplay = eventDisplay;
         this.earlyBirdID = earlyBirdID;
         this.earlyBird = earlyBird; // Assigned the parameter value
+       
     }
 }
