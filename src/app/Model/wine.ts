@@ -19,9 +19,7 @@ export class Wine {
   constructor(
     wineID: number = 0,
     name: string = "",
-    description: string = "",
     vintage: string = "",
-    restockLimit: number = 0,
     filePath: string = "",
     wineTastingNote: string = "",
     winePrice: number = 0,
