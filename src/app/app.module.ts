@@ -62,6 +62,7 @@ import { UserRefundsComponent } from './customer/user-refunds/user-refunds.compo
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
 
 
 @NgModule({
@@ -111,6 +112,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     UserRefundsComponent,
     WriteoffComponent,
     ChatbotComponent,
+    AuditLogsComponent,
   ],
   imports: [
     BrowserModule,

@@ -22,13 +22,17 @@
   <thead>
     <tr>
       <th scope="col" class="header-cell">Description</th>
-      <th scope="col" class="header-cell">Date of Last Update</th>      
+      <th scope="col" class="header-cell">Date of Last Update</th> 
+      <th scope="col" class="header-cell">Times Used</th>  
+      <th scope="col" class="header-cell">Bottels Lost</th>    
     </tr>
   </thead>
   <tbody>      
       <tr *ngFor="let x of writeOffReason">
         <td>{{ x.description }}</td>
         <td>{{ x.date_of_last_update }}</td>
+        <td>{{ x.timesUsed }}</td>
+        <td>{{ x.bottelsLost }}</td>
       <td>
         <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.writeOff_ReasonID !== undefined && openEditWORModal(x.writeOff_ReasonID)">
           <i class="fas fa-pencil-alt"></i>

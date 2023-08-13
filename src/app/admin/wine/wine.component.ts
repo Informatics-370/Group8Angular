@@ -32,6 +32,8 @@ export class WineComponent implements OnInit {
     this.loadWinetypes();
   }
 
+
+
   //--------------------------------------------------------------------------------------------------------------------------------
   //Methods to display the Wines, WineTypes and WineVarietals in the tables
 
@@ -162,6 +164,19 @@ closeDeleteWineModal(): void {
 
 // CRUD Wine
 
+updateDisplay(wine: Wine): void {
+  // if the 'paid' checkbox was unticked, the 'received' checkbox should also be unticked
+  if (!wine.displayWine) {
+    wine.displayWine = false;
+  }if(wine.displayWine){
+    wine.displayWine = true;
+  }
+  }
+
+
+
+
+
 // Create and Edit Wine
 async submitWineForm(form: NgForm): Promise<void> {
   this.isSaving = true;
@@ -185,6 +200,8 @@ async submitWineForm(form: NgForm): Promise<void> {
         if (!this.selectedFile) {
           formData.delete('File');
         }
+        this.updateDisplay(this.currentWine)
+        console.log(this.currentWine.displayWine);
         await this.wineService.updateWine(this.currentWine.wineID!, formData);
         const updatedWine = await this.wineService.getWine(this.currentWine.wineID!); // Fetch the updated wine.
         const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
@@ -199,7 +216,9 @@ async submitWineForm(form: NgForm): Promise<void> {
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
         this.loadWines(); // Call loadWines() after updating a wine
       } else {
-        const createdWine = await this.wineService.addWine(formData);
+        let createdWine = await this.wineService.addWine(formData);
+        this.updateDisplay(createdWine)
+        console.log(createdWine.displayWine);
         this.wines.push(createdWine);
         console.log(createdWine);
         this.toastr.success('Wine has been added successfully.', 'Wine Form');
