@@ -13,6 +13,7 @@ export class Inventory {
   wineType: WineType | undefined;
   stockLimit: number;
   quantityOnHand: number;
+  public winePrice: number;
  
   constructor(
     inventoryID: number = 0,
@@ -20,7 +21,8 @@ export class Inventory {
     varietalID: number = 0,
     wineTypeID: number = 0,
     stockLimit: number = 0,
-    quantityOnHand: number = 0
+    quantityOnHand: number = 0,
+    winePrice: number =0
   ) {
     this.inventoryID = inventoryID;
     this.wineID = wineID;
@@ -28,6 +30,7 @@ export class Inventory {
     this.wineTypeID = wineTypeID;
     this.stockLimit = stockLimit;
     this.quantityOnHand = quantityOnHand;
+    this.winePrice = winePrice;
   }
 }
 

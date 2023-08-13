@@ -105,9 +105,9 @@ export class ReportComponent {
     return `${day}/${month}/${year}`;
   }
 
-  exportToPdf(): void {
+  exportInventoryToPdf(): void {
     const currentDate = this.getCurrentDateFormatted(); // Get the current date
-    this.pdfService.generatePdf(this.inventory, currentDate);
+    this.pdfService.generateInventoryPdf(this.inventory, currentDate);
   }
 
   async downloadEventsReport() {

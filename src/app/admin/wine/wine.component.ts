@@ -165,17 +165,12 @@ closeDeleteWineModal(): void {
 // CRUD Wine
 
 updateDisplay(wine: Wine): void {
-  // if the 'paid' checkbox was unticked, the 'received' checkbox should also be unticked
   if (!wine.displayWine) {
     wine.displayWine = false;
   }if(wine.displayWine){
     wine.displayWine = true;
   }
   }
-
-
-
-
 
 // Create and Edit Wine
 async submitWineForm(form: NgForm): Promise<void> {
