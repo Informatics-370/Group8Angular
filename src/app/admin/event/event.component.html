@@ -41,7 +41,7 @@
       <!-- New Column -->
       <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : '' }}</td>
       <td>
-        <input type="checkbox" [checked]="event.eventDisplay" (change)="toggleDisplay(event)">
+        <input type="checkbox" [checked]="event.displayEvent" (change)="toggleDisplay(event)">
 
 
      </td>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EventService } from '../services/event.service';
 import { Event } from 'src/app/Model/event';
 import { ToastrService } from 'ngx-toastr';
-import { FormControl,NgForm } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Validators } from '@angular/forms';
 import { EventTypeService } from '../services/event-type.service';
@@ -28,9 +28,9 @@ export class EventComponent {
 
 
   constructor(private toastr: ToastrService, private eventService: EventService, private eventTypeService: EventTypeService, private eventPriceService: EventPriceService, private earlyBirdService: EarlyBirdService) { }
-  
+
   async ngOnInit(): Promise<void> {
-    
+
     try {
       await this.loadEventData();
       await this.loadDropdownData();
@@ -49,7 +49,7 @@ export class EventComponent {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
-  
+
   async loadEventData(): Promise<void> {
     this.events = await this.eventService.getEvents();
   }
@@ -71,201 +71,224 @@ export class EventComponent {
   showDeleteEventModal = false;
   eventToDeleteDetails: any;
   eventToDelete: any = null;
-  
+
   //--------------------------------------------------------------------------------------------------------------------------------
- // Methods to load and get event-related information
-async loadEvents(): Promise<void> {
-  try {
-    this.events = await this.eventService.getEvents();
-  } catch (error) {
-    console.error(error);
-    this.toastr.error('Error, please try again', 'Event Table');
+  // Methods to load and get event-related information
+  async loadEvents(): Promise<void> {
+    try {
+      this.events = await this.eventService.getEvents();
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error, please try again', 'Event Table');
+    }
   }
-}
 
-getEventTypeName(eventTypeID: number): string {
-  const eventType = this.eventTypes.find(e => e.eventTypeID === eventTypeID);
-  return eventType?.eventTypeName || 'Unknown';
-}
-
-getEventPriceAmount(eventPriceID: number): number {
-  const eventPrice = this.eventPrices.find(e => e.eventPriceID === eventPriceID);
-  return eventPrice?.amount || 0;
-}
-
-getEarlyBirdPercentage(earlyBirdID: number): number {
-  const earlyBird = this.earlyBirds.find(e => e.earlyBirdID === earlyBirdID);
-  return earlyBird?.percentage || 0;
-}
-
-characterCount = 0;
-
-updateCharacterCount(event: any) {
-  this.characterCount = event.target.value.length;
-}
-
-
-// Event modal-related methods
-openAddEventModal() {
-  this.editingEvent = false;
-  this.currentEvent = new Event();
-  this.showEventModal = true;
-}
-
-openEditEventModal(id: number) {
-  this.editingEvent = true;
-  let eventToEdit = this.events.find(event => event.eventID === id);
-  if (eventToEdit) {
-    this.tempEvent = {
-      ...eventToEdit,
-      imagePath: eventToEdit.imagePath,
-    };
-    this.currentEvent = this.tempEvent;
+  getEventTypeName(eventTypeID: number): string {
+    const eventType = this.eventTypes.find(e => e.eventTypeID === eventTypeID);
+    return eventType?.eventTypeName || 'Unknown';
   }
-  this.showEventModal = true;
-}
 
-closeEventModal() {
-  this.showEventModal = false;
-  this.ngOnInit();
-}
+  getEventPriceAmount(eventPriceID: number): number {
+    const eventPrice = this.eventPrices.find(e => e.eventPriceID === eventPriceID);
+    return eventPrice?.amount || 0;
+  }
 
-openDeleteEventModal(event: any): void {
-  console.log(event); // add this line
-  this.eventToDelete = event.eventID;
-  this.eventToDeleteDetails = event;
-  this.showDeleteEventModal = true;
-}
+  getEarlyBirdPercentage(earlyBirdID: number): number {
+    const earlyBird = this.earlyBirds.find(e => e.earlyBirdID === earlyBirdID);
+    return earlyBird?.percentage || 0;
+  }
 
-closeDeleteEventModal(): void {
-  this.showDeleteEventModal = false;
-}
+  characterCount = 0;
 
-getEarlyBirdById(id: number): EarlyBird | undefined {
-  return this.earlyBirds.find(earlyBird => earlyBird.earlyBirdID === id);
-}
+  updateCharacterCount(event: any) {
+    this.characterCount = event.target.value.length;
+  }
 
-// CRUD Event
-isSubmitting = false;
 
-async submitEventForm(form: NgForm): Promise<void> {
-  if (form.valid && !this.isSubmitting) {  // Check if not currently submitting
-    this.isSubmitting = true; // Set isSubmitting to true to disable the button
-    
+  // Event modal-related methods
+  openAddEventModal() {
+    this.editingEvent = false;
+    this.currentEvent = new Event();
+    this.showEventModal = true;
+  }
+
+  openEditEventModal(id: number) {
+    this.editingEvent = true;
+    let eventToEdit = this.events.find(event => event.eventID === id);
+    if (eventToEdit) {
+      this.tempEvent = {
+        ...eventToEdit,
+        imagePath: eventToEdit.imagePath,
+        displayEvent: eventToEdit.displayEvent
+      };
+      this.currentEvent = this.tempEvent;
+    }
+    this.showEventModal = true;
+  }
+
+  closeEventModal() {
+    this.showEventModal = false;
+    this.ngOnInit();
+  }
+
+  openDeleteEventModal(event: any): void {
+    console.log(event); // add this line
+    this.eventToDelete = event.eventID;
+    this.eventToDeleteDetails = event;
+    this.showDeleteEventModal = true;
+  }
+
+  closeDeleteEventModal(): void {
+    this.showDeleteEventModal = false;
+  }
+
+  getEarlyBirdById(id: number): EarlyBird | undefined {
+    return this.earlyBirds.find(earlyBird => earlyBird.earlyBirdID === id);
+  }
+
+
+  // CRUD Event
+  isSubmitting = false;
+
+  async submitEventForm(form: NgForm): Promise<void> {
+    // Check if not currently submitting
+    if (form.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+
+      // Adjustments for consistency
+      if (this.currentEvent.earlyBird === null) {
+        this.currentEvent.earlyBird = undefined;
+      }
+      if (this.currentEvent.earlyBirdID === null) {
+        this.currentEvent.earlyBirdID = 0;
+      }
+      if (this.editingEvent) {
+        const pathArray = this.currentEvent.imagePath.split('/');
+        this.currentEvent.imagePath = pathArray[pathArray.length - 1];
+      }
+      try {
+        const formData = new FormData();
+
+        for (const key in this.currentEvent) {
+          if (this.currentEvent.hasOwnProperty(key)) {
+            formData.append(key, (this.currentEvent as any)[key]);
+          }
+        }
+
+        if (this.selectedFile) {
+          formData.append('ImagePath', this.selectedFile, this.selectedFile.name);
+        }
+
+
+        // Log formData entries for debugging
+        console.log("Logging formData Entries:");
+        formData.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
+        });
+
+        if (this.editingEvent) {
+          await this.eventService.updateEvent(this.currentEvent.eventID, formData);
+          const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID);
+          const index = this.events.findIndex(event => event.eventID === this.currentEvent.eventID);
+
+          if (index !== -1) {
+            this.events[index] = updatedEvent;
+          }
+          this.toastr.success('Event has been updated successfully.', 'Event Form');
+        } else {
+          const createdEvent = await this.eventService.addEvent(formData);
+          this.events.push(createdEvent);
+
+          // Validate and format eventPrice
+          const eventPriceToAdd = new EventPrice();
+          eventPriceToAdd.amount = createdEvent.eventPrice;
+          eventPriceToAdd.date = createdEvent.eventDate;
+
+          const addedEventPrice = await this.eventPriceService.addEventPrice(eventPriceToAdd);
+          this.eventPrices.push(addedEventPrice);
+
+          this.toastr.success('Event has been added successfully.', 'Event Form');
+        }
+
+        this.closeEventModal();
+        form.resetForm();
+      } catch (error) {
+        console.error(error);
+        this.toastr.error('An error occurred, please try again.', 'Event Form');
+      } finally {
+        this.isSubmitting = false;  // Set isSubmitting back to false at the end, no matter what happens
+      }
+    }
+  }
+
+
+
+  getObjectURL(file: File): string {
+    return URL.createObjectURL(file);
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      this.selectedFile = event.target.files[0];
+      this.currentEvent.imagePath = this.selectedFile?.name ?? '';
+    }
+  }
+
+  async deleteEvent(): Promise<void> {
+    try {
+      await this.eventService.deleteEvent(this.eventToDelete);
+      const index = this.events.findIndex(event => event.eventID === this.eventToDelete);
+      if (index !== -1) {
+        this.events.splice(index, 1);
+      }
+      this.toastr.success('Event has been deleted successfully.', 'Delete Event');
+      this.closeDeleteEventModal();
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error, please try again', 'Delete Event');
+    }
+  }
+
+
+
+
+  async onDisplayCheckboxChange(eventToUpdate: Event) {
     try {
       const formData = new FormData();
 
-      for (const key in this.currentEvent) {
-        if (this.currentEvent.hasOwnProperty(key)) {
-          formData.append(key, (this.currentEvent as any)[key]);
-        }
-      }
-      if (this.selectedFile) {
-        formData.append('ImagePath', this.selectedFile, this.selectedFile.name);
-      }
-
-      if (this.editingEvent) {
-        await this.eventService.updateEvent(this.currentEvent.eventID, formData);
-        const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID); 
-        const index = this.events.findIndex(event => event.eventID === this.currentEvent.eventID);
-        if (index !== -1) {
-          this.events[index] = updatedEvent; 
-        }
-        this.toastr.success('Event has been updated successfully.', 'Event Form');
-      } else {
-        console.log(this.currentEvent);
-        const createdEvent = await this.eventService.addEvent(formData);
-        this.events.push(createdEvent);
-
-        // Validate and format eventPrice
-        const eventPriceToAdd = new EventPrice();
-        eventPriceToAdd.amount = createdEvent.eventPrice;
-        eventPriceToAdd.date = createdEvent.eventDate;
-
-        const addedEventPrice = await this.eventPriceService.addEventPrice(eventPriceToAdd);
-        this.eventPrices.push(addedEventPrice);
-
-        this.toastr.success('Event has been added successfully.', 'Event Form');
-      }
-
-      this.closeEventModal();
-      form.resetForm();
-    } catch (error) {
-      console.error(error);
-      this.toastr.error('An error occurred, please try again.', 'Event Form');
-    } finally {
-      this.isSubmitting = false;  // Set isSubmitting back to false at the end, no matter what happens
-    }
-  }
-}
-
-
-getObjectURL(file: File): string {
-  return URL.createObjectURL(file);
-}
-
-onFileSelected(event: any) {
-  if (event.target.files && event.target.files[0]) {
-    this.selectedFile = event.target.files[0];
-    this.currentEvent.imagePath = this.selectedFile?.name ?? '';
-  }
-}
-
-async deleteEvent(): Promise<void> {
-  try {
-    await this.eventService.deleteEvent(this.eventToDelete);
-    const index = this.events.findIndex(event => event.eventID === this.eventToDelete);
-    if (index !== -1) {
-      this.events.splice(index, 1);
-    }
-    this.toastr.success('Event has been deleted successfully.', 'Delete Event');
-    this.closeDeleteEventModal();
-  } catch (error) {
-    console.error(error);
-    this.toastr.error('Error, please try again', 'Delete Event');
-  }
-}
-
-
-
-
-async onDisplayCheckboxChange(eventToUpdate: Event) {
-  try {
-      const formData = new FormData();
-
       for (const key in eventToUpdate) {
-          if (eventToUpdate.hasOwnProperty(key)) {
-              formData.append(key, (eventToUpdate as any)[key]);
-          }
+        if (eventToUpdate.hasOwnProperty(key)) {
+          formData.append(key, (eventToUpdate as any)[key]);
+        }
       }
 
       await this.eventService.updateEvent(eventToUpdate.eventID, formData);
       this.toastr.success('Display setting updated successfully.', 'Event Display Update');
 
-  } catch (error) {
+    } catch (error) {
       console.error(error);
       this.toastr.error('An error occurred, please try again.', 'Event Display Update');
+    }
   }
-}
 
-async toggleDisplay(event: Event): Promise<void> {
-  try {
-    // Toggle the display property of the event object
-    event.eventDisplay = !event.eventDisplay;
+  async toggleDisplay(event: Event): Promise<void> {
+    try {
+      // Toggle the display property of the event object
+      event.displayEvent = !event.displayEvent;
 
-    // Update the event using the service method
-    await this.eventService.toggleEventDisplay(event.eventID);
+      // Update the event using the service method
+      await this.eventService.toggleEventDisplay(event.eventID);
 
-    // Optional: Provide a success message
-    this.toastr.success('Event display toggled successfully.', 'Toggle Display');
+      // Optional: Provide a success message
+      this.toastr.success('Event display toggled successfully.', 'Toggle Display');
 
-  } catch (error) {
-    console.error('Error toggling display:', error);
+    } catch (error) {
+      console.error('Error toggling display:', error);
 
-    // Optional: Provide an error message
-    this.toastr.error('An error occurred while toggling the display. Please try again.', 'Toggle Display');
+      // Optional: Provide an error message
+      this.toastr.error('An error occurred while toggling the display. Please try again.', 'Toggle Display');
+    }
   }
-}
 
 
 
