@@ -35,6 +35,7 @@
       <th scope="col">Type</th>
       <!-- <th scope="col">Restock Limit</th> -->
       <th scope="col">Price (ZAR)</th>
+      <th scope="col">Display</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -55,6 +56,8 @@
       <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td> <!-- Added Type data -->
       <!-- <td class="align-middle">{{ wine.restockLimit }}</td> -->
       <td class="align-middle">{{ wine.winePrice }}</td>
+      <td class="align-middle">
+        <span *ngIf="wine.displayWine else disabledText"> Enabled</span><ng-template #disabledText> Disabled</ng-template></td>
       <td class="align-middle">
         <button class="btn btn-primary" (click)="wine.wineID !== undefined && openEditWineModal(wine.wineID)"
           style="margin-right: 4px;">
@@ -143,6 +146,15 @@
     <div *ngIf="winePriceField.errors?.['required']">Wine price is required.</div>
     <div *ngIf="winePriceField.errors?.['min']">Wine price cannot be zero.</div>
   </div>
+</div>
+
+<div class="mb-3">
+  <label for="wineDisplay" class="form-label">Display Wine on Shop</label>
+  <select class="form-control" required [(ngModel)]="currentWine.displayWine" id="wineDisplay" name="wineDisplay" #wineDisplayField="ngModel">
+    <option [value]="false" disabled selected>Select an option</option>
+    <option [value]="true">Yes</option>
+    <option [value]="false">No</option>
+  </select>
 </div>
 
           

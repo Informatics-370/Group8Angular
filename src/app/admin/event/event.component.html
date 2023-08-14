@@ -25,7 +25,7 @@
       <th scope="col">Price (ZAR)</th>
       <th scope="col">Early Bird Limit</th>
       <th scope="col">Early Bird Percentage</th>
-      <th scope="col"></th>
+      <th scope="col">Display</th>
     </tr>
   </thead>
   <tbody>
@@ -40,8 +40,14 @@
       <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.limit : '' }}</td>
       <!-- New Column -->
       <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : '' }}</td>
-
       <td>
+        <input type="checkbox" [checked]="event.eventDisplay" (change)="toggleDisplay(event)">
+
+
+     </td>
+     
+      <td>
+
         <button class="btn btn-primary" (click)="event.eventID !== undefined && openEditEventModal(event.eventID)"
           style="margin-right: 4px;">
           <i class="fas fa-pencil-alt"></i>
@@ -180,7 +186,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)" [disabled]="isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
+        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
+          [disabled]="isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
 
       </div>
     </div>

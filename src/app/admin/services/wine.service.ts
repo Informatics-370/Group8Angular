@@ -56,11 +56,21 @@ export class WineService {
     throw new Error('An error occurred while adding the wine.');
   }
   
-  async updateWine(id: number, wine: FormData): Promise<any> {
+  async updateWine(id: number, wine: FormData): Promise<Wine> {
     this.setHeaders();
     console.log('Updating wine with ID:', id, 'and data:', wine);
-    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, wine, { reportProgress: true, observe: 'events', headers: this.headers }));
+    const response = await this.http.put<HttpEvent<Wine>>(`${this.apiUrl}/${id}`, wine, { reportProgress: true, observe: 'events', headers: this.headers }).toPromise();
+  
+    if (response instanceof HttpResponse) {
+      const event = response as unknown as HttpEvent<Wine>;
+      if (event.type === HttpEventType.Response) {
+        return event.body as Wine;
+      }
+    }
+  
+    throw new Error("Update did not succeed or did not return the expected format."); 
   }
+  
 
   async deleteWine(id: number): Promise<any> {
     this.setHeaders();

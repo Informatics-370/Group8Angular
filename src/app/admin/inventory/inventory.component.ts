@@ -6,6 +6,12 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Inventory } from 'src/app/Model/inventory';
+import { Wine } from 'src/app/Model/wine';
+import { WineService } from '../services/wine.service';
+import { WineType } from 'src/app/Model/winetype';
+import { Varietal } from 'src/app/Model/varietal';
+import { WinetypeService } from '../services/winetype.service';
+import { VarietalService } from '../services/varietal.service';
 
 
 
@@ -37,12 +43,26 @@ export class InventoryComponent implements OnInit{
     wORToDeleteDetails: any;
     showDeleteWORModal = false;
     // Write Off Reasons Variables
+
+
+
+    allWines: Wine[] = [];
+    currentWine: Wine = new Wine();
+    wines: Wine[] = [];
+    name: string ='';
+    searchQuery: string = '';
+    winetypes: WineType[] = []; 
+    varietals: Varietal[] = []; 
+
     
 
     constructor(private writeORService: WriteORService,
                 private router: Router,
                 private toastr: ToastrService,
                 private inventoryService: InventoryService,
+                private wineService: WineService,
+                private winetypeService: WinetypeService,
+                private varietalService: VarietalService
                ) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -50,9 +70,91 @@ export class InventoryComponent implements OnInit{
     ngOnInit(): void {
       this.loadWORs();
       this.loadInventory();
+      this.loadWines();
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
+
+
+
+getWineName(wineID: number): string {
+  const wine = this.wines.find(w => w.wineID === wineID);
+  return wine ? wine.name : 'N/A';
+}
+
+getVarietalName(varietalID: number): string {
+  let varietal = this.varietals.find(x => x.varietalID == varietalID);
+  return varietal?.name || 'Unknown';
+}
+
+getWinetypeName(wineTypeID?: number): string {
+  let winetype = this.winetypes.find(x => x.wineTypeID == wineTypeID);  
+  return winetype?.name || 'Unknown';
+}
+
+updateFieldsBasedOnWineName(wineID: number): void {
+  console.log('Selected Wine ID:', wineID);
+  let selectedWine = this.allWines.find(x => x.wineID == (wineID));
+  console.log('All Wines:', this.allWines);
+  console.log('Selected Wine:', selectedWine);
+  console.log(this.currentInventory)
+  if (selectedWine) {
+    // this.varietalService.getVarietal(selectedWine.varietalID);
+    // this.winetypeService.getWinetype(selectedWine.wineTypeID);
+    this.getWinetypeName(selectedWine.wineTypeID);
+    this.getVarietalName(selectedWine.varietalID);
+    this.currentInventory.wineTypeID = selectedWine.wineTypeID; // Update wineType
+    this.currentInventory.varietalID = selectedWine.varietalID; // Update varietal
+    this.currentInventory.wine = selectedWine; // Update wine
+  }
+  console.log(this.currentInventory)
+}
+
+
+
+
+getWinePrice(wineID: number): number {
+  const wine = this.wines.find(w => w.wineID === wineID);
+  return wine ? wine.winePrice : 0;
+}
+
+
+
+async loadWines(): Promise<void> {
+  try {
+    this.allWines = await this.wineService.getWines();
+    //console.log('All Wines:', this.allWines);
+    this.winetypes = await this.winetypeService.getWinetypes();
+    this.varietals = await this.varietalService.getVarietals();
+    this.filterWines();
+  } catch (error) {
+    console.error(error);
+    this.toastr.error('Error, please try again', 'Wine Table');
+  }
+}
+
+
+filterWines(): void {
+  if (this.searchQuery.trim() !== '') {
+    const query = this.searchQuery.toLowerCase().trim();
+    this.wines = this.allWines.filter(wine =>
+      wine.name.toLowerCase().includes(query) ||
+      wine.vintage.toString().includes(query) ||
+      wine.varietalID.toString().includes(query) ||
+      wine.wineTypeID.toString().includes(query) ||
+      wine.winePrice.toString().includes(query)
+    );
+  } else {
+    this.wines = [...this.allWines]; // if searchQuery is empty, show all wines
+  }
+}
+
+
+
+
+
+
+
 
 
 
@@ -113,6 +215,9 @@ openEditInventoryModal(id: number) {
     // Clone the original Customer Details object and assign it to currentBlacklistC
     this.currentInventory = {...originalInventory};
   }
+  this.getVarietalName(this.currentInventory.varietalID);
+  this.getWinePrice(this.currentInventory.wineID);
+  this.getWinetypeName(this.currentInventory.wineTypeID);
   this.showInventoryModal = true;
 }
 
@@ -122,6 +227,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
     try {
       if (this.editingInventory) {
         // Update inventory 
+        console.log(this.currentInventory);
         await this.inventoryService.updateInventory(this.currentInventory.inventoryID!, this.currentInventory);
         const index = this.inventory.findIndex(x => x.inventoryID === this.currentInventory.inventoryID);
         if (index !== -1) {
@@ -132,6 +238,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
         // Add inventory
         const data = await this.inventoryService.addInventory(this.currentInventory);
         this.inventory.push(data);
+        this.loadInventory();
         this.toastr.success('Successfully added', 'Inventory Reason');
       }
       this.closeInventoryModal();
@@ -152,6 +259,7 @@ openDeleteInventoryModal(inventory: any): void {
   this.inventoryToDelete = inventory.inventoryID;
   console.log("Inventory : ", this.inventoryToDelete)
   this.inventoryToDeleteDetails = inventory;
+  console.log(this.inventoryToDeleteDetails);
   this.showDeleteInventoryModal = true;
 }
 

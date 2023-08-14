@@ -32,12 +32,12 @@
   </thead>
   <tbody>
       <tr *ngFor="let x of inventory">
-        <td>{{ x.wineName }}</td>
-        <td>{{ x.wineVarietal }}</td>
-        <td>{{ x.wineType }}</td>
-        <td>{{ x.winePrice }}</td>
-        <td>{{ x.stockLimit }}</td>
-        <td>{{ x.quantityOnHand }}</td>
+      <td>{{ getWineName(x.wineID) }}</td>
+      <td>{{ getVarietalName(x.varietalID) }}</td>
+      <td>{{ getWinetypeName(x.wineTypeID) }}</td>
+      <td>{{ getWinePrice(x.wineID) }}</td>
+      <td>{{ x.stockLimit }}</td>
+      <td>{{ x.quantityOnHand }}</td>
         <td>
          
           <i class="bi bi-dash-circle text-primary fs-3" (click)="decreaseQuantity(x)"></i>
@@ -74,39 +74,53 @@
       </div>
       <div class="modal-body">
         <form #inventoryForm="ngForm" (ngSubmit)="submitInventoryForm(inventoryForm)">
+          
+          <!-- Wine Name Field -->
           <div class="mb-3">
-            <label for="wineName" class="form-label">Wine Name</label>
-            <input type="text" class="form-control" id="wineName" [(ngModel)]="currentInventory.wineName" name="wineName" required #nameField="ngModel">
-            <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
-              <div *ngIf="nameField.errors?.['required']">Name is required.</div>
-            </div>
+            <label for="wineName" class="form-label">Name</label>
+            <!-- When Adding Inventory -->
+            <select *ngIf="!editingInventory" class="form-select" id="wineName" [(ngModel)]="currentInventory.wineID" name="wineID" required (ngModelChange)="updateFieldsBasedOnWineName(currentInventory.wineID)">
+                <option *ngFor="let wine of wines" [value]="wine.wineID">{{ wine.name }}</option>
+            </select>
+            <!-- When Editing Inventory -->
+            <p *ngIf="editingInventory">{{ getWineName(currentInventory.wineID) }}</p>
           </div>
 
-          <div class="mb-3">
-            <label for="wineType" class="form-label">Wine Type</label>
-            <input type="text" class="form-control" id="wineType" [(ngModel)]="currentInventory.wineType" name="wineType" required #wineTypeField="ngModel">
-            <div *ngIf="wineTypeField.invalid && wineTypeField.touched" class="alert alert-danger">
-              <div *ngIf="wineTypeField.errors?.['required']">Wine Type is required.</div>
-            </div>
+          <!-- Wine Type Field -->
+          <div class="mb-3" *ngIf="currentInventory.wine">
+            <label class="form-label">Wine Type</label>
+            <p>{{ getWinetypeName(currentInventory.wineTypeID) }}</p>
           </div>
 
-          <div class="mb-3">
-            <label for="wineVarietal" class="form-label">Wine Varietal</label>
-            <input type="text" class="form-control" id="wineVarietal" [(ngModel)]="currentInventory.wineVarietal" name="wineVarietal" required #wineVarietalField="ngModel">
-            <div *ngIf="wineVarietalField.invalid && wineVarietalField.touched" class="alert alert-danger">
-              <div *ngIf="wineVarietalField.errors?.['required']">Wine Varietal is required.</div>
-            </div>
+          <div class="mb-3" *ngIf="editingInventory">
+            <label class="form-label">Wine Type</label>
+            <p>{{ getWinetypeName(currentInventory.wineTypeID) }}</p>
           </div>
-          
-          <div class="mb-3">
-            <label for="winePrice" class="form-label">Wine Price</label>
-            <input type="number" class="form-control" id="winePrice" [(ngModel)]="currentInventory.winePrice" name="winePrice" required [min]="0.01" #winePriceField="ngModel">
-            <div *ngIf="winePriceField.invalid && winePriceField.touched" class="alert alert-danger">
-              <div *ngIf="winePriceField.errors?.['required']">Wine Price is required.</div>
-              <div *ngIf="stockLimitField.errors?.['min']">Wine Price cannot be zero or less.</div>
-            </div>
+        
+
+          <!-- Wine Varietal Field -->
+          <div class="mb-3" *ngIf="currentInventory.wine">
+            <label class="form-label">Wine Varietal</label>
+            <p>{{ getVarietalName(currentInventory.varietalID) }}</p>
           </div>
-          
+
+          <div class="mb-3" *ngIf="editingInventory">
+            <label class="form-label">Wine Varietal</label>
+            <p>{{ getVarietalName(currentInventory.varietalID) }}</p>
+          </div>
+
+          <!-- Wine Price Field -->
+          <div class="mb-3" *ngIf="currentInventory.wine">
+            <label class="form-label">Wine Price</label>
+            <p>R {{ currentInventory.wine.winePrice }}</p>
+          </div>
+
+          <div class="mb-3" *ngIf="editingInventory">
+            <label class="form-label">Wine Price</label>
+            <p>R {{ getWinePrice(currentInventory.wineID) }}</p>
+          </div>
+
+          <!-- Stock Limit Field -->
           <div class="mb-3">
             <label for="stockLimit" class="form-label">Stock Limit</label>
             <input type="number" class="form-control" id="stockLimit" [(ngModel)]="currentInventory.stockLimit" name="stockLimit" required [min]="0.01" #stockLimitField="ngModel">
@@ -115,7 +129,8 @@
               <div *ngIf="stockLimitField.errors?.['min']">Stock Limit cannot be zero or less.</div>
             </div>
           </div>
-          
+
+          <!-- Quantity On Hand Field -->
           <div class="mb-3">
             <label for="quantityOnHand" class="form-label">Quantity On Hand</label>
             <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required [min]="0.01" #quantityOnHandField="ngModel">
@@ -124,7 +139,7 @@
               <div *ngIf="stockLimitField.errors?.['min']">Quantity On Hand cannot be zero or less.</div>
             </div>
           </div>
-          
+
         </form>
       </div>
       <div class="modal-footer">
@@ -136,6 +151,7 @@
     </div>
   </div>
 </div>
+
 
 <!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
 
@@ -152,7 +168,7 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to delete this Inventory?</p>
-        <p>Wine Name: {{ inventoryToDeleteDetails?.wineName }}</p>
+        <p>Wine Name: {{ getWineName(inventoryToDeleteDetails?.wineID) }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteInventoryModal()">No</button>

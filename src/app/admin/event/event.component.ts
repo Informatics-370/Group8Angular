@@ -226,5 +226,51 @@ async deleteEvent(): Promise<void> {
   }
 }
 
+
+
+
+async onDisplayCheckboxChange(eventToUpdate: Event) {
+  try {
+      const formData = new FormData();
+
+      for (const key in eventToUpdate) {
+          if (eventToUpdate.hasOwnProperty(key)) {
+              formData.append(key, (eventToUpdate as any)[key]);
+          }
+      }
+
+      await this.eventService.updateEvent(eventToUpdate.eventID, formData);
+      this.toastr.success('Display setting updated successfully.', 'Event Display Update');
+
+  } catch (error) {
+      console.error(error);
+      this.toastr.error('An error occurred, please try again.', 'Event Display Update');
+  }
+}
+
+async toggleDisplay(event: Event): Promise<void> {
+  try {
+    // Toggle the display property of the event object
+    event.eventDisplay = !event.eventDisplay;
+
+    // Update the event using the service method
+    await this.eventService.toggleEventDisplay(event.eventID);
+
+    // Optional: Provide a success message
+    this.toastr.success('Event display toggled successfully.', 'Toggle Display');
+
+  } catch (error) {
+    console.error('Error toggling display:', error);
+
+    // Optional: Provide an error message
+    this.toastr.error('An error occurred while toggling the display. Please try again.', 'Toggle Display');
+  }
+}
+
+
+
+
+
+
 }
 // EarlyBird END
