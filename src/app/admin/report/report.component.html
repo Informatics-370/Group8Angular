@@ -5,32 +5,32 @@
   <canvas id="canvas"></canvas>
 </div>
 <div>
-  <button type="button" class="btn btn-primary" (click)="generateReport()">Generate Report</button>
+  <!-- <button type="button" class="btn btn-primary" (click)="generateReport()">Generate Report</button> -->
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Wines')">Wines</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="exportInventoryToPdf()">Inventory</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('EVENTS')">Events</button>
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showDateModal('EVENTS')">Events</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Sales')">Sales</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('REFUNDS')">Refunds</button>
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showDateModal('REFUNDS')">Refunds</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="generateSupplierOrderReport()">Supplier Order</button>
-  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="generateBlacklistReport()">Blacklist</button>
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('BLACKLIST')">Blacklist</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Sales')">Sales</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Bookings')">Bookings</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Customer')">Customer</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Customer satisfaction')">Customer satisfaction</button>
-  <!-- <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="exportToPdf()">Inventory</button> -->
+  <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('INVENTORY')">Inventory</button>
   <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showToastr('Write-off')">Write-off</button>
 </div>
 
+<!-- Events Report Modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showRefundsModal}"
   [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Please select the dates you wish to create a {{ currentReportType?.toLowerCase() }}
-          report for</h5>
+        <h1>{{ currentReportType }}</h1>        
         <button type="button" class="btn-close" aria-label="Close" (click)="closeRefundsModal()"></button>
       </div>
       <div class="modal-body">
+        <h5 class="modal-title">Please select the dates you wish to create a {{ currentReportType?.toLowerCase() }} report for</h5>
         <div class="form-group">
           <label for="beginDateInput">Begin Date:</label>
           <input type="date" id="beginDateInput" [(ngModel)]="beginDate">
@@ -41,12 +41,13 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeRefundsModal()">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="generateReport()">Generate Report</button>
+        <button type="button" class="btn btn-primary" (click)="OpenDateReports()">Open Report</button>
+        <button type="button" class="btn btn-primary" (click)="DownloadDateReports()">Download Report</button>
       </div>
     </div>
   </div>
-  
+</div>
+
   <!-- Sales Report Modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showSalesModal}" [ngStyle]="{'display': showSalesModal ? 'block' : 'none'}">
   <div class="modal-dialog">
@@ -68,6 +69,25 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeSalesModal()">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="generateSalesChartAndPDF()">Generate Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blacklist Report Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}" [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>{{ currentReportType }}</h1>        
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeBlacklistModal()"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="modal-title">Please select how you want to view the {{ currentReportType?.toLowerCase() }} report</h5>
+      </div>      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="OpenReports()">Open Report</button>
+        <button type="button" class="btn btn-primary" (click)="DownloadReports()">Download Report</button>
       </div>
     </div>
   </div>
