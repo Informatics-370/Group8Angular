@@ -280,7 +280,7 @@ export class PdfService {
 
                   const eventEarlyBirdlimit = event.earlyBird?.limit;
                   const eventEarlyBirdPercentage = event.earlyBird?.percentage;
-                  const eventActive = event.eventDisplay ? "Yes" : "No"; // Convert eventDisplay to "Yes" or "No"
+                  const eventActive = event.displayEvent ? "Yes" : "No"; // Convert eventDisplay to "Yes" or "No"
 
                   // Calculate early bird ticket price
                   const earlyBirdPrice = event.eventPrice - (event.eventPrice * eventEarlyBirdPercentage! / 100);
