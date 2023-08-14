@@ -431,43 +431,42 @@ export class PdfService {
           '\n',
           {
             table: {
-              headerRows: 1,
-              widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'], // Added a new column for "Active"
-              body: [
-                ['No.', 'Event Name', 'Event Date', 'Tickets Available', 'Tickets Sold', 'Price', 'Revenue', 'Active'], // Added "Active" header
-                ...eventData.map((event, index) => {
-
-                  const eventEarlyBirdlimit = event.earlyBird?.limit;
-                  const eventEarlyBirdPercentage = event.earlyBird?.percentage;
-                  const eventActive = event.displayEvent ? "Yes" : "No"; // Convert eventDisplay to "Yes" or "No"
-
-                  // Calculate early bird ticket price
-                  const earlyBirdPrice = event.eventPrice - (event.eventPrice * eventEarlyBirdPercentage! / 100);
-
-                  // Determine number of early bird tickets and regular tickets sold
-                  const earlyBirdTicketsSold = event.tickets_Sold <= eventEarlyBirdlimit! ? event.tickets_Sold : eventEarlyBirdlimit;
-                  const regularTicketsSold = event.tickets_Sold - earlyBirdTicketsSold!;
-
-                  // Calculate revenue
-                  const revenueFromEarlyBirdTickets = earlyBirdTicketsSold! * earlyBirdPrice;
-                  const revenueFromRegularTickets = regularTicketsSold * event.eventPrice;
-
-                  const totalRevenue = revenueFromEarlyBirdTickets + revenueFromRegularTickets;
-
-                  return [
-                    index + 1,
-                    event.eventName,
-                    new Date(event.eventDate).toLocaleDateString(),
-                    event.tickets_Available,
-                    event.tickets_Sold,
-                    `R${event.eventPrice}`,
-                    `R${totalRevenue}`,
-                    eventActive  // Added "Active" column value
-                  ];
-                })
-              ]
+                headerRows: 1,
+                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'], 
+                body: [
+                    ['No.', 'Name', 'Date', 'Tickets Available', 'Tickets Sold', 'Price', 'Early Bird Discount', 'Revenue', 'Active'],
+                    ...eventData.map((event, index) => {
+        
+                        const eventEarlyBirdlimit = event.earlyBird?.limit || 0;  // Default to 0 if null
+                        const eventEarlyBirdPercentage = event.earlyBird?.percentage || 0;  // Default to 0 if null
+                        const eventActive = event.displayEvent ? "Yes" : "No"; 
+        
+                        const earlyBirdPrice = event.eventPrice - (event.eventPrice * eventEarlyBirdPercentage / 100);
+                        const earlyBirdDiscountAmount = event.eventPrice - earlyBirdPrice;  // Calculating discount amount
+        
+                        const earlyBirdTicketsSold = event.tickets_Sold <= eventEarlyBirdlimit ? event.tickets_Sold : eventEarlyBirdlimit;
+                        const regularTicketsSold = event.tickets_Sold - earlyBirdTicketsSold;
+        
+                        const revenueFromEarlyBirdTickets = earlyBirdTicketsSold * earlyBirdPrice;
+                        const revenueFromRegularTickets = regularTicketsSold * event.eventPrice;
+                        const totalRevenue = revenueFromEarlyBirdTickets + revenueFromRegularTickets;
+        
+                        return [
+                            index + 1,
+                            event.eventName,
+                            new Date(event.eventDate).toLocaleDateString(),
+                            event.tickets_Available,
+                            event.tickets_Sold,
+                            `R${event.eventPrice}`,
+                            `R${earlyBirdDiscountAmount.toFixed(2)}`,  // Added "Early Bird Discount" column value and fixed it to two decimal places
+                            `R${totalRevenue.toFixed(2)}`, // Fixing to two decimal places for cleaner display
+                            eventActive
+                        ];
+                    })
+                ]
             }
-          }
+        }
+        
 
         ],
         styles: {
