@@ -140,5 +140,11 @@ deletePurchasedTicket(ticketId: number): Observable<any> {
   return this.http.delete(apiUrl);
 }
 
+scanTicket(token: string): Observable<any> {
+  const apiUrl = `${environment.baseApiUrl}api/Tickets/Scan/${token}`;
+  return this.http.post<any>(apiUrl, {});
+}
+
+
 
 }

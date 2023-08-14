@@ -64,6 +64,7 @@ import { ChatbotComponent } from './customer/chatbot/chatbot.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
 import { ChartsComponent } from './admin/charts/charts.component';
+import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
 
 
 @NgModule({
@@ -115,6 +116,7 @@ import { ChartsComponent } from './admin/charts/charts.component';
     ChatbotComponent,
     AuditLogsComponent,
     ChartsComponent,
+    ScanTicketComponent,
   ],
   imports: [
     BrowserModule,
