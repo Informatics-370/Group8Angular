@@ -27,10 +27,10 @@ export class PdfService {
   blacklistData: any;
 
   constructor(private userService: DataServiceService,
-              private wineService: WineService,
-              private winetypeService: WinetypeService,
-              private varietalService: VarietalService,
-              private toastr: ToastrService) {
+    private wineService: WineService,
+    private winetypeService: WinetypeService,
+    private varietalService: VarietalService,
+    private toastr: ToastrService) {
     var tokenUser = this.userService.getUserFromToken();
     this.userService.getUser(tokenUser!.email).subscribe((result: any) => {
       this.user = result.user;
@@ -38,29 +38,29 @@ export class PdfService {
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Inventory Report 
-  wines: Wine[] = [];  
+  wines: Wine[] = [];
   allWines: Wine[] = [];
-  winetypes: WineType[] = []; 
+  winetypes: WineType[] = [];
   varietals: Varietal[] = [];
-  searchQuery: string = ''; 
+  searchQuery: string = '';
 
 
   getWineName(wineID: number): string {
     console.log('Name ID', wineID)
     let wine = this.wines.find(x => x.wineID == wineID);
-    console.log('Wine',wine)
+    console.log('Wine', wine)
     return wine ? wine.name : 'Unknown';
   }
-  
+
   getVarietalName(varietalID: number): string {
-    console.log('V ID',varietalID)
+    console.log('V ID', varietalID)
     let varietal = this.varietals.find(x => x.varietalID == varietalID);
     return varietal?.name || 'Unknown';
   }
-  
+
   getWinetypeName(wineTypeID?: number): string {
-    console.log('Type ID',wineTypeID)
-    let winetype = this.winetypes.find(x => x.wineTypeID == wineTypeID);  
+    console.log('Type ID', wineTypeID)
+    let winetype = this.winetypes.find(x => x.wineTypeID == wineTypeID);
     return winetype?.name || 'Unknown';
   }
 
@@ -111,15 +111,15 @@ export class PdfService {
               body: [
                 ['No.', 'Name', 'Varietal', 'Type', 'Price', 'Stock Limit', 'Quantity on Hand'],
                 ...inventoryData.map((item, index) => [
-                    index + 1,
-                    this.getWineName(item.wineID) || 'N/A',
-                    this.getVarietalName(item.varietalID) || 'N/A',
-                    this.getWinetypeName(item.wineTypeID) || 'N/A',
-                   'R ' + item.winePrice || 'N/A',
-                    item.stockLimit || 'N/A',
-                    item.quantityOnHand || 'N/A'
+                  index + 1,
+                  this.getWineName(item.wineID) || 'N/A',
+                  this.getVarietalName(item.varietalID) || 'N/A',
+                  this.getWinetypeName(item.wineTypeID) || 'N/A',
+                  'R ' + item.winePrice || 'N/A',
+                  item.stockLimit || 'N/A',
+                  item.quantityOnHand || 'N/A'
                 ])
-            ]            
+              ]
             }
           }
         ],
@@ -204,7 +204,7 @@ export class PdfService {
                     status = "Not Approved";
                   }
 
-                return [index, item.wineId, item.orderId, item.orderRefNum, item.requestedOn, item.description, item.email, status];
+                  return [index, item.wineId, item.orderId, item.orderRefNum, item.requestedOn, item.description, item.email, status];
                 })
               ]
             }
@@ -261,7 +261,6 @@ export class PdfService {
     let formattedBeginDate = new Date(beginDate).toLocaleDateString();
     let formattedEndDate = new Date(endDate).toLocaleDateString();
 
-
     let documentDefinition: any;
 
     if (eventData.length > 0) {
@@ -274,24 +273,43 @@ export class PdfService {
           {
             table: {
               headerRows: 1,
-              widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'], // Adjusted widths based on Event model fields
+              widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'], // Added a new column for "Active"
               body: [
-                ['No.', 'Event Name', 'Event Date', 'Tickets Available', 'Tickets Sold', 'Price', 'Revenue'],
-                ...eventData.map((event, index) => [
-                  index + 1,
-                  event.eventName,
-                  new Date(event.eventDate).toLocaleDateString(),
-                  event.tickets_Available,
-                  event.tickets_Sold,
-                  `R${event.eventPrice}`,
-                  `R${event.tickets_Sold * event.eventPrice}` // Added Revenue calculation
-                ])
+                ['No.', 'Event Name', 'Event Date', 'Tickets Available', 'Tickets Sold', 'Price', 'Revenue', 'Active'], // Added "Active" header
+                ...eventData.map((event, index) => {
 
+                  const eventEarlyBirdlimit = event.earlyBird?.limit;
+                  const eventEarlyBirdPercentage = event.earlyBird?.percentage;
+                  const eventActive = event.eventDisplay ? "Yes" : "No"; // Convert eventDisplay to "Yes" or "No"
 
+                  // Calculate early bird ticket price
+                  const earlyBirdPrice = event.eventPrice - (event.eventPrice * eventEarlyBirdPercentage! / 100);
+
+                  // Determine number of early bird tickets and regular tickets sold
+                  const earlyBirdTicketsSold = event.tickets_Sold <= eventEarlyBirdlimit! ? event.tickets_Sold : eventEarlyBirdlimit;
+                  const regularTicketsSold = event.tickets_Sold - earlyBirdTicketsSold!;
+
+                  // Calculate revenue
+                  const revenueFromEarlyBirdTickets = earlyBirdTicketsSold! * earlyBirdPrice;
+                  const revenueFromRegularTickets = regularTicketsSold * event.eventPrice;
+
+                  const totalRevenue = revenueFromEarlyBirdTickets + revenueFromRegularTickets;
+
+                  return [
+                    index + 1,
+                    event.eventName,
+                    new Date(event.eventDate).toLocaleDateString(),
+                    event.tickets_Available,
+                    event.tickets_Sold,
+                    `R${event.eventPrice}`,
+                    `R${totalRevenue}`,
+                    eventActive  // Added "Active" column value
+                  ];
+                })
               ]
             }
-
           }
+
         ],
         styles: {
           header: {
@@ -343,9 +361,9 @@ export class PdfService {
 
   generateSupplierOrdersPdf(supplierOrderData: SupplierOrder[]): void {
     console.log(supplierOrderData);
-  
+
     let generatedDate = Date.now();
-  
+
     let content: any[] = [
       { text: 'Supplier Order Report', style: 'header' },
       { text: `Generated by: ${this.user.first_Name} ${this.user.last_Name}`, style: 'subheader' },
@@ -353,7 +371,7 @@ export class PdfService {
       { text: '', style: 'spaceStyle' },
       { text: '', style: 'spaceStyle' }
     ];
-  
+
     supplierOrderData.forEach((order, index) => {
       let status = "Pending";
       let statusStyle = 'statusPending'; // default style
@@ -368,14 +386,14 @@ export class PdfService {
         status = "Ordered";
         statusStyle = 'statusOrdered';
       }
-  
+
       const vat = (order.orderTotal ?? 0) * 0.15;
       const totalWithVat = (order.orderTotal ?? 0) + vat;
-  
+
       content.push(
         { text: `Supplier Order # ${index + 1}`, style: 'orderTitle' },
         { text: `Order Date: ${order.dateOrdered}`, style: 'orderDetail' },
-        { text: `Status: ${status}`, style: [ 'orderDetail', statusStyle ] },
+        { text: `Status: ${status}`, style: ['orderDetail', statusStyle] },
         {
           table: {
             headerRows: 1,
@@ -392,9 +410,9 @@ export class PdfService {
         { text: '', style: 'spaceStyle' }
       );
     });
-  
+
     content.push({ text: '*********** Report End ***********', style: 'reportEnd' });
-  
+
     type Alignment = 'left' | 'right' | 'center' | 'justify';
 
     const documentDefinition = {
@@ -429,7 +447,7 @@ export class PdfService {
           bold: true
         },
         spaceStyle: {
-            margin: [0, 20, 0, 0] as [number, number, number, number]
+          margin: [0, 20, 0, 0] as [number, number, number, number]
         },
         statusPending: {
           background: 'lightgray'
@@ -440,17 +458,17 @@ export class PdfService {
         },
         statusPaid: {
           background: 'blue',
-          color: 'white' 
+          color: 'white'
         },
         statusReceived: {
           background: 'green',
-          color: 'white' 
+          color: 'white'
         }
       },
-      
+
       pageOrientation: 'portrait' as const
     };
-  
+
     pdfMake.createPdf(documentDefinition).download(`supplier_order_report_${generatedDate}.pdf`);
   }
 
@@ -463,7 +481,7 @@ export class PdfService {
           { text: 'Blacklist Report', style: 'header' },
           { text: `Report generated by: ${this.user.first_Name} ${this.user.last_Name}`, style: 'subheader' },
           { text: `Date: ${currentDate}`, style: 'subheader' },
-          
+
           '\n',
           {
             table: {
