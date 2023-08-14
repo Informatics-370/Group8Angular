@@ -40,30 +40,51 @@ export class ReportComponent {
   allSuppOrders: SupplierOrder[] = [];
   inventory: Inventory[] = [];
   allEvents: Event[] = []; // Add this property to store fetched events
-  currentReportType: 'REFUNDS' | 'EVENTS' | null = null;
+  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | null = null;
   blacklistData: Blacklist[] = [];
+  showBlacklistModal: boolean = false;
+  
+
 
 
 
 
   ngOnInit(): void {
-    this.loadInventory();
+  this.loadInventory();
+}
+
+async loadInventory(): Promise<void> {
+  try {
+    this.inventory = await this.inventoryService.getFullInventory();
+  } catch (error) {
+    console.error(error);
+    this.toastr.error('Error, please try again', 'Inventory Table');
   }
+}
 
-  async loadInventory(): Promise<void> {
-    try {
-      this.inventory = await this.inventoryService.getFullInventory();
-    } catch (error) {
-      console.error(error);
-      this.toastr.error('Error, please try again', 'Inventory Table');
-    }
-  };
+async generateInventoryReport() {
+  try {
+    let result: Inventory[] | undefined = this.inventory; // Use the fetched inventory data
+    console.log('Result:', result);
+
+    // Rest of your code...
+  } catch (error) {
+    console.error('Error fetching inventory data:', error);
+    // Handle error if needed
+  }
+}
+  
 
 
 
-  showModal(reportType: 'REFUNDS' | 'EVENTS'): void {
+  showDateModal(reportType: 'REFUNDS' | 'EVENTS' ): void {
     this.currentReportType = reportType;
     this.showRefundsModal = true;
+  }
+
+  showModal(reportType: 'BLACKLIST' | 'INVENTORY' ): void {
+    this.currentReportType = reportType;
+    this.showBlacklistModal = true;
   }
 
   closeRefundsModal() {
@@ -71,14 +92,46 @@ export class ReportComponent {
     this.currentReportType = null;
   }
 
-
-  generateReport(): void {
-    if (this.currentReportType === 'REFUNDS') {
-      this.generateRefundReport(this.beginDate, this.endDate);
-    } else if (this.currentReportType === 'EVENTS') {
-      this.generateEventsReport(this.beginDate, this.endDate);
-    }
+  closeBlacklistModal() {
+    this.showBlacklistModal = false;
+    this.currentReportType = null;
   }
+
+
+  OpenDateReports(): void {
+    if (this.currentReportType === 'REFUNDS') {
+      // this.generateRefundReport(this.beginDate, this.endDate);
+    } else if (this.currentReportType === 'EVENTS') {
+      this.generateEventsReport();
+    }    
+}
+
+DownloadDateReports(): void {
+  if (this.currentReportType === 'REFUNDS') {
+    // this.generateRefundReport(this.beginDate, this.endDate);
+  } else if (this.currentReportType === 'EVENTS') {
+    this.generateEventsReportpdf(this.beginDate, this.endDate);
+  }    
+}
+
+  OpenReports(): void {
+    if (this.currentReportType === 'BLACKLIST') {
+      this.generateBlacklistReport();
+    } else if (this.currentReportType === 'INVENTORY') {
+      this.ViewInventory();
+    }
+
+  }
+
+  DownloadReports(): void {
+    if (this.currentReportType === 'BLACKLIST') {
+      this.generateBlacklistReportpdf();
+    }else if (this.currentReportType === 'INVENTORY') {
+      this.exportInventoryToPdf();
+    }
+
+  }
+  
 
   showToastr(message: string) {
     this.toastr.info(`Haha, you thought... this ain't coded yet! :)`, message);
@@ -87,16 +140,16 @@ export class ReportComponent {
 
 
 
-  generateRefundReport(beginDate: Date, endDate: Date) {
-    this.dataService.getRefunds(beginDate, endDate).subscribe((result: any) => {
-      this.allRefunds = result;
-      console.log(this.allRefunds);
-      this.pdfService.generateRefundsPdf(this.allRefunds, beginDate, endDate);
-      this.closeRefundsModal(); // Optionally, close the modal after generating the report
-    });
-  }
+  // generateRefundReport(beginDate: Date, endDate: Date) {
+  //   this.dataService.getRefunds(beginDate, endDate).subscribe((result: any) => {
+  //     this.allRefunds = result;
+  //     console.log(this.allRefunds);
+  //     this.pdfService.generateRefundsPdf(this.allRefunds, beginDate, endDate);
+  //     this.closeRefundsModal(); // Optionally, close the modal after generating the report
+  //   });
+  // }
 
-  generateEventsReport(beginDate: Date, endDate: Date) {
+  generateEventsReportpdf(beginDate: Date, endDate: Date) {
     this.dataService.getEventsReport(beginDate, endDate).subscribe((result: any) => {
       this.allEvents = result.map((event: { revenue: number; ticketsSold: number; price: number; }) => {
           event.revenue = event.ticketsSold * event.price;
@@ -108,6 +161,47 @@ export class ReportComponent {
   });
   
   }
+
+
+  async generateEventsReport() {
+    try {
+      const result: any = await this.dataService.getEventsReport(this.beginDate, this.endDate).toPromise();
+      console.log('Result:', result);
+
+      if (result !== undefined) {
+        this.allEvents = result;
+        const currentDate = this.getCurrentDateFormatted();
+
+        // Generate the PDF Blob using event data and current date
+        const pdfBlob: Blob = await this.pdfService.generateEventsReport(this.allEvents, currentDate);
+
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        const newTab = window.open(blobUrl, '_blank');
+        if (!newTab) {
+          console.error('Failed to open new tab for PDF');
+          // Handle error if new tab cannot be opened
+        }
+        // Do any additional processing or actions here if needed
+
+      } else {
+        console.error('Received undefined or invalid event data');
+        // Handle the case where the returned data is undefined or invalid
+      }
+    } catch (error) {
+      console.error('Error fetching event data:', error);
+      // Handle error if needed
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   getCurrentDateFormatted(): string {
     const today = new Date();
@@ -121,6 +215,49 @@ export class ReportComponent {
     const currentDate = this.getCurrentDateFormatted(); // Get the current date
     this.pdfService.generateInventoryPdf(this.inventory, currentDate);
   }
+  
+  async ViewInventory(): Promise<void> {
+    try {
+        const currentDate = this.getCurrentDateFormatted(); // Get the current date
+        const pdfBlob = await this.pdfService.generateInventoryReport(this.inventory, currentDate);
+
+        const resolvedPdfBlob = await pdfBlob;
+
+      // Create a Blob URL and open it in a new tab
+      const blobUrl = URL.createObjectURL(resolvedPdfBlob);
+      const newTab = window.open(blobUrl, '_blank');
+
+      if (!newTab) {
+        console.error('Failed to open new tab for PDF');
+        // Handle error if new tab cannot be opened
+      } else {
+        console.error('Received undefined or invalid inventory data');
+        // Handle the case where the returned data is undefined or invalid
+      }
+      
+        
+    } catch (error) {
+        console.error('Error generating inventory report:', error);
+    }
+}
+
+
+//   openInventory(): void {
+//     const currentDate = this.getCurrentDateFormatted();
+//     this.pdfService.generateInventoryPdf(this.inventory, currentDate)
+//         .then((pdfBlob: Blob) => {
+//             if (pdfBlob) {
+//                 const pdfUrl = URL.createObjectURL(pdfBlob);
+//                 window.open(pdfUrl, '_blank');
+//                 URL.revokeObjectURL(pdfUrl);
+//             } else {
+//                 console.error('Error generating PDF.');
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error generating PDF:', error);
+//         });
+// }
 
   async downloadEventsReport() {
     try {
@@ -133,9 +270,7 @@ export class ReportComponent {
   }
 
 
-  openRefundsModal(){
-    this.showRefundsModal = true;
-}
+  
 
 
 generateSupplierOrderReport(){
@@ -147,7 +282,7 @@ generateSupplierOrderReport(){
   })
 }
 
-async generateBlacklistReport() {
+async generateBlacklistReportpdf() {
   try {
     let result: Blacklist[] | undefined = await this.dataService.getBlacklist();
     console.log('Result:', result); // Add this line
@@ -165,6 +300,47 @@ async generateBlacklistReport() {
     // Handle error if needed
   }
 }
+
+
+
+
+
+async generateBlacklistReport() {
+  try {
+    let result: Blacklist[] | undefined = await this.dataService.getBlacklist();
+    console.log('Result:', result);
+
+    if (result !== undefined) {
+      this.blacklistData = result;
+      let currentDate = this.getCurrentDateFormatted();
+
+      const pdfBlob = await this.pdfService.generateBlacklist(this.blacklistData, currentDate);
+
+      // Await the promise and get the resolved Blob
+      const resolvedPdfBlob = await pdfBlob;
+
+      // Create a Blob URL and open it in a new tab
+      const blobUrl = URL.createObjectURL(resolvedPdfBlob);
+      const newTab = window.open(blobUrl, '_blank');
+      if (!newTab) {
+        console.error('Failed to open new tab for PDF');
+        // Handle error if new tab cannot be opened
+      }
+
+      // Do any additional processing or actions here if needed
+    } else {
+      console.error('Received undefined or invalid blacklist data');
+      // Handle the case where the returned data is undefined or invalid
+    }
+  } catch (error) {
+    console.error('Error fetching blacklist data:', error);
+    // Handle error if needed
+  }
+}
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////Marco//////////////////////////////////////////////////////////////////////////////////////////
 chart: Chart | undefined;
