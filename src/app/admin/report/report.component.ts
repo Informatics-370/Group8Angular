@@ -40,7 +40,7 @@ export class ReportComponent {
   allSuppOrders: SupplierOrder[] = [];
   inventory: Inventory[] = [];
   allEvents: Event[] = []; // Add this property to store fetched events
-  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | null = null;
+  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | null = null;
   blacklistData: Blacklist[] = [];
   showBlacklistModal: boolean = false;
   
@@ -82,7 +82,7 @@ async generateInventoryReport() {
     this.showRefundsModal = true;
   }
 
-  showModal(reportType: 'BLACKLIST' | 'INVENTORY' ): void {
+  showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER'): void {
     this.currentReportType = reportType;
     this.showBlacklistModal = true;
   }
@@ -119,6 +119,8 @@ DownloadDateReports(): void {
       this.generateBlacklistReport();
     } else if (this.currentReportType === 'INVENTORY') {
       this.ViewInventory();
+    }else if(this.currentReportType === 'SUPPLIER ORDER'){
+      this.generateSupplierOrderReport();
     }
 
   }
@@ -128,6 +130,8 @@ DownloadDateReports(): void {
       this.generateBlacklistReportpdf();
     }else if (this.currentReportType === 'INVENTORY') {
       this.exportInventoryToPdf();
+    }else if(this.currentReportType === 'SUPPLIER ORDER'){
+      this.generateSupplierOrderReportpdf();
     }
 
   }
@@ -273,7 +277,7 @@ DownloadDateReports(): void {
   
 
 
-generateSupplierOrderReport(){
+async generateSupplierOrderReportpdf(){
   this.dataService.getSupplierOrder().subscribe((result) => {
     console.log(result);
     this.allSuppOrders = result;
@@ -281,6 +285,45 @@ generateSupplierOrderReport(){
     this.pdfService.generateSupplierOrdersPdf(this.allSuppOrders);
   })
 }
+
+async generateSupplierOrderReport(): Promise<void> {
+  try {
+    let allSuppOrders: any;
+
+    // Wait for the supplier order data to be fetched
+    await new Promise<void>((resolve, reject) => {
+      this.dataService.getSupplierOrder().subscribe(result => {
+        allSuppOrders = result;
+        console.log('this.allSuppOrders', allSuppOrders);
+        resolve();
+      }, error => reject(error));
+    });
+
+    // Ensure that we have data before proceeding
+    if (!allSuppOrders || allSuppOrders.length === 0) {
+      console.error('Received undefined or invalid supplier order data');
+      return;
+    }
+
+    const pdfBlob = await this.pdfService.generateSupplierOrders(allSuppOrders);
+
+    // Create a Blob URL and open it in a new tab
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    const newTab = window.open(blobUrl, '_blank');
+
+    if (!newTab) {
+      console.error('Failed to open new tab for PDF');
+      // Handle error if new tab cannot be opened
+    }
+
+  } catch (error) {
+    console.error('Error generating inventory report:', error);
+  }
+}
+
+
+
+
 
 async generateBlacklistReportpdf() {
   try {
