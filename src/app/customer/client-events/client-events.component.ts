@@ -24,7 +24,7 @@ export class ClientEventsComponent {
 
   @ViewChild('noEventsMessage', { static: true }) noEventsMessage!: TemplateRef<any>;
 
-  constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService,  private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService,private blacklistService: BlacklistService ) { }
+  constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService, private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService, private blacklistService: BlacklistService) { }
 
 
 
@@ -32,7 +32,7 @@ export class ClientEventsComponent {
     try {
       await this.loadEventData();
       await this.loadEarlyBirdData();
-  
+
       // Check if the user is logged in
       if (this.loginService.userValue?.email) {
         this.purchasedEvents = (await this.paymentService.getUserPurchases(this.loginService.userValue.email).toPromise()) ?? [];
@@ -54,9 +54,9 @@ export class ClientEventsComponent {
   getEarlyBirdDiscount(event: Event): number {
     return event.earlyBird?.percentage ?? 0;
   }
-  
-  
-  
+
+
+
 
   isPurchased(eventId: string): boolean {
     return this.purchasedEvents.includes(eventId);
@@ -82,139 +82,154 @@ export class ClientEventsComponent {
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-async onBuyTicket(event: Event) {
-  // Get current user
-  const isUserLoggedIn = this.loginService.isUserLoggedIn(); 
+  async onBuyTicket(event: Event) {
+    // Get current user
+    const isUserLoggedIn = this.loginService.isUserLoggedIn();
 
-  // If there is no user, show toastr notification and return
-  if (!isUserLoggedIn) {
-    this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
-    return;
-  }
-
-  // Check ticket availability and calculate the price
-  try {
-    const purchaseResponse = await this.eventService.purchaseTicket(event.eventID);
-    if (!purchaseResponse.success) {
-      this.toastr.error(purchaseResponse.message, 'Purchase');
+    // If there is no user, show toastr notification and return
+    if (!isUserLoggedIn) {
+      this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
       return;
     }
 
-    // If Early Bird exists and conditions are met, apply discount
-    if (event.earlyBird 
-        && typeof event.earlyBird.limit !== 'undefined' 
-        && event.tickets_Sold < event.earlyBird.limit 
+    // Check ticket availability and calculate the price
+    try {
+      const purchaseResponse = await this.eventService.purchaseTicket(event.eventID);
+      if (!purchaseResponse.success) {
+        this.toastr.error(purchaseResponse.message, 'Purchase');
+        return;
+      }
+
+      // If Early Bird exists and conditions are met, apply discount
+      if (event.earlyBird
+        && typeof event.earlyBird.limit !== 'undefined'
+        && event.tickets_Sold < event.earlyBird.limit
         && typeof event.earlyBird.percentage !== 'undefined') {
 
-      // Apply early bird discount
-      event.eventPrice = purchaseResponse.price * (1 - event.earlyBird.percentage / 100);
-      // Add Toastr notification for early bird discount
-      this.toastr.success(`Congrats! You qualify for an EarlyBird discount of ${event.earlyBird.percentage}%`, 'Discount');
-    } else {
-      // Regular price
-      event.eventPrice = purchaseResponse.price;
+        // Apply early bird discount
+        event.eventPrice = purchaseResponse.price * (1 - event.earlyBird.percentage / 100);
+        // Add Toastr notification for early bird discount
+        this.toastr.success(`Congrats! You qualify for an EarlyBird discount of ${event.earlyBird.percentage}%`, 'Discount');
+      } else {
+        // Regular price
+        event.eventPrice = purchaseResponse.price;
+      }
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('An error occurred, please try again.', 'Purchase');
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    this.toastr.error('An error occurred, please try again.', 'Purchase');
-    return;
+
+    // Start the payment process with the final price
+    const ticketPurchase: TicketPurchase = {
+      userEmail: this.loginService.userValue?.email ?? '',
+      eventId: event.eventID,
+      eventDate: event.eventDate,
+      purchaseDate: new Date(),
+      ticketPrice: event.eventPrice,
+      eventName: event.eventName,  // New field
+      description: event.description,  // New field
+      eventDeleted: false,
+      scannedAt: null,
+      isScanned: false,
+      scanningToken: ""
+    };
+
+    this.paymentService.initiatePayment(event).subscribe(
+      (payfastRequest: any) => {
+        // Create a form
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://www.payfast.co.za/eng/process';
+        form.target = '_self';
+
+        // Add the form fields
+        for (const key in payfastRequest) {
+          if (payfastRequest.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = payfastRequest[key];
+            form.appendChild(hiddenField);
+          }
+        }
+
+        // Add the form to the page and submit it
+        document.body.appendChild(form);
+        form.submit();
+
+      },
+      (error: HttpErrorResponse) => {
+        // It's better to handle "User is not logged in" error in payment service
+        // But if for some reason it comes here, then show toastr notification as well
+        if (error.error === 'User is not logged in') {
+          this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
+          console.error('User is not logged in');
+        } else {
+          console.error(error);
+        }
+      }
+    );
   }
 
-  // Start the payment process with the final price
-  const ticketPurchase: TicketPurchase = {
-    userEmail: this.loginService.userValue?.email ?? '',
-    eventId: event.eventID,
-    eventDate: event.eventDate,
-    purchaseDate: new Date(),
-    ticketPrice: event.eventPrice,
-    eventName: event.eventName,  // New field
-    description: event.description,  // New field
-    eventDeleted : false
-  };
 
-  this.paymentService.initiatePayment(event).subscribe(
-    (payfastRequest: any) => {
-      // Create a form
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://www.payfast.co.za/eng/process';
-      form.target = '_self';
 
-      // Add the form fields
-      for (const key in payfastRequest) {
-        if (payfastRequest.hasOwnProperty(key)) {
-          const hiddenField = document.createElement('input');
-          hiddenField.type = 'hidden';
-          hiddenField.name = key;
-          hiddenField.value = payfastRequest[key];
-          form.appendChild(hiddenField);
-        }
-      }
 
-      // Add the form to the page and submit it
-      document.body.appendChild(form);
-      form.submit();
-      
-    },
-    (error: HttpErrorResponse) => {
-      // It's better to handle "User is not logged in" error in payment service
-      // But if for some reason it comes here, then show toastr notification as well
-      if (error.error === 'User is not logged in') {
-        this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
-        console.error('User is not logged in');
-      } else {
-        console.error(error);
-      }
+
+  saveTicketPurchase(event: Event) {
+    // Ensure eventDate is a Date object
+    event.eventDate = new Date(event.eventDate);
+
+    // Get the event's date
+    const eventDate = event.eventDate;
+
+    // Create a new date object with only the year, month, and day
+
+
+    // Start the payment process with the final price
+    const ticketPurchase: TicketPurchase = {
+      userEmail: this.loginService.userValue?.email ?? '',
+      eventId: event.eventID,
+      eventDate: event.eventDate,
+      purchaseDate: new Date(),
+      ticketPrice: event.eventPrice,
+      eventName: event.eventName,  // New field
+      description: event.description,  // New field
+      eventDeleted: false,
+      scannedAt: null,
+      isScanned: false,
+      scanningToken: generateGUID()
+    };
+
+    function generateGUID(): string {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (Math.random() * 16) | 0,
+          v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
     }
-  );      
-}
-
-  
-
-
-
-    saveTicketPurchase(event: Event) {
- // Ensure eventDate is a Date object
- event.eventDate = new Date(event.eventDate);
-
- // Get the event's date
- const eventDate = event.eventDate;
-
- // Create a new date object with only the year, month, and day
- 
-
-      // Start the payment process with the final price
-      const ticketPurchase: TicketPurchase = {
-        userEmail: this.loginService.userValue?.email ?? '',
-        eventId: event.eventID,
-        eventDate: event.eventDate,
-        purchaseDate: new Date(),
-        ticketPrice: event.eventPrice,
-        eventName: event.eventName,  // New field
-        description: event.description,  // New field
-        eventDeleted : false
-      };
-
-      
     
-      // Save the ticket purchase
-      this.paymentService.saveTicketPurchase(ticketPurchase).subscribe(
-        (response) => {
-          // Handle the success response, such as navigating the user to another page
-          console.log(response);
-          this.toastr.success('You will be redirected shortly', 'Redirecting...');
-        },
-        (error: HttpErrorResponse) => {
-          // Handle the error response
-          console.error(error);
-          this.toastr.error('An error occurred while saving ticket purchase, please try again.', 'Purchase');
-        }
-      );
-    }
+
+
+
+    // Save the ticket purchase
+    this.paymentService.saveTicketPurchase(ticketPurchase).subscribe(
+      (response) => {
+        // Handle the success response, such as navigating the user to another page
+        console.log(response);
+        this.toastr.success('You will be redirected shortly', 'Redirecting...');
+      },
+      (error: HttpErrorResponse) => {
+        // Handle the error response
+        console.error(error);
+        this.toastr.error('An error occurred while saving ticket purchase, please try again.', 'Purchase');
+      }
+    );
+  }
 
 
 
@@ -236,26 +251,26 @@ async onBuyTicket(event: Event) {
 
 
   async handleTicketPurchase(event: Event) {
-    const isUserLoggedIn = this.loginService.isUserLoggedIn(); 
+    const isUserLoggedIn = this.loginService.isUserLoggedIn();
 
     // If there is no user, show toastr notification and return
     if (!isUserLoggedIn) {
       this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
       return;
     }
-  
+
     const userEmail = this.loginService.userValue?.email ?? '';
-  
+
     // Check if user is on the blacklist
     const isBlacklisted = await this.blacklistService.checkBlacklist(userEmail);
     if (isBlacklisted) {
       this.toastr.error('You are on the Blacklist and cannot attend events.', 'Purchase');
       return;
     }
-  
+
     try {
       await this.onBuyTicket(event); // Buying ticket process
-  
+
       // After successful buying process, save the ticket purchase in the database
       this.saveTicketPurchase(event);
     } catch (error) {
@@ -264,6 +279,10 @@ async onBuyTicket(event: Event) {
       return;
     }
   }
-  
-  
+
+
 }
+function Guid(): string {
+  throw new Error('Function not implemented.');
+}
+

@@ -8,4 +8,7 @@ export interface TicketPurchase {
     eventName: string;  // New field
     description: string;  // New field
     eventDeleted: boolean;
+    isScanned : boolean;
+    scannedAt : Date | null;
+    scanningToken : string | "";
 }

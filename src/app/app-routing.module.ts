@@ -18,6 +18,7 @@ import { EventPriceComponent } from './admin/event-price/event-price.component';
 import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.component';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
+import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
 
 
 //Client side
@@ -66,7 +67,11 @@ const routes: Routes = [
   {path: 'discount', component: DiscountComponent},
   {path: 'earlybird', component: EarlyBirdComponent},
   {path: 'eventtype', component:EventTypeComponent},
-  {path: 'eventprice', component: EventPriceComponent}, //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS
+  {path: 'eventprice', component: EventPriceComponent}, 
+  { path: 'Tickets/Scan/:token', component: ScanTicketComponent },
+  
+  
+  //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS
   {path: 'clienthome', component: ClientHomeComponent},
   {path: 'clientabout', component: ClientAboutComponent },
   {path: 'clientcontact', component: ClientContactComponent },
