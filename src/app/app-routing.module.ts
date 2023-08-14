@@ -42,11 +42,7 @@ import { ClientAboutComponent } from './customer/client-about/client-about.compo
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
-
-
-
-
-
+import { ChartsComponent } from './admin/charts/charts.component';
 
 
 const routes: Routes = [
@@ -93,6 +89,7 @@ const routes: Routes = [
   {path: 'userrefunds', component: MyRefundsComponent},
   {path: 'chatbot', component: ChatbotComponent},
   {path: 'auditlogs', component: AuditLogsComponent},
+  {path: 'charts', component: ChartsComponent}
   
 ];
 

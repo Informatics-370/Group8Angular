@@ -1,0 +1,17 @@
+.container {
+    text-align: center;
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+.chart-canvas,
+.chart-canvas-big {
+    width: 100%;
+    height: auto;
+    max-width: 200%; /* Adjust this percentage as needed */
+    margin: 0 auto;
+    display: block;
+    aspect-ratio: unset; /* Remove the aspect-ratio property */
+}

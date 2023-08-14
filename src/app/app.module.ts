@@ -63,6 +63,7 @@ import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
+import { ChartsComponent } from './admin/charts/charts.component';
 
 
 @NgModule({
@@ -113,6 +114,7 @@ import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
     WriteoffComponent,
     ChatbotComponent,
     AuditLogsComponent,
+    ChartsComponent,
   ],
   imports: [
     BrowserModule,

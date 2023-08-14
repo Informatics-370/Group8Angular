@@ -42,7 +42,8 @@ export class AppComponent {
           '/refunds',
           '/refundrequests',
           '/writeoff',
-          '/auditlogs'
+          '/auditlogs',
+          '/charts'
         ];
 
         const custroutes = [

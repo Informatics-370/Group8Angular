@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- 1st Column for Gender Pie Chart -->
+        <div class="col-lg-3">
+            <canvas class="chart-canvas" #genderPieChartCanvas></canvas>
+        </div>
+        <!-- 2nd Column for Age Distribution Chart -->
+        <div class="col-lg-3">
+            <canvas class="chart-canvas" #ageDistributionCanvas></canvas>
+        </div>
+    </div>
+    <!-- Row for Sales Report Input and Canvas -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <input type="date" [(ngModel)]="startDate" placeholder="Start Date" />
+            <input type="date" [(ngModel)]="endDate" placeholder="End Date" />
+            <button (click)="loadSalesReport()">Load Report</button>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <canvas class="chart-canvas-big" #salesReportCanvas></canvas>
+        </div>
+    </div>
+</div>

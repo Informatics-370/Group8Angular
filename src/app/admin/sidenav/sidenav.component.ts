@@ -28,6 +28,7 @@ export class SidenavComponent {
   showSupplierSubnav = false;
   showRefundSubnav = false;
   showInventorySubnav = false;
+  showReportSubnav = false;
 
   sidebarOpen = false;
 
