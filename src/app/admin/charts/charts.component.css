@@ -6,12 +6,30 @@
     margin-bottom: 20px;
 }
 
-.chart-canvas,
-.chart-canvas-big {
+.chart-canvas {
     width: 100%;
-    height: auto;
-    max-width: 200%; /* Adjust this percentage as needed */
+    height: 400px; /* Adjust to the same height as the other charts */
+    max-width: 100%;
     margin: 0 auto;
     display: block;
-    aspect-ratio: unset; /* Remove the aspect-ratio property */
 }
+
+.chart-canvas-big {
+    width: 100%;
+    height: 600px; /* A larger value for the bottom chart */
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+}
+
+.chart-canvas[_ngcontent-heh-c44] {
+    width: 100%;
+    height: 400px; /* This is the value you want to set */
+}
+.chart-canvas[_ngcontent-heh-c44], .chart-canvas-big[_ngcontent-heh-c44] {
+    max-width: 200%;
+    margin: 0 auto;
+    display: block;
+    aspect-ratio: unset; /* You may need to adjust this if the aspect ratio is not what you want */
+}
+
