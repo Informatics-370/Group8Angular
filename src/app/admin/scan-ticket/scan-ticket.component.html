@@ -1,4 +1,25 @@
-<div *ngIf="ticketStatus === 'scanned'">Your ticket has been successfully scanned!</div>
-<div *ngIf="ticketStatus === 'alreadyScanned'">This ticket has already been scanned.</div>
-<div *ngIf="ticketStatus === 'notScanned'">Unable to scan the ticket.</div>
+<!-- Layout for displaying ticket statuses with icons -->
+<div class="status-wrapper text-center mt-5">
 
+    <!-- Scanned Successfully -->
+    <div *ngIf="ticketStatus === 'scanned'" class="alert alert-success">
+        <i class="bi bi-check-lg"></i> <!-- Bootstrap icon for success -->
+        <p class="mt-2">Your ticket has been successfully scanned!</p>
+    </div>
+
+    <!-- Already Scanned -->
+    <div *ngIf="ticketStatus === 'alreadyScanned'" class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i> <!-- Bootstrap icon for warning -->
+        <p class="mt-2">{{ errorMessage }}</p>
+    </div>
+
+
+
+
+    <!-- Unable to Scan -->
+    <div *ngIf="ticketStatus === 'notScanned'" class="alert alert-danger">
+        <i class="bi bi-x-lg"></i> <!-- Bootstrap icon for error -->
+        <p class="mt-2">Unable to scan the ticket.</p>
+    </div>
+
+</div>

@@ -13,6 +13,7 @@ export class ScanTicketComponent implements OnInit {
   token!: string | null;
   ticketStatus: 'scanned' | 'notScanned' | 'alreadyScanned' = 'notScanned';
   url!: string;  // Just declare the variable, initialization will be done in ngOnInit.
+  errorMessage?: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,10 +22,10 @@ export class ScanTicketComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.paramMap.get('token');  
+    this.token = this.route.snapshot.paramMap.get('token');
     console.log("Fetched token:", this.token);
-    
-    
+
+
     if (this.token) {
       this.url = `${environment.baseApiUrl}api/TicketPurchases/Scan/${this.token}`;  // Initialize the URL here
 
@@ -37,19 +38,24 @@ export class ScanTicketComponent implements OnInit {
           },
           error => {
             if (error && error.error && error.error.message) {
+              this.errorMessage = error.error.message; // Store the error message
+              
               if (error.error.message.includes('already scanned')) {
                 this.ticketStatus = 'alreadyScanned';
               } else {
                 this.ticketStatus = 'notScanned';
               }
+              
               this.toastr.error(error.error.message);
             } else {
-              this.toastr.error('An unexpected error occurred.');
+              this.errorMessage = 'An unexpected error occurred.';
+              this.toastr.error(this.errorMessage);
             }
           }
+          
+          
         );
-    } else {
-      this.toastr.error('Invalid ticket token.');
+
+        }
+      }
     }
-  }
-}
