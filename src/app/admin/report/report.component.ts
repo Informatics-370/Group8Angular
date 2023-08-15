@@ -89,17 +89,17 @@ async generateInventoryReport() {
   }
 }
 
-async generateWinesReport() {
-  try {
-    let result: Wine[] | undefined = this.wines; // Use the fetched inventory data
-    console.log('Result:', result);
+// async generateWinesReport() {
+//   try {
+//     let result: Wine[] | undefined = this.wines; // Use the fetched inventory data
+//     console.log('Result:', result);
 
-    // Rest of your code...
-  } catch (error) {
-    console.error('Error fetching inventory data:', error);
-    // Handle error if needed
-  }
-}
+//     // Rest of your code...
+//   } catch (error) {
+//     console.error('Error fetching inventory data:', error);
+//     // Handle error if needed
+//   }
+// }
   
 
 
