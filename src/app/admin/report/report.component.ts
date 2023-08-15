@@ -5,6 +5,7 @@ import { PdfService } from '../services/pdf.service';
 import { ReportService } from '../services/report.service';
 import { Inventory } from 'src/app/Model/inventory';
 import { InventoryService } from '../services/inventory.service';
+import { WineService } from '../services/wine.service';
 import { OrderService } from 'src/app/customer/services/order.service';
 import { SalesService } from '../services/sales.service';
 import * as html2pdf from 'html2pdf.js';
@@ -13,6 +14,7 @@ import { Chart, LineController, LineElement, PointElement, LinearScale, Category
 import { Event } from 'src/app/Model/event';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
 import { Blacklist } from 'src/app/Model/blacklist';
+import { Wine } from 'src/app/Model/wine';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale);
 
@@ -30,7 +32,8 @@ export class ReportComponent {
               private pdfService: PdfService,
               private inventoryService: InventoryService,
               private order: OrderService,
-              private salesService: SalesService) { }
+              private salesService: SalesService,
+              private wineService: WineService) { }
 
   showRefundsModal: boolean = false;
   currentDate = new Date();
@@ -39,8 +42,9 @@ export class ReportComponent {
   allRefunds: RefundRequest[] = [];
   allSuppOrders: SupplierOrder[] = [];
   inventory: Inventory[] = [];
+  wines: Wine[] = [];
   allEvents: Event[] = []; // Add this property to store fetched events
-  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | null = null;
+  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES' | null = null;
   blacklistData: Blacklist[] = [];
   showBlacklistModal: boolean = false;
   
@@ -51,6 +55,7 @@ export class ReportComponent {
 
   ngOnInit(): void {
   this.loadInventory();
+  this.loadWines();
 }
 
 async loadInventory(): Promise<void> {
@@ -62,9 +67,30 @@ async loadInventory(): Promise<void> {
   }
 }
 
+async loadWines(): Promise<void> {
+  try {
+    this.wines = await this.wineService.getWines();
+  } catch (error) {
+    console.error(error);
+    this.toastr.error('Error, please try again', 'Wine Table');
+  }
+}
+
 async generateInventoryReport() {
   try {
     let result: Inventory[] | undefined = this.inventory; // Use the fetched inventory data
+    console.log('Result:', result);
+
+    // Rest of your code...
+  } catch (error) {
+    console.error('Error fetching inventory data:', error);
+    // Handle error if needed
+  }
+}
+
+async generateWinesReport() {
+  try {
+    let result: Wine[] | undefined = this.wines; // Use the fetched inventory data
     console.log('Result:', result);
 
     // Rest of your code...
@@ -82,7 +108,7 @@ async generateInventoryReport() {
     this.showRefundsModal = true;
   }
 
-  showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER'): void {
+  showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES'): void {
     this.currentReportType = reportType;
     this.showBlacklistModal = true;
   }
@@ -98,12 +124,12 @@ async generateInventoryReport() {
   }
 
 
-  OpenDateReports(): void {
-    if (this.currentReportType === 'REFUNDS') {
-      // this.generateRefundReport(this.beginDate, this.endDate);
-    } else if (this.currentReportType === 'EVENTS') {
-      this.generateEventsReport();
-    }    
+OpenDateReports(): void {
+  if (this.currentReportType === 'REFUNDS') {
+    // this.generateRefundReport(this.beginDate, this.endDate);
+  } else if (this.currentReportType === 'EVENTS') {
+    this.generateEventsReport();
+  }    
 }
 
 DownloadDateReports(): void {
@@ -121,6 +147,8 @@ DownloadDateReports(): void {
       this.ViewInventory();
     }else if(this.currentReportType === 'SUPPLIER ORDER'){
       this.generateSupplierOrderReport();
+    }else if(this.currentReportType === 'WINES'){
+      this.ViewWines();
     }
 
   }
@@ -132,6 +160,8 @@ DownloadDateReports(): void {
       this.exportInventoryToPdf();
     }else if(this.currentReportType === 'SUPPLIER ORDER'){
       this.generateSupplierOrderReportpdf();
+    }else if(this.currentReportType === 'WINES'){
+      this.generateWineReportpdf();
     }
 
   }
@@ -177,7 +207,7 @@ DownloadDateReports(): void {
         const currentDate = this.getCurrentDateFormatted();
 
         // Generate the PDF Blob using event data and current date
-        const pdfBlob: Blob = await this.pdfService.generateEventsReport(this.allEvents, currentDate);
+        const pdfBlob: Blob = await this.pdfService.generateEventsReport(this.allEvents, this.beginDate, this.endDate, currentDate);
 
         const blobUrl = URL.createObjectURL(pdfBlob);
         const newTab = window.open(blobUrl, '_blank');
@@ -196,6 +226,7 @@ DownloadDateReports(): void {
       // Handle error if needed
     }
   }
+  
   
   
   
@@ -244,6 +275,57 @@ DownloadDateReports(): void {
         console.error('Error generating inventory report:', error);
     }
 }
+
+
+async ViewWines(): Promise<void> {
+  try {
+      const currentDate = this.getCurrentDateFormatted(); // Get the current date
+      console.log(this.wines)
+      const pdfBlob = await this.pdfService.generateWinesReport(this.wines, currentDate);
+
+      const resolvedPdfBlob = await pdfBlob;
+
+    // Create a Blob URL and open it in a new tab
+    const blobUrl = URL.createObjectURL(resolvedPdfBlob);
+    const newTab = window.open(blobUrl, '_blank');
+
+    if (!newTab) {
+      console.error('Failed to open new tab for PDF');
+      // Handle error if new tab cannot be opened
+    } else {
+      console.error('Received undefined or invalid Wine data');
+      // Handle the case where the returned data is undefined or invalid
+    }
+    
+      
+  } catch (error) {
+      console.error('Error generating Wine report:', error);
+  }
+}
+
+
+async generateWineReportpdf() {
+  try {
+    let result: Wine[] | undefined = await this.wineService.getWines();
+    console.log('Result:', result); // Add this line
+    if (result !== undefined) {
+      this.wines = result;
+      let currentDate = this.getCurrentDateFormatted();
+      this.pdfService.generateWinesReportpdf(this.wines, currentDate);
+      // Do any additional processing or actions here if needed
+    } else {
+      console.error('Received undefined or invalid wine data');
+      this.toastr.error('Error, failed to download Wines Report', 'Wines Report');
+      // Handle the case where the returned data is undefined or invalid
+    }
+  } catch (error) {
+    console.error('Error fetching wine data:', error);
+    this.toastr.error('Error, failed to retrieve Wine Data', 'Wines Report');
+    // Handle error if needed
+  }
+}
+
+
 
 
 //   openInventory(): void {
@@ -336,10 +418,12 @@ async generateBlacklistReportpdf() {
       // Do any additional processing or actions here if needed
     } else {
       console.error('Received undefined or invalid blacklist data');
+      this.toastr.error('Error, failed to download Blacklist Report', 'Blacklist Report');
       // Handle the case where the returned data is undefined or invalid
     }
   } catch (error) {
     console.error('Error fetching blacklist data:', error);
+    this.toastr.error('Error, failed to retrieve Blacklist Data', 'Blacklist Report');
     // Handle error if needed
   }
 }
