@@ -6,15 +6,15 @@ import { ReportService } from '../services/report.service';
 import { Inventory } from 'src/app/Model/inventory';
 import { InventoryService } from '../services/inventory.service';
 import { WineService } from '../services/wine.service';
-import { OrderService } from 'src/app/customer/services/order.service';
 import { SalesService } from '../services/sales.service';
 import * as html2pdf from 'html2pdf.js';
-import { Order } from 'src/app/Model/order';
 import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale } from 'chart.js';
 import { Event } from 'src/app/Model/event';
-import { SupplierOrder } from 'src/app/Model/supplierOrder';
 import { Blacklist } from 'src/app/Model/blacklist';
 import { Wine } from 'src/app/Model/wine';
+import { SuppOrderAndVATViewModel } from 'src/app/Model/SupplierOrdersVATs';
+import { SupplierOrder } from 'src/app/Model/supplierOrder';
+import { VAT } from 'src/app/Model/vat';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale);
 
@@ -31,7 +31,6 @@ export class ReportComponent {
               private dataService: ReportService,
               private pdfService: PdfService,
               private inventoryService: InventoryService,
-              private order: OrderService,
               private salesService: SalesService,
               private wineService: WineService) { }
 
@@ -40,7 +39,9 @@ export class ReportComponent {
   beginDate: Date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1); // First day of the current month
   endDate: Date = new Date();
   allRefunds: RefundRequest[] = [];
-  allSuppOrders: SupplierOrder[] = [];
+  allSuppOrders: SuppOrderAndVATViewModel[] = [];
+  supplierOrders: SupplierOrder | undefined;
+  vaTs: VAT | undefined;
   inventory: Inventory[] = [];
   wines: Wine[] = [];
   allEvents: Event[] = []; // Add this property to store fetched events
@@ -359,35 +360,50 @@ async generateWineReportpdf() {
   
 
 
-async generateSupplierOrderReportpdf(){
-  this.dataService.getSupplierOrder().subscribe((result) => {
-    console.log(result);
-    this.allSuppOrders = result;
-    console.log(this.allSuppOrders);
-    this.pdfService.generateSupplierOrdersPdf(this.allSuppOrders);
-  })
-}
-
-async generateSupplierOrderReport(): Promise<void> {
-  try {
-    let allSuppOrders: any;
+  async generateSupplierOrderReportpdf() {
+    let suppOrderAndVATData!: SuppOrderAndVATViewModel;
 
     // Wait for the supplier order data to be fetched
     await new Promise<void>((resolve, reject) => {
       this.dataService.getSupplierOrder().subscribe(result => {
-        allSuppOrders = result;
-        console.log('this.allSuppOrders', allSuppOrders);
+        // Assuming result now returns an object with supplierOrders and vaTs properties
+        suppOrderAndVATData = result;
+        console.log('SuppOrderAndVAT Data', suppOrderAndVATData);
         resolve();
       }, error => reject(error));
     });
 
     // Ensure that we have data before proceeding
-    if (!allSuppOrders || allSuppOrders.length === 0) {
+    if (!suppOrderAndVATData || !suppOrderAndVATData.supplierOrders) {
+      console.error('Received undefined or invalid supplier order data');
+      return;
+    }
+        this.pdfService.generateSupplierOrdersPdf([suppOrderAndVATData]);
+    }
+
+
+
+async generateSupplierOrderReport(): Promise<void> {
+  try {
+    let suppOrderAndVATData!: SuppOrderAndVATViewModel;
+
+    // Wait for the supplier order data to be fetched
+    await new Promise<void>((resolve, reject) => {
+      this.dataService.getSupplierOrder().subscribe(result => {
+        // Assuming result now returns an object with supplierOrders and vaTs properties
+        suppOrderAndVATData = result;
+        console.log('SuppOrderAndVAT Data', suppOrderAndVATData);
+        resolve();
+      }, error => reject(error));
+    });
+
+    // Ensure that we have data before proceeding
+    if (!suppOrderAndVATData || !suppOrderAndVATData.supplierOrders) {
       console.error('Received undefined or invalid supplier order data');
       return;
     }
 
-    const pdfBlob = await this.pdfService.generateSupplierOrders(allSuppOrders);
+    const pdfBlob = await this.pdfService.generateSupplierOrders([suppOrderAndVATData]);
 
     // Create a Blob URL and open it in a new tab
     const blobUrl = URL.createObjectURL(pdfBlob);
