@@ -29,4 +29,15 @@ export class ChartsService {
     }
     return this.http.get<any>(`${this.apiUrl}/OrderHistory/SalesReport`, { params: params });
   }
+
+  getTicketSalesReport(startDate: string, endDate: string): Observable<any> {
+    console.log(`Sending start date: ${startDate}, end date: ${endDate}`); // Debugging line
+  
+    let params = new HttpParams()
+      .append('startDate', startDate)
+      .append('endDate', endDate);
+  
+    return this.http.get<any>(`${this.apiUrl}/TicketPurchases/TicketSalesReport`, { params: params });
+  }
+  
 }
