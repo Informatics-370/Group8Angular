@@ -46,7 +46,7 @@ ngAfterViewInit(): void {
   }
 
 
-///////////////////////////////////////////////////////////////////Pie Chart
+////////////////////////////////Pie Chart/////////////////////////////////////////////////
 createGenderPieChart(labels: string[], counts: number[]): void {
 
     // Determine colors based on the labels
@@ -97,14 +97,10 @@ createGenderPieChart(labels: string[], counts: number[]): void {
 }
 
 
-
-
-
-
 loadGenderDistributionChart(): void {
-  this.chartsService.getGenderDistribution().subscribe((data: any[]) => { // Change type to any or align with actual structure
-    const labels = data.map(d => d.gender); // Change to 'gender'
-    const counts = data.map(d => d.count); // Change to 'count'
+  this.chartsService.getGenderDistribution().subscribe((data: any[]) => { 
+    const labels = data.map(d => d.gender);
+    const counts = data.map(d => d.count);
 
     setTimeout(() => {
       this.createGenderPieChart(labels, counts);
@@ -112,7 +108,7 @@ loadGenderDistributionChart(): void {
   });
 }
 
-//////////////////////////////////////////////////////////////////////Age distrubution Chart
+//////////////////////////////////////////Age distrubution Chart/////////////////////////////////////////////////
 loadAgeDistributionChart(): void {
   this.chartsService.getAgeDistribution().subscribe((data: { [key: string]: number }) => {
     const labels = Object.keys(data);
@@ -124,29 +120,29 @@ loadAgeDistributionChart(): void {
       data: {
         labels: labels,
         datasets: [{
-          label: 'Customers By Age', // Legend for the dataset
+          label: 'Customers By Age', 
           data: counts,
-          backgroundColor: 'blue' // You can customize this
+          backgroundColor: 'blue' 
         }]
       },
       options: {
         plugins: {
           title: {
             display: true,
-            text: 'Customer Age Distribution', // Header for the chart
+            text: 'Customer Age Distribution', 
             font: {
               size: 18,
             }
           },
           legend: {
-            display: true, // This ensures the legend is displayed
+            display: true, 
           },
         },
         scales: {
           y: {
             beginAtZero: true,
             ticks: {
-              stepSize: 1 // This ensures only whole numbers are used on the y-axis
+              stepSize: 1
             }
           }
         }
@@ -156,6 +152,7 @@ loadAgeDistributionChart(): void {
 }
 
 ////////////////////////////////Sales Chart///////////////////////////////////////////
+
 formatDates(dates: string[], format: string = 'YYYY-MM-DD'): string[] {
   return dates.map(date => moment(date).format(format));
 }
@@ -167,25 +164,33 @@ createSalesReportChart(labels: string[], wineTotals: number[], ticketTotals: num
   }
 
   const ctx = this.salesReportCanvas.nativeElement.getContext('2d');
+  const datasets = [];
+
+  // Add the wine data only if there is data
+  if (wineTotals.length > 0) {
+    datasets.push({
+      data: wineTotals,
+      borderColor: 'blue', // Wine sales
+      pointBackgroundColor: 'blue', // Same as borderColor for Wine Sales
+      label: 'Wine Sales'
+    });
+  }
+
+  // Add the ticket data only if there is data
+  if (ticketTotals.length > 0) {
+    datasets.push({
+      data: ticketTotals,
+      borderColor: 'red', // Ticket sales
+      pointBackgroundColor: 'red', // Same as borderColor for Event Sales
+      label: 'Event Sales'
+    });
+  }
 
   this.salesReportLineChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
-      datasets: [
-        {
-          data: wineTotals,
-          borderColor: 'blue', // Wine sales
-          pointBackgroundColor: 'blue', // Same as borderColor for Wine Sales
-          label: 'Wine Sales'
-        },
-        {
-          data: ticketTotals,
-          borderColor: 'red', // Ticket sales
-          pointBackgroundColor: 'red', // Same as borderColor for Event Sales
-          label: 'Event Sales'
-        }
-      ]
+      datasets: datasets
     },
     options: {
       plugins: {
@@ -206,51 +211,69 @@ createSalesReportChart(labels: string[], wineTotals: number[], ticketTotals: num
   });
 }
 
+mergeLabels(wineLabels: string[], ticketDates: string[], startDate: string, endDate: string): string[] {
+  const combinedLabels: Set<string> = new Set();
+
+  for (let date = moment(startDate); date.isSameOrBefore(endDate); date.add(1, 'days')) {
+    combinedLabels.add(date.format('YYYY-MM-DD'));
+  }
+  wineLabels.forEach(label => combinedLabels.add(label));
+  ticketDates.forEach(label => combinedLabels.add(label));
+
+  // Convert to an array and sort
+  const sortedLabels = Array.from(combinedLabels);
+  sortedLabels.sort();
+  return sortedLabels;
+}
+
 
 
 loadSalesReport() {
-  // Assigning the start and end dates to local variables so TypeScript knows they won't change
   const startDate = this.startDate;
   const endDate = this.endDate;
 
-  // Check if both startDate and endDate are defined
   if (startDate && endDate) {
-    console.log("startDate:", this.startDate);
-    console.log("endDate:", this.endDate);
-
-    // Call the getSalesReport method from the service, passing in the start and end dates
     this.chartsService.getSalesReport(startDate, endDate).subscribe(data => {
-      const wineLabels = data.map((order: any) => order.orderDate);
-      const wineTotals = data.map((order: any) => order.orderTotal);
-      this.totalWineSales = wineTotals.reduce((a: number, b: number) => a + b, 0); // Sum of wine sales
+      const wineLabels = data.length ? data.map((order: any) => moment(order.orderDate).format('YYYY-MM-DD')) : [];
+      const wineTotals = data.length ? data.map((order: any) => order.totalAmount) : [0];
 
-      // Format the wine labels
-      const wineLabelsFormatted = this.formatDates(wineLabels, 'MM-DD');
+      this.totalWineSales = wineTotals.reduce((a: number, b: number) => a + b, 0);
 
       this.chartsService.getTicketSalesReport(startDate, endDate).subscribe(ticketData => {
-        // Extract the purchase dates and total amounts for ticket sales
-        const ticketDates = ticketData.map((purchase: any) => purchase.purchaseDate);
-        const ticketTotals = ticketData.map((purchase: any) => purchase.totalAmount);
-        this.totalEventSales = ticketTotals.reduce((a: number, b: number) => a + b, 0); // Sum of ticket sales
+        const ticketDates = ticketData.length ? ticketData.map((purchase: any) => moment(purchase.purchaseDate).format('YYYY-MM-DD')) : [];
+        const ticketTotals = ticketData.length ? ticketData.map((purchase: any) => purchase.totalAmount) : [0];
+        this.totalEventSales = ticketTotals.reduce((a: number, b: number) => a + b, 0);
 
-        // Calculate the total sales
         this.totalSales = this.totalWineSales + this.totalEventSales;
 
-        // Combine wine and ticket labels if needed
-        // const labels = mergeLabels(wineLabels, ticketDates); // You may need to implement this
+        // Combine wine and ticket labels, and make sure that the total counts align
+        const labels = this.mergeLabels(wineLabels, ticketDates, startDate, endDate);
+        console.log("Labels:", labels);
 
-        // Create the sales report chart with the extracted data
+        const wineTotalsFilled = labels.map(label => {
+          const index = wineLabels.indexOf(label);
+          return index !== -1 ? wineTotals[index] : 0;
+        });
+
+          const ticketTotalsFilled = labels.map(label => {
+          const index = ticketDates.indexOf(label);
+          return index !== -1 ? ticketTotals[index] : 0;
+        });
+
+        console.log("Wine Totals Filled:", wineTotalsFilled);
+        console.log("Ticket Totals Filled:", ticketTotalsFilled);
+
+        
         setTimeout(() => {
-          // Use the formatted labels here
-          this.createSalesReportChart(wineLabelsFormatted, wineTotals, ticketTotals);
+          this.createSalesReportChart(labels, wineTotalsFilled, ticketTotalsFilled);
         }, 0);
       });
+      console.log(data);
+
     });
   } else {
-    // Show toastr notification if the dates are not defined
     this.toastr.error('Please select valid dates');
-    console.error('Start date and end date must be defined.'); // Log an error message if the dates are not defined
-    // Handle error, perhaps showing a message to the user.
+    console.error('Start date and end date must be defined.');
   }
 }
 
