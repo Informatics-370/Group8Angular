@@ -26,10 +26,30 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <p><strong>Total Wine Sales:</strong> {{totalWineSales | currency:'R'}}</p>
-                <p><strong>Total Event Sales:</strong> {{totalEventSales | currency:'R'}}</p>
-                <p><strong>Total Sales:</strong> {{totalSales | currency:'R'}}</p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sale Name</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Wine Sales</td>
+                            <td>{{totalWineSales | currency:'R'}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Event Sales</td>
+                            <td>{{totalEventSales | currency:'R'}}</td>
+                        </tr>
+                        <tr class="table-dark">
+                            <td>Total Sales</td>
+                            <td>{{totalSales | currency:'R'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+        
     </div>
 </div>
