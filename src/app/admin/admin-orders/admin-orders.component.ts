@@ -18,6 +18,14 @@ export class AdminOrdersComponent implements OnInit {
   ngOnInit() {
     this.fetchAllOrders();
   }
+  
+  searchWineRef: string = '';
+
+  get filteredOrders(): Order[] {
+    return this.orders.filter(order =>
+      order.orderRefNum.toLowerCase().includes(this.searchWineRef.toLowerCase())
+    );
+  }
 
   fetchAllOrders() {
     this.orderService.getAllOrders().subscribe(
