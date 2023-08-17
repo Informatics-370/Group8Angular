@@ -199,11 +199,11 @@
           <div class="mb-3">
             <label for="phoneNumber" class="form-label">Phone Number</label>
             <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number"
-              [(ngModel)]="phoneNumber" name="phoneNumber" #phoneNumberInput required pattern="^[0-9]{10}$">
+              [(ngModel)]="phoneNumber" name="phoneNumber" #phoneNumberInput required pattern="^0[0-9]{9}$">
             <div *ngIf="Registerform.controls['phoneNumber']?.invalid && Registerform.controls['phoneNumber'].touched"
               class="alert alert-danger">
               <div *ngIf="Registerform.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
-              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10
+              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 and start with a 0
                 digits.</div>
             </div>
           </div>
@@ -216,6 +216,14 @@
               <div *ngIf="Registerform.controls['idNumber'].errors?.['required']">ID Number is required.</div>
               <div *ngIf="Registerform.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.
               </div>
+            </div>
+            <div *ngIf="!isOlderThan18() && Registerform.controls['idNumber'].touched"
+            class="alert alert-danger">
+            Unfotunately You need to be older than 18 to have an account.
+            </div>
+            <div *ngIf="!DateValid() && Registerform.controls['idNumber'].touched"
+            class="alert alert-danger">
+            Please Enter Valid Dates.
             </div>
           </div>
           <div class="mb-3">
@@ -295,7 +303,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null"
-              [disabled]="Registerform.invalid">
+              [disabled]="Registerform.invalid || !isOlderThan18() || !passwordsMatch() || !DateValid()">
               Register
             </button>
           </div>

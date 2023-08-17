@@ -99,7 +99,7 @@ export class PdfService {
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  await delay(50);
+  await delay(1234);
   // if(this.getWineName(inventoryData.wineID) == 'Unknown'){
 
   // }
@@ -187,7 +187,7 @@ export class PdfService {
     this.loadWines();
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  await delay(50);
+  await delay(1234);
     return new Promise<Blob>((resolve, reject) => {
       let documentDefinition: any;
   
@@ -1067,12 +1067,9 @@ async generateWinesReport(winesData: Wine[], currentDate: string): Promise<Blob>
   this.loadWines();
 
   let delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  this.toastr.success('Generating...','Report');
+  await delay(1234); 
 
-  await delay(0);
-
-  if( this.getVarietalName(winesData[0].varietalID) == 'Unknown' || this.getWinetypeName(winesData[0].wineTypeID) == 'Unknown'){
-    this.toastr.error('Will Display Unknown','Could not Get Varietal and Wine Type');
-  }
 return new Promise<Blob>((resolve, reject) => {
   let documentDefinition: any;
 
@@ -1148,14 +1145,14 @@ return new Promise<Blob>((resolve, reject) => {
     resolve(pdfBlob);
   });
 });
-}
+  }
 
 async generateWinesReportpdf(winesData: Wine[], currentDate: string): Promise<Blob> {
   this.loadWines();
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  await delay(50);
+  this.toastr.success('Generating...','Report');
+  await delay(1234);
   return new Promise<Blob>((resolve, reject) => {
     let documentDefinition: any;
 
@@ -1228,8 +1225,4 @@ async generateWinesReportpdf(winesData: Wine[], currentDate: string): Promise<Bl
     pdfMake.createPdf(documentDefinition).download(`wines_report.pdf`);
   });
 }
-
-
-
-
 }
