@@ -203,7 +203,7 @@
             <div *ngIf="Registerform.controls['phoneNumber']?.invalid && Registerform.controls['phoneNumber'].touched"
               class="alert alert-danger">
               <div *ngIf="Registerform.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
-              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 and start with the digit 0.</div>
+              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 digits and start with the digit 0.</div>
             </div>
           </div>
           <div class="mb-3">
