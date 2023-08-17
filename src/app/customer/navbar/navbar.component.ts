@@ -62,6 +62,57 @@ passwordsMatch(): boolean {
   return this.confirmPassword === this.rpassword;
 }
 
+DateValid(): boolean{
+  let idMonth = parseInt(this.idNumber.toString().substring(2,4));
+let idDay = parseInt(this.idNumber.toString().substring(4,6));
+
+if(idDay >31 || idMonth >12){
+  return false
+}
+return true;
+}
+
+isOlderThan18(): boolean{
+let idYear = parseInt(this.idNumber.toString().substring(0,2));
+let idMonth = parseInt(this.idNumber.toString().substring(2,4));
+let idDay = parseInt(this.idNumber.toString().substring(4,6));
+let currentDate = new Date();
+let year = parseInt(currentDate.getFullYear().toString().slice(-2));
+let month = parseInt((currentDate.getMonth() + 1).toString().padStart(2, '0'));
+let day = parseInt(currentDate.getDate().toString().padStart(2, '0'));
+
+//    x   > 23
+if (idYear > year) {
+  idYear = +1900;
+  year = +2000;
+  if (year - idYear > 18) {
+    return true;
+  }
+}
+
+
+//  x     <  23
+if(idYear < year){
+  //   23 - x     >18
+  if((year-idYear) >18){
+    return true
+    //          23 - x     =18
+    }else if((year-idYear) ==18){
+      //     8 - x      >0
+      if((month-idMonth) >0){
+        return true;        
+      }else
+      //  8 - x     ==0
+      if((month-idMonth) ==0){
+        // 17 - x     >=0
+        if((day-idDay) >=0){
+          return true
+        }  
+      }  
+    }
+}
+return false;
+} 
 
   constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router, private scrollService: ScrollServiceService){ }
 
