@@ -233,6 +233,15 @@ loadSalesReport() {
   const endDate = this.endDate;
 
   if (startDate && endDate) {
+    
+    let eD = new Date(endDate);
+    let bD = new Date(startDate);
+    console.log('Begin date', bD);
+    console.log('End date', eD);
+    if(eD < bD){
+      this.toastr.error('The time period you selected is invalid, please try again','Selected dates')
+    }else{
+
     this.chartsService.getSalesReport(startDate, endDate).subscribe(data => {
       const wineLabels = data.length ? data.map((order: any) => moment(order.orderDate).format('YYYY-MM-DD')) : [];
       const wineTotals = data.length ? data.map((order: any) => order.totalAmount) : [0];
@@ -271,11 +280,12 @@ loadSalesReport() {
       console.log(data);
 
     });
+  }
   } else {
     this.toastr.error('Please select valid dates');
     console.error('Start date and end date must be defined.');
   }
 }
-
 }
+
 

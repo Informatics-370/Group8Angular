@@ -199,6 +199,14 @@ DownloadDateReports(): void {
 
 
   async generateEventsReport() {
+    let eD = new Date(this.endDate);
+    let bD = new Date(this.beginDate);
+    console.log('Begin date', bD);
+    console.log('End date', eD);
+    if(eD < bD){
+      this.toastr.error('The time period you selected is invalid, please try again','Selected dates')
+    }else{
+
     try {
       const result: any = await this.dataService.getEventsReport(this.beginDate, this.endDate).toPromise();
       console.log('Result:', result);
@@ -227,6 +235,7 @@ DownloadDateReports(): void {
       // Handle error if needed
     }
   }
+}
   
   
   
