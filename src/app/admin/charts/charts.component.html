@@ -14,9 +14,9 @@
         <div class="col-lg-6">
             <h1>Wine and Event Sales</h1>
             <div class="input-group mb-3">
-                <input type="date" class="form-control" [(ngModel)]="startDate" placeholder="Start Date" />
-                <input type="date" class="form-control" [(ngModel)]="endDate" placeholder="End Date" />
-                <button class="btn btn-primary" (click)="loadSalesReport()">Load Report</button>
+                <input type="date" class="form-control" [(ngModel)]="startDate" placeholder="Start Date" (ngModelChange)="checkDates()"/>
+                <input type="date" class="form-control" [(ngModel)]="endDate" placeholder="End Date" (ngModelChange)="checkDates()"/>
+                <button class="btn btn-primary" [disabled]="!isDateValid" (click)="loadSalesReport()">Load Report</button>
             </div>
         </div>
     </div>

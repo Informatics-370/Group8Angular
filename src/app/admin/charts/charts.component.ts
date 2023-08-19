@@ -39,6 +39,8 @@ constructor(private chartsService: ChartsService, private toastr: ToastrService)
 
 startDate: string | undefined;
 endDate: string | undefined;
+isDateValid: boolean = true;
+
 
 ngAfterViewInit(): void {
     this.loadGenderDistributionChart();
@@ -226,7 +228,24 @@ mergeLabels(wineLabels: string[], ticketDates: string[], startDate: string, endD
   return sortedLabels;
 }
 
+checkDates(){
+  const startDate = this.startDate;
+  const endDate = this.endDate;
 
+  if (startDate && endDate) {
+    
+    let eD = new Date(endDate);
+    let bD = new Date(startDate);
+    console.log('Begin date', bD);
+    console.log('End date', eD);
+    if(eD < bD){
+      this.isDateValid = false;
+      this.toastr.error('The time period you selected is invalid, please try again','Selected dates')
+    }else{
+      this.isDateValid = true;
+    }
+  }
+}
 
 loadSalesReport() {
   const startDate = this.startDate;
