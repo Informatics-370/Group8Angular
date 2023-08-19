@@ -200,6 +200,7 @@ return false;
           (error: any) => {
             console.error(error);
             console.error(error.error);
+            this.toastr.error("The code you provided is invalid, please check the email again and ensure you typed it in correctly")
             // Clear the code input for the user to enter again
             this.twoFactorCode = '';
           }
@@ -345,7 +346,6 @@ sendPasswordResetLink() {
     frgPs.email = this.forgotPasswordEmail;
     this.dataService.forgotPassword(frgPs).subscribe(
       (result: any) => {
-        this.toastr.success("An email containing your new details has been sent to your inbox, please follow the instructions to log into your account");
         console.log('Sending password reset link to: ', this.forgotPasswordEmail);
         this.showForgotPasswordModal = false;
         this.showLoginModal = true;

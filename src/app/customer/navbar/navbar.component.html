@@ -300,6 +300,7 @@
             <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
           </div>
           <div class="modal-footer">
+            <a href="#" class="btn btn-link" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Return to login</a>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null"
               [disabled]="Registerform.invalid || !isOlderThan18() || !passwordsMatch() || !DateValid()">

@@ -105,6 +105,7 @@ export class UsernameAndPasswordComponent {
           this.toastr.info("Because you updated your login details, we require you to log into your account once again. Thank you for understanding :)")
         },
         (error: any) => {
+          this.toastr.error('Failed to update login details. Please try again later', 'Update failed');
           console.error('Error occurred:', error.message);
         }
       );
