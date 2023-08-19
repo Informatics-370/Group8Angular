@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { UserRolesViewModel } from 'src/app/Model/userRolesViewModel';
 import { UserManagementService } from '../services/user-management.service';
-import { UserViewModel } from 'src/app/Model/userviewmodel';
 import { ToastrService } from 'ngx-toastr';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
 
 @Component({
   selector: 'app-user-management',
@@ -15,7 +15,7 @@ export class UserManagementComponent {
   public users: UserRolesViewModel[] = [];
   private editableUsers = new Set<UserRolesViewModel>();
 
-  constructor(private userManagementService: UserManagementService, private toastr: ToastrService) { }
+  constructor(private userManagementService: UserManagementService, private toastr: ToastrService, private dataService: DataServiceService) { }
 
   ngOnInit(){
     this.getAllUsers();
@@ -66,7 +66,9 @@ export class UserManagementComponent {
   saveChanges(user: UserRolesViewModel): void {
     this.userManagementService.UpdateUserRoles(user)
       .subscribe(
-        () => this.toastr.success('Successfully Updated', 'User Roles'),
+        (result : any) => {
+          this.toastr.success('Successfully Updated', 'User Roles')
+        },
         error => this.toastr.error('Error, failed to update', 'User Roles')
       );
   }
