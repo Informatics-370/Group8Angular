@@ -11,6 +11,7 @@ import { Varietal } from 'src/app/Model/varietal';
 import { ToastrService } from 'ngx-toastr';
 import { Validators } from '@angular/forms';
 
+
 @Component({
   selector: 'app-wine',
   templateUrl: './wine.component.html',
@@ -222,7 +223,12 @@ async submitWineForm(form: NgForm): Promise<void> {
     } else {
       if (this.selectedFile) {
         formData.append('File', this.selectedFile);
+      } 
+      else {
+        // Display toastr notification if no image is uploaded when adding a new wine
+        this.toastr.warning('Please upload an image for the new wine.', 'Wine Form');
       }
+      
       
       let createdWine = await this.wineService.addWine(formData);
       this.updateDisplay(createdWine);

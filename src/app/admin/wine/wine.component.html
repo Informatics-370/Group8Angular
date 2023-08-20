@@ -135,13 +135,13 @@
             <textarea type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
               name="wineTastingNote" required maxlength="255" required (input)="updateCharacterCount($event)"
               #wineTastingNoteField="ngModel"></textarea>
-              <div class="character-count">{{characterCount || 0}} / 255 characters</div>
+            <div class="character-count">{{characterCount || 0}} / 255 characters</div>
 
-              <div *ngIf="wineTastingNoteField.invalid && wineTastingNoteField.touched" class="alert alert-danger">
-                <div *ngIf="wineTastingNoteField.errors?.['required']">Wine description is required.</div>
-                <!-- <div *ngIf="wineTastingNoteField.errors?.['maxlength']">Wine description must not exceed 255 characters,
+            <div *ngIf="wineTastingNoteField.invalid && wineTastingNoteField.touched" class="alert alert-danger">
+              <div *ngIf="wineTastingNoteField.errors?.['required']">Wine description is required.</div>
+              <!-- <div *ngIf="wineTastingNoteField.errors?.['maxlength']">Wine description must not exceed 255 characters,
                   including spaces.</div> -->
-              </div>
+            </div>
           </div>
 
 
@@ -159,10 +159,15 @@
             <label for="wineDisplay" class="form-label">Display Wine in Shop</label>
             <select class="form-control" required [(ngModel)]="currentWine.displayWine" id="wineDisplay"
               name="wineDisplay" #wineDisplayField="ngModel">
-              <option [value]="false" disabled selected>Select an option</option>
+              <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select an option----</option>
               <option [value]="true">Yes</option>
               <option [value]="false">No</option>
             </select>
+
+            <div *ngIf="(wineDisplayField.value == '0' || wineDisplayField.invalid) && wineDisplayField.touched"
+              class="alert alert-danger">
+              <div>Display in shop selection is required.</div>
+            </div>
           </div>
 
 
@@ -171,24 +176,31 @@
             <label for="wineType" class="form-label">Wine Type</label>
             <select class="form-control" id="wineType" [(ngModel)]="currentWine.wineTypeID" name="wineType" required
               #wineTypeField="ngModel">
+              <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a wine type----</option>
               <option *ngFor="let winetype of winetypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
             </select>
-            <div *ngIf="wineTypeField.invalid && wineTypeField.touched" class="alert alert-danger">
-              <div *ngIf="wineTypeField.errors?.['required']">Wine type is required.</div>
+
+            <div *ngIf="(wineTypeField.value == '0' || wineTypeField.invalid) && wineTypeField.touched"
+              class="alert alert-danger">
+              <div>Wine type is required.</div>
             </div>
+
+
           </div>
 
 
           <div class="mb-3">
             <label for="wineVarietal" class="form-label">Wine Varietal</label>
-            <select class="form-control" id="wineVarietal" [(ngModel)]="currentWine.varietalID" name="wineVarietal"
-              required #wineVarietalField="ngModel">
-              <option *ngFor="let varietal of varietals" [value]="varietal.varietalID">{{varietal.name}}</option>
+            <select class="form-control" id="wineVarietal" [(ngModel)]="currentWine.varietalID" name="wineVarietal" required #wineVarietalField="ngModel">
+                <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a varietal----</option>
+                <option *ngFor="let varietal of varietals" [value]="varietal.varietalID">{{varietal.name}}</option>
             </select>
-            <div *ngIf="wineVarietalField.invalid && wineVarietalField.touched" class="alert alert-danger">
-              <div *ngIf="wineVarietalField.errors?.['required']">Wine varietal is required.</div>
+        
+            <div *ngIf="(wineVarietalField.value == '0' || wineVarietalField.invalid) && wineVarietalField.touched" class="alert alert-danger">
+                <div>Wine varietal is required.</div>
             </div>
-          </div>
+        </div>
+        
 
           <div class="mb-3">
             <label for="wineImage" class="form-label">Wine Image</label>
@@ -203,8 +215,10 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="wineForm.invalid"
+        <button type="button" class="btn btn-primary"
+          [disabled]="wineForm.invalid || wineDisplayField.value == '0' || wineTypeField.value == '0' || isSaving == true || wineVarietalField.value == '0'"
           (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
+
       </div>
     </div>
   </div>
