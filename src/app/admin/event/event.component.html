@@ -122,11 +122,11 @@
             <textarea type="text" class="form-control" id="eventDescription" [(ngModel)]="currentEvent.description"
               name="eventDescription" required maxlength="255" (input)="updateCharacterCount($event)"
               #eventDescriptionField="ngModel"></textarea>
-            <div class="character-count">{{characterCount}} / 255 characters</div>
+            <div class="character-count">{{characterCount || 0}} / 255 characters</div>
             <div *ngIf="eventDescriptionField.invalid && eventDescriptionField.touched" class="alert alert-danger">
               <div *ngIf="eventDescriptionField.errors?.['required']">Event description is required.</div>
-              <div *ngIf="eventDescriptionField.errors?.['maxlength']">Event description must not exceed 255 characters,
-                including spaces.</div>
+              <!-- <div *ngIf="eventDescriptionField.errors?.['maxlength']">Event description must not exceed 255 characters,
+                including spaces.</div> -->
             </div>
           </div>
 
