@@ -72,7 +72,8 @@
               <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$"> 
               <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
-                <div *ngIf="editCustomerForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
+                <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['pattern']">Last Name should not contain numerical values.</div>
+                
               </div>
             </div>
   
@@ -89,10 +90,10 @@
             <!-- PHONE NUMBER -->
             <div class="mb-3">
               <label for="phoneNumber" class="form-label">Phone Number:</label>
-              <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
+              <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^0[0-9]{9}$">
               <div *ngIf="editCustomerForm.controls['phoneNumber']?.invalid && editCustomerForm.controls['phoneNumber'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['required']">Phone Number is required.</div>
-                <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['pattern']">Phone Number must be a 10-digit number.</div>
+                <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['pattern']">Phone Number must be a valid 10-digit number.</div>
               </div>
             </div>
   
