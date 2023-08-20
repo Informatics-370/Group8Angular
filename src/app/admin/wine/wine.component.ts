@@ -22,6 +22,7 @@ export class WineComponent implements OnInit {
 
   tempWine: Wine = new Wine();
   isSaving: boolean = false;
+  characterCount: any;
 
   constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef,) { }
 
@@ -281,6 +282,11 @@ filterWines(): void {
     this.wines = [...this.allWines]; // if searchQuery is empty, show all wines
   }
 }
+
+updateCharacterCount(event: any) {
+  this.characterCount = event.target.value.length;
+}
+
 
 
 
