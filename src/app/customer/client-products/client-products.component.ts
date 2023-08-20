@@ -190,7 +190,7 @@ export class ClientProductsComponent implements OnInit {
       },
       error => {
         console.log('Failed to add wine to cart');
-        this.toastr.success('Failed to add to Cart', 'Wine');
+        this.toastr.error('Failed to add to Cart', 'Wine');
       }
     );
   }
