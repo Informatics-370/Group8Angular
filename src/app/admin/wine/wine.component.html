@@ -202,13 +202,18 @@
         </div>
         
 
+          <!---------------------------------------------------------------------------------------------------------->
           <div class="mb-3">
             <label for="wineImage" class="form-label">Wine Image</label>
             <input type="file" class="form-control" id="wineImage" (change)="onFileSelected($event)">
+            <!-- Display error if no file is uploaded -->
+            <div *ngIf="!fileUploaded && wineForm.submitted" class="alert alert-danger">
+              Wine image is required.
+            </div>
           </div>
 
-          <div *ngIf="selectedFile" class="mb-3">
-            <img [src]="getObjectURL(selectedFile)" alt="Selected Image" class="img-thumbnail">
+          <div *ngIf="selectedFile || editingWine" class="mb-3">
+            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentWineImageURL" alt="Selected Image" class="img-thumbnail">
           </div>
 
         </form>
@@ -216,7 +221,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
         <button type="button" class="btn btn-primary"
-          [disabled]="wineForm.invalid || wineDisplayField.value == '0' || wineTypeField.value == '0' || isSaving == true || wineVarietalField.value == '0'"
+          [disabled]="wineForm.invalid || (!fileUploaded && !editingWine )|| wineDisplayField.value == '0' || wineTypeField.value == '0' || isSaving == true || wineVarietalField.value == '0'"
           (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
 
       </div>

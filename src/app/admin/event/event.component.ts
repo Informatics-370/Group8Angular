@@ -25,6 +25,8 @@ export class EventComponent {
 
   tempEvent: Event = new Event();
   minDateTime!: string;
+  fileUploaded = false;  // Property to track if a file is uploaded
+
 
 
   constructor(private toastr: ToastrService, private eventService: EventService, private eventTypeService: EventTypeService, private eventPriceService: EventPriceService, private earlyBirdService: EarlyBirdService) { }
@@ -71,6 +73,7 @@ export class EventComponent {
   showDeleteEventModal = false;
   eventToDeleteDetails: any;
   eventToDelete: any = null;
+  currentEventImageURL! : string;
 
   //--------------------------------------------------------------------------------------------------------------------------------
   // Methods to load and get event-related information
@@ -114,12 +117,17 @@ export class EventComponent {
 
   openEditEventModal(id: number) {
     this.editingEvent = true;
+      // Set the image URL/path of the event being edited.
+
     let eventToEdit = this.events.find(event => event.eventID === id);
+    this.currentEventImageURL = eventToEdit?.imagePath || '';
+    
     if (eventToEdit) {
       this.tempEvent = {
         ...eventToEdit,
         imagePath: eventToEdit.imagePath,
         displayEvent: eventToEdit.displayEvent
+
       };
       this.currentEvent = this.tempEvent;
     }
@@ -231,6 +239,12 @@ export class EventComponent {
     if (event.target.files && event.target.files[0]) {
       this.selectedFile = event.target.files[0];
       this.currentEvent.imagePath = this.selectedFile?.name ?? '';
+    }
+
+    if (event.target.files && event.target.files.length > 0) {
+      this.fileUploaded = true;
+    } else {
+      this.fileUploaded = false;
     }
   }
 
