@@ -44,8 +44,8 @@
         <input type="checkbox" [checked]="event.displayEvent" (change)="toggleDisplay(event)">
 
 
-     </td>
-     
+      </td>
+
       <td>
 
         <button class="btn btn-primary" (click)="event.eventID !== undefined && openEditEventModal(event.eventID)"
@@ -172,13 +172,18 @@
 
           <!---------------------------------------------------------------------------------------------------------->
           <div class="mb-3">
-            <label for="wineImage" class="form-label">Event Image</label>
+            <label for="eventImage" class="form-label">Event Image</label>
             <input type="file" class="form-control" id="eventImage" (change)="onFileSelected($event)">
+            <!-- Display error if no file is uploaded -->
+            <div *ngIf="!fileUploaded && eventForm.submitted" class="alert alert-danger">
+              Event image is required.
+            </div>
           </div>
 
-          <div *ngIf="selectedFile" class="mb-3">
-            <img [src]="getObjectURL(selectedFile)" alt="Selected Image" class="img-thumbnail">
+          <div *ngIf="selectedFile || editingEvent" class="mb-3">
+            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentEventImageURL" alt="Selected Image" class="img-thumbnail">
           </div>
+          
           <!---------------------------------------------------------------------------------------------------------->
 
 
@@ -187,8 +192,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
         <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
-          [disabled]="isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
-
+        [disabled]="eventForm.invalid || (!fileUploaded && !editingEvent) || isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
+    
       </div>
     </div>
   </div>
