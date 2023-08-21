@@ -160,6 +160,13 @@ formatDates(dates: string[], format: string = 'YYYY-MM-DD'): string[] {
 }
 
 createSalesReportChart(labels: string[], wineTotals: number[], ticketTotals: number[]): void {
+  if (wineTotals.every(x => x === 0) && ticketTotals.every(x => x === 0)) {
+    // Handle the case where both datasets are empty or filled with zeros
+    console.warn('No data to display for the selected date range.');
+    // Optionally, show a message to the user in the UI
+    return;
+  }
+
   // Destroy the previous chart
   if (this.salesReportLineChart) {
     this.salesReportLineChart.destroy();
@@ -169,7 +176,7 @@ createSalesReportChart(labels: string[], wineTotals: number[], ticketTotals: num
   const datasets = [];
 
   // Add the wine data only if there is data
-  if (wineTotals.length > 0) {
+  if (wineTotals.some(x => x > 0)) {
     datasets.push({
       data: wineTotals,
       borderColor: 'blue', // Wine sales
@@ -179,7 +186,7 @@ createSalesReportChart(labels: string[], wineTotals: number[], ticketTotals: num
   }
 
   // Add the ticket data only if there is data
-  if (ticketTotals.length > 0) {
+  if (ticketTotals.some(x => x > 0)) {
     datasets.push({
       data: ticketTotals,
       borderColor: 'red', // Ticket sales
