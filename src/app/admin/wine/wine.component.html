@@ -155,20 +155,19 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="wineDisplay" class="form-label">Display Wine in Shop</label>
-            <select class="form-control" required [(ngModel)]="currentWine.displayWine" id="wineDisplay"
-              name="wineDisplay" #wineDisplayField="ngModel">
-              <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select an option----</option>
-              <option [value]="true">Yes</option>
-              <option [value]="false">No</option>
-            </select>
+          <select class="form-control" required [(ngModel)]="currentWine.displayWine" id="wineDisplay"
+  name="wineDisplay" #wineDisplayField="ngModel">
+  <option [ngStyle]="{'color': 'grey'}" [value]="null">----Select an option----</option>
+  <option [value]="true">Yes</option>
+  <option [value]="false">No</option>
+</select>
 
-            <div *ngIf="(wineDisplayField.value == '0' || wineDisplayField.invalid) && wineDisplayField.touched"
-              class="alert alert-danger">
-              <div>Display in shop selection is required.</div>
-            </div>
-          </div>
+
+<div *ngIf="(wineDisplayField.value === null || wineDisplayField.invalid) && wineDisplayField.touched"
+class="alert alert-danger">
+<div>Display in shop selection is required.</div>
+</div>
+
 
 
 

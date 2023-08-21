@@ -157,9 +157,11 @@ openEditWineModal(id: number) {
     this.tempWine = {
       ...wineToEdit,
       wineTypeName: this.getWinetypeName(wineToEdit.wineTypeID),
-      varietalName: this.getVarietalName(wineToEdit.varietalID)
+      varietalName: this.getVarietalName(wineToEdit.varietalID),
+      
     };
     this.currentWine = this.tempWine;
+
   }
   this.showWineModal = true;
 }
