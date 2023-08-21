@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 
 export class ClientProductsComponent implements OnInit {
-  
+
   // variables
   counter = 0;
   // wine: Wine[] = [];
@@ -35,8 +35,8 @@ export class ClientProductsComponent implements OnInit {
     private wineService: WineService,
     private varietalService: VarietalService,
     private winetypeService: WinetypeService,
-    private cartService : CartService,
-    private wishlistService : WishlistService,
+    private cartService: CartService,
+    private wishlistService: WishlistService,
     private toastr: ToastrService
   ) { } // Inject the WineService, VarietalService, and WinetypeService
 
@@ -44,55 +44,55 @@ export class ClientProductsComponent implements OnInit {
     this.loadWines();
     this.loadVarietals();
     this.loadWinetypes();
-    }
-    
-    incrementCounter(wineId: number): void {
-      let quantity = this.quantityMap.get(wineId) || 1;
-      this.quantityMap.set(wineId, ++quantity);
-    }
-    
-    decrementCounter(wineId: number): void {
-      let quantity = this.quantityMap.get(wineId);
-      if (quantity && quantity > 0) {
-        this.quantityMap.set(wineId, --quantity);
-      }
-    }
+  }
 
-    getQuantity(wineId: number): number {
-      return this.quantityMap.get(wineId) || 1;
+  incrementCounter(wineId: number): void {
+    let quantity = this.quantityMap.get(wineId) || 1;
+    this.quantityMap.set(wineId, ++quantity);
+  }
+
+  decrementCounter(wineId: number): void {
+    let quantity = this.quantityMap.get(wineId);
+    if (quantity && quantity > 0) {
+      this.quantityMap.set(wineId, --quantity);
     }
-    
-    
+  }
+
+  getQuantity(wineId: number): number {
+    return this.quantityMap.get(wineId) || 1;
+  }
+
+
 
   loadWines() {
     this.wineService.getWines().then((wines: Wine[]) => {
-    this.wines = wines;
-    console.log(wines);
-    this.assignWineTypesAndVarietals();
-    this.checkDataLoaded(); // Check if all data is loaded
+      this.wines = wines;
+      console.log(wines);
+      this.assignWineTypesAndVarietals();
+      this.checkDataLoaded(); // Check if all data is loaded
 
-  }).catch(error => {
-    console.error('Error:', error);
-    console.log("Failed to load wines");
-    // Handle your error here
-    this.checkDataLoaded(); // Check if all data is loaded even in case of error
-  });
-  
+    }).catch(error => {
+      console.error('Error:', error);
+      console.log("Failed to load wines");
+      // Handle your error here
+      this.checkDataLoaded(); // Check if all data is loaded even in case of error
+    });
+
   }
 
   loadVarietals() {
     this.varietalService.getVarietals().then((varietals: Varietal[]) => {
-    this.varietals = varietals;
-    console.log(varietals);
-    this.checkDataLoaded(); // Check if all data is loaded
+      this.varietals = varietals;
+      console.log(varietals);
+      this.checkDataLoaded(); // Check if all data is loaded
 
-  }).catch(error => {
-    console.error('Error:', error);
-    console.log("Failed to load varietals");
-    // Handle your error here
-    this.checkDataLoaded(); // Check if all data is loaded even in case of error
-  });
-  
+    }).catch(error => {
+      console.error('Error:', error);
+      console.log("Failed to load varietals");
+      // Handle your error here
+      this.checkDataLoaded(); // Check if all data is loaded even in case of error
+    });
+
   }
 
   loadWinetypes() {
@@ -128,16 +128,22 @@ export class ClientProductsComponent implements OnInit {
   addToWishlist(wine: Wine) {
     // Decode token to get email
     const token = localStorage.getItem('Token') || '';
+
+    // Check if the user is not logged in
+    if (!token) {
+      this.toastr.warning('Please log in to add to Wishlist.');
+      return;
+    }
     const decoded = jwtDecode(token) as DecodedToken;
     const email = decoded.sub; // the property might be different, adjust it to match your token structure
-    
+
     // Create wishlistItem
     const wishlistItem = {
       wishlistItemID: 0,  // generate or fetch ID if necessary
       wineID: wine.wineID,
       wishlistID: 0,  // fetch the user's wishlist ID if necessary
     };
-  
+
     this.wishlistService.addToWishlist(email, wishlistItem).subscribe(
       () => {
         console.log('Wine added to wishlist!');
@@ -149,26 +155,33 @@ export class ClientProductsComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
 
   //Cart functionality
 
   addToCart(wine: Wine) {
     const quantity = this.getQuantity(wine.wineID);
-    
+
     if (quantity < 1) {
-        // Show warning toast and return
-        this.toastr.warning('Invalid amount selected. Please select at least one bottle before adding to the cart.');
-        return;
+      // Show warning toast and return
+      this.toastr.warning('Invalid amount selected. Please select at least one bottle before adding to the cart.');
+      return;
     }
     // Decode token to get email
     const token = localStorage.getItem('Token') || '';
+
+    // Check if the user is not logged in
+    if (!token) {
+      this.toastr.warning('Please log in to add to Cart.');
+      return;
+    }
+
     const decoded = jwtDecode(token) as DecodedToken;
     const email = decoded.sub; // the property might be different, adjust it to match your token structure
-    
+
     // Fetch or create cart for the user here if necessary
-  
+
     // Create cartItem
     const cartItem = {
       cartItemID: 0,  // generate or fetch ID if necessary
@@ -182,7 +195,7 @@ export class ClientProductsComponent implements OnInit {
         cartItems: []  // add cart items if necessary
       }
     };
-  
+
     this.cartService.addToCart(email, cartItem).subscribe(
       () => {
         console.log('Wine added to cart!');
@@ -194,7 +207,7 @@ export class ClientProductsComponent implements OnInit {
       }
     );
   }
-  
-  }
+
+}
 
 
