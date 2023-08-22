@@ -76,83 +76,90 @@
 </nav>
 
 <!--Login Modal-->
-  <div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" (hidden.bs.modal)="clearFields()" [ngClass]="{'show': showLoginModal}" [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Login</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #Loginform="ngForm" (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
-            <!-- <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email" name="email" #emailInput>
-            </div> -->
-
-            <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email"
-                name="email" #emailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
-              <div *ngIf="Loginform.controls['email']?.invalid && Loginform.controls['email'].touched"
-                class="alert alert-danger">
-                <div *ngIf="Loginform.controls['email'].errors?.['required']">Email is required.</div>
-                <div *ngIf="Loginform.controls['email'].errors?.['pattern']">Invalid email format.</div>
-              </div>
+<div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" (hidden.bs.modal)="clearFields()" [ngClass]="{'show': showLoginModal}" [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #Loginform="ngForm" (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
+          
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address <i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Please enter your email here, ex. john.doe@gmail.com"></i></label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email"
+              name="email" #emailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+            <div *ngIf="Loginform.controls['email']?.invalid && Loginform.controls['email'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Loginform.controls['email'].errors?.['required']">Email is required.</div>
+              <div *ngIf="Loginform.controls['email'].errors?.['pattern']">Invalid email format.</div>
             </div>
-
-            <div class="mb-3 position-relative">
-              <label for="password" class="form-label">Password</label>
-              <div style="position:relative;">
-                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" placeholder="Enter password" required
-                      [(ngModel)]="password" name="password" #passwordInput
-                      (blur)="validatePassword()" (focus)="clearPasswordError()" style="padding-right: 50px;">
-                  <i class="fas fa-eye position-absolute top-50 end-0 translate-middle-y" style="cursor: pointer; right: 10px; font-size: 15px;" (click)="togglePasswordVisibility()"></i>
-              </div>
-              <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
-                  Invalid password format.
-                  Password must consist of the following:
-                <ul>
-                  <li>1 uppercase letter</li>
-                  <li>1 lowercase letter</li>
-                  <li>1 non-alphanumeric character</li>
-                  <li>1 digit</li>
-                  <li>Password must be 8 - 100 characters in length</li>
-                </ul>
-              </div>
           </div>
-          
-          
-          
-            <div *ngIf="show2FACodeInput">
-              <div class="mb-3">
-                <label for="twoFactorCode" class="form-label">Two-Factor Code</label>
-                <input type="text" class="form-control" id="twoFactorCode" [(ngModel)]="twoFactorCode" placeholder="Enter code" required name="twoFactorCode" #twoFactorInput>
+
+          <div class="mb-3 position-relative">
+            <label for="password" class="form-label">Password <i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Please enter the password linked to your account"></i></label>
+            <div class="input-group">
+              <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" placeholder="Enter password" required
+                  [(ngModel)]="password" name="password" #passwordInput
+                  (blur)="validatePassword()" (focus)="clearPasswordError()">
+              <div class="input-group-text" (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
               </div>
             </div>
+            <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
+              Invalid password format.
+              Password must consist of the following:
+              <ul>
+                <li>1 uppercase letter</li>
+                <li>1 lowercase letter</li>
+                <li>1 non-alphanumeric character</li>
+                <li>1 digit</li>
+                <li>Password must be 8 - 100 characters in length</li>
+              </ul>
+            </div>
+          </div>
+
+          <div *ngIf="show2FACodeInput">
             <div class="mb-3">
-              <small>Don't have an account? Register
-                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal" (click)="openRegisterModal()">
-                  here
-                </a>
-              </small>
+                <label for="twoFactorCode" class="form-label">Two-Factor Code 
+                    <i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Please enter the code sent to your email, it is a 6 digit code"></i>
+                </label>
+                <div class="d-flex justify-content-between">
+                    <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[0]" name="twoFactorCode0" #twoFactorInput0 (keyup)="focusNext($event, twoFactorInput1)">
+                    <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[1]" name="twoFactorCode1" #twoFactorInput1 (keyup)="focusNext($event, twoFactorInput2)">
+                    <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[2]" name="twoFactorCode2" #twoFactorInput2 (keyup)="focusNext($event, twoFactorInput3)">
+                    <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[3]" name="twoFactorCode3" #twoFactorInput3 (keyup)="focusNext($event, twoFactorInput4)">
+                    <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[4]" name="twoFactorCode4" #twoFactorInput4 (keyup)="focusNext($event, twoFactorInput5)">
+                    <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[5]" name="twoFactorCode5" #twoFactorInput5 (keyup)="focusNext($event)">
+                </div>
             </div>
-            <div class="mb-3">
-              <small>
-                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" (click)="openForgotPasswordModal()">Forgot password?</a>
-              </small>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="show2FACodeInput ? 'modal' : null">
-                {{ show2FACodeInput ? 'Submit' : 'Login' }}
-              </button>
-            </div>
-          </form>
         </div>
+        
+          <div class="mb-3">
+            <small>Don't have an account? Register
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal" (click)="openRegisterModal()">
+                here
+              </a>
+            </small>
+          </div>
+          <div class="mb-3">
+            <small>
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" (click)="openForgotPasswordModal()">Forgot password?</a>
+            </small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="show2FACodeInput && is2FACorrect ? 'modal' : null">
+              {{ show2FACodeInput ? 'Submit' : 'Login' }}
+          </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
+
   
 
 <!-- Register Modal -->

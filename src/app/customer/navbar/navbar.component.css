@@ -77,10 +77,6 @@
   font-weight: 700;
 }
 
-.nav-link:hover {
-
-}
-
 .modal-content {
   background: #f8f9fa;
   border-radius: 0.3rem;
@@ -150,3 +146,8 @@
   bottom: -50%;
 }
 
+.two-factor-input {
+  width: 14%;
+  margin: 0 3px;
+  text-align: center;
+}

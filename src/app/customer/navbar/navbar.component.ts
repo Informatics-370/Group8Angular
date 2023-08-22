@@ -26,7 +26,8 @@ export class NavbarComponent {
   password = '';
   passwordTouched = false;
   show2FACodeInput = false;
-  twoFactorCode = '';
+  twoFactorCode: string[] = ['', '', '', '', '', ''];
+  is2FACorrect: boolean = false;
   showLoginModal = false;
 //! This is for Login
 
@@ -139,7 +140,7 @@ return false;
     this.email = '';
     this.password = '';
     this.passwordTouched = false;
-    this.twoFactorCode = '';
+    this.twoFactorCode = ['', '', '', '', '', ''];
     this.show2FACodeInput = false;
     this.showLoginModal = false;
   }
@@ -180,38 +181,57 @@ return false;
     );
   }
 
+  focusNext(event: any, nextInput?: any) {
+    if (event.target.value.length === 1 && nextInput) {
+        nextInput.focus();
+    }
+}
 
-  submitTwoFactorCode() {
-    this.dataService.GetUserIdByEmail(this.email).subscribe(
-      (response: any) => {
-        console.log(response);
-        const userId = response;
-        const authUser = new TwoFactorAuth();
-        authUser.UserId = userId;
-        authUser.Code = this.twoFactorCode;
 
-        console.log(authUser);
+submitTwoFactorCode() {
+  const finalCode = this.twoFactorCode.join('');
 
-        this.dataService.VerifyCode(authUser).subscribe(
-          (result: any) => {
-            console.log("Just before handling logins");
-            this.handleSuccessfulLogin(result);
-          },
-          (error: any) => {
-            console.error(error);
-            console.error(error.error);
-            this.toastr.error("The code you provided is invalid, please check the email again and ensure you typed it in correctly")
-            // Clear the code input for the user to enter again
-            this.twoFactorCode = '';
-          }
-        );
-      },
-      (error: any) => {
-        console.error(error);
-        console.error(error.error);
-      }
-    );
-  }
+  this.dataService.GetUserIdByEmail(this.email).subscribe(
+    (response: any) => {
+      console.log(response);
+      const userId = response;
+      const authUser = new TwoFactorAuth();
+      authUser.UserId = userId;
+      authUser.Code = finalCode;
+
+      console.log(authUser);
+
+      this.dataService.VerifyCode(authUser).subscribe(
+        (result: any) => {
+          this.is2FACorrect = true;
+          console.log("Just before handling logins");
+          this.handleSuccessfulLogin(result);
+        },
+        (error: any) => {
+          console.error(error);
+          console.error(error.error);
+          this.toastr.error("The code you provided is invalid, please check the email again and ensure you typed it in correctly");
+          this.is2FACorrect = false;
+          // Clear the code input for the user to enter again
+          this.twoFactorCode = ['', '', '', '', '', ''];
+          
+          // You might need to add this line to set the focus back to the first input box.
+          setTimeout(() => {
+            const firstInput = document.querySelector<HTMLInputElement>(".two-factor-input");
+            if (firstInput) {
+              firstInput.focus();
+            }
+          }, 0);
+        }
+      );
+    },
+    (error: any) => {
+      console.error(error);
+      console.error(error.error);
+    }
+  );
+}
+
 
   handleSuccessfulLogin(result: any) {
     var accessToken = result.tokenValue;
@@ -231,14 +251,14 @@ return false;
           token: parsedAuth,
           roles: result.roles// Handle single role
         };
-
+        this.is2FACorrect = true;
         this.dataService.login(uvw);  // use the DataServiceService to set user details
         this.clearFields();
         this.toastr.success('Successfully', 'Logged in');
 
         setTimeout(() => {
           location.reload();
-        }, 2000);
+        }, 1000);
       }
     } else {
       console.log('Token not found in localStorage');
