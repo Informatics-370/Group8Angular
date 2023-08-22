@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Login } from 'src/app/Model/login';
 import { DataServiceService } from '../services/data-service.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +10,7 @@ import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 import { ScrollServiceService } from '../services/scroll-service.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { NgForm } from '@angular/forms';
 
 
 
@@ -19,6 +20,8 @@ import { of } from 'rxjs';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+
+  @ViewChild('Registerform') registerForm!: NgForm;
   userName = '';
 
   //! This is for Login
@@ -289,8 +292,21 @@ submitTwoFactorCode() {
     this.displayName = '';
     this.remail = '';
     this.rpassword = '';
+    this.displayName = '';
     this.enableTwoFactorAuth = true;
-  }
+
+    // Set each field as untouched and pristine
+    Object.keys(this.registerForm.controls).forEach(key => {
+      const control = this.registerForm.controls[key];
+      control.markAsUntouched();
+      control.markAsPristine();
+      // control.untouched;
+      // control.valid;
+      // control.errors;
+    });
+
+    this.registerForm.untouched;
+  } 
 
   register() {
     this.showRegisterModal = true;
