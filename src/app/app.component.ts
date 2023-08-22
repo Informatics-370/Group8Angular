@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { DataServiceService } from './customer/services/data-service.service';
+import { Toast, ToastrService } from 'ngx-toastr';
+import { UserViewModel } from './Model/userviewmodel';
 
 
 
@@ -10,11 +13,22 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 
 export class AppComponent {
+  logoutTimer: any;
+  loggedOutUser: UserViewModel ={
+    email: '',
+    username: '',
+    token: '',
+    roles: []
+  };
   isAdmin = false;
   showCustomerSideNav = false;
 
+  ngOnInit(){
+    this.checkAndSetLogoutTimer();
+  }
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router, private dataService: DataServiceService, private toastr: ToastrService) {
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // List of admin routes
@@ -78,5 +92,38 @@ export class AppComponent {
 
   toggleChat() {
     this.showChat = !this.showChat;
+  }
+
+  checkAndSetLogoutTimer() {
+    const storedExpiry = localStorage.getItem('TokenExpiration');
+    if (storedExpiry) {
+      const now = new Date().getTime();
+      const duration = new Date(JSON.parse(storedExpiry)).getTime() - now;
+      if (duration > 0) {
+        this.scheduleAutoLogout(duration);
+      } else {
+        this.dataService.LogOut();
+      }
+    }
+  }
+
+  scheduleAutoLogout(duration: number) {
+    if (this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+    }
+    this.logoutTimer = setTimeout(() => {
+      this.dataService.LogOut().subscribe((result: any) => {
+        if(result.token.tokenValue == '') {
+          this.toastr.show('Please note, logout commencing', 'Logout');
+          localStorage.removeItem("Token");
+          this.dataService.login(this.loggedOutUser);
+          localStorage.removeItem("TokenExpiration");
+          this.router.navigate(['/clienthome']);
+        } else {
+          console.log("Logout failed, please try again later");
+          this.toastr.error('Failed, please try again', 'Logout');
+        }
+      });
+    }, duration);
   }
 }

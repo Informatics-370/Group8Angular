@@ -44,6 +44,7 @@ export class CustomerSidenavComponent {
     this.dataService.LogOut().subscribe((result: any) => {
       if(result.token.tokenValue == ''){
         localStorage.removeItem("Token");
+        localStorage.removeItem("TokenExpiration");
         this.dataService.login(this.loggedOutUser);
         this.toastr.success('Logged out successfully', 'Logout');
         this.router.navigate(['/clienthome']);

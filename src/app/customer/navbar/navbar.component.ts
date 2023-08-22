@@ -8,11 +8,8 @@ import { Register } from 'src/app/Model/register';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
 import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 import { ScrollServiceService } from '../services/scroll-service.service';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { NgForm } from '@angular/forms';
-
-
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-navbar',
@@ -20,6 +17,8 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+
+  appComponent = new AppComponent(this.router, this.dataService, this.toastr);
 
   @ViewChild('Registerform') registerForm!: NgForm;
   userName = '';
@@ -237,9 +236,14 @@ submitTwoFactorCode() {
 
 
   handleSuccessfulLogin(result: any) {
+    console.log(result);
     var accessToken = result.tokenValue;
+    var expirationToken = result.expirationTime;
     
     localStorage.setItem('Token', JSON.stringify(accessToken));
+    localStorage.setItem('TokenExpiration', JSON.stringify(expirationToken));
+    var duration = new Date(expirationToken).getTime() - new Date().getTime();
+    this.appComponent.scheduleAutoLogout(duration);
 
     let auth = localStorage.getItem('Token');
     console.log(auth);
