@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { DataServiceService } from './customer/services/data-service.service';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { UserViewModel } from './Model/userviewmodel';
+import { timer } from 'rxjs';
 
 
 
@@ -22,6 +23,7 @@ export class AppComponent {
   };
   isAdmin = false;
   showCustomerSideNav = false;
+  lastActivityTimestamp = Date.now();
 
   ngOnInit(){
     this.checkAndSetLogoutTimer();
@@ -95,15 +97,29 @@ export class AppComponent {
   }
 
   checkAndSetLogoutTimer() {
-    const storedExpiry = localStorage.getItem('TokenExpiration');
-    if (storedExpiry) {
-      const now = new Date().getTime();
-      const duration = new Date(JSON.parse(storedExpiry)).getTime() - now;
+    // const storedExpiry = localStorage.getItem('TokenExpiration');
+    let user = localStorage.getItem('Token');
+    if (user) {
+      var duration = 1800000 - (Date.now() - this.lastActivityTimestamp);
       if (duration > 0) {
         this.scheduleAutoLogout(duration);
       } else {
         this.dataService.LogOut();
       }
+    }else{
+      localStorage.removeItem('TokenExpiration');
+    }
+  }
+
+  @HostListener('window:mousemove')
+  @HostListener('window:keydown')
+  resetInactivityTimer(){
+    this.lastActivityTimestamp = Date.now();
+    var timeRemaining = 1800000 - (Date.now() - this.lastActivityTimestamp);
+    localStorage.setItem('TokenExpiration', timeRemaining.toString());
+    var loginToken = localStorage.getItem('Token');
+    if(loginToken != ""){
+      this.checkAndSetLogoutTimer(); // timeRemaining 1800000ms
     }
   }
 
