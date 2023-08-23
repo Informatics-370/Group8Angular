@@ -2,13 +2,58 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
 
-<nav id="nav-bar" class="navbar navbar-expand-lg navbar-light w-100"
-  style="background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-  <div class="container d-flex align-items-center justify-content-between">
-    <!-- Logo -->
-    <a class="navbar-brand" routerLink="/clienthome">
-      <img src="/assets/promenadelogo.png" alt="Logo" height="60">
-    </a>
+
+<nav id="nav-bar" class="navbar navbar-expand-lg navbar-light w-100" style="background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);">
+    <div class="container d-flex align-items-center justify-content-between">
+      <!-- Logo -->
+      <a class="navbar-brand" routerLink="/clienthome">
+        <img src="/assets/promenadelogo.png" alt="Logo" height="60">
+      </a>
+  
+      <!-- Navbar Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto navbar-custom-links">
+          <!-- Home -->
+          <li class="nav-item spaced-item">
+            <a class="nav-link" routerLink="/clienthome" routerLinkActive="active" style="color: #B55933;">Home</a>
+          </li>
+  
+          <!-- About Us -->
+          <li class="nav-item spaced-item">
+            <a class="nav-link" routerLink="/clientabout" style="color: #B55933;">About Us</a>
+          </li>
+  
+          <!-- Contact -->
+          <li class="nav-item spaced-item">
+            <a class="nav-link" [routerLink]="'/clienthome'" fragment="contact-section" style="color: #B55933;">Contact</a>
+          </li>
+  
+          <!-- Wines -->
+          <li class="nav-item spaced-item">
+            <a class="nav-link" routerLink="/clientproducts" style="color: #B55933;">Shop</a>
+          </li>
+  
+          <!-- Events -->
+          <li class="nav-item spaced-item">
+            <a class="nav-link" routerLink="/clientevents" style="color: #B55933;">Events</a>
+          </li>
+  
+          <!-- FAQ's -->
+          <li class="nav-item spaced-item">
+            <a class="nav-link" routerLink="/customerfaq" style="color: #B55933;">FAQ</a>
+          </li>
+  
+<!-- Admin Icon -->
+<li class="nav-item spaced-item" *ngIf="isAdmin()">
+  <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
+</li>
+
 
     <!-- Navbar Toggler -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
