@@ -21,6 +21,8 @@ export class ClientEventsComponent {
   events: Event[] = [];
   earlyBirds: EarlyBird[] = [];
   purchasedEvents: string[] = [];
+  displayableEvents: Event[] = [];
+
 
   @ViewChild('noEventsMessage', { static: true }) noEventsMessage!: TemplateRef<any>;
 
@@ -45,12 +47,14 @@ export class ClientEventsComponent {
   async loadEventData(): Promise<void> {
     try {
       this.events = await this.eventService.getEvents();
+      this.displayableEvents = this.events.filter(event => event.displayEvent);
     } catch (error) {
       console.error('Failed to fetch events:', error);
       this.events = [];
+      this.displayableEvents = [];
     }
   }
-
+  
   getEarlyBirdDiscount(event: Event): number {
     return event.earlyBird?.percentage ?? 0;
   }
