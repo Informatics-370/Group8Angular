@@ -274,7 +274,8 @@ export class ClientEventsComponent {
 
     try {
       await this.onBuyTicket(event); // Buying ticket process
-
+      this.toastr.info('Redirecting URL...', 'Purchasing ticket');
+      return;
       // After successful buying process, save the ticket purchase in the database
       this.saveTicketPurchase(event);
     } catch (error) {
