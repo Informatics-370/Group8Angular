@@ -214,7 +214,7 @@ export class CartComponent implements OnInit {
             ).subscribe(
                 () => {
                     console.log('Order created and cart cleared successfully.');
-                    this.toastr.success('Order created and payment successful!', 'Success');
+                    this.toastr.info('Order created and payment successful!', 'Success');
                     this.cartTotal = 0; // Reset the cart total
                     this.loadCart(winePurchase.userEmail);
                 },
@@ -226,7 +226,7 @@ export class CartComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
             if (error.error === 'User is not logged in') {
-                this.toastr.warning('Please log in to purchase a ticket.', 'Warning');
+                this.toastr.warning('Please log in to purchase.', 'Warning');
                 console.error('User is not logged in');
             } else {
                 console.error(error);
