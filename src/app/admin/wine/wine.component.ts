@@ -24,6 +24,8 @@ export class WineComponent implements OnInit {
   tempWine: Wine = new Wine();
   isSaving: boolean = false;
   characterCount: any;
+  fileUploaded!: boolean;
+  currentWineImageURL: string | undefined;
 
   constructor(private toastr : ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef,) { }
 
@@ -99,23 +101,35 @@ wineRestockLimitField = new FormControl('', [
 ]);
 
 
-onFileSelected(event: Event): void {
-  const target = event.target as HTMLInputElement;
-  if (target.files !== null) {
-    const file: File = target.files[0];
-    const fileType = file.type;
+// onFileSelected(event: Event): void {
+//   const target = event.target as HTMLInputElement;
+//   if (target.files !== null) {
+//     const file: File = target.files[0];
+//     const fileType = file.type;
 
-    // Check if the file type is PNG or JPG
-    if (fileType.match(/image\/*/) === null || (fileType !== 'image/jpeg' && fileType !== 'image/png')) {
-      this.toastr.error('Only PNG or JPG files can be uploaded', 'File Type Error');
-      return; // Exit the method if the file type is not PNG or JPG
-    }
+//     // Check if the file type is PNG or JPG
+//     if (fileType.match(/image\/*/) === null || (fileType !== 'image/jpeg' && fileType !== 'image/png')) {
+//       this.toastr.error('Only PNG or JPG files can be uploaded', 'File Type Error');
+//       return; // Exit the method if the file type is not PNG or JPG
+//     }
 
-    // If the file type is PNG or JPG, continue processing
-    this.selectedFile = file;
+//     // If the file type is PNG or JPG, continue processing
+//     this.selectedFile = file;
+//   }
+// }
+
+onFileSelected(wine: any) {
+  if (wine.target.files && wine.target.files[0]) {
+    this.selectedFile = wine.target.files[0];
+    this.currentWine.filePath = this.selectedFile?.name ?? '';
+  }
+
+  if (wine.target.files && wine.target.files.length > 0) {
+    this.fileUploaded = true;
+  } else {
+    this.fileUploaded = false;
   }
 }
-
 
 getObjectURL(file: File): string {
   return URL.createObjectURL(file);
@@ -137,6 +151,8 @@ openEditWineModal(id: number) {
   //console.log('Opening edit wine modal for ID:', id);
   this.editingWine = true;
   let wineToEdit = this.wines.find(wine => wine.wineID === id);
+  this.currentWineImageURL = wineToEdit?.filePath;
+  console.log(this.currentWineImageURL)
   if (wineToEdit) {
     this.tempWine = {
       ...wineToEdit,

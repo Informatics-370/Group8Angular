@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
 
+
 <nav id="nav-bar" class="navbar navbar-expand-lg navbar-light w-100" style="background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);">
     <div class="container d-flex align-items-center justify-content-between">
       <!-- Logo -->
@@ -53,107 +54,178 @@
   <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
 </li>
 
-<!-- Cart Icon -->
-<li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
-  <a class="nav-link" href="/cart" style="color: #B55933; font-size: 1.6rem;"><i class="bi bi-cart3"></i></a>
-</li>
 
-<!-- User Icon -->
-<li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
-  <a class="nav-link" routerLink="/userinformation" style="color: #B55933; font-size: 1.6rem;">
-    <i class="bi bi-person-circle"></i> {{dataService.userValue?.username}}
-  </a>
-</li>
+    <!-- Navbar Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-<!-- Login Button -->
-<li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
-  <a class="nav-link login-button plain-text" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">LOGIN</a>
-</li>
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto navbar-custom-links">
+        <!-- Home -->
+        <li class="nav-item spaced-item">
+          <a class="nav-link" routerLink="/clienthome" routerLinkActive="active" style="color: #B55933;">Home</a>
+        </li>
 
-        </ul>
-      </div>
+        <!-- About Us -->
+        <li class="nav-item spaced-item">
+          <a class="nav-link" routerLink="/clientabout" style="color: #B55933;">About Us</a>
+        </li>
+
+        <!-- Contact -->
+        <li class="nav-item spaced-item">
+          <a class="nav-link" [routerLink]="'/clienthome'" fragment="contact-section"
+            style="color: #B55933;">Contact</a>
+        </li>
+
+        <!-- Wines -->
+        <li class="nav-item spaced-item">
+          <a class="nav-link" routerLink="/clientproducts" style="color: #B55933;">Shop</a>
+        </li>
+
+        <!-- Events -->
+        <li class="nav-item spaced-item">
+          <a class="nav-link" routerLink="/clientevents" style="color: #B55933;">Events</a>
+        </li>
+
+        <!-- FAQ's -->
+        <li class="nav-item spaced-item">
+          <a class="nav-link" routerLink="/customerfaq" style="color: #B55933;">FAQ</a>
+        </li>
+
+        <!-- Admin Icon -->
+        <li class="nav-item spaced-item" *ngIf="isAdmin()">
+          <a class="nav-link" routerLink="/wine" style="color: #B55933;">ADMIN</a>
+        </li>
+
+        <!-- Cart Icon -->
+        <li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
+          <a class="nav-link" href="/cart" style="color: #B55933; font-size: 1.6rem;"><i class="bi bi-cart3"></i></a>
+        </li>
+
+        <!-- User Icon -->
+        <li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
+          <a class="nav-link" routerLink="/userinformation" style="color: #B55933; font-size: 1.6rem;">
+            <i class="bi bi-person-circle"></i> {{dataService.userValue?.username}}
+          </a>
+        </li>
+
+        <!-- Login Button -->
+        <li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
+          <a class="nav-link login-button plain-text" href="#" data-bs-toggle="modal"
+            data-bs-target="#loginModal">LOGIN</a>
+        </li>
+
+      </ul>
     </div>
+  </div>
 </nav>
 
 <!--Login Modal-->
-  <div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" (hidden.bs.modal)="clearFields()" [ngClass]="{'show': showLoginModal}" [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Login</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #Loginform="ngForm" (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()" (ngModelChange)="clearFields()">
-            <!-- <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email" name="email" #emailInput>
-            </div> -->
+<div class="modal fade" #loginModal id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"
+  (hidden.bs.modal)="clearFields(); Loginform.reset()" [ngClass]="{'show': showLoginModal}"
+  [ngStyle]="{'display': showLoginModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        Login
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #Loginform="ngForm" (ngSubmit)="show2FACodeInput ? submitTwoFactorCode() : login()"
+          (ngModelChange)="clearFields()">
 
-            <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email"
-                name="email" #emailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
-              <div *ngIf="Loginform.controls['email']?.invalid && Loginform.controls['email'].touched"
-                class="alert alert-danger">
-                <div *ngIf="Loginform.controls['email'].errors?.['required']">Email is required.</div>
-                <div *ngIf="Loginform.controls['email'].errors?.['pattern']">Invalid email format.</div>
-              </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address <i class="fas fa-question-circle"
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Please enter your email here, ex. john.doe@gmail.com"></i></label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" required [(ngModel)]="email"
+              name="email" #emailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+            <div *ngIf="Loginform.controls['email']?.invalid && Loginform.controls['email'].touched"
+              class="alert alert-danger">
+              <div *ngIf="Loginform.controls['email'].errors?.['required']">Email is required.</div>
+              <div *ngIf="Loginform.controls['email'].errors?.['pattern']">Invalid email format.</div>
             </div>
-
-            <div class="mb-3 position-relative">
-              <label for="password" class="form-label">Password</label>
-              <div style="position:relative;">
-                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" placeholder="Enter password" required
-                      [(ngModel)]="password" name="password" #passwordInput
-                      (blur)="validatePassword()" (focus)="clearPasswordError()" style="padding-right: 50px;">
-                  <i class="fas fa-eye position-absolute top-50 end-0 translate-middle-y" style="cursor: pointer; right: 10px; font-size: 15px;" (click)="togglePasswordVisibility()"></i>
-              </div>
-              <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
-                  Invalid password format.
-                  Password must consist of the following:
-                <ul>
-                  <li>1 uppercase letter</li>
-                  <li>1 lowercase letter</li>
-                  <li>1 non-alphanumeric character</li>
-                  <li>1 digit</li>
-                  <li>Password must be 8 - 100 characters in length</li>
-                </ul>
-              </div>
           </div>
-          
-          
-          
-            <div *ngIf="show2FACodeInput">
-              <div class="mb-3">
-                <label for="twoFactorCode" class="form-label">Two-Factor Code</label>
-                <input type="text" class="form-control" id="twoFactorCode" [(ngModel)]="twoFactorCode" placeholder="Enter code" required name="twoFactorCode" #twoFactorInput>
-              </div>
-            </div>
-            <div class="mb-3">
-              <small>Don't have an account? Register
-                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal" (click)="openRegisterModal()">
-                  here
-                </a>
-              </small>
-            </div>
-            <div class="mb-3">
-              <small>
-                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" (click)="openForgotPasswordModal()">Forgot password?</a>
-              </small>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="show2FACodeInput ? 'modal' : null">
-                {{ show2FACodeInput ? 'Submit' : 'Login' }}
+
+          <div class="mb-3 position-relative">
+            <label for="password" class="form-label">Password <i class="fas fa-question-circle" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Please enter the password linked to your account"></i></label>
+            <div class="input-group">
+              <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password"
+                placeholder="Enter password" required [(ngModel)]="password" name="password" #passwordInput
+                (blur)="validatePassword()" (focus)="clearPasswordError()">
+              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                <i class="bi bi-eye-fill {{ showPassword }}"></i>
               </button>
             </div>
-          </form>
-        </div>
+            <div *ngIf="passwordTouched && isPasswordInvalid()" class="alert alert-danger">
+              Invalid password format.
+              Password must consist of the following:
+              <ul>
+                <li>1 uppercase letter</li>
+                <li>1 lowercase letter</li>
+                <li>1 non-alphanumeric character</li>
+                <li>1 digit</li>
+                <li>Password must be 8 - 100 characters in length</li>
+              </ul>
+            </div>
+          </div>
+
+          <div *ngIf="show2FACodeInput">
+            <div class="mb-3">
+              <label for="twoFactorCode" class="form-label">Two-Factor Code
+                <i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  title="Please enter the code sent to your email, it is a 6 digit code"></i>
+              </label>
+              <div class="d-flex justify-content-between">
+                <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[0]"
+                  name="twoFactorCode0" #twoFactorInput0 (keyup)="focusNext($event, twoFactorInput1)">
+                <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[1]"
+                  name="twoFactorCode1" #twoFactorInput1 (keyup)="focusNext($event, twoFactorInput2)">
+                <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[2]"
+                  name="twoFactorCode2" #twoFactorInput2 (keyup)="focusNext($event, twoFactorInput3)">
+                <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[3]"
+                  name="twoFactorCode3" #twoFactorInput3 (keyup)="focusNext($event, twoFactorInput4)">
+                <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[4]"
+                  name="twoFactorCode4" #twoFactorInput4 (keyup)="focusNext($event, twoFactorInput5)">
+                <input type="text" maxlength="1" class="form-control two-factor-input" [(ngModel)]="twoFactorCode[5]"
+                  name="twoFactorCode5" #twoFactorInput5 (keyup)="focusNext($event)">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <small>Don't have an account? Register
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal"
+                (click)="openRegisterModal()">
+                here
+              </a>
+            </small>
+          </div>
+          <div class="mb-3">
+            <small>
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal"
+                (click)="openForgotPasswordModal()">Forgot password?</a>
+            </small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary"
+            [attr.data-bs-dismiss]="show2FACodeInput && is2FACorrect ? 'modal' : null"
+            [disabled]="!Loginform.valid">
+            {{ show2FACodeInput ? 'Submit' : 'Login' }}
+          </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  
+</div>
+
+
 
 <!-- Register Modal -->
 <div class="modal fade" #registerModal id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
@@ -162,13 +234,16 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="registerModalLabel">Register</h5>
+        Register
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form #Registerform="ngForm" (ngSubmit)="register()">
+        <form #Registerform="ngForm" (ngSubmit)="register()" (ngModelChange)="clearRegisterFields()">
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
+            <label for="title" class="form-label">Title
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Choose an appropriate title from the dropdown."></i>
+            </label>
             <select class="form-control" id="title" required [(ngModel)]="title" name="title" #titleInput>
               <option value="" disabled selected>Select a title</option>
               <option *ngFor="let title of titles" [value]="title">{{title}}</option>
@@ -179,7 +254,9 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
+            <label for="firstName" class="form-label">First Name
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Enter your first name."></i>
+            </label>
             <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required
               [(ngModel)]="firstName" name="firstName" #firstNameInput>
             <div *ngIf="Registerform.controls['firstName']?.invalid && Registerform.controls['firstName'].touched"
@@ -188,7 +265,9 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
+            <label for="lastName" class="form-label">Last Name
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Enter your last name."></i>
+            </label>
             <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required
               [(ngModel)]="lastName" name="lastName" #lastNameInput required pattern="^[A-Za-z ]+$">
             <div *ngIf="Registerform.controls['lastName']?.invalid && Registerform.controls['lastName'].touched"
@@ -197,17 +276,24 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <label for="phoneNumber" class="form-label">Phone Number
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Enter a 10-digit phone number starting with 0."></i>
+            </label>
+
             <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number"
               [(ngModel)]="phoneNumber" name="phoneNumber" #phoneNumberInput required pattern="^0[0-9]{9}$">
             <div *ngIf="Registerform.controls['phoneNumber']?.invalid && Registerform.controls['phoneNumber'].touched"
               class="alert alert-danger">
               <div *ngIf="Registerform.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
-              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 digits and start with the digit 0.</div>
+              <div *ngIf="Registerform.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10
+                digits and start with the digit 0.</div>
             </div>
           </div>
           <div class="mb-3">
-            <label for="idNumber" class="form-label">ID Number</label>
+            <label for="idNumber" class="form-label">ID Number
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide your 13-digit ID number."></i>
+            </label>
             <input type="text" class="form-control" id="idNumber" placeholder="Enter ID number" [(ngModel)]="idNumber"
               name="idNumber" required pattern="^[0-9]{13}$">
             <div *ngIf="Registerform.controls['idNumber']?.invalid && Registerform.controls['idNumber'].touched"
@@ -216,17 +302,18 @@
               <div *ngIf="Registerform.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.
               </div>
             </div>
-            <div *ngIf="!isOlderThan18() && Registerform.controls['idNumber'].touched"
-            class="alert alert-danger">
-            Unfortunately you need to be older than 18 to have an account.
+            <div *ngIf="!isOlderThan18() && Registerform.controls['idNumber'].touched" class="alert alert-danger">
+              Unfortunately you need to be older than 18 to have an account.
             </div>
-            <div *ngIf="!DateValid() && Registerform.controls['idNumber'].touched"
-            class="alert alert-danger">
-            Please Enter Valid Dates.
+            <div *ngIf="!DateValid() && Registerform.controls['idNumber'].touched" class="alert alert-danger">
+              Please Enter Valid Dates.
             </div>
           </div>
           <div class="mb-3">
-            <label for="gender" class="form-label">Gender</label>
+            <label for="gender" class="form-label">Gender
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Choose your gender from the dropdown."></i>
+            </label>
             <select class="form-control" id="gender" required [(ngModel)]="gender" name="gender" #genderInput>
               <option value="" disabled selected>Select a gender</option>
               <option *ngFor="let gender of genders" [value]="gender">{{gender}}</option>
@@ -237,7 +324,10 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="displayName" class="form-label">Display Name</label>
+            <label for="displayName" class="form-label">Display Name
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Choose a display name for your account."></i>
+            </label>
             <input type="text" class="form-control" id="displayName" placeholder="Enter display name" required
               [(ngModel)]="displayName" name="displayName" #displayNameInput>
             <div *ngIf="Registerform.controls['displayName']?.invalid && Registerform.controls['displayName'].touched"
@@ -246,7 +336,9 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
+            <label for="email" class="form-label">Email address
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide a valid email address."></i>
+            </label>
             <input type="email" class="form-control" id="remail" placeholder="Enter email" required [(ngModel)]="remail"
               name="remail" #remailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
             <div *ngIf="Registerform.controls['remail']?.invalid && Registerform.controls['remail'].touched"
@@ -255,9 +347,11 @@
               <div *ngIf="Registerform.controls['remail'].errors?.['pattern']">Invalid email format.</div>
             </div>
           </div>
-          
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
+
+          <div class="mb-3"><label for="password" class="form-label">Password
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Your password should have at least 1 uppercase, 1 lowercase, 1 non-alphanumeric character, 1 digit and be between 8-100 characters."></i>
+            </label><label for="password" class="form-label"></label>
             <div class="input-group">
               <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" id="rpassword"
                 placeholder="Enter password" [(ngModel)]="rpassword" name="rpassword" #rpasswordInput="ngModel" required
@@ -283,10 +377,13 @@
           </div>
 
           <div class="mb-3">
-            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <label for="confirmPassword" class="form-label">Confirm Password
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Confirm the password you entered above."></i>
+            </label>
             <div class="input-group">
-              <input type="password" class="form-control" id="confirmPassword"
-                placeholder="Confirm password" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+              <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password"
+                [(ngModel)]="confirmPassword" name="confirmPassword" required>
             </div>
             <div *ngIf="!passwordsMatch() && Registerform.controls['confirmPassword'].touched"
               class="alert alert-danger">
@@ -297,10 +394,14 @@
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="enableTwoFactorAuth"
               name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
-            <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
+            <label for="enableTwoFactorAuth" class="form-check-label">Enable Two-Factor Authentication
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Check this if you want to enable two-factor authentication for added security."></i>
+            </label>
           </div>
           <div class="modal-footer">
-            <a href="#" class="btn btn-link" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Return to login</a>
+            <a href="#" class="btn btn-link" data-bs-dismiss="modal" data-bs-toggle="modal"
+              data-bs-target="#loginModal">Return to login</a>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" [attr.data-bs-dismiss]="showRegisterModal ? 'modal' : null"
               [disabled]="Registerform.invalid || !isOlderThan18() || !passwordsMatch() || !DateValid()">
@@ -314,7 +415,9 @@
 </div>
 
 <!-- Forgot Password Modal -->
-<div class="modal fade" #forgotPasswordModal id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true" (hidden.bs.modal)="clearForgotPasswordFields()" [ngClass]="{'show': showForgotPasswordModal}" [ngStyle]="{'display': showForgotPasswordModal ? 'block' : 'none'}">
+<div class="modal fade" #forgotPasswordModal id="forgotPasswordModal" tabindex="-1"
+  aria-labelledby="forgotPasswordModalLabel" aria-hidden="true" (hidden.bs.modal)="clearForgotPasswordFields()"
+  [ngClass]="{'show': showForgotPasswordModal}" [ngStyle]="{'display': showForgotPasswordModal ? 'block' : 'none'}">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -324,10 +427,16 @@
       <div class="modal-body">
         <form (ngSubmit)="sendPasswordResetLink()" (ngModelChange)="clearForgotPasswordFields()" #Forgotform="ngForm">
           <div class="mb-3">
-            <label for="forgotPasswordEmail" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="forgotPasswordEmail" placeholder="Enter your email" required [(ngModel)]="forgotPasswordEmail"
-              name="forgotPasswordEmail" #forgotPasswordEmailInput pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
-            <div *ngIf="Forgotform.controls['forgotPasswordEmail']?.invalid && Forgotform.controls['forgotPasswordEmail'].touched"
+            <label for="forgotPasswordEmail" class="form-label">Email address
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter a valid email address to receive the reset link."></i>
+            </label>
+
+            <input type="email" class="form-control" id="forgotPasswordEmail" placeholder="Enter your email" required
+              [(ngModel)]="forgotPasswordEmail" name="forgotPasswordEmail" #forgotPasswordEmailInput
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+            <div
+              *ngIf="Forgotform.controls['forgotPasswordEmail']?.invalid && Forgotform.controls['forgotPasswordEmail'].touched"
               class="alert alert-danger">
               <div *ngIf="Forgotform.controls['forgotPasswordEmail'].errors?.['required']">Email is required.</div>
               <div *ngIf="Forgotform.controls['forgotPasswordEmail'].errors?.['pattern']">Invalid email format.</div>
@@ -337,11 +446,10 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Send Reset Link</button>
+            <button type="submit" class="btn btn-primary" [disabled]="Forgotform.invalid">Send Reset Link</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-

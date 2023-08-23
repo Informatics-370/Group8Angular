@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { DataServiceService } from './customer/services/data-service.service';
+import { Toast, ToastrService } from 'ngx-toastr';
+import { UserViewModel } from './Model/userviewmodel';
+import { timer } from 'rxjs';
 
 
 
@@ -10,11 +14,23 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 
 export class AppComponent {
+  logoutTimer: any;
+  loggedOutUser: UserViewModel ={
+    email: '',
+    username: '',
+    token: '',
+    roles: []
+  };
   isAdmin = false;
   showCustomerSideNav = false;
+  lastActivityTimestamp = Date.now();
+
+  ngOnInit(){
+    this.checkAndSetLogoutTimer();
+  }
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private dataService: DataServiceService, private toastr: ToastrService) {
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // List of admin routes
@@ -78,5 +94,52 @@ export class AppComponent {
 
   toggleChat() {
     this.showChat = !this.showChat;
+  }
+
+  checkAndSetLogoutTimer() {
+    // const storedExpiry = localStorage.getItem('TokenExpiration');
+    let user = localStorage.getItem('Token');
+    if (user) {
+      var duration = 1800000 - (Date.now() - this.lastActivityTimestamp);
+      if (duration > 0) {
+        this.scheduleAutoLogout(duration);
+      } else {
+        this.dataService.LogOut();
+      }
+    }else{
+      localStorage.removeItem('TokenExpiration');
+    }
+  }
+
+  @HostListener('window:mousemove')
+  @HostListener('window:keydown')
+  resetInactivityTimer(){
+    this.lastActivityTimestamp = Date.now();
+    var timeRemaining = 1800000 - (Date.now() - this.lastActivityTimestamp);
+    localStorage.setItem('TokenExpiration', timeRemaining.toString());
+    var loginToken = localStorage.getItem('Token');
+    if(loginToken != ""){
+      this.checkAndSetLogoutTimer(); // timeRemaining 1800000ms
+    }
+  }
+
+  scheduleAutoLogout(duration: number) {
+    if (this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+    }
+    this.logoutTimer = setTimeout(() => {
+      this.dataService.LogOut().subscribe((result: any) => {
+        if(result.token.tokenValue == '') {
+          this.toastr.show('Please note, logout commencing', 'Logout');
+          localStorage.removeItem("Token");
+          this.dataService.login(this.loggedOutUser);
+          localStorage.removeItem("TokenExpiration");
+          this.router.navigate(['/clienthome']);
+        } else {
+          console.log("Logout failed, please try again later");
+          this.toastr.error('Failed, please try again', 'Logout');
+        }
+      });
+    }, duration);
   }
 }

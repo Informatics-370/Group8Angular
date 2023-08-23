@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Login } from 'src/app/Model/login';
 import { DataServiceService } from '../services/data-service.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,10 +8,8 @@ import { Register } from 'src/app/Model/register';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
 import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 import { ScrollServiceService } from '../services/scroll-service.service';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-
-
+import { NgForm } from '@angular/forms';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +17,10 @@ import { of } from 'rxjs';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+
+  appComponent = new AppComponent(this.router, this.dataService, this.toastr);
+
+  @ViewChild('Registerform') registerForm!: NgForm;
   userName = '';
 
   //! This is for Login
@@ -26,7 +28,8 @@ export class NavbarComponent {
   password = '';
   passwordTouched = false;
   show2FACodeInput = false;
-  twoFactorCode = '';
+  twoFactorCode: string[] = ['', '', '', '', '', ''];
+  is2FACorrect: boolean = false;
   showLoginModal = false;
 //! This is for Login
 
@@ -139,7 +142,7 @@ return false;
     this.email = '';
     this.password = '';
     this.passwordTouched = false;
-    this.twoFactorCode = '';
+    this.twoFactorCode = ['', '', '', '', '', ''];
     this.show2FACodeInput = false;
     this.showLoginModal = false;
   }
@@ -180,43 +183,67 @@ return false;
     );
   }
 
+  focusNext(event: any, nextInput?: any) {
+    if (event.target.value.length === 1 && nextInput) {
+        nextInput.focus();
+    }
+}
 
-  submitTwoFactorCode() {
-    this.dataService.GetUserIdByEmail(this.email).subscribe(
-      (response: any) => {
-        console.log(response);
-        const userId = response;
-        const authUser = new TwoFactorAuth();
-        authUser.UserId = userId;
-        authUser.Code = this.twoFactorCode;
 
-        console.log(authUser);
+submitTwoFactorCode() {
+  const finalCode = this.twoFactorCode.join('');
 
-        this.dataService.VerifyCode(authUser).subscribe(
-          (result: any) => {
-            console.log("Just before handling logins");
-            this.handleSuccessfulLogin(result);
-          },
-          (error: any) => {
-            console.error(error);
-            console.error(error.error);
-            this.toastr.error("The code you provided is invalid, please check the email again and ensure you typed it in correctly")
-            // Clear the code input for the user to enter again
-            this.twoFactorCode = '';
-          }
-        );
-      },
-      (error: any) => {
-        console.error(error);
-        console.error(error.error);
-      }
-    );
-  }
+  this.dataService.GetUserIdByEmail(this.email).subscribe(
+    (response: any) => {
+      console.log(response);
+      const userId = response;
+      const authUser = new TwoFactorAuth();
+      authUser.UserId = userId;
+      authUser.Code = finalCode;
+
+      console.log(authUser);
+
+      this.dataService.VerifyCode(authUser).subscribe(
+        (result: any) => {
+          this.is2FACorrect = true;
+          console.log("Just before handling logins");
+          this.handleSuccessfulLogin(result);
+        },
+        (error: any) => {
+          console.error(error);
+          console.error(error.error);
+          this.toastr.error("The code you provided is invalid, please check the email again and ensure you typed it in correctly");
+          this.is2FACorrect = false;
+          // Clear the code input for the user to enter again
+          this.twoFactorCode = ['', '', '', '', '', ''];
+          
+          // You might need to add this line to set the focus back to the first input box.
+          setTimeout(() => {
+            const firstInput = document.querySelector<HTMLInputElement>(".two-factor-input");
+            if (firstInput) {
+              firstInput.focus();
+            }
+          }, 0);
+        }
+      );
+    },
+    (error: any) => {
+      console.error(error);
+      console.error(error.error);
+    }
+  );
+}
+
 
   handleSuccessfulLogin(result: any) {
+    console.log(result);
     var accessToken = result.tokenValue;
+    var expirationToken = result.expirationTime;
     
     localStorage.setItem('Token', JSON.stringify(accessToken));
+    localStorage.setItem('TokenExpiration', JSON.stringify(expirationToken));
+    var duration = new Date(expirationToken).getTime() - new Date().getTime();
+    this.appComponent.scheduleAutoLogout(duration);
 
     let auth = localStorage.getItem('Token');
     console.log(auth);
@@ -231,14 +258,14 @@ return false;
           token: parsedAuth,
           roles: result.roles// Handle single role
         };
-
+        this.is2FACorrect = true;
         this.dataService.login(uvw);  // use the DataServiceService to set user details
         this.clearFields();
         this.toastr.success('Successfully', 'Logged in');
 
         setTimeout(() => {
           location.reload();
-        }, 2000);
+        }, 1000);
       }
     } else {
       console.log('Token not found in localStorage');
@@ -269,8 +296,21 @@ return false;
     this.displayName = '';
     this.remail = '';
     this.rpassword = '';
+    this.displayName = '';
     this.enableTwoFactorAuth = true;
-  }
+
+    // Set each field as untouched and pristine
+    Object.keys(this.registerForm.controls).forEach(key => {
+      const control = this.registerForm.controls[key];
+      control.markAsUntouched();
+      control.markAsPristine();
+      // control.untouched;
+      // control.valid;
+      // control.errors;
+    });
+
+    this.registerForm.untouched;
+  } 
 
   register() {
     this.showRegisterModal = true;
