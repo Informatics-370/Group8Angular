@@ -24,6 +24,7 @@ export class ClientProductsComponent implements OnInit {
   counter = 0;
   // wine: Wine[] = [];
   wines: Wine[] = [];
+  displayedWines : Wine[] = [];
   winetypes: WineType[] = [];
   varietals: Varietal[] = [];
   dataLoaded = false;
@@ -67,6 +68,9 @@ export class ClientProductsComponent implements OnInit {
   loadWines() {
     this.wineService.getWines().then((wines: Wine[]) => {
       this.wines = wines;
+      this.displayedWines = this.wines.filter(wines=> wines.displayWine);
+      // this.displayableEvents = this.events.filter(event => event.displayEvent);
+
       console.log(wines);
       this.assignWineTypesAndVarietals();
       this.checkDataLoaded(); // Check if all data is loaded
