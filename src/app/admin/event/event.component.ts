@@ -73,7 +73,7 @@ export class EventComponent {
   showDeleteEventModal = false;
   eventToDeleteDetails: any;
   eventToDelete: any = null;
-  currentEventImageURL! : string;
+  currentEventImageURL!: string;
 
   //--------------------------------------------------------------------------------------------------------------------------------
   // Methods to load and get event-related information
@@ -117,11 +117,11 @@ export class EventComponent {
 
   openEditEventModal(id: number) {
     this.editingEvent = true;
-      // Set the image URL/path of the event being edited.
+    // Set the image URL/path of the event being edited.
 
     let eventToEdit = this.events.find(event => event.eventID === id);
     this.currentEventImageURL = eventToEdit?.imagePath || '';
-    
+
     if (eventToEdit) {
       this.tempEvent = {
         ...eventToEdit,
@@ -235,9 +235,25 @@ export class EventComponent {
     return URL.createObjectURL(file);
   }
 
+  // Add this new variable to track if uploaded file is of invalid type
+  invalidFileType: boolean = false;
+
   onFileSelected(event: any) {
     if (event.target.files && event.target.files[0]) {
-      this.selectedFile = event.target.files[0];
+      const file = event.target.files[0];
+      const fileType = file["type"];
+      const validImageTypes = ["image/jpeg", "image/png"];
+
+      // Check if the file is a valid image type
+      if (!validImageTypes.includes(fileType)) {
+        this.invalidFileType = true;
+        this.fileUploaded = false;
+        return;
+      }
+
+      // File type is valid, proceed
+      this.invalidFileType = false;
+      this.selectedFile = file;
       this.currentEvent.imagePath = this.selectedFile?.name ?? '';
     }
 
@@ -247,6 +263,7 @@ export class EventComponent {
       this.fileUploaded = false;
     }
   }
+
 
   async deleteEvent(): Promise<void> {
     try {

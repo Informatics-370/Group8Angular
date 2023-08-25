@@ -173,28 +173,24 @@
           <!---------------------------------------------------------------------------------------------------------->
           <div class="mb-3">
             <label for="eventImage" class="form-label">Event Image</label>
-            <input type="file" class="form-control" id="eventImage" (change)="onFileSelected($event)">
-            <!-- Display error if no file is uploaded -->
-            <div *ngIf="!fileUploaded && eventForm.submitted" class="alert alert-danger">
-              Event image is required.
+            <input type="file" class="form-control" id="eventImage" accept=".png, .jpg, .jpeg" (change)="onFileSelected($event)">
+            <!-- Display error if no file is uploaded or invalid type -->
+            <div *ngIf="(!fileUploaded || invalidFileType) && eventForm.submitted" class="alert alert-danger">
+              Valid event image (PNG or JPEG) is required.
             </div>
           </div>
-
+          
           <div *ngIf="selectedFile || editingEvent" class="mb-3">
             <img [src]="selectedFile ? getObjectURL(selectedFile) : currentEventImageURL" alt="Selected Image" class="img-thumbnail">
           </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
+            <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
+              [disabled]="eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
+          </div>
           
-          <!---------------------------------------------------------------------------------------------------------->
-
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
-        [disabled]="eventForm.invalid || (!fileUploaded && !editingEvent) || isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
-    
-      </div>
     </div>
   </div>
 </div>
