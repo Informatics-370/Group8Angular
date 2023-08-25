@@ -118,9 +118,25 @@ wineRestockLimitField = new FormControl('', [
 //   }
 // }
 
+invalidFileType: boolean = false;  // Add this new variable to track if uploaded file is of invalid type
+
 onFileSelected(wine: any) {
   if (wine.target.files && wine.target.files[0]) {
-    this.selectedFile = wine.target.files[0];
+    const file = wine.target.files[0];
+    const fileType = file["type"];
+    const validImageTypes = ["image/jpeg", "image/png"];
+
+    if (!validImageTypes.includes(fileType)) {
+      // Invalid file type
+      this.invalidFileType = true;
+      this.fileUploaded = false;
+      return;
+    }
+    
+    // If we reached this point, the file type is valid
+    this.invalidFileType = false;
+
+    this.selectedFile = file;
     this.currentWine.filePath = this.selectedFile?.name ?? '';
   }
 
@@ -130,6 +146,7 @@ onFileSelected(wine: any) {
     this.fileUploaded = false;
   }
 }
+
 
 getObjectURL(file: File): string {
   return URL.createObjectURL(file);
