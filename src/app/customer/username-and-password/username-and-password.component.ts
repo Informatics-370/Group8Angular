@@ -25,11 +25,11 @@ export class UsernameAndPasswordComponent {
 
 
   passwordsMatch(): boolean {
-    return this.confirmPassword === this.newPassword;
+    return this.updatedUser.confirmPassword === this.updatedUser.newPassword;
   }
 
   cpasswordsMatch(): boolean {
-    return this.newPassword === this.currentPassword;
+    return this.updatedUser.newPassword === this.updatedUser.currentPassword;
   }
 
   togglePasswordVisibility(): void {

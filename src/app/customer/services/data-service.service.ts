@@ -20,7 +20,7 @@ export interface DecodedToken {
 @Injectable({
   providedIn: 'root'
 })
-export class DataServiceService {
+export class  DataServiceService {
   private headers: HttpHeaders;
   // Decode JWT Token
   private userSubject: BehaviorSubject<UserViewModel | null>;

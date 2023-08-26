@@ -261,7 +261,7 @@ submitTwoFactorCode() {
         this.is2FACorrect = true;
         this.dataService.login(uvw);  // use the DataServiceService to set user details
         this.clearFields();
-        this.toastr.success('Successfully', 'Logged in');
+        this.toastr.success('Successful', 'Login');
 
         setTimeout(() => {
           location.reload();
@@ -389,7 +389,7 @@ sendPasswordResetLink() {
         console.log('Sending password reset link to: ', this.forgotPasswordEmail);
         this.showForgotPasswordModal = false;
         this.showLoginModal = true;
-        this.handleSuccessfulLogin(result);
+        this.handleSuccessfulLogin(result); //! LINE IN QUESTION
         console.log('Success');
       },
       (error: any) => {

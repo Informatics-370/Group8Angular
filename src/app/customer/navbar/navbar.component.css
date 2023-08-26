@@ -147,7 +147,8 @@
 }
 
 .two-factor-input {
-  width: 14%;
+  width: 40px;
   margin: 0 3px;
   text-align: center;
+  margin: 0 5px;
 }
