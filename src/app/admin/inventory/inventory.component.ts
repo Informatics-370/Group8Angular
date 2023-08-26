@@ -233,13 +233,13 @@ async submitInventoryForm(form: NgForm): Promise<void> {
         if (index !== -1) {
           this.inventory[index] = this.currentInventory;
         }
-        this.toastr.success('Successfully updated', 'Inventory Reason');
+        this.toastr.success('Successfully updated', 'Inventory');
       } else {
         // Add inventory
         const data = await this.inventoryService.addInventory(this.currentInventory);
         this.inventory.push(data);
         this.loadInventory();
-        this.toastr.success('Successfully added', 'Inventory Reason');
+        this.toastr.success('Successfully added', 'Inventory');
       }
       this.closeInventoryModal();
       if (!this.editingInventory) {
