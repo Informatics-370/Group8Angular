@@ -22,6 +22,8 @@ export class SuperuserComponent {
   superuserToDelete: any = null;
   maxDate!: string;
   deleteConfirmationText: string = 'Confirm';
+  searchTerm: string = '';
+  filteredSuperusers: Superuser[] = [];
 
   constructor(private superuserService: SuperuserService, private toastr : ToastrService){ }
 
@@ -30,6 +32,24 @@ export class SuperuserComponent {
     const today = new Date();
     this.maxDate = this.formatDate(today);
     this.clearConfirmationInput();
+  }
+
+  searchSuperusers() {
+    if (!this.searchTerm) {
+      this.filteredSuperusers = this.superusers; // If no search term, show all superusers
+      return;
+    }
+  
+    const lowercasedTerm = this.searchTerm.toLowerCase();
+  
+    this.filteredSuperusers = this.superusers.filter(sup => 
+      (sup.first_Name && sup.first_Name.toLowerCase().includes(lowercasedTerm)) ||
+      (sup.last_Name && sup.last_Name.toLowerCase().includes(lowercasedTerm)) ||
+      (sup.email && sup.email.toLowerCase().includes(lowercasedTerm)) ||
+      (sup.phoneNumber && sup.phoneNumber.toString().toLowerCase().includes(lowercasedTerm)) ||
+      (sup.iD_Number && sup.iD_Number.toString().toLowerCase().includes(lowercasedTerm)) ||
+      (sup.hire_Date && sup.hire_Date.toString().toLowerCase().includes(lowercasedTerm))
+    );
   }
 
   clearConfirmationInput(): void {
@@ -47,6 +67,7 @@ export class SuperuserComponent {
     this.superuserService.GetSuperusers().subscribe(
       (result: Superuser[]) => {
         this.superusers = result;
+        this.filteredSuperusers = result;
         console.log(this.superusers);
       },
       (error: any) => {
@@ -173,4 +194,32 @@ export class SuperuserComponent {
       this.closeDeleteSuperuserModal();
     }
   }
+
+  // VALIDATION
+
+  DateValid(): boolean {
+    let idMonth = parseInt(this.currentSuperuser.iD_Number.toString().substring(2,4));
+    let idDay = parseInt(this.currentSuperuser.iD_Number.toString().substring(4,6));
+  
+    return !(idDay > 31 || idMonth > 12);
+  }
+  
+  isOlderThan18(): boolean {
+    let idYearPrefix = (parseInt(this.currentSuperuser.iD_Number.toString().substring(0,2)) < new Date().getFullYear() % 100) ? 2000 : 1900;
+    let idYear = idYearPrefix + parseInt(this.currentSuperuser.iD_Number.toString().substring(0,2));
+    let idMonth = parseInt(this.currentSuperuser.iD_Number.toString().substring(2,4));
+    let idDay = parseInt(this.currentSuperuser.iD_Number.toString().substring(4,6));
+  
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth() + 1; // Months are 0-based in JavaScript
+    let currentDay = currentDate.getDate();
+  
+    let age = currentYear - idYear;
+    if (currentMonth < idMonth || (currentMonth === idMonth && currentDay < idDay)) {
+      age--;  // This handles if the birthday hasn't occurred yet for the current year
+    }
+  
+    return age >= 18;
+  }  
 }
