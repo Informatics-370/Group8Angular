@@ -164,33 +164,44 @@
             <label for="earlyBird" class="form-label">Early Bird</label>
             <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" #earlyBirdField="ngModel"
               class="form-control" [disabled]="editingEvent">
+              <!-- Placeholder -->
+              <option value="0" disabled selected>Select Early Bird</option>
+              <!-- Options -->
               <option [value]=0>No Early Bird</option>
               <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets
                 at {{earlyBird.percentage}}%</option>
             </select>
+            <div *ngIf="earlyBirdField.value == '' && earlyBirdField.touched" class="alert alert-danger">
+              <div>Early Bird option is required.</div>
+            </div>
           </div>
+
+
 
           <!---------------------------------------------------------------------------------------------------------->
           <div class="mb-3">
             <label for="eventImage" class="form-label">Event Image</label>
-            <input type="file" class="form-control" id="eventImage" accept=".png, .jpg, .jpeg" (change)="onFileSelected($event)">
+            <input type="file" class="form-control" id="eventImage" accept=".png, .jpg, .jpeg"
+              (change)="onFileSelected($event)">
             <!-- Display error if no file is uploaded or invalid type -->
             <div *ngIf="(!fileUploaded || invalidFileType) && eventForm.submitted" class="alert alert-danger">
               Valid event image (PNG or JPEG) is required.
             </div>
           </div>
-          
+
           <div *ngIf="selectedFile || editingEvent" class="mb-3">
-            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentEventImageURL" alt="Selected Image" class="img-thumbnail">
+            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentEventImageURL" alt="Selected Image"
+              class="img-thumbnail">
           </div>
-          </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-            <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
-              [disabled]="eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent ? 'Save Changes' : 'Save'}}</button>
-          </div>
-          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
+          [disabled]="earlyBirdField.value == '' || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent
+          ? 'Save Changes' : 'Save'}}</button>
+
+
+      </div>
     </div>
   </div>
-</div>
