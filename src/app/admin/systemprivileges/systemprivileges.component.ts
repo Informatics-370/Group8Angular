@@ -20,6 +20,7 @@ export class SystemprivilegesComponent {
   showDeleteSystemPrivilegeModal = false;
   systemPrivilegeToDeleteDetails: any;
   systemPrivilegeToDelete: any = null;
+  deleteConfirmationText: string = '';
   searchTerm: string = '';
   filteredSystemPrivileges: SystemPrivilege[] = [];
 
@@ -129,6 +130,10 @@ async deleteSystemPrivilege(): Promise<void> {
       }
   }
   this.closeSystemPrivilegeModal();
+}
+
+clearConfirmationInput(): void {
+  this.deleteConfirmationText = ''; // Clear the input field
 }
 
 searchSystemPrivileges() {

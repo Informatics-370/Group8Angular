@@ -58,6 +58,7 @@
           <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm)">
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the name of the system privilege."></i>
               <input type="text" class="form-control" id="sysPrivName" [(ngModel)]="currentSystemPrivilege.name"
                 name="name" required pattern="^[A-Za-z,\s]+$">
                 <div *ngIf="systemPrivilegeForm.controls['name'] && systemPrivilegeForm.controls['name'].invalid && systemPrivilegeForm.controls['name'].touched" class="alert alert-danger">
@@ -68,6 +69,7 @@
   
             <div class="mb-3">
               <label for="limit" class="form-label">Description</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the description of the system privilege."></i>
               <input type="text" class="form-control" id="limit" [(ngModel)]="currentSystemPrivilege.description"
                 name="description" required pattern="^[A-Za-z,\s]+$">
                 <div *ngIf="systemPrivilegeForm.controls['description'] && systemPrivilegeForm.controls['description'].invalid && systemPrivilegeForm.controls['description'].touched" class="alert alert-danger">
@@ -89,7 +91,7 @@
   </div>
   
   
-  <!-- Delete EarlyBird modal -->
+  <!-- Delete Systemprivilege modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSystemPrivilegeModal}"
 [ngStyle]="{'display': showDeleteSystemPrivilegeModal ? 'block' : 'none'}">
 <div class="modal-dialog">
@@ -104,10 +106,12 @@
       <p>ID: {{ systemPrivilegeToDeleteDetails?.id }}</p>
       <p>Name: {{ systemPrivilegeToDeleteDetails?.name }}</p>
       <p>Description: {{ systemPrivilegeToDeleteDetails?.description }}</p>
+      <label for="confirmationInput">Type "Confirm" to proceed:</label>
+      <input type="text" id="confirmationInput" [(ngModel)]="deleteConfirmationText" placeholder="Type 'Confirm' here" (focus)="clearConfirmationInput()">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteSystemPrivilegeModal()">No</button>
-      <button type="button" class="btn btn-primary" (click)="deleteSystemPrivilege()">Yes</button>
+      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteSystemPrivilege()">Yes</button>
     </div>
   </div>
 </div>
