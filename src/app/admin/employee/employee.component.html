@@ -65,6 +65,7 @@
           <!-- FIRST NAME -->
           <div class="mb-3">
             <label for="firstName" class="form-label">First Name:</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the first name of the employee."></i>
             <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="firstName" required pattern="^[A-Za-z ]+$">
             <div *ngIf="employeeForm.controls['firstName']?.invalid && employeeForm.controls['firstName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['firstName'].errors?.['required']">First Name is required.</div>
@@ -75,6 +76,7 @@
           <!-- LAST NAME -->
           <div class="mb-3">
             <label for="lastName" class="form-label">Last Name:</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the last name of the employee."></i>
             <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z ]+$">
             <div *ngIf="employeeForm.controls['lastName']?.invalid && employeeForm.controls['lastName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
@@ -85,6 +87,7 @@
           <!--! PHONE NUMBER -->
           <div class="mb-3">
             <label for="phoneNumber" class="form-label">Phone number:</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the phone number of the employee."></i>
             <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
             <div *ngIf="employeeForm.controls['phoneNumber']?.invalid && employeeForm.controls['phoneNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
@@ -95,6 +98,7 @@
           <!--! ID NUMBER -->
           <div class="mb-3">
             <label for="idNumber" class="form-label">ID Number:</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the ID Number of the employee."></i>
             <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idNumber" required pattern="^[0-9]{13}$">
             <div *ngIf="employeeForm.controls['idNumber']?.invalid && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['required']">ID Number is required.</div>
@@ -114,6 +118,7 @@
             <!-- TITLE -->
             <div class="mb-3">
               <label for="title" class="form-label">Title:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the title of the employee."></i>
               <select class="form-select" id="empTitle" [(ngModel)]="currentEmployee.title" name="title" required>
                 <option value="" disabled selected>Select a title</option>
                 <option value="Mr">Mr</option>
@@ -130,6 +135,7 @@
             <!-- EMAIL -->
             <div class="mb-3">
               <label for="email" class="form-label">Email: </label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the email of the employee."></i>
               <input type="email" class="form-control" id="empEmail" [(ngModel)]="currentEmployee.email" name="email" required>
               <div *ngIf="employeeForm.controls['email']?.invalid && employeeForm.controls['email'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['email'].errors?.['required']">Email is required.</div>
@@ -140,6 +146,7 @@
             <!-- DISPLAY NAME -->
             <div class="mb-3">
               <label for="displayName" class="form-label">Display Name:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the display name of the employee."></i>
               <input type="text" class="form-control" id="empDisplayName" [(ngModel)]="currentEmployee.username" name="displayName" required>
               <div *ngIf="employeeForm.controls['displayName']?.invalid && employeeForm.controls['displayName'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['displayName'].errors?.['required']">Display Name is required.</div>
@@ -149,6 +156,7 @@
             <!-- PASSWORD -->
             <div class="mb-3">
               <label for="password" class="form-label">Password:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="This is disabled as the system generates a password for the user."></i>
               <input type="password" class="form-control" id="empPassword" [(ngModel)]="currentEmployee.password" name="password" required disabled>
               <div *ngIf="employeeForm.controls['password']?.invalid && employeeForm.controls['password'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['password'].errors?.['required']">Password is required.</div>
@@ -158,6 +166,7 @@
              <!-- GENDER -->
              <div class="mb-3">
               <label for="gender" class="form-label">Gender:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the gender of the employee."></i>
               <select class="form-select" id="empGender" [(ngModel)]="currentEmployee.gender" name="gender" required>
                 <option value="" disabled selected>Select a gender</option>
                 <option value="Male">Male</option>
