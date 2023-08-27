@@ -17,6 +17,9 @@ export class UserManagementComponent {
 
   constructor(private userManagementService: UserManagementService, private toastr: ToastrService, private dataService: DataServiceService) { }
 
+  searchTerm: string = '';
+  filteredUsers: UserRolesViewModel[] = [];
+
   ngOnInit(){
     this.getAllUsers();
     this.getAllRoles();
@@ -26,9 +29,11 @@ export class UserManagementComponent {
     this.userManagementService.GetAllUsers().subscribe(
       (users: UserRolesViewModel[]) => {
         this.users = users;
+        this.filteredUsers = [...this.users];
         console.log(this.users);
       },
       error => {
+        this.toastr.error('Failed to load user data', 'User data')
         console.error('Error:', error);
       }
     );
@@ -41,6 +46,7 @@ export class UserManagementComponent {
         console.log(this.roles);
       },
       error => {
+        this.toastr.error('Failed to load roles data', 'Roles data')
         console.error('Error:', error);
       }
     );
@@ -68,6 +74,9 @@ export class UserManagementComponent {
       .subscribe(
         (result : any) => {
           this.toastr.success('Successfully Updated', 'User Roles')
+          this.searchTerm = '';
+          this.getAllUsers();
+          this.getAllRoles();
         },
         error => this.toastr.error('Error, failed to update', 'User Roles')
       );
@@ -80,5 +89,18 @@ export class UserManagementComponent {
     } else {
       this.editableUsers.add(user);
     }
+  }
+
+
+  searchUsers() {
+    if (!this.searchTerm) {
+      this.filteredUsers = this.users; // If no search term, show all users
+      return;
+    }
+  
+    const lowercasedTerm = this.searchTerm.toLowerCase();
+  
+    this.filteredUsers = this.users.filter(sup => 
+      (sup.userEmail && sup.userEmail.toLowerCase().includes(lowercasedTerm)));
   }
 }
