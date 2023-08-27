@@ -12,14 +12,15 @@
       <i class="fas fa-plus"></i> Add
     </button>
   </div>
+  <input type="text" class="form-control" placeholder="Search for superusers..." [(ngModel)]="searchTerm" (input)="searchSystemPrivileges()">
 </div>
 
 <!-- System Privileges table -->
-<div class="text-center" *ngIf="systemPrivileges.length === 0">
+<div class="text-center" *ngIf="filteredSystemPrivileges.length === 0">
   <h3>No system privileges are currently in your system.</h3>
 </div>
 
-<table class="table table-striped" *ngIf="systemPrivileges.length > 0">
+<table class="table table-striped" *ngIf="filteredSystemPrivileges.length > 0">
   <thead>
     <tr>
       <th scope="col">Privilege Name</th>
@@ -27,7 +28,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let priv of systemPrivileges">
+    <tr *ngFor="let priv of filteredSystemPrivileges">
       <td>{{ priv.name }}</td>
       <td>{{ priv.description }}</td>
       <td>
