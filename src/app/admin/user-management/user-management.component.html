@@ -3,11 +3,13 @@
     <div class="col-md-6">
       <h2>User Access</h2>
     </div>
+
+    <input type="text" class="form-control" placeholder="Search for superusers..." [(ngModel)]="searchTerm" (input)="searchUsers()">
 </div>
   
 <!-- User Roles table -->
 <div class="text-center" *ngIf="users.length === 0">
-  <h3>No user roles are currently in your system.</h3>
+  <h3>No users are currently in your system.</h3>
 </div>
   
 <table class="table table-striped" *ngIf="users.length > 0">
@@ -18,7 +20,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users">
+    <tr *ngFor="let user of filteredUsers">
       <td>{{user.userEmail}}</td>
       <td *ngFor="let role of roles">
         <input type="checkbox" 

@@ -172,7 +172,7 @@ export class SuperuserComponent {
         }
       } catch (error) {
         console.error(error);
-        this.toastr.error("Adding a new superuser failed, please try again later.", "Add Superuser")
+        this.toastr.error("Failed response, please contact support.", "Failed Adjustment")
       }
     }
   }
