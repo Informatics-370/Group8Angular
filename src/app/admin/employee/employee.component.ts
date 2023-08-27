@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { EmployeeService } from '../services/employee.service';
 import { Employee } from 'src/app/Model/employee';
@@ -14,6 +14,9 @@ import { EmployeeViewModel } from 'src/app/Model/employeeViewModel';
   styleUrls: ['./employee.component.css']
 })
 export class EmployeeComponent {
+
+  @ViewChild('employeeForm') employeeForm!: NgForm;
+
   employees: Employee[] = [];
   currentEmployee: Employee = new Employee();
   showEmployeeModal: boolean = false;
@@ -22,6 +25,9 @@ export class EmployeeComponent {
   employeeToDeleteDetails: any;
   employeeToDelete: any = null;
   maxDate!: string;
+  deleteConfirmationText: string = '';
+  searchTerm: string = '';
+  filteredEmployees: Employee[] = [];
 
   constructor(private employeeService: EmployeeService, private toastr : ToastrService){ }
 
@@ -42,6 +48,7 @@ export class EmployeeComponent {
     this.employeeService.GetEmployees().subscribe(
       (result: Employee[]) => {
         this.employees = result;
+        this.filteredEmployees = this.employees;
         console.log(this.employees);
       },
       (error: any) => {
@@ -71,6 +78,11 @@ export class EmployeeComponent {
 
   closeEmployeeModal() {
     this.showEmployeeModal = false;
+    Object.keys(this.employeeForm.controls).forEach(key => {
+      const control = this.employeeForm.controls[key];
+      control.markAsUntouched();
+      control.markAsPristine();
+    });
   }
 
   openDeleteEmployeeModal(employee: any): void {
@@ -146,7 +158,7 @@ export class EmployeeComponent {
         }
       } catch (error) {
         console.error(error);
-        this.toastr.error("Adding a new employee failed, please try again later.", "Add Employee")
+        this.toastr.error("Failed response, please contact support.", "Failed adjustment")
       }
     }
   }
@@ -165,6 +177,58 @@ export class EmployeeComponent {
         this.toastr.error("Deleting the selected employee account failed, please try again later.", "Delete Employee");
       }
       this.closeDeleteEmployeeModal();
+      location.reload();
     }
   }
+
+  clearConfirmationInput(): void {
+    this.deleteConfirmationText = ''; // Clear the input field
+  }
+
+
+  searchEmployees() {
+    if (!this.searchTerm) {
+      this.filteredEmployees = this.employees; // If no search term, show all superusers
+      return;
+    }
+  
+    const lowercasedTerm = this.searchTerm.toLowerCase();
+  
+    this.filteredEmployees = this.employees.filter(emp => 
+      (emp.first_Name && emp.first_Name.toLowerCase().includes(lowercasedTerm)) ||
+      (emp.last_Name && emp.last_Name.toLowerCase().includes(lowercasedTerm)) ||
+      (emp.email && emp.email.toLowerCase().includes(lowercasedTerm)) ||
+      (emp.phoneNumber && emp.phoneNumber.toString().toLowerCase().includes(lowercasedTerm)) ||
+      (emp.iD_Number && emp.iD_Number.toString().toLowerCase().includes(lowercasedTerm)) ||
+      (emp.hire_Date && emp.hire_Date.toString().toLowerCase().includes(lowercasedTerm))
+    );
+  }
+
+  // VALIDATION
+
+  DateValid(): boolean {
+    let idMonth = parseInt(this.currentEmployee.iD_Number.toString().substring(2,4));
+    let idDay = parseInt(this.currentEmployee.iD_Number.toString().substring(4,6));
+  
+    return !(idDay > 31 || idMonth > 12);
+  }
+  
+  isOlderThan18(): boolean {
+    let idYearPrefix = (parseInt(this.currentEmployee.iD_Number.toString().substring(0,2)) < new Date().getFullYear() % 100) ? 2000 : 1900;
+    let idYear = idYearPrefix + parseInt(this.currentEmployee.iD_Number.toString().substring(0,2));
+    let idMonth = parseInt(this.currentEmployee.iD_Number.toString().substring(2,4));
+    let idDay = parseInt(this.currentEmployee.iD_Number.toString().substring(4,6));
+  
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth() + 1; // Months are 0-based in JavaScript
+    let currentDay = currentDate.getDate();
+  
+    let age = currentYear - idYear;
+    if (currentMonth < idMonth || (currentMonth === idMonth && currentDay < idDay)) {
+      age--;  // This handles if the birthday hasn't occurred yet for the current year
+    }
+  
+    return age >= 18;
+  }  
 }

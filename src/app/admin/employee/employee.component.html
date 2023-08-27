@@ -10,14 +10,15 @@
       <i class="fas fa-plus"></i> Add
     </button>
   </div>
+  <input type="text" class="form-control" placeholder="Search for superusers..." [(ngModel)]="searchTerm" (input)="searchEmployees()">
 </div>
 
 <!-- Employee table -->
-<div class="text-center" *ngIf="employees.length === 0">
+<div class="text-center" *ngIf="filteredEmployees.length === 0">
   <h3>No employee details are currently in your system.</h3>
 </div>
 
-<table class="table table-striped" *ngIf="employees.length > 0">
+<table class="table table-striped" *ngIf="filteredEmployees.length > 0">
   <thead>
     <tr>
       <th scope="col">First Name</th>
@@ -29,7 +30,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let emp of employees">
+    <tr *ngFor="let emp of filteredEmployees">
       <td>{{ emp.first_Name }}</td>
       <td>{{ emp.last_Name }}</td>
       <td>{{ emp.email }}</td>
@@ -98,6 +99,13 @@
             <div *ngIf="employeeForm.controls['idNumber']?.invalid && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['required']">ID Number is required.</div>
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.</div>
+            </div>
+            <div *ngIf="!DateValid() && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
+              Your birthdate in your ID is invalid.
+            </div>
+            
+            <div *ngIf="!isOlderThan18() && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
+              You have to be older than 18 to start working here.
             </div>
           </div>
 
@@ -192,10 +200,12 @@
       <p>ID: {{ employeeToDeleteDetails?.id }}</p>
       <p>Name: {{ employeeToDeleteDetails?.first_Name }}</p>
       <p>Surname: {{ employeeToDeleteDetails?.last_Name }}</p>
+      <label for="confirmationInput">Type "Confirm" to proceed:</label>
+      <input type="text" id="confirmationInput" [(ngModel)]="deleteConfirmationText" placeholder="Type 'Confirm' here" (focus)="clearConfirmationInput()">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteEmployeeModal()">No</button>
-      <button type="button" class="btn btn-primary" (click)="deleteEmployee()">Yes</button>
+      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteEmployee()">Yes</button>
     </div>
   </div>
 </div>

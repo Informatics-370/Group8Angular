@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SystemPrivilege } from 'src/app/Model/systemprivilege';
 import { SystemprivilegeService } from '../services/systemprivilege.service';
 import { NgForm } from '@angular/forms';
@@ -10,6 +10,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./systemprivileges.component.css']
 })
 export class SystemprivilegesComponent {
+
+  @ViewChild('systemPrivilegeForm') systemPrivilegeForm!: NgForm;
+  
   systemPrivileges: SystemPrivilege[] = [];
   currentSystemPrivilege: SystemPrivilege = new SystemPrivilege();
   showSystemPrivilegeModal: boolean = false;
@@ -17,6 +20,8 @@ export class SystemprivilegesComponent {
   showDeleteSystemPrivilegeModal = false;
   systemPrivilegeToDeleteDetails: any;
   systemPrivilegeToDelete: any = null;
+  searchTerm: string = '';
+  filteredSystemPrivileges: SystemPrivilege[] = [];
 
   constructor(private privilegeService: SystemprivilegeService, private toastr: ToastrService){}
 
@@ -29,6 +34,7 @@ export class SystemprivilegesComponent {
       (result: any) => {
         console.log(result);
         this.systemPrivileges = result;
+        this.filteredSystemPrivileges = this.systemPrivileges;
       },
       (error: any) => {
         console.error(error);
@@ -57,6 +63,11 @@ export class SystemprivilegesComponent {
 
   closeSystemPrivilegeModal() {
     this.showSystemPrivilegeModal = false;
+    Object.keys(this.systemPrivilegeForm.controls).forEach(key => {
+      const control = this.systemPrivilegeForm.controls[key];
+      control.markAsUntouched();
+      control.markAsPristine();
+    });
   }
 
   openDeleteSystemPrivilegeModal(systemPrivilege: any): void {
@@ -118,5 +129,18 @@ async deleteSystemPrivilege(): Promise<void> {
       }
   }
   this.closeSystemPrivilegeModal();
+}
+
+searchSystemPrivileges() {
+  if (!this.searchTerm) {
+    this.filteredSystemPrivileges = this.systemPrivileges; // If no search term, show all superusers
+    return;
+  }
+
+  const lowercasedTerm = this.searchTerm.toLowerCase();
+
+  this.filteredSystemPrivileges = this.systemPrivileges.filter(sup => 
+    (sup.description && sup.description.toLowerCase().includes(lowercasedTerm)) ||
+    (sup.name && sup.name.toLowerCase().includes(lowercasedTerm)));
 }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Register } from 'src/app/Model/register';
@@ -13,6 +13,9 @@ import { SuperuserService } from '../services/superuser.service';
   styleUrls: ['./superuser.component.css']
 })
 export class SuperuserComponent {
+
+  @ViewChild('superuserForm') superuserForm!: NgForm;
+  
   superusers: Superuser[] = [];
   currentSuperuser: Superuser = new Superuser();
   showSuperuserModal: boolean = false;
@@ -97,6 +100,11 @@ export class SuperuserComponent {
 
   closeSuperuserModal() {
     this.showSuperuserModal = false;
+    Object.keys(this.superuserForm.controls).forEach(key => {
+      const control = this.superuserForm.controls[key];
+      control.markAsUntouched();
+      control.markAsPristine();
+    });
   }
 
   openDeleteSuperuserModal(superuser: any): void {
