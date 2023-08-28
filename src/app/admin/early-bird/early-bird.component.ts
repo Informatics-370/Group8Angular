@@ -19,6 +19,7 @@ export class EarlyBirdComponent implements OnInit {
   showDeleteEarlyBirdModal = false;
   earlyBirdToDeleteDetails: any;
   earlyBirdToDelete: any = null;
+  isSaving = false;
 
   constructor(private earlyBirdService: EarlyBirdService, private toastr : ToastrService){ }
 
@@ -57,6 +58,7 @@ export class EarlyBirdComponent implements OnInit {
 
   closeEarlyBirdModal() {
     this.showEarlyBirdModal = false;
+    this.isSaving = false;
   }
 
   openDeleteEarlyBirdModal(earlyBird: any): void {
@@ -71,14 +73,15 @@ export class EarlyBirdComponent implements OnInit {
   }
 
   async submitEarlyBirdForm(form: NgForm): Promise<void> {
+    this.isSaving = true;  // Indicate that saving is in progress
     console.log('Submitting form with editingEarlyBird flag:', this.editingEarlyBird);
+    
     if (form.valid) {
       try {
         if (this.editingEarlyBird) {
           await this.earlyBirdService.updateEarlyBird(this.currentEarlyBird.earlyBirdID!, this.currentEarlyBird);
           const index = this.earlyBirds.findIndex(earlyBird => earlyBird.earlyBirdID === this.currentEarlyBird.earlyBirdID);
           if (index !== -1) {
-            // Update the original EarlyBird object with the changes made to the clone
             this.earlyBirds[index] = this.currentEarlyBird;
           }
           this.toastr.success('Successfully updated', 'Update');
@@ -94,11 +97,17 @@ export class EarlyBirdComponent implements OnInit {
       } catch (error) {
         console.error(error);
         this.toastr.error('Error, please try again');
+      } finally {
+        this.isSaving = false;  // Reset isSaving to false
       }
+    } else {
+      this.isSaving = false;  // Reset isSaving to false if form is invalid
     }
   }
+  
 
   async deleteEarlyBird(): Promise<void> {
+    this.isSaving = true;  // Indicate that deletion is in progress
     if (this.earlyBirdToDelete !== null) {
       try {
         await this.earlyBirdService.deleteEarlyBird(this.earlyBirdToDelete);
@@ -107,10 +116,13 @@ export class EarlyBirdComponent implements OnInit {
         this.toastr.success('Successfully deleted', 'Delete');
       } catch (error) {
         console.error('Error deleting EarlyBird:', error);
-        this.toastr.error('Error, please try again', 'Delete');
+        this.toastr.warning('An error occurred, early bird referenced by wine.', 'Error');
+      } finally {
+        this.isSaving = false;  // Reset isSaving to false
       }
-      this.closeDeleteModal();
+    } else {
+      this.isSaving = false;  // Reset isSaving to false if there's nothing to delete
     }
   }
-
+  
 }

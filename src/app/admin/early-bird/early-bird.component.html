@@ -75,14 +75,14 @@
               limit required min="1" max="998" #limit="ngModel">
             <div *ngIf="limit.invalid && limit.touched" class="alert alert-danger">
               <div *ngIf="limit.errors?.['required']">Limit is required.</div>
-              <div *ngIf="limit.value === 999">Limit cannot be 999.</div>
+              <div *ngIf="limit.value === 0">Limit cannot be 0.</div>
               
             </div>
           </div>
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeEarlyBirdModal()">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="earlyBirdForm.invalid">{{editingEarlyBird ? 'Save Changes' : 'Save'}}</button>
+            <button type="submit" class="btn btn-primary" [disabled]="earlyBirdForm.invalid || isSaving">{{editingEarlyBird ? 'Save Changes' : 'Save'}}</button>
           </div>
         </form>
       </div>
