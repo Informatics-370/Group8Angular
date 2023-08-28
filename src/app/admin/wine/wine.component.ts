@@ -34,9 +34,6 @@ export class WineComponent implements OnInit {
     this.loadWines();
     this.loadWinetypes();
   }
-
-
-
   //--------------------------------------------------------------------------------------------------------------------------------
   //Methods to display the Wines, WineTypes and WineVarietals in the tables
 
@@ -100,26 +97,7 @@ wineRestockLimitField = new FormControl('', [
   Validators.pattern(/^\d+$/)
 ]);
 
-
-// onFileSelected(event: Event): void {
-//   const target = event.target as HTMLInputElement;
-//   if (target.files !== null) {
-//     const file: File = target.files[0];
-//     const fileType = file.type;
-
-//     // Check if the file type is PNG or JPG
-//     if (fileType.match(/image\/*/) === null || (fileType !== 'image/jpeg' && fileType !== 'image/png')) {
-//       this.toastr.error('Only PNG or JPG files can be uploaded', 'File Type Error');
-//       return; // Exit the method if the file type is not PNG or JPG
-//     }
-
-//     // If the file type is PNG or JPG, continue processing
-//     this.selectedFile = file;
-//   }
-// }
-
 invalidFileType: boolean = false;  // Add this new variable to track if uploaded file is of invalid type
-
 onFileSelected(wine: any) {
   if (wine.target.files && wine.target.files[0]) {
     const file = wine.target.files[0];
@@ -133,9 +111,7 @@ onFileSelected(wine: any) {
       return;
     }
     
-    // If we reached this point, the file type is valid
     this.invalidFileType = false;
-
     this.selectedFile = file;
     this.currentWine.filePath = this.selectedFile?.name ?? '';
   }
@@ -151,7 +127,6 @@ onFileSelected(wine: any) {
 getObjectURL(file: File): string {
   return URL.createObjectURL(file);
 }
-
 
 // Modal-related methods
 openAddWineModal() {
@@ -196,13 +171,10 @@ closeDeleteWineModal(): void {
   this.showDeleteWineModal = false;
 }
 
-// CRUD Wine
-
 updateDisplay(wine: Wine): void {
   wine.displayWine = !!wine.displayWine;
 }
 
-// Create and Edit Wine
 async submitWineForm(form: NgForm): Promise<void> {
   this.isSaving = true;
   try {
@@ -234,11 +206,10 @@ async submitWineForm(form: NgForm): Promise<void> {
             formData.append('File', this.selectedFile);
         }
     } else if(this.selectedFile == null) {
-        // If there's no selected file, you shouldn't try to append a null value to FormData.
         formData.delete('File');
         formData.delete('filePath');
         formData.append('filePath', "");
-        formData.append('File', oldWineImagePathConvert); // Assuming you want to keep the old path when no new file is selected.
+        formData.append('File', oldWineImagePathConvert);
     }
 
       var wineToUpdate = await this.wineService.getWine(this.currentWine.wineID);
@@ -258,8 +229,7 @@ async submitWineForm(form: NgForm): Promise<void> {
         formData.append('File', this.selectedFile);
       } 
       else {
-        // Display toastr notification if no image is uploaded when adding a new wine
-        this.toastr.warning('Please upload an image for the new wine.', 'Wine Form');
+                this.toastr.warning('Please upload an image for the new wine.', 'Wine Form');
       }
       
       
@@ -280,27 +250,19 @@ async submitWineForm(form: NgForm): Promise<void> {
   }
 }
 
-
-
-
-
-// Delete Wine
 async deleteWine(): Promise<void> {
   try {
     if (this.wineToDeleteDetails && this.wineToDeleteDetails.wineID !== undefined) {
       await this.wineService.deleteWine(this.wineToDeleteDetails.wineID);
       this.wines = this.wines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
-      // Toastr success message for deletion
-      this.toastr.success('Wine has been deleted successfully.', 'Successful');
+            this.toastr.success('Wine has been deleted successfully.', 'Successful');
       this.closeDeleteWineModal();
     } else {
       console.log("Wine to delete is null, undefined, or has an undefined WineID property.");
-      // Toastr warning message
       this.toastr.warning('Unable to delete wine, please check the wine details.', 'Error');
     }
   } catch (error) {
     console.error(error);
-    // Toastr error message
     this.toastr.error('An error occurred, please try again.', 'Error');
   }
 }
@@ -318,7 +280,7 @@ filterWines(): void {
       wine.winePrice.toString().includes(query)
     );
   } else {
-    this.wines = [...this.allWines]; // if searchQuery is empty, show all wines
+    this.wines = [...this.allWines]; 
   }
 }
 
@@ -326,18 +288,11 @@ updateCharacterCount(event: any) {
   this.characterCount = event.target.value.length;
 }
 
-
-
-
-
 // Wine END-----------------------------------------------------------------------------------------------------.>
 
-
-
   // WINETYPES------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
   //===================================================================================================================================================================.//
-
-
   //Winetype variables needed
   winetypes: WineType[] = [];
   currentWinetype: WineType = new WineType();
@@ -347,8 +302,6 @@ updateCharacterCount(event: any) {
   winetypeToDeleteDetails: any;
   winetypeToDelete: any = null;
 
-
-  // Modal-related methods
   openAddWinetypeModal() {
     this.editingWinetype = false;
     this.currentWinetype = new WineType();
@@ -357,7 +310,6 @@ updateCharacterCount(event: any) {
   openEditWinetypeModal(id: number) {
     console.log('Opening edit winetype modal for ID:', id);
     this.editingWinetype = true;
-    // Create a deep copy of the Winetype, not reference the same object
     this.currentWinetype = JSON.parse(JSON.stringify(this.winetypes.find(winetype => winetype.wineTypeID === id)!));
     this.showWinetypeModal = true;
   }
@@ -377,22 +329,17 @@ updateCharacterCount(event: any) {
     this.showDeleteWinetypeModal = false;
   }
 
-  // CRUD Winetype
-
-  // Create and Edit Winetype
   async submitWinetypeForm(form: NgForm): Promise<void> {
     console.log('Submitting form with editingWinetype flag:', this.editingWinetype);
     if (form.valid) {
       try {
         if (this.editingWinetype) {
-          // Update Winetype
           await this.winetypeService.updateWinetype(this.currentWinetype.wineTypeID!, this.currentWinetype);
           const index = this.winetypes.findIndex(winetype => winetype.wineTypeID === this.currentWinetype.wineTypeID);
           if (index !== -1) {
             this.winetypes[index] = this.currentWinetype;
           }
         } else {
-          // Add Winetype
           const data = await this.winetypeService.addWinetype(this.currentWinetype);
           this.winetypes.push(data);
         }
@@ -406,19 +353,16 @@ updateCharacterCount(event: any) {
     }
   }
 
-  // Delete Winetype
   async deleteWinetype(): Promise<void> {
     if (this.winetypeToDeleteDetails && this.winetypeToDeleteDetails.wineTypeID !== undefined) {
       // Check if there are any wines referencing the winetype
       const winesReferencingWinetype = this.wines.filter(wine => wine.wineTypeID === this.winetypeToDeleteDetails.wineTypeID);
   
       if (winesReferencingWinetype.length > 0) {
-        // Display a notification or prevent deletion
         console.log("Cannot delete winetype. There are wines referencing it.");
         return;
       }
   
-      // Delete the winetype if there are no referencing wines
       await this.winetypeService.deleteWinetype(this.winetypeToDeleteDetails.wineTypeID);
       this.winetypes = this.winetypes.filter(winetype => winetype.wineTypeID !== this.winetypeToDeleteDetails.wineTypeID);
       this.closeDeleteWineTypeModal();
@@ -428,14 +372,6 @@ updateCharacterCount(event: any) {
   }
   
   // Winetype END-----------------------------------------------------------------------------------------------------.>
-
-
-
-
-
-
-
-
 
   // VARIETALS------------------------------------------------------------------------------------------------------------------------------------------------------------//
   //===================================================================================================================================================================.//

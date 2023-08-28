@@ -218,7 +218,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
             <button type="button" class="btn btn-primary" 
-              [disabled]="wineForm.invalid || (!fileUploaded || invalidFileType) || wineDisplayField.value == '0' || wineTypeField.value == '0' || isSaving == true || wineVarietalField.value == '0'" 
+              [disabled]="wineForm.invalid || (!fileUploaded || invalidFileType) || wineDisplayField.value == 'null' || wineTypeField.value == '0' || isSaving == true || wineVarietalField.value == '0'" 
               (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
           </div>
           
