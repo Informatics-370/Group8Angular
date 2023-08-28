@@ -158,6 +158,11 @@
             <label for="ticketsAvailable" class="form-label">Tickets Available</label>
             <input type="number" class="form-control" id="ticketsAvailable" [(ngModel)]="currentEvent.tickets_Available"
               name="ticketsAvailable" required #ticketsAvailableField="ngModel" min="1" [readonly]="editingEvent">
+              <div *ngIf="ticketsAvailableField.invalid && ticketsAvailableField.touched" class="alert alert-danger">
+                <div *ngIf="ticketsAvailableField.errors?.['required']">Event price is required.</div>
+                <div *ngIf="ticketsAvailableField.errors?.['min'] && !ticketsAvailableField.errors?.['required']">Tickets Availbale must be
+                  greater than 0.</div>
+              </div>
           </div>
 
           <div class="mb-3">
