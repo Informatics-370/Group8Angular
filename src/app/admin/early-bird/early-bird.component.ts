@@ -117,12 +117,15 @@ export class EarlyBirdComponent implements OnInit {
       } catch (error) {
         console.error('Error deleting EarlyBird:', error);
         this.toastr.warning('An error occurred, early bird referenced by wine.', 'Error');
+        this.closeDeleteModal();  // Explicitly close the modal on error
       } finally {
         this.isSaving = false;  // Reset isSaving to false
+        this.closeDeleteModal();  // Close the modal whether or not an error occurred
       }
     } else {
       this.isSaving = false;  // Reset isSaving to false if there's nothing to delete
     }
   }
+  
   
 }
