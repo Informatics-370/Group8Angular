@@ -29,7 +29,7 @@ export class EventTypeComponent implements OnInit {
       this.eventTypes = await this.eventTypeService.getEventTypes();
     } catch (error) {
       console.error(error);
-      this.toastr.error('Error, please try again', 'Event Type Table');
+      this.toastr.error('Error, please try again', 'Event Type');
     }
   }
 
