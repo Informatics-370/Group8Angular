@@ -112,9 +112,10 @@
           <div class="mb-3">
             <label for="wineVintage" class="form-label">Wine Vintage</label>
             <input type="text" class="form-control" id="wineVintage" [(ngModel)]="currentWine.vintage"
-              name="wineVintage" required #wineVintageField="ngModel">
+              name="wineVintage" required #wineVintageField="ngModel" pattern="^\d{4}$">
             <div *ngIf="wineVintageField.invalid && wineVintageField.touched" class="alert alert-danger">
               <div *ngIf="wineVintageField.errors?.['required']">Wine vintage is required.</div>
+            <div *ngIf="wineVintageField.errors?.['pattern']">Wine Vintage must be a valid Year in format yyyy.</div>
             </div>
           </div>
 
@@ -136,9 +137,8 @@
               name="wineTastingNote" required maxlength="255" required (input)="updateCharacterCount($event)"
               #wineTastingNoteField="ngModel"></textarea>
             <div class="character-count">{{characterCount || 0}} / 255 characters</div>
-
             <div *ngIf="wineTastingNoteField.invalid && wineTastingNoteField.touched" class="alert alert-danger">
-              <div *ngIf="wineTastingNoteField.errors?.['required']">Wine description is required.</div>
+              <div *ngIf="wineTastingNoteField.errors?.['required']">Wine Tasting Note is required.</div>
               <!-- <div *ngIf="wineTastingNoteField.errors?.['maxlength']">Wine description must not exceed 255 characters,
                   including spaces.</div> -->
             </div>
@@ -159,17 +159,14 @@
             <label for="wineDisplay" class="form-label">Display Wine in Shop</label>
             <select class="form-control" required [(ngModel)]="currentWine.displayWine" id="wineDisplay"
               name="wineDisplay" #wineDisplayField="ngModel">
-              <option [ngStyle]="{'color': 'grey'}" [value]="null">----Select an option----</option>
+              <option [ngStyle]="{'color': 'grey'}" [value]="null" disabled selected>----Select an option----</option>
               <option [value]="true">Yes</option>
               <option [value]="false">No</option>
-            </select>
-
-
+            </select>       
             <div *ngIf="(wineDisplayField.value === null || wineDisplayField.invalid) && wineDisplayField.touched"
               class="alert alert-danger">
               <div>Display in shop selection is required.</div>
             </div>
-
           </div>
 
 
@@ -181,13 +178,10 @@
               <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a wine type----</option>
               <option *ngFor="let winetype of winetypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
             </select>
-
             <div *ngIf="(wineTypeField.value == '0' || wineTypeField.invalid) && wineTypeField.touched"
               class="alert alert-danger">
               <div>Wine type is required.</div>
             </div>
-
-
           </div>
 
 
