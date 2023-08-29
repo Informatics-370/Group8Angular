@@ -30,9 +30,11 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.baseUrl}/AllOrders`);
   }
 
-  // Add a function for the put request here
-  updateOrderStatus(orderId: number): Observable<any> {
-    return this.http.put(`${this.baseUrl}/UpdateOrder/${orderId}`, null);
-  }
+  updateOrderStatus(orderId: number, newStatus: number): Observable<any> {
+    // Assuming newStatus is required in the URL as well
+    return this.http.put(`${this.baseUrl}/UpdateOrder/${orderId}?newStatus=${newStatus}`, {});
+}
+
+
 
 }

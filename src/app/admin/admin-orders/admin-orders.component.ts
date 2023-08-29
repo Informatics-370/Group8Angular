@@ -11,6 +11,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AdminOrdersComponent implements OnInit {
   orders: Order[] = [];
+  wineOrdersDisplay: Order[] = [];
+
  
 
   constructor(private orderService: OrderService, private toastr: ToastrService) { }
@@ -28,8 +30,11 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   fetchAllOrders() {
+
     this.orderService.getAllOrders().subscribe(
       (orders: Order[]) => {
+        this.orders = orders;
+        this.wineOrdersDisplay = [...orders]; // Initialize with all orders
         this.orders = orders.map(order => ({
           ...order,
           statusUpdated: 0 // Set statusUpdated as false initially
@@ -42,21 +47,29 @@ export class AdminOrdersComponent implements OnInit {
     );
   }
 
-  updateOrderStatus(orderId: number, status: number) {
-    this.orderService.updateOrderStatus(orderId).subscribe(
+  updateOrderStatus(orderId: number, newStatus: number) {
+    this.orderService.updateOrderStatus(orderId, newStatus).subscribe(
       response => {
         console.log(response);
-
+  
         // Find the order and update its status
         const order = this.orders.find(order => order.wineOrderId === orderId);
-        if (order) {
-          order.orderStatus = status;
+        const displayOrder = this.wineOrdersDisplay.find(order => order.wineOrderId === orderId);
+        if (order && displayOrder) {
+          order.orderStatusId = newStatus;
+          displayOrder.orderStatusId = newStatus; // update the status in the display array as well
           this.toastr.success('Status updated', 'Success');
+  
+          // Remove from wineOrdersDisplay if status is 'Collected'
+          if (newStatus === 4) {
+            this.wineOrdersDisplay = this.wineOrdersDisplay.filter(order => order.wineOrderId !== orderId);
+          }
         }
       },
       error => {
         console.error('Error updating order status:', error);
       }
     );
-}
+  }
+  
 }

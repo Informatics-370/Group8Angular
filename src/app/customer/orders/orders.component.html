@@ -14,28 +14,29 @@
       </div>
       <!-- Order Status Display -->
       <div class="d-flex align-items-center mt-2">
-        <div class="ml-3 mt-n1" style="height: 20px; width: 20px; border-radius: 50%;" 
-             [ngStyle]="{
+        <div class="ml-3 mt-n1" style="height: 20px; width: 20px; border-radius: 50%;" [ngStyle]="{
                          'background-color': 
-                             order.orderStatus === 0 ? 'red' : 
-                             order.orderStatus === 1 ? 'green' : 
+                             order.orderStatusId === 1 ? 'red' : 
+                             order.orderStatusId === 3 ? 'green' : 
                              'blue'
                         }">
         </div>
-        <br/>
-        <p class="card-text" 
-           [ngClass]="{
-                       'text-danger': order.orderStatus === 0, 
-                       'text-success': order.orderStatus === 1, 
-                       'text-info': order.orderStatus === 2
-                      }">
-          {{ order.orderStatus === 0 ? 'Order being processed' : 
-             order.orderStatus === 1 ? 'Order ready for pickup' : 
-             'Order collected' }}
+        <br />
+        <p class="card-text" [ngClass]="{
+               'text-danger': order.orderStatusId === 1, 
+               'text-warning': order.orderStatusId === 2,
+               'text-success': order.orderStatusId === 3, 
+               'text-info': order.orderStatusId === 4
+              }">
+          {{ order.orderStatusId === 1 ? 'Order being processed' :
+          order.orderStatusId === 2 ? 'Order being shipped' :
+          order.orderStatusId === 3 ? 'Order ready for pickup' :
+          'Order collected' }}
         </p>
+
       </div>
-      
-      
+
+
       <div class="mt-4">
         <h4 class="custom-text-size text-muted">Order Items:</h4>
         <div *ngFor="let item of order.orderItems">
@@ -46,9 +47,8 @@
         <div>
           <h4 class="custom-text-size">Order Total: {{ order.orderTotal | number }}</h4>
         </div>
-        <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatus === 2" 
-                class="btn btn-outline-danger" 
-                (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">
+        <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatusId === 3"
+          class="btn btn-outline-danger" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">
           Request Refund
         </button>
         <p *ngIf="!order.isRefunded && !checkRefundAvailability(order)" class="text-warning">Refund unavailable</p>
@@ -62,7 +62,8 @@
 
 
 <!--Refunds request pop up modal-->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showRefundModal}" [ngStyle]="{'display': showRefundModal ? 'block' : 'none'}">
+<div class="modal" tabindex="-1" [ngClass]="{'show': showRefundModal}"
+  [ngStyle]="{'display': showRefundModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -73,7 +74,9 @@
         <form #refundForm="ngForm" (ngSubmit)="submitRefundForm(refundForm)">
           <div class="mb-3">
             <label for="refundDescription" class="form-label">Reason for refund</label>
-            <input type="text" class="form-control" id="refundDescription" [(ngModel)]="currentRefundDescription" name="refundDescription" required #descriptionField="ngModel" placeholder="Please enter the reason for the refund request here">
+            <input type="text" class="form-control" id="refundDescription" [(ngModel)]="currentRefundDescription"
+              name="refundDescription" required #descriptionField="ngModel"
+              placeholder="Please enter the reason for the refund request here">
             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="alert alert-danger">
               <div *ngIf="descriptionField.errors?.['required']">Description is required.</div>
             </div>
@@ -82,7 +85,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeRefundModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="refundForm.invalid" (click)="submitRefundForm(refundForm)">Submit Request</button>
+        <button type="button" class="btn btn-primary" [disabled]="refundForm.invalid"
+          (click)="submitRefundForm(refundForm)">Submit Request</button>
       </div>
     </div>
   </div>
