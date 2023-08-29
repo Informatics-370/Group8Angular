@@ -34,8 +34,8 @@ export class PaymentService {
         switchMap((result: any) => {
           const userDetails = result.user;
           return this.http.post(this.apiUrl, {
-            amount: event.eventPrice,
-            item_name: event.eventName,
+            amount: event.price,
+            item_name: event.name,
             email_address: userDetails.email,
             cell_number: userDetails.phoneNumber // assuming the property name is phoneNumber
           });

@@ -120,13 +120,13 @@ export class EventComponent {
     // Set the image URL/path of the event being edited.
 
     let eventToEdit = this.events.find(event => event.eventID === id);
-    this.currentEventImageURL = eventToEdit?.imagePath || '';
+    this.currentEventImageURL = eventToEdit?.filePath || '';
 
     if (eventToEdit) {
       this.tempEvent = {
         ...eventToEdit,
-        imagePath: eventToEdit.imagePath,
-        displayEvent: eventToEdit.displayEvent
+        filePath: eventToEdit.filePath,
+        displayItem: eventToEdit.displayItem
 
       };
       this.currentEvent = this.tempEvent;
@@ -171,8 +171,8 @@ export class EventComponent {
         this.currentEvent.earlyBirdID = 0;
       }
       if (this.editingEvent) {
-        const pathArray = this.currentEvent.imagePath.split('/');
-        this.currentEvent.imagePath = pathArray[pathArray.length - 1];
+        const pathArray = this.currentEvent.filePath.split('/');
+        this.currentEvent.filePath = pathArray[pathArray.length - 1];
       }
       try {
         const formData = new FormData();
@@ -209,7 +209,7 @@ export class EventComponent {
 
           // Validate and format eventPrice
           const eventPriceToAdd = new EventPrice();
-          eventPriceToAdd.amount = createdEvent.eventPrice;
+          eventPriceToAdd.amount = createdEvent.price;
           eventPriceToAdd.date = createdEvent.eventDate;
 
           const addedEventPrice = await this.eventPriceService.addEventPrice(eventPriceToAdd);
@@ -254,7 +254,7 @@ export class EventComponent {
       // File type is valid, proceed
       this.invalidFileType = false;
       this.selectedFile = file;
-      this.currentEvent.imagePath = this.selectedFile?.name ?? '';
+      this.currentEvent.filePath = this.selectedFile?.name ?? '';
     }
 
     if (event.target.files && event.target.files.length > 0) {
@@ -305,7 +305,7 @@ export class EventComponent {
   async toggleDisplay(event: Event): Promise<void> {
     try {
       // Toggle the display property of the event object
-      event.displayEvent = !event.displayEvent;
+      event.displayItem = !event.displayItem;
 
       // Update the event using the service method
       await this.eventService.toggleEventDisplay(event.eventID);

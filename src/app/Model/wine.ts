@@ -9,12 +9,12 @@ export class Wine {
   // restockLimit: number;
   filePath: string; 
   wineTastingNote: string;
-  winePrice: number;
+  price: number;
   wineTypeID: number;
   wineType: WineType;
   varietalID: number;
   varietal: Varietal;
-  displayWine: boolean;
+  displayItem: boolean;
 
   constructor(
     wineID: number = 0,
@@ -22,12 +22,12 @@ export class Wine {
     vintage: string = "",
     filePath: string = "",
     wineTastingNote: string = "",
-    winePrice: number = 0,
+    price: number = 0,
     wineTypeID: number = 0,
     wineType: WineType = new WineType(),
     varietalID: number = 0,
     varietal: Varietal = new Varietal(),
-    displayWine: boolean = false
+    displayItem: boolean = false
   ) {
     this.wineID = wineID;
     this.name = name;
@@ -36,12 +36,12 @@ export class Wine {
     // this.restockLimit = restockLimit;
     this.filePath = filePath;
     this.wineTastingNote = wineTastingNote;
-    this.winePrice = winePrice;
+    this.price = price;
     this.wineTypeID = wineTypeID;
     this.wineType = wineType;
     this.varietalID = varietalID;
     this.varietal = varietal;
-    this.displayWine = displayWine;
+    this.displayItem = displayItem;
   }
 
   get wineTypeName(): string | undefined {

@@ -30,18 +30,18 @@
   </thead>
   <tbody>
     <tr *ngFor="let event of events">
-      <td><img [src]="event.imagePath" alt="{{ event.eventName }}'s Image" width="140" height="100"></td>
-      <td>{{ event.eventName }}</td>
+      <td><img [src]="event.filePath" alt="{{ event.name }}'s Image" width="140" height="100"></td>
+      <td>{{ event.name }}</td>
       <!-- <td>{{ event.description }}</td> -->
       <td>{{ event.eventDate | date:'short' }}</td>
       <td>{{ event.tickets_Available }}</td>
       <td>{{ event.tickets_Sold }}</td>
-      <td>{{ event.eventPrice }}</td>
+      <td>{{ event.price }}</td>
       <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.limit : '' }}</td>
       <!-- New Column -->
       <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : '' }}</td>
       <td>
-        <input type="checkbox" [checked]="event.displayEvent" (change)="toggleDisplay(event)">
+        <input type="checkbox" [checked]="event.displayItem" (change)="toggleDisplay(event)">
 
 
       </td>
@@ -82,7 +82,7 @@
         Are you sure you want to delete this event?
         <br>
         <p></p>
-        <p>Event Name: {{ eventToDeleteDetails?.eventName }}</p>
+        <p>Event Name: {{ eventToDeleteDetails?.name }}</p>
         <!-- <p>Event Description: {{ eventToDeleteDetails?.description }}</p> -->
       </div>
       <div class="modal-footer">
@@ -110,7 +110,7 @@
 
           <div class="mb-3">
             <label for="eventName" class="form-label">Event Name</label>
-            <input type="text" class="form-control" id="eventName" [(ngModel)]="currentEvent.eventName" name="eventName"
+            <input type="text" class="form-control" id="eventName" [(ngModel)]="currentEvent.name" name="eventName"
               required #eventNameField="ngModel">
             <div *ngIf="eventNameField.invalid && eventNameField.touched" class="alert alert-danger">
               <div *ngIf="eventNameField.errors?.['required']">Event name is required.</div>
@@ -145,7 +145,7 @@
 
           <div class="mb-3">
             <label for="eventPrice" class="form-label">Event Price</label>
-            <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.eventPrice"
+            <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.price"
               name="eventPrice" required #eventPriceField="ngModel" min="1">
             <div *ngIf="eventPriceField.invalid && eventPriceField.touched" class="alert alert-danger">
               <div *ngIf="eventPriceField.errors?.['required']">Event price is required.</div>

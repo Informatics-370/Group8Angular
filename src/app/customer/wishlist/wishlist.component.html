@@ -28,7 +28,7 @@
       <td class="align-middle">{{ wine.vintage }}</td>
       <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td>
       <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
-      <td class="align-middle">{{ wine.winePrice }}</td>
+      <td class="align-middle">{{ wine.price }}</td>
       <td class="align-middle">
         <button style="margin: 5px;" class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
           <i class="fas fa-trash-alt"></i> Remove

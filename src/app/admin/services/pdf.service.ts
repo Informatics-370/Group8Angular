@@ -85,7 +85,7 @@ export class PdfService {
         wine.vintage.toString().includes(query) ||
         wine.varietalID.toString().includes(query) ||
         wine.wineTypeID.toString().includes(query) ||
-        wine.winePrice.toString().includes(query)
+        wine.price.toString().includes(query)
       );
     } else {
       this.wines = [...this.allWines]; // if searchQuery is empty, show all wines
@@ -370,25 +370,25 @@ export class PdfService {
         
                         const eventEarlyBirdlimit = event.earlyBird?.limit || 0;  // Default to 0 if null
                         const eventEarlyBirdPercentage = event.earlyBird?.percentage || 0;  // Default to 0 if null
-                        const eventActive = event.displayEvent ? "Yes" : "No"; 
+                        const eventActive = event.displayItem ? "Yes" : "No"; 
         
-                        const earlyBirdPrice = event.eventPrice - (event.eventPrice * eventEarlyBirdPercentage / 100);
-                        const earlyBirdDiscountAmount = event.eventPrice - earlyBirdPrice;  // Calculating discount amount
+                        const earlyBirdPrice = event.price - (event.price * eventEarlyBirdPercentage / 100);
+                        const earlyBirdDiscountAmount = event.price - earlyBirdPrice;  // Calculating discount amount
         
                         const earlyBirdTicketsSold = event.tickets_Sold <= eventEarlyBirdlimit ? event.tickets_Sold : eventEarlyBirdlimit;
                         const regularTicketsSold = event.tickets_Sold - earlyBirdTicketsSold;
         
                         const revenueFromEarlyBirdTickets = earlyBirdTicketsSold * earlyBirdPrice;
-                        const revenueFromRegularTickets = regularTicketsSold * event.eventPrice;
+                        const revenueFromRegularTickets = regularTicketsSold * event.price;
                         const totalRevenue = revenueFromEarlyBirdTickets + revenueFromRegularTickets;
         
                         return [
                             index + 1,
-                            event.eventName,
+                            event.name,
                             new Date(event.eventDate).toLocaleDateString(),
                             event.tickets_Available,
                             event.tickets_Sold,
-                            `R${event.eventPrice}`,
+                            `R${event.price}`,
                             `R${earlyBirdDiscountAmount.toFixed(2)}`,  // Added "Early Bird Discount" column value and fixed it to two decimal places
                             `R${totalRevenue.toFixed(2)}`, // Fixing to two decimal places for cleaner display
                             eventActive
@@ -507,25 +507,25 @@ export class PdfService {
           
                           const eventEarlyBirdlimit = event.earlyBird?.limit || 0;  // Default to 0 if null
                           const eventEarlyBirdPercentage = event.earlyBird?.percentage || 0;  // Default to 0 if null
-                          const eventActive = event.displayEvent ? "Yes" : "No"; 
+                          const eventActive = event.displayItem ? "Yes" : "No"; 
           
-                          const earlyBirdPrice = event.eventPrice - (event.eventPrice * eventEarlyBirdPercentage / 100);
-                          const earlyBirdDiscountAmount = event.eventPrice - earlyBirdPrice;  // Calculating discount amount
+                          const earlyBirdPrice = event.price - (event.price * eventEarlyBirdPercentage / 100);
+                          const earlyBirdDiscountAmount = event.price - earlyBirdPrice;  // Calculating discount amount
           
                           const earlyBirdTicketsSold = event.tickets_Sold <= eventEarlyBirdlimit ? event.tickets_Sold : eventEarlyBirdlimit;
                           const regularTicketsSold = event.tickets_Sold - earlyBirdTicketsSold;
           
                           const revenueFromEarlyBirdTickets = earlyBirdTicketsSold * earlyBirdPrice;
-                          const revenueFromRegularTickets = regularTicketsSold * event.eventPrice;
+                          const revenueFromRegularTickets = regularTicketsSold * event.price;
                           const totalRevenue = revenueFromEarlyBirdTickets + revenueFromRegularTickets;
           
                           return [
                               index + 1,
-                              event.eventName,
+                              event.name,
                               new Date(event.eventDate).toLocaleDateString(),
                               event.tickets_Available,
                               event.tickets_Sold,
-                              `R${event.eventPrice}`,
+                              `R${event.price}`,
                               `R${earlyBirdDiscountAmount.toFixed(2)}`,  // Added "Early Bird Discount" column value and fixed it to two decimal places
                               `R${totalRevenue.toFixed(2)}`, // Fixing to two decimal places for cleaner display
                               eventActive
@@ -1193,14 +1193,14 @@ return new Promise<Blob>((resolve, reject) => {
               ['No.', 'Wine Name', 'Varietal', 'Type', 'Price', 'Active'],
               ...winesData.map((item, index) => {
 
-                const wineActive = item.displayWine ? "Yes" : "No"; 
+                const wineActive = item.displayItem ? "Yes" : "No"; 
 
                 return [
                 index + 1,
                 item.name|| 'N/A',
                 this.getVarietalName(item.varietalID) || 'N/A',
                 this.getWinetypeName(item.wineTypeID) || 'N/A',
-                'R ' + item.winePrice || 'N/A',
+                'R ' + item.price || 'N/A',
                 wineActive
               ];
             })
@@ -1304,14 +1304,14 @@ async generateWinesReportpdf(winesData: Wine[], currentDate: string): Promise<Bl
                 ['No.', 'Wine Name', 'Varietal', 'Type', 'Price', 'Active'],
                 ...winesData.map((item, index) => {
 
-                  const wineActive = item.displayWine ? "Yes" : "No"; 
+                  const wineActive = item.displayItem ? "Yes" : "No"; 
 
                   return [
                   index + 1,
                   item.name|| 'N/A',
                   this.getVarietalName(item.varietalID) || 'N/A',
                   this.getWinetypeName(item.wineTypeID) || 'N/A',
-                  'R ' + item.winePrice || 'N/A',
+                  'R ' + item.price || 'N/A',
                   wineActive
                 ];
               })

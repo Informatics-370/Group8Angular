@@ -115,7 +115,7 @@ updateFieldsBasedOnWineName(wineID: number): void {
 
 getWinePrice(wineID: number): number {
   const wine = this.wines.find(w => w.wineID === wineID);
-  return wine ? wine.winePrice : 0;
+  return wine ? wine.price : 0;
 }
 
 
@@ -142,7 +142,7 @@ filterWines(): void {
       wine.vintage.toString().includes(query) ||
       wine.varietalID.toString().includes(query) ||
       wine.wineTypeID.toString().includes(query) ||
-      wine.winePrice.toString().includes(query)
+      wine.price.toString().includes(query)
     );
   } else {
     this.wines = [...this.allWines]; // if searchQuery is empty, show all wines
