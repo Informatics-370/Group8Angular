@@ -1,5 +1,4 @@
-
-
+import { OrderStatusEnum } from './OrderStatusEnum';
 import {OrderItem} from './orderItem';
  
 // order.model.ts
@@ -10,8 +9,8 @@ export interface Order {
   customerId: string;
   orderDate: Date;
   collectedDate: Date;
-  orderStatus: number; // renamed from 'received' to 'orderStatus'
+  orderStatusId: OrderStatusEnum;  // Make sure to use the enum type
   orderItems: OrderItem[];
   isRefunded: boolean;
-  wineId: number;
+  wineId: number;  // If this is still relevant, keep it. Otherwise, remove.
 }
