@@ -184,7 +184,7 @@ export class EventComponent {
         }
 
         if (this.selectedFile) {
-          formData.append('ImagePath', this.selectedFile, this.selectedFile.name);
+          formData.append('File', this.selectedFile, this.selectedFile.name);
         }
 
 
