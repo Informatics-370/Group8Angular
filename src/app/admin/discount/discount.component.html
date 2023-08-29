@@ -78,7 +78,7 @@
           <div class="mb-3">
             <label for="discountAmount" class="form-label">Discount Percentage Amount</label>
             <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountPercentage"
-              name="discountAmount" required [min]="0.01" [max]="100" #discountAmountField="ngModel">
+              name="discountAmount" required [min]="1" [max]="100" #discountAmountField="ngModel">
             <div *ngIf="discountAmountField.invalid && discountAmountField.touched" class="alert alert-danger">
               <div *ngIf="discountAmountField.errors?.['required']">Discount amount is required.</div>
               <div *ngIf="discountAmountField.errors?.['min']">Discount amount cannot be zero.</div>
