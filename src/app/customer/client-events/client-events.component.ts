@@ -47,7 +47,7 @@ export class ClientEventsComponent {
   async loadEventData(): Promise<void> {
     try {
       this.events = await this.eventService.getEvents();
-      this.displayableEvents = this.events.filter(event => event.displayEvent);
+      this.displayableEvents = this.events.filter(event => event.displayItem);
     } catch (error) {
       console.error('Failed to fetch events:', error);
       this.events = [];
@@ -115,12 +115,12 @@ export class ClientEventsComponent {
         && typeof event.earlyBird.percentage !== 'undefined') {
 
         // Apply early bird discount
-        event.eventPrice = purchaseResponse.price * (1 - event.earlyBird.percentage / 100);
+        event.price = purchaseResponse.price * (1 - event.earlyBird.percentage / 100);
         // Add Toastr notification for early bird discount
         this.toastr.success(`Congrats! You qualify for an EarlyBird discount of ${event.earlyBird.percentage}%`, 'Discount');
       } else {
         // Regular price
-        event.eventPrice = purchaseResponse.price;
+        event.price = purchaseResponse.price;
       }
     } catch (error) {
       console.error(error);
@@ -134,8 +134,8 @@ export class ClientEventsComponent {
       eventId: event.eventID,
       eventDate: event.eventDate,
       purchaseDate: new Date(),
-      ticketPrice: event.eventPrice,
-      eventName: event.eventName,  // New field
+      ticketPrice: event.price,
+      eventName: event.name,  // New field
       description: event.description,  // New field
       eventDeleted: false,
       scannedAt: null,
@@ -200,8 +200,8 @@ export class ClientEventsComponent {
       eventId: event.eventID,
       eventDate: event.eventDate,
       purchaseDate: new Date(),
-      ticketPrice: event.eventPrice,
-      eventName: event.eventName,  // New field
+      ticketPrice: event.price,
+      eventName: event.name,  // New field
       description: event.description,  // New field
       eventDeleted: false,
       scannedAt: null,

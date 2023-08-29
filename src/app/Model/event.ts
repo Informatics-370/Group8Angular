@@ -6,14 +6,14 @@ import { EarlyBirdComponent } from "../admin/early-bird/early-bird.component";
 
 export class Event {
     eventID: number;
-    eventName: string;
+    name: string;
     eventDate: Date;
     tickets_Available: number;
     tickets_Sold: number;
     description: string;
-    eventPrice: number;
-    imagePath: string;
-    displayEvent:  boolean | undefined;
+    price: number;
+    filePath: string;
+    displayItem:  boolean | undefined;
     earlyBirdID?: number;
     earlyBird?: EarlyBird = new EarlyBird();
    
@@ -21,27 +21,27 @@ export class Event {
 
     constructor(
         eventID: number = 0,
-        eventName: string = '',
+        name: string = '',
         eventDate: Date = new Date(),
         tickets_Available: number = 0,
         tickets_Sold: number = 0,
         description: string = '',
-        eventPrice: number = 0,
-        imagePath: string = '',
-        displayEvent: boolean = true,  // Corrected this line
+        price: number = 0,
+        filePath: string = '',
+        displayItem: boolean = true,  // Corrected this line
         earlyBirdID?: number, // Made this parameter optional
         earlyBird?: EarlyBird, // Added this parameter
 
     ) {
         this.eventID = eventID;
-        this.eventName = eventName;
+        this.name = name;
         this.eventDate = eventDate;
         this.tickets_Available = tickets_Available;
         this.tickets_Sold = tickets_Sold;
         this.description = description;
-        this.eventPrice = eventPrice;
-        this.imagePath = imagePath;
-        this.displayEvent = displayEvent;
+        this.price = price;
+        this.filePath = filePath;
+        this.displayItem = displayItem;
         this.earlyBirdID = earlyBirdID;
         this.earlyBird = earlyBird; // Assigned the parameter value
 

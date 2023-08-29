@@ -68,7 +68,7 @@ export class ClientProductsComponent implements OnInit {
   loadWines() {
     this.wineService.getWines().then((wines: Wine[]) => {
       this.wines = wines;
-      this.displayedWines = this.wines.filter(wines=> wines.displayWine);
+      this.displayedWines = this.wines.filter(wines=> wines.displayItem);
       // this.displayableEvents = this.events.filter(event => event.displayEvent);
 
       console.log(wines);
