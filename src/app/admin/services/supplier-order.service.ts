@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UpdateSupplierOrderStatusDTO } from 'src/app/Model/UpdateSupplierOrderStatusDTO';
 // Update with your model path
 import { environment } from 'src/app/environment';// Update with your environment file path
 
@@ -22,8 +23,9 @@ export class SupplierOrderService {
     return this.http.get<SupplierOrder>(`${this.apiURL}/${id}`);
   }
 
-  updateSupplierOrder(id: number, supplierOrder: SupplierOrder): Observable<void> {
-    return this.http.put<void>(`${this.apiURL}/${id}`, supplierOrder);
+  updateSupplierOrderStatus(id: number, statusDTO: UpdateSupplierOrderStatusDTO): Observable<any> {
+    const url = `${this.apiURL}/${id}/status`;
+    return this.http.put(url, statusDTO);
   }
 
   createSupplierOrder(supplierOrder: SupplierOrder): Observable<SupplierOrder> {
