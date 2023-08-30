@@ -1,4 +1,4 @@
-<!-- Supplier Orders -->
+
 <div class="row align-items-center mb-3">
     <div class="col-md-6">
         <h2>Supplier Orders</h2>
@@ -14,7 +14,7 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th scope="col">Wine Name</th> <!-- Header -->
+                <th scope="col">Wine Name</th>
                 <th scope="col">Quantity Ordered</th>
                 <th scope="col">Order Price</th>
                 <th scope="col">Date Ordered</th>
@@ -24,26 +24,54 @@
                 <th scope="col">Received</th>
             </tr>
         </thead>
+
         <tbody>
-            <tr *ngFor="let order of supplierOrders">
-                <td>{{ order.wineName }}</td> <!-- Corresponding data -->
+            <tr *ngFor="let order of supplierOrders; let i = index">
+                <td>{{ order.wineName }}</td>
                 <td>{{ order.quantity_Ordered }}</td>
-                <td>R {{ order.orderTotal }}</td>
-                <td>{{ order.dateOrdered | date:'short' }}</td>
-                <td>{{ getSupplierName(order.supplierID) ?? 'Unknown Supplier' }}</td>
-                <td><input type="checkbox" [(ngModel)]="order.ordered" (change)="updateOrder(order)"></td>
+                <td>{{ order.orderTotal }}</td>
+                <td>{{ order.dateOrdered }}</td>
+                <td>{{ order.supplier?.name }}</td>
+
+                <!-- Ordered -->
                 <td>
-                    <input type="checkbox" [(ngModel)]="order.paid" [disabled]="!order.ordered" (change)="updateOrder(order)">
+                    <input *ngIf="order.supplierOrderStatus" type="checkbox"
+                        [(ngModel)]="order.supplierOrderStatus.ordered" (change)="updateOrder(order)">
                 </td>
+
+                <!-- Paid -->
                 <td>
-                    <input type="checkbox" [(ngModel)]="order.received" [disabled]="!order.ordered || !order.paid" (change)="updateOrder(order)">
-                </td>                
+                    <input *ngIf="order.supplierOrderStatus" type="checkbox"
+                        [(ngModel)]="order.supplierOrderStatus.paid" [disabled]="!order.supplierOrderStatus.ordered"
+                        (change)="updateOrder(order)">
+                </td>
+
+                <!-- Received -->
+                <td>
+                    <input *ngIf="order.supplierOrderStatus" type="checkbox"
+                        [(ngModel)]="order.supplierOrderStatus.received"
+                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid"
+                        (change)="updateOrder(order)">
+                </td>
+                <!-- Add this to your <tr> element -->
+                <td>
+                    <button class="btn btn-danger"
+                        *ngIf="order.supplierOrderStatus?.ordered && order.supplierOrderStatus?.paid && order.supplierOrderStatus?.received"
+                        (click)="order.supplierOrderID !== undefined && openDeleteSupplierOrderModal(order)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+
             </tr>
-            
-            
         </tbody>
+
+
+
+
     </table>
 </div>
+<!-- Debug: Display raw data -->
+<!-- <pre>{{ supplierOrders | json }}</pre> -->
 
 <div class="text-center" *ngIf="supplierOrders.length === 0">
     <h3>No supplier orders currently in your system.</h3>
@@ -137,4 +165,3 @@
         </div>
     </div>
 </div>
-
