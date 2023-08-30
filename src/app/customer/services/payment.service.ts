@@ -7,6 +7,7 @@ import { DataServiceService } from './data-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
 import { WinePurchase } from 'src/app/Model/WinePurchase';
+import { TicketPurchaseDto } from 'src/app/Model/TicketPurchaseDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -56,12 +57,11 @@ export class PaymentService {
     return this.httpClient.post(apiUrl, ticket, {headers: this.headers});
 }
 
-  saveTicketPurchase(ticketPurchase: TicketPurchase) {
-    // use the baseApiUrl from your environment
-    const apiUrl = `${environment.baseApiUrl}api/TicketPurchases`;
-
-    return this.http.post<TicketPurchase>(apiUrl, ticketPurchase);
+saveTicketPurchaseDto(ticketPurchaseDto: TicketPurchaseDto) {
+  const apiUrl = `${environment.baseApiUrl}api/TicketPurchases`;
+  return this.http.post<TicketPurchaseDto>(apiUrl, ticketPurchaseDto);
 }
+
 
 getUserPurchases(userEmail: string): Observable<string[]> {
   const apiUrl = `${environment.baseApiUrl}api/TicketPurchases/User/${userEmail}`;

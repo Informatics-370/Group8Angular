@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DataServiceService } from '../services/data-service.service';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
 import { BlacklistService } from 'src/app/admin/services/blacklist.service';
+import { TicketPurchaseDto } from 'src/app/Model/TicketPurchaseDTO';
 
 @Component({
   selector: 'app-client-events',
@@ -128,20 +129,26 @@ export class ClientEventsComponent {
       return;
     }
 
-    // Start the payment process with the final price
-    const ticketPurchase: TicketPurchase = {
-      userEmail: this.loginService.userValue?.email ?? '',
-      eventId: event.eventID,
-      eventDate: event.eventDate,
-      purchaseDate: new Date(),
-      ticketPrice: event.price,
-      eventName: event.name,  // New field
-      description: event.description,  // New field
-      eventDeleted: false,
-      scannedAt: null,
-      isScanned: false,
-      scanningToken: ""
-    };
+    // // Start the payment process with the final price
+    // const ticketPurchase: TicketPurchase = {
+    //   userEmail: this.loginService.userValue?.email ?? '',
+    //   eventId: event.eventID,
+    //   eventDate: event.eventDate,
+    //   purchaseDate: new Date(),
+    //   ticketPrice: event.price,
+    //   eventName: event.name,
+    //   description: event.description,
+    //   ticketPurchasedStatus: {  // Nested TicketPurchasedStatus object
+    //     eventDeleted: false,
+    //     isScanned: false,
+    //     scannedAt: null,
+    //     scanningToken: ""
+    //   }
+    // };
+
+    // console.log("Ticket Purchase Payload:", ticketPurchase);
+
+             
 
     this.paymentService.initiatePayment(event).subscribe(
       (payfastRequest: any) => {
@@ -179,62 +186,29 @@ export class ClientEventsComponent {
       }
     );
   }
+  
+    
+        saveTicketPurchase(event: Event) {
+      const ticketPurchaseDto: TicketPurchaseDto = {
+        UserEmail: this.loginService.userValue?.email ?? '',
+        EventId: event.eventID
+      };
 
-
-
-
-
-  saveTicketPurchase(event: Event) {
-    // Ensure eventDate is a Date object
-    event.eventDate = new Date(event.eventDate);
-
-    // Get the event's date
-    const eventDate = event.eventDate;
-
-    // Create a new date object with only the year, month, and day
-
-
-    // Start the payment process with the final price
-    const ticketPurchase: TicketPurchase = {
-      userEmail: this.loginService.userValue?.email ?? '',
-      eventId: event.eventID,
-      eventDate: event.eventDate,
-      purchaseDate: new Date(),
-      ticketPrice: event.price,
-      eventName: event.name,  // New field
-      description: event.description,  // New field
-      eventDeleted: false,
-      scannedAt: null,
-      isScanned: false,
-      scanningToken: generateGUID()
-    };
-
-    function generateGUID(): string {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (Math.random() * 16) | 0,
-          v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
+      console.log(ticketPurchaseDto)
+      
+      // Assuming saveTicketPurchaseDto exists in your service
+      this.paymentService.saveTicketPurchaseDto(ticketPurchaseDto).subscribe(
+        (response) => {
+          console.log(response);
+          this.toastr.success('You will be redirected shortly', 'Redirecting...');
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+          this.toastr.error('An error occurred while saving ticket purchase, please try again.', 'Purchase');
+        }
+      );
     }
     
-
-
-
-    // Save the ticket purchase
-    this.paymentService.saveTicketPurchase(ticketPurchase).subscribe(
-      (response) => {
-        // Handle the success response, such as navigating the user to another page
-        console.log(response);
-        this.toastr.success('You will be redirected shortly', 'Redirecting...');
-      },
-      (error: HttpErrorResponse) => {
-        // Handle the error response
-        console.error(error);
-        this.toastr.error('An error occurred while saving ticket purchase, please try again.', 'Purchase');
-      }
-    );
-  }
-
 
 
 
@@ -273,11 +247,11 @@ export class ClientEventsComponent {
     }
 
     try {
-      await this.onBuyTicket(event); // Buying ticket process
+      await this.onBuyTicket(event);  // Buying ticket process
+     
       this.toastr.info('Redirecting URL...', 'Purchasing ticket');
-      // After successful buying process, save the ticket purchase in the database
-      this.saveTicketPurchase(event);
-      return;     
+      return this.saveTicketPurchase(event);
+
     } catch (error) {
       console.error(error);
       this.toastr.error('An error occurred, please try again.', 'Purchase');

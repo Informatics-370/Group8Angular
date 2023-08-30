@@ -1,3 +1,5 @@
+import { TicketPurchasedStatus } from "./TicketPurchasedStatus";
+
 export interface TicketPurchase {
     id?: number;
     userEmail: string;
@@ -5,10 +7,8 @@ export interface TicketPurchase {
     eventDate: Date;
     purchaseDate: Date;
     ticketPrice: number;
-    eventName: string;  // New field
-    description: string;  // New field
-    eventDeleted: boolean;
-    isScanned : boolean;
-    scannedAt : Date | null;
-    scanningToken : string | "";
-}
+    eventName: string;
+    description: string;
+    ticketPurchasedStatus?: TicketPurchasedStatus; // Added this line
+  }
+  

@@ -11,7 +11,7 @@ export class EventService {
 
   private apiUrl = `${environment.baseApiUrl}api/Events`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Event crud operations ----------------------------------------------------.>
   async getEvents(): Promise<Event[]> {
@@ -35,16 +35,16 @@ export class EventService {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 
-purchaseTicket(eventID: number): Promise<any> {
-  const url = `${this.apiUrl}/purchase/${eventID}`;
-  return firstValueFrom(this.http.post<any>(url, {}));
-}
+  purchaseTicket(eventID: number): Promise<any> {
+    const url = `${this.apiUrl}/purchase/${eventID}`;
+    return firstValueFrom(this.http.post<any>(url, {}));
+  }
 
-async toggleEventDisplay(eventID: number): Promise<any> {
-  const url = `${this.apiUrl}/display-toggle/${eventID}`;
-  return firstValueFrom(this.http.put<any>(url, {}));
-}
+  async toggleEventDisplay(eventID: number): Promise<any> {
+    const url = `${this.apiUrl}/display-toggle/${eventID}`;
+    return firstValueFrom(this.http.put<any>(url, {}));
+  }
 
 
-  
+
 }
