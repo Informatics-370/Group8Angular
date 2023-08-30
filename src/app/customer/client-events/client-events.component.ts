@@ -252,7 +252,6 @@ export class ClientEventsComponent {
       this.toastr.info('Redirecting URL...', 'Purchasing ticket');
       return this.saveTicketPurchase(event);
 
-      // After successful buying process, save the ticket purchase in the database
     } catch (error) {
       console.error(error);
       this.toastr.error('An error occurred, please try again.', 'Purchase');
