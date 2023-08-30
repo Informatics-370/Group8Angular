@@ -68,7 +68,7 @@ const routes: Routes = [
   {path: 'earlybird', component: EarlyBirdComponent},
   {path: 'eventtype', component:EventTypeComponent},
   {path: 'eventprice', component: EventPriceComponent}, 
-  { path: 'Tickets/Scan/:token', component: ScanTicketComponent },
+  { path: 'TicketPurchase/Scan/:token', component: ScanTicketComponent },
   
   
   //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS

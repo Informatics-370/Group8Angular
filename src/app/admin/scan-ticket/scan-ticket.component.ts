@@ -27,7 +27,7 @@ export class ScanTicketComponent implements OnInit {
 
 
     if (this.token) {
-      this.url = `${environment.baseApiUrl}api/TicketPurchases/Scan/${this.token}`;  // Initialize the URL here
+      this.url = `${environment.baseApiUrl}api/TicketPurchase/Scan/${this.token}`;  // Initialize the URL here
 
       this.http.post(this.url, {})
         .subscribe(
