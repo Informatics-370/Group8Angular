@@ -5,12 +5,12 @@
 <div class="row"> <!-- Wrap the cards in a row -->
   <!-- Wine Event Tickets -->
   <div *ngFor="let ticket of purchasedTickets" class="col-md-6 my-3"> <!-- Set the column width for medium screens and above to 6, so there are two columns -->
-    <div class="card" [style.max-width.px]="800" [style.background-color]="ticket.eventDeleted ? '#ccc' : '#f2f2f2'">
-      <div class="card-header" [style.background-color]="ticket.eventDeleted ? '#ccc' : '#54ce20'" [style.color]="'#fff'">
+    <div class="card" [style.max-width.px]="800" [style.background-color]="ticket.ticketPurchasedStatus?.eventDeleted ? '#ccc' : '#f2f2f2'">
+      <div class="card-header" [style.background-color]="ticket.ticketPurchasedStatus?.eventDeleted ? '#ccc' : '#54ce20'" [style.color]="'#fff'">
         <h2 class="card-title">{{ ticket.eventName }}</h2>
       </div>
       <div class="card-body">
-        <div *ngIf="ticket.eventDeleted" class="text-center my-3">
+        <div *ngIf="ticket.ticketPurchasedStatus?.eventDeleted==true" class="text-center my-3">
           <span *ngIf="ticket.id" class="d-inline">This event ticket is for an event in the past.</span> <!-- Change to inline element -->
           
         </div>
@@ -36,7 +36,7 @@
           <span class="data">R{{ ticket.ticketPrice }}</span>
         </div>
         <br>
-        <button *ngIf="ticket.eventDeleted" class="btn btn-danger d-inline" (click)="onDeleteTicket(ticket.id)">Delete Ticket</button>
+        <button *ngIf="ticket.ticketPurchasedStatus?.eventDeleted" class="btn btn-danger d-inline" (click)="onDeleteTicket(ticket.id)">Delete Ticket</button>
 
 
       </div>
