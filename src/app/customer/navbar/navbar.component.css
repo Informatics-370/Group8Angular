@@ -5,6 +5,20 @@
   height: 80px; /* Adjust the height of the navbar as needed */
 }
 
+/* Existing CSS */
+/* ... */
+
+/* Media query for small screens */
+@media (max-width: 992px) {
+  .wine-section .wine-text, .events-section .events-text {
+    font-size: 1.6rem;
+  }
+  .wine-icon, .events-icon {
+    display: inline !important; /* To override the d-lg-none class */
+  }
+}
+
+
 /* Center the navbar content vertically */
 .container {
   height: 100%;

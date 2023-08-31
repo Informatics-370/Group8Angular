@@ -1,49 +1,55 @@
 <!-- Wishlist Table -->
+<br>
+<br>
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
-    <h2>Wishlist</h2>
+    <h2>My Wishlist</h2>
   </div>
 </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Image</th>
-      <th scope="col">Name</th>
-      <th scope="col">Vintage</th>
-      <th scope="col">Varietal</th>
-      <th scope="col">Type</th>
-      <th scope="col">Price (ZAR)</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let wine of wines; let i = index">
-      <td>
-        <div *ngIf="wine.filePath" class="image-container mb-3">
-          <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;"> <!-- (click)="openImageModal(wine)" "-->
-        </div>
-      </td>
-      <td class="align-middle">{{ wine.name }}</td>
-      <td class="align-middle">{{ wine.vintage }}</td>
-      <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td>
-      <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
-      <td class="align-middle">{{ wine.price }}</td>
-      <td class="align-middle">
-        <button style="margin: 5px;" class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
-          <i class="fas fa-trash-alt"></i> Remove
-        </button>    
-        <button style="margin: 5px;" class="btn btn-success" (click)="addToCart(wishlistItems[i])">
-          <i class="fas fa-cart-plus"></i> Add to cart
-        </button>            
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="d-none d-md-table-cell">Image</th>
+        <th scope="col">Wine Name</th>
+        <th scope="col" class="d-none d-md-table-cell">Vintage</th>
+        <th scope="col" class="d-none d-md-table-cell">Varietal</th>
+        <th scope="col" class="d-none d-md-table-cell">Type</th>
+        <th scope="col" class="d-none d-md-table-cell">Price (ZAR)</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let wine of wines; let i = index">
+        <td class="d-none d-md-table-cell">
+          <div *ngIf="wine.filePath" class="image-container mb-3">
+            <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+          </div>
+        </td>
+        <td class="align-middle">{{ wine.name }}</td>
+        <td class="d-none d-md-table-cell align-middle">{{ wine.vintage }}</td>
+        <td class="d-none d-md-table-cell align-middle">{{ getVarietalName(wine.varietalID) }}</td>
+        <td class="d-none d-md-table-cell align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
+        <td class="d-none d-md-table-cell align-middle">{{ wine.price }}</td>
+        <td class="align-middle">
 
+
+          <button style="margin: 5px;" class="btn btn-danger" (click)="openDeleteWineModal(wishlistItems[i])">
+            <i class="fas fa-trash-alt"></i> 
+          </button>
+          <button style="margin: 5px;" class="btn btn-success" (click)="addToCart(wishlistItems[i])">
+            <i class="fas fa-cart-plus"></i> 
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 <div class="text-center" *ngIf="wines.length === 0">
   <h3>No wines currently in your wishlist.</h3>
 </div>
+
 
 <!-- Delete Wine from Wishlist modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWineModal}"
@@ -66,20 +72,3 @@
     </div>
   </div>
 </div>
-
-
-<!-- Image Modal -->
-<!-- <div class="modal" tabindex="-1" [ngClass]="{'show': showImageModal}" 
-  [ngStyle]="{'display': showImageModal ? 'block' : 'none'}">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ currentImage?.name }}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeImageModal()"></button>
-      </div>
-      <div class="modal-body text-center">
-        <img [src]="currentImage?.filePath" alt="Wine Image" class="img-fluid">
-      </div>
-    </div>
-  </div>
-</div> -->
