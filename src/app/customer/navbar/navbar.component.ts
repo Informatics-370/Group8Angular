@@ -61,6 +61,13 @@ titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
 genders = ['Male', 'Female', 'Other'];
 confirmPassword: string | undefined;
 
+isLoggedIn(): boolean {
+  // Your logic here to determine if the user is logged in.
+  // For example, return true if you have a valid user token.
+  return this.dataService.userValue ? true : false;
+}
+
+
 passwordsMatch(): boolean {
   return this.confirmPassword === this.rpassword;
 }

@@ -80,11 +80,12 @@
         </li>
 
         <!-- Cart Icon for Desktop -->
-        <li class="nav-item spaced-item">
+        <li class="nav-item spaced-item" *ngIf="isLoggedIn()">
           <a class="nav-link" href="/cart" style="color: #B55933; font-size: 1.6rem;">
             <i class="bi bi-cart3"></i>
           </a>
         </li>
+
 
         <!-- User Icon for Desktop -->
         <li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
@@ -92,6 +93,15 @@
             <i class="bi bi-person-circle"></i> {{dataService.userValue?.username}}
           </a>
         </li>
+
+          <li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
+            <div id="login-button" class="nav-link login-button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <span style="color: white;">Login</span>
+            </div>
+        </li>
+      
+
+
       </ul>
     </div>
   </div>
