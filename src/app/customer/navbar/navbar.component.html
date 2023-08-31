@@ -21,6 +21,14 @@
           <i class="bi bi-cart3"></i>
         </a>
       </li>
+
+      <!-- Login Button for Mobile -->
+      <li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
+        <a  class="nav-link login-button" data-bs-toggle="modal" data-bs-target="#loginModal" style="color: #B55933;">
+          <span style="color: white;"  >Login</span>
+        </a>
+      </li>
+
       <!-- User Icon for Mobile -->
       <li class="nav-item spaced-item" *ngIf="dataService.userValue?.username">
         <a class="nav-link" routerLink="/userinformation" style="color: #B55933; font-size: 1.6rem;">
@@ -94,12 +102,12 @@
           </a>
         </li>
 
-          <li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
-            <div id="login-button" class="nav-link login-button" data-bs-toggle="modal" data-bs-target="#loginModal">
-                <span style="color: white;">Login</span>
-            </div>
+        <li class="nav-item spaced-item" *ngIf="!dataService.userValue?.username">
+          <div id="login-button" class="nav-link login-button" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <span style="color: white;">Login</span>
+          </div>
         </li>
-      
+
 
 
       </ul>
