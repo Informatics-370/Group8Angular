@@ -1,0 +1,37 @@
+/* Refund table specific styles */
+
+.refund-header {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 15px;
+  }
+  
+  .refund-title {
+    font-size: 1.8em;
+    color: #333;
+  }
+  
+  .refund-table-container {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .refund-table {
+    margin-bottom: 0;
+  }
+  
+  .refund-table th {
+    background-color: #f4f4f4;
+    color: #555;
+  }
+  
+  .refund-table td, .refund-table th {
+    padding: 12px 15px;
+    text-align: left;
+  }
+  
+  .refund-table tr:hover {
+    background-color: #f5f5f5;
+  }
+  

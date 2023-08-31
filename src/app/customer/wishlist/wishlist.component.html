@@ -1,14 +1,14 @@
 <!-- Wishlist Table -->
 <br>
 <br>
-<div class="row align-items-center mb-3">
+<div class="row align-items-center mb-3 wishlist-header">
   <div class="col-md-6">
-    <h2>My Wishlist</h2>
+    <h2 class="wishlist-title">My Wishlist</h2>
   </div>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-striped">
+<div class="table-responsive custom-table-container">
+  <table class="table table-striped custom-table">
     <thead>
       <tr>
         <th scope="col" class="d-none d-md-table-cell">Image</th>
@@ -46,10 +46,10 @@
     </tbody>
   </table>
 </div>
-<div class="text-center" *ngIf="wines.length === 0">
+
+<div class="text-center empty-wishlist" *ngIf="wines.length === 0">
   <h3>No wines currently in your wishlist.</h3>
 </div>
-
 
 <!-- Delete Wine from Wishlist modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteWineModal}"

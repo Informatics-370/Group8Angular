@@ -1,0 +1,43 @@
+.wishlist-header {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 15px;
+  }
+  
+  .wishlist-title {
+    font-size: 1.8em;
+    color: #333;
+  }
+  
+  .custom-table-container {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .custom-table {
+    margin-bottom: 0;  /* To remove unnecessary margin */
+  }
+  
+  .custom-table th {
+    background-color: #f2f2f2;
+    color: #555;
+  }
+  
+  .custom-table td, .custom-table th {
+    padding: 12px 15px;
+    text-align: left;
+  }
+  
+  .custom-table tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .empty-wishlist {
+    color: #888;
+    font-size: 1.3em;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 5px;
+  }
+  
