@@ -65,6 +65,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
 import { ChartsComponent } from './admin/charts/charts.component';
 import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
+import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
 
 
 @NgModule({
@@ -117,6 +118,7 @@ import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
     AuditLogsComponent,
     ChartsComponent,
     ScanTicketComponent,
+    HelpResourcesComponent,
   ],
   imports: [
     BrowserModule,
