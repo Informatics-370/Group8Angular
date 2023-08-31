@@ -14,13 +14,6 @@
       </div>
       <!-- Order Status Display -->
       <div class="d-flex align-items-center mt-2">
-        <div class="ml-3 mt-n1" style="height: 20px; width: 20px; border-radius: 50%;" [ngStyle]="{
-                         'background-color': 
-                             order.orderStatusId === 1 ? 'red' : 
-                             order.orderStatusId === 3 ? 'green' : 
-                             'blue'
-                        }">
-        </div>
         <br />
         <p class="card-text" [ngClass]="{
           'status-processed': order.orderStatusId === 1, 
@@ -83,7 +76,7 @@
               name="refundDescription" required #descriptionField="ngModel"
               placeholder="Please enter the reason for the refund request here">
             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="alert alert-danger">
-              <div *ngIf="descriptionField.errors?.['required']">Description is required.</div>
+              <div *ngIf="descriptionField.errors?.['required']">Refund Reason is required.</div>
             </div>
           </div>
         </form>

@@ -110,6 +110,8 @@
 
           <div class="mb-3">
             <label for="eventName" class="form-label">Event Name</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Event Name"></i>
             <input type="text" class="form-control" id="eventName" [(ngModel)]="currentEvent.name" name="eventName"
               required #eventNameField="ngModel">
             <div *ngIf="eventNameField.invalid && eventNameField.touched" class="alert alert-danger">
@@ -119,6 +121,8 @@
 
           <div class="mb-3">
             <label for="eventDescription" class="form-label">Event Description</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Event Description"></i>
             <textarea type="text" class="form-control" id="eventDescription" [(ngModel)]="currentEvent.description"
               name="eventDescription" required maxlength="255" (input)="updateCharacterCount($event)"
               #eventDescriptionField="ngModel"></textarea>
@@ -134,6 +138,8 @@
 
           <div class="mb-3">
             <label for="eventDate" class="form-label">Event Date and Time</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please Select the Event Date and Time"></i>
             <input type="datetime-local" class="form-control" id="eventDate" [(ngModel)]="currentEvent.eventDate"
               name="eventDate" required #eventDateField="ngModel" [min]="minDateTime">
             <div *ngIf="eventDateField.invalid && eventDateField.touched" class="alert alert-danger">
@@ -145,6 +151,8 @@
 
           <div class="mb-3">
             <label for="eventPrice" class="form-label">Event Price</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the ticket price for the Event "></i>
             <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.price"
               name="eventPrice" required #eventPriceField="ngModel" min="1">
             <div *ngIf="eventPriceField.invalid && eventPriceField.touched" class="alert alert-danger">
@@ -156,6 +164,8 @@
 
           <div class="mb-3">
             <label for="ticketsAvailable" class="form-label">Tickets Available</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the amount of tickets available for the Event"></i>
             <input type="number" class="form-control" id="ticketsAvailable" [(ngModel)]="currentEvent.tickets_Available"
               name="ticketsAvailable" required #ticketsAvailableField="ngModel" min="1" [readonly]="editingEvent">
               <div *ngIf="ticketsAvailableField.invalid && ticketsAvailableField.touched" class="alert alert-danger">
@@ -167,6 +177,8 @@
 
           <div class="mb-3">
             <label for="earlyBird" class="form-label">Early Bird</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please select the early bird option applicable for the Event"></i>
             <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" #earlyBirdField="ngModel"
               class="form-control" [disabled]="editingEvent">
               <!-- Placeholder -->
@@ -186,6 +198,8 @@
           <!---------------------------------------------------------------------------------------------------------->
           <div class="mb-3">
             <label for="eventImage" class="form-label">Event Image</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please select the image used for the Event"></i>
             <input type="file" class="form-control" id="eventImage" accept=".png, .jpg, .jpeg"
               (change)="onFileSelected($event)">
             <!-- Display error if no file is uploaded or invalid type -->
