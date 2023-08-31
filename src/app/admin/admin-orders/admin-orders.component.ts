@@ -3,7 +3,6 @@ import { OrderService } from 'src/app/customer/services/order.service';
 import { Order } from 'src/app/Model/order';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Component({
   selector: 'app-admin-orders',
   templateUrl: './admin-orders.component.html',
@@ -12,34 +11,23 @@ import { ToastrService } from 'ngx-toastr';
 export class AdminOrdersComponent implements OnInit {
   orders: Order[] = [];
   wineOrdersDisplay: Order[] = [];
-
- 
+  public showPastOrders: boolean = false;
 
   constructor(private orderService: OrderService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.fetchAllOrders();
-  }
-  
-  searchWineRef: string = '';
-
-  get filteredOrders(): Order[] {
-    return this.orders.filter(order =>
-      order.orderRefNum.toLowerCase().includes(this.searchWineRef.toLowerCase())
-    );
+    this.filterOrders();
   }
 
   fetchAllOrders() {
-
     this.orderService.getAllOrders().subscribe(
       (orders: Order[]) => {
-        this.orders = orders;
-        this.wineOrdersDisplay = [...orders]; // Initialize with all orders
         this.orders = orders.map(order => ({
           ...order,
           statusUpdated: 0 // Set statusUpdated as false initially
         }));
-        console.log(this.orders);
+        this.filterOrders();
       },
       (error) => {
         console.error('Error fetching orders:', error);
@@ -47,23 +35,22 @@ export class AdminOrdersComponent implements OnInit {
     );
   }
 
+  searchWineRef: string = '';
+
+  get filteredOrders(): Order[] {
+    return this.orders.filter(order => 
+      order.orderRefNum.toLowerCase().includes(this.searchWineRef.toLowerCase())
+    );
+  }
+
   updateOrderStatus(orderId: number, newStatus: number) {
     this.orderService.updateOrderStatus(orderId, newStatus).subscribe(
       response => {
-        console.log(response);
-  
-        // Find the order and update its status
         const order = this.orders.find(order => order.wineOrderId === orderId);
-        const displayOrder = this.wineOrdersDisplay.find(order => order.wineOrderId === orderId);
-        if (order && displayOrder) {
+        if (order) {
           order.orderStatusId = newStatus;
-          displayOrder.orderStatusId = newStatus; // update the status in the display array as well
           this.toastr.success('Status updated', 'Success');
-  
-          // Remove from wineOrdersDisplay if status is 'Collected'
-          if (newStatus === 4) {
-            this.wineOrdersDisplay = this.wineOrdersDisplay.filter(order => order.wineOrderId !== orderId);
-          }
+          this.filterOrders();
         }
       },
       error => {
@@ -71,5 +58,21 @@ export class AdminOrdersComponent implements OnInit {
       }
     );
   }
-  
+
+  togglePastOrders() {
+    this.showPastOrders = !this.showPastOrders;
+    this.filterOrders();
+  }
+
+  filterOrders() {
+    if (this.showPastOrders) {
+      this.wineOrdersDisplay = this.filteredOrders;
+    } else {
+      this.wineOrdersDisplay = this.filteredOrders.filter(order => order.orderStatusId !== 4);
+    }
+  }
+
+  onSearchChange() {
+    this.filterOrders();
+  }
 }
