@@ -23,16 +23,21 @@
         </div>
         <br />
         <p class="card-text" [ngClass]="{
-               'text-danger': order.orderStatusId === 1, 
-               'text-warning': order.orderStatusId === 2,
-               'text-success': order.orderStatusId === 3, 
-               'text-info': order.orderStatusId === 4
-              }">
-          {{ order.orderStatusId === 1 ? 'Order being processed' :
-          order.orderStatusId === 2 ? 'Order being shipped' :
-          order.orderStatusId === 3 ? 'Order ready for pickup' :
-          'Order collected' }}
+          'status-processed': order.orderStatusId === 1, 
+          'status-shipped': order.orderStatusId === 2,
+          'status-ready-for-pickup': order.orderStatusId === 3, 
+          'status-collected': order.orderStatusId === 4
+         }">
+          <i *ngIf="order.orderStatusId === 1" class="fas fa-spinner"></i>
+          <i *ngIf="order.orderStatusId === 2" class="fas fa-truck"></i>
+          <i *ngIf="order.orderStatusId === 3" class="fas fa-store"></i>
+          <i *ngIf="order.orderStatusId === 4" class="fas fa-check-circle"></i>
+
+          {{ order.orderStatusId === 1 ? 'Processing Your Order' :
+          order.orderStatusId === 2 ? 'Shipment On The Way' :
+          order.orderStatusId === 3 ? 'Ready For Pickup' : 'Order Successfully Collected' }}
         </p>
+
 
       </div>
 
@@ -47,7 +52,7 @@
         <div>
           <h4 class="custom-text-size">Order Total: {{ order.orderTotal | number }}</h4>
         </div>
-        <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatusId === 3"
+        <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatusId === 4"
           class="btn btn-outline-danger" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">
           Request Refund
         </button>
