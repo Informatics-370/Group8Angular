@@ -6,16 +6,18 @@
 </div>
 <div class="row mb-3">
   <div class="col-md-6">
-    <input type="text" class="form-control" placeholder="Search by Order Reference" [(ngModel)]="searchWineRef">
+    <input type="text" class="form-control" placeholder="Search by Order Reference" 
+           [(ngModel)]="searchWineRef" (input)="onSearchChange()">
   </div>
 </div>
 <div class="row mb-3">
   <div class="col-md-6 offset-md-0.1">
       <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-          <label class="form-check-label" for="flexSwitchCheckChecked">
-            <span class="offset-label current-label">Current Orders</span>
-            <span class="offset-label past-label">Past Orders</span>
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" 
+               (click)="togglePastOrders()" [checked]="showPastOrders">
+        <label class="form-check-label" for="flexSwitchCheckChecked">
+            <span class="offset-label current-label">Past Orders</span>
+            <span class="offset-label past-label">Current Orders</span>
         </label>
       </div>
   </div>
@@ -26,7 +28,7 @@
   <!-- Check if there are any orders -->
   <div *ngIf="orders.length > 0; else noOrders">
     <!-- Iterate over each order -->
-    <div *ngFor="let order of  wineOrdersDisplay && filteredOrders">
+    <div *ngFor="let order of wineOrdersDisplay">
       <!-- Display basic order details in a card-like structure for neatness -->
       <div class="card mb-3">
         <div class="card-header bg-primary text-white">Order ID: {{ order.wineOrderId }}</div>
@@ -76,3 +78,5 @@
       <h3>No orders found.</h3>
     </div>
   </ng-template>
+
+
