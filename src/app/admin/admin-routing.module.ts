@@ -26,6 +26,7 @@ import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
 import { WriteoffComponent } from './writeoff/writeoff.component';
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 import { ScanTicketComponent } from './scan-ticket/scan-ticket.component';
+import { HelpResourcesComponent } from './help-resources/help-resources.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -52,6 +53,7 @@ const routes: Routes = [
   {path:'supplierOrder', component: SupplierOrderComponent},
   {path: 'adminOrder', component: AdminOrdersComponent},
   {path: 'auditlogs', component: AuditLogsComponent},
+  {path: 'help', component: HelpResourcesComponent},
   { path: 'Tickets/Scan/:token', component: ScanTicketComponent },
 
 

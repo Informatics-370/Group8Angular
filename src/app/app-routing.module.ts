@@ -44,6 +44,7 @@ import { ClientContactComponent } from './customer/client-contact/client-contact
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
 import { ChartsComponent } from './admin/charts/charts.component';
+import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
 
 
 const routes: Routes = [
@@ -68,6 +69,7 @@ const routes: Routes = [
   {path: 'earlybird', component: EarlyBirdComponent},
   {path: 'eventtype', component:EventTypeComponent},
   {path: 'eventprice', component: EventPriceComponent}, 
+  {path: 'help', component: HelpResourcesComponent},
   { path: 'TicketPurchases/Scan/:token', component: ScanTicketComponent },
   
   
