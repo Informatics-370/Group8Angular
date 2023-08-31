@@ -1,62 +1,54 @@
-<div class="sidenav" *ngIf="showSidebar">
-    <ul class="nav nav-pills flex-column mb-auto">
-      <!-- User Information -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/userinformation" routerLinkActive="active">
-          <i class="bi bi-person-circle me-2"></i>
-          User Information
-        </a>
-      </li>
-      <!-- Orders -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/orders" routerLinkActive="active">
-          <i class="bi bi-basket2 me-2"></i>
-          Orders
-        </a>
-      </li>
-      <!-- Tickets -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/tickets" routerLinkActive="active">
-          <i class="bi bi-ticket me-2"></i>
-          Tickets
-        </a>
-      </li>
-      <!-- Refunds -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/myrefunds" routerLinkActive="active">
-          <i class="bi bi-cash me-2"></i>
-          My Refunds
-        </a>
-      </li>
-      <!-- Refund Request
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/refundrequest" routerLinkActive="active">
-          <i class="bi bi-cash-coin me-2"></i>
-          Refund Request
-        </a>
-      </li> -->
-      <!-- Wishlist -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/wishlist" routerLinkActive="active">
-          <i class="bi bi-heart me-2"></i>
-          Wishlist
-        </a>
-      </li>
-      <!-- Username and Password -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/usernameandpassword" routerLinkActive="active">
-          <i class="bi bi-key me-2"></i>
-          Username and Password
-        </a>
-      </li>
-        <!-- Logout -->
-        <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" (click)="logOut()">
-            <i class="bi bi-key me-2"></i>
-            Logout
-          </a>
-        </li>
-    </ul>
-  </div>
-
-  
+ <!-- Sidebar -->
+ <div class="sidenav">
+  <ul class="nav nav-pills flex-column mb-auto">
+    <!-- User Information -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/userinformation" routerLinkActive="active">
+        <i class="bi bi-person-circle me-2"></i>
+        <span class="text-label">User Information</span>
+      </a>
+    </li>
+    <!-- Orders -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/orders" routerLinkActive="active">
+        <i class="bi bi-basket2 me-2"></i>
+        <span class="text-label">Orders</span>
+      </a>
+    </li>
+    <!-- Tickets -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/tickets" routerLinkActive="active">
+        <i class="bi bi-ticket me-2"></i>
+        <span class="text-label">Tickets</span>
+      </a>
+    </li>
+    <!-- My Refunds -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/myrefunds" routerLinkActive="active">
+        <i class="bi bi-cash me-2"></i>
+        <span class="text-label">My Refunds</span>
+      </a>
+    </li>
+    <!-- Wishlist -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/wishlist" routerLinkActive="active">
+        <i class="bi bi-heart me-2"></i>
+        <span class="text-label">Wishlist</span>
+      </a>
+    </li>
+    <!-- Username and Password -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/usernameandpassword" routerLinkActive="active">
+        <i class="bi bi-key me-2"></i>
+        <span class="text-label">Username and Password</span>
+      </a>
+    </li>
+    <!-- Logout -->
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive="active" (click)="logOut()">
+        <i class="bi bi-box-arrow-left me-2"></i>
+        <span class="text-label">Logout</span>
+      </a>
+    </li>
+  </ul>
+</div>

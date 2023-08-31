@@ -37,4 +37,23 @@
   .fas {
     margin-right: 5px;
   }
+
+  @media screen and (max-width: 768px) { 
+    .custom-text-size {
+      font-size: 12px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+    }
+    
+    .text-muted {
+      font-size: 14px;
+    }
+  
+    .lead {
+      font-size: 16px;
+    }
+  }
+  
   
