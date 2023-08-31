@@ -78,6 +78,7 @@
           <!-- Wine Name Field -->
           <div class="mb-3">
             <label for="wineName" class="form-label">Name</label>
+            <i *ngIf="!editingInventory" class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please select the Wine Name" ></i>
             <!-- When Adding Inventory -->
             <select *ngIf="!editingInventory" class="form-select" id="wineName" [(ngModel)]="currentInventory.wineID" name="wineID" required (ngModelChange)="updateFieldsBasedOnWineName(currentInventory.wineID)">
                 <option *ngFor="let wine of wines" [value]="wine.wineID">{{ wine.name }}</option>
@@ -123,6 +124,7 @@
           <!-- Stock Limit Field -->
           <div class="mb-3">
             <label for="stockLimit" class="form-label">Stock Limit</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter minimun amount of the wine that should be available"></i>
             <input type="number" class="form-control" id="stockLimit" [(ngModel)]="currentInventory.stockLimit" name="stockLimit" required [min]="0.01" #stockLimitField="ngModel">
             <div *ngIf="stockLimitField.invalid && stockLimitField.touched" class="alert alert-danger">
               <div *ngIf="stockLimitField.errors?.['required']">Stock Limit is required.</div>
@@ -133,6 +135,7 @@
           <!-- Quantity On Hand Field -->
           <div class="mb-3">
             <label for="quantityOnHand" class="form-label">Quantity On Hand</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the amount of Wine you have on hand"></i>
             <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required [min]="0.01" #quantityOnHandField="ngModel">
             <div *ngIf="quantityOnHandField.invalid && quantityOnHandField.touched" class="alert alert-danger">
               <div *ngIf="quantityOnHandField.errors?.['required']">Quantity On Hand is required.</div>
@@ -179,3 +182,10 @@
 </div>
 
 <!--************************************************************ Delete Modal *************************************************************************************************-->
+
+
+
+
+
+
+<button type="button" class="btn btn-primary" (click)="exportexcel()">Export to Excel</button>

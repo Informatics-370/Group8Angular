@@ -54,13 +54,13 @@
                         (change)="updateOrder(order)">
                 </td>
                 <!-- Add this to your <tr> element -->
-                <td>
+                <!-- <td> Mens moet nie supplier orders kan delete nie agv audit trail of iets ek kan nie onthou nie maar Prof het so gese.
                     <button class="btn btn-danger"
                         *ngIf="order.supplierOrderStatus?.ordered && order.supplierOrderStatus?.paid && order.supplierOrderStatus?.received"
                         (click)="order.supplierOrderID !== undefined && openDeleteSupplierOrderModal(order)">
                         <i class="fas fa-trash-alt"></i>
                     </button>
-                </td>
+                </td> -->
 
             </tr>
         </tbody>
@@ -92,34 +92,39 @@
                     <!-- In your Add Supplier Order Modal form -->
                     <div class="mb-3">
                         <label for="wineName" class="form-label">Wine Name</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Name"></i>
                         <input *ngIf="selectedOrder" type="text" class="form-control" id="wineName" name="wineName"
                             [(ngModel)]="selectedOrder.wineName" required>
                     </div>
                     <div class="mb-3">
                         <label for="wineYear" class="form-label">Wine Year</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Year"></i>
                         <input *ngIf="selectedOrder" type="text" class="form-control" id="wineYear" name="wineYear"
                             [(ngModel)]="selectedOrder.wineYear" required>
                     </div>
                     <div class="mb-3">
                         <label for="wineType" class="form-label">Wine Type</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine type"></i>
                         <input *ngIf="selectedOrder" type="text" class="form-control" id="wineType" name="wineType"
                             [(ngModel)]="selectedOrder.wineType" required>
                     </div>
                     <div class="mb-3">
                         <label for="winePrice" class="form-label">Wine Price</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine price"></i>
                         <input *ngIf="selectedOrder" type="number" class="form-control" id="winePrice" name="winePrice"
                             [(ngModel)]="selectedOrder.winePrice" min="1" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the quantity ordered"></i>
                         <input *ngIf="selectedOrder" type="number" class="form-control" id="quantityOrdered"
                             name="quantity_Ordered" [(ngModel)]="selectedOrder.quantity_Ordered" min="1" required>
                     </div>
 
                     <div *ngIf="selectedOrder">
                         <label for="quantityOrdered" class="form-label">Supplier</label>
-
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please select the supplier ordered from"></i>
                         <select id="supplierID" name="supplierID" [(ngModel)]="selectedOrder.supplierID"
                             class="form-control">
                             <option *ngFor="let supplier of suppliers" [value]="supplier.supplierID">{{supplier.name}}

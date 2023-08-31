@@ -55,6 +55,8 @@
 
           <div class="mb-3">
             <label for="varietalName" class="form-label">Varietal Name</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Wine Varietal Name"></i>
             <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
               name="varietalName" required #nameField="ngModel">
             <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
@@ -64,6 +66,8 @@
 
           <div class="mb-3">
             <label for="varietalDescription" class="form-label">Varietal Description</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Wine Varietal Description"></i>
             <textarea type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
               name="varietalDescription" required #descField="ngModel"></textarea>
             <div *ngIf="descField.invalid && descField.touched" class="alert alert-danger">

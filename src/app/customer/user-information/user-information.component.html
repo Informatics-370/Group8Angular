@@ -45,6 +45,8 @@
             <!-- TITLE -->
             <div class="mb-3">
               <label for="title" class="form-label">Title:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Choose an appropriate title from the dropdown."></i>
               <select class="form-select" id="editTitle" [(ngModel)]="user!.title" name="title" required>
                 <option value="" disabled selected>Select a title</option>
                 <option value="Mr">Mr</option>
@@ -60,6 +62,7 @@
             <!-- FIRST NAME -->
             <div class="mb-3">
               <label for="title" class="form-label">First Name:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Enter your first name."></i>
               <input type="text" class="form-control" id="editName" [(ngModel)]="user!.first_Name" name="first_Name" required>
               <div *ngIf="editCustomerForm.controls['first_Name']?.invalid && editCustomerForm.controls['first_Name'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['first_Name'].errors?.['required']">First name is required.</div>
@@ -69,6 +72,7 @@
             <!-- LAST NAME -->
             <div class="mb-3">
               <label for="last_Name" class="form-label">Last Name:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Enter your last name."></i>
               <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$"> 
               <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
@@ -80,6 +84,7 @@
             <!-- EMAIL -->
             <div class="mb-3">
               <label for="email" class="form-label">Email:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide a valid email address."></i>
               <input type="text" class="form-control" id="editEmail" [(ngModel)]="user!.email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
               <div *ngIf="editCustomerForm.controls['email']?.invalid && editCustomerForm.controls['email'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['email'].errors?.['required']">Email is required.</div>
@@ -90,6 +95,8 @@
             <!-- PHONE NUMBER -->
             <div class="mb-3">
               <label for="phoneNumber" class="form-label">Phone Number:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Enter a 10-digit phone number starting with 0."></i>
               <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^0[0-9]{9}$">
               <div *ngIf="editCustomerForm.controls['phoneNumber']?.invalid && editCustomerForm.controls['phoneNumber'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['required']">Phone Number is required.</div>
@@ -100,6 +107,7 @@
             <!-- ID NUMBER -->
             <div class="mb-3">
               <label for="iD_Number" class="form-label">ID Number:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide your 13-digit ID number."></i>
               <input type="text" class="form-control" id="editiD_Number" [(ngModel)]="user!.iD_Number" name="iD_Number" required pattern="^[0-9]{13}$">
               <div *ngIf="editCustomerForm.controls['iD_Number']?.invalid && editCustomerForm.controls['iD_Number'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['required']">ID Number is required.</div>
@@ -110,6 +118,8 @@
             <!-- GENDER -->
             <div class="mb-3">
               <label for="gender" class="form-label">Gender:</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Choose your gender from the dropdown."></i>
               <select class="form-select" id="editGender" [(ngModel)]="user!.gender" name="gender" required>
               <option value="" disabled selected>Select a gender</option>
                   <option value="Male">Male</option>
@@ -124,6 +134,8 @@
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="enableTwoFactorAuth" [(ngModel)]="user!.twoFactorEnabled" name="enableTwoFactorAuth" #enableTwoFactorAuthInput>
               <label class="form-check-label" for="enableTwoFactorAuth">Enable Two-Factor Authentication</label>
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Check this if you want to enable two-factor authentication for added security."></i>
             </div>
   
             <!-- OTHER FIELDS (First Name, Last Name, Email, Phone Number, ID Number, Gender) -->

@@ -83,7 +83,7 @@ async requestRefund(orderId: number, wineId: number, description: string, refNum
 
   try {
     await this.refundService.requestRefund(wineId, email, cost, description, refNum).toPromise(); // pass the description
-    this.toastr.success('Refund request has been sent.');
+    this.toastr.success('Refund request has been sent.', 'Success');
     order.isRefunded = true;
     //console.log('Order Total:', order.orderTotal);
   } catch (error) {

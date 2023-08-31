@@ -68,6 +68,8 @@
 
           <div class="mb-3">
             <label for="discountDescription" class="form-label">Discount Description</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter a description for the Discount"></i>
             <input type="text" class="form-control" id="discountDescription"
               [(ngModel)]="currentDiscount.discountDescription" name="discountDescription" required #discountDescriptionField="ngModel">
             <div *ngIf="discountDescriptionField.invalid && discountDescriptionField.touched" class="alert alert-danger">
@@ -77,6 +79,8 @@
 
           <div class="mb-3">
             <label for="discountAmount" class="form-label">Discount Percentage Amount</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Discount Percentage"></i>
             <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountPercentage"
               name="discountAmount" required [min]="1" [max]="100" #discountAmountField="ngModel">
             <div *ngIf="discountAmountField.invalid && discountAmountField.touched" class="alert alert-danger">

@@ -12,6 +12,7 @@ import { WineType } from 'src/app/Model/winetype';
 import { Varietal } from 'src/app/Model/varietal';
 import { WinetypeService } from '../services/winetype.service';
 import { VarietalService } from '../services/varietal.service';
+import * as XLSX from 'xlsx';
 
 
 
@@ -71,6 +72,7 @@ export class InventoryComponent implements OnInit{
       this.loadWORs();
       this.loadInventory();
       this.loadWines();
+      this.populateExcelArray();
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -247,7 +249,7 @@ async submitInventoryForm(form: NgForm): Promise<void> {
       }
     } catch (error) {
       console.error(error);
-      this.toastr.error('Error occurred, please try again', 'Inventory Reason');
+      this.toastr.error('Error occurred, please try again', 'Inventory');
       this.closeInventoryModal();
     }
   }
@@ -402,5 +404,67 @@ async deleteWOR(): Promise<void> {
 
 
 //******************* Modal-related methods *********************************************************************************************************************************
+
+
+
+
+
+
+
+excelarray: any[] =[];
+
+populateExcelArray() {
+  this.excelarray = this.inventory.map((x) => {
+    return {
+      'Wine Name': this.getWineName(x.wineID),
+      'Wine Varietal': this.getVarietalName(x.varietalID),
+      'Wine Type': this.getWinetypeName(x.wineTypeID),
+      'Wine Price': this.getWinePrice(x.wineID),
+      'Stock Limit' : x.stockLimit,
+      'Quantity On Hand': x.quantityOnHand,
+    };
+  });
+  console.log(this.excelarray)
+}
+
+exportexcel(): void {
+  this.populateExcelArray();
+  const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.excelarray);
+  
+  // Set column widths (example: wineName width = 20, varietalName width = 15, etc.)
+  const columnWidths = [
+    { wch: 15 }, // wineName
+    { wch: 15 }, // varietalName
+    { wch: 15 }, // winetypeName
+    { wch: 15 }, // winePrice
+    { wch: 15 }, // stockLimit
+    { wch: 15 }, // quantityOnHand
+  ];
+  
+  ws['!cols'] = columnWidths;
+
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+  // Generate an array containing the Excel data
+  const excelDataArray = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
+  // Create a Blob object from the array data
+  const blob = new Blob([excelDataArray], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  });
+
+  // Create a download URL for the Blob
+  const url = window.URL.createObjectURL(blob);
+
+  // Create a link element to trigger the download
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Inventory On Hand.xlsx';
+  a.click();
+
+  // Clean up the URL object
+  window.URL.revokeObjectURL(url);
+}
 
 }
