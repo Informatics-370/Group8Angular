@@ -82,3 +82,28 @@
   background-color: #0d6efd;
   border-color: #0d6efd;
 }
+
+/* Regular view styles */
+.sidenav .nav-item .nav-link {
+  display: flex;
+  align-items: center;
+}
+
+.sidenav .nav-item .nav-link i {
+  margin-right: 8px;
+}
+
+.sidenav .nav-item .nav-link .text-label {
+  display: inline;
+}
+
+/* Small view styles */
+@media screen and (max-width: 768px) { /* Adjust 768px according to your needs */
+  .sidenav .nav-item .nav-link .text-label {
+    display: none;
+  }
+
+  .sidenav .nav-item .nav-link i {
+    margin-right: 0;
+  }
+}
