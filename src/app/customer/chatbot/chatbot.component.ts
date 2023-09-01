@@ -32,7 +32,7 @@ export class ChatbotComponent {
 
   sendMessage() {
     const sentMessage = this.chatForm.value.message!;
-    this.loading = true;
+    this.loading = true; 
     this.messages.push({
       type: 'user',
       message: sentMessage,
