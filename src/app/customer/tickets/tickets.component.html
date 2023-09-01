@@ -2,46 +2,56 @@
   <p class="lead">You have not purchased any tickets yet.</p>
 </div>
 
-<div class="row"> <!-- Wrap the cards in a row -->
-  <!-- Wine Event Tickets -->
-  <div *ngFor="let ticket of purchasedTickets" class="col-md-6 my-3"> <!-- Set the column width for medium screens and above to 6, so there are two columns -->
+<div class="row">
+  <div *ngFor="let ticket of purchasedTickets; let i = index" class="col-md-6 my-3">
     <div class="card" [style.max-width.px]="800" [style.background-color]="ticket.ticketPurchasedStatus?.eventDeleted ? '#ccc' : '#f2f2f2'">
       <div class="card-header" [style.background-color]="ticket.ticketPurchasedStatus?.eventDeleted ? '#ccc' : '#54ce20'" [style.color]="'#fff'">
         <h2 class="card-title">{{ ticket.eventName }}</h2>
       </div>
       <div class="card-body">
         <div *ngIf="ticket.ticketPurchasedStatus?.eventDeleted==true" class="text-center my-3">
-          <span *ngIf="ticket.id" class="d-inline">This event ticket is for an event in the past.</span> <!-- Change to inline element -->
-          
+          <span *ngIf="ticket.id" class="d-inline">This event ticket is for an event in the past.</span> 
         </div>
-        <!-- Rest of ticket details as before -->
         <div class="ticket-detail">
-          <span class="label">Event Date:</span>
+          <span class="label">Event Date: </span>
           <span class="data">{{ ticket.eventDate | date:'longDate' }}</span>
         </div>
         <div class="ticket-detail">
           <span class="label">Time:</span>
           <span class="data">{{ getEventTime(ticket.eventDate) }}</span>
         </div>
+
         <div class="ticket-detail">
-          <span class="label">Description:</span>
+          <span class="label">Description: </span>
           <p class="data">{{ ticket.description }}</p>
         </div>
+
         <div class="ticket-detail">
-          <span class="label">Purchased on:</span>
+          <span class="label">Purchased on: </span>
           <span class="data">{{ ticket.purchaseDate | date:'longDate' }}</span>
         </div>
         <div class="ticket-detail">
-          <span class="label">Price:</span>
+          <span class="label">Price: </span>
           <span class="data">R{{ ticket.ticketPrice }}</span>
         </div>
         <br>
-        <button *ngIf="ticket.ticketPurchasedStatus?.eventDeleted" class="btn btn-danger d-inline" (click)="onDeleteTicket(ticket.id)">Delete Ticket</button>
+        <button type="button" class="btn btn-primary float-right" (click)="toggleModal(i)">Show QR Code</button>
 
-
+        <!-- QR Code Modal -->
+    <div *ngIf="showModal[i]" class="modal-container">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button type="button" class="close" (click)="toggleModal(i)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img [src]="'data:image/png;base64,' + ticket.qrCode.qrCodeBase64" alt="QR Code" class="img-fluid qr-code-img">
+        </div>
       </div>
     </div>
+    <!-- ... -->
   </div>
 </div>
-
 <!-- <pre>{{ purchasedTickets | json }}</pre> -->
