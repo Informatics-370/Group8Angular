@@ -5,6 +5,12 @@ import { Supplier } from 'src/app/Model/supplier';
 import { SupplierService } from '../services/supplier.service';
 import { ToastrService } from 'ngx-toastr';
 import { UpdateSupplierOrderStatusDTO } from '../../Model/UpdateSupplierOrderStatusDTO';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
+import { delay, timeout } from 'rxjs';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
 
 @Component({
   selector: 'app-supplier-order',
@@ -19,11 +25,14 @@ export class SupplierOrderComponent implements OnInit {
   showAddSupplierOrderModal = false;
   suppliers: Supplier[] = [];
 
-  constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService) { }
+  constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService,
+    private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.getSupplierOrders();
     this.getSuppliers();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   getSupplierOrders(): void {
@@ -104,6 +113,7 @@ export class SupplierOrderComponent implements OnInit {
   }
 
   updateOrder(order: SupplierOrder): void {
+    
     if (order.supplierOrderStatus) {
       if (!order.supplierOrderStatus.paid) {
         order.supplierOrderStatus.received = false;
@@ -135,6 +145,39 @@ export class SupplierOrderComponent implements OnInit {
         this.toastr.error('Error occurred please try again', 'Order');
       }
     }
+  }
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
   }
   
 }

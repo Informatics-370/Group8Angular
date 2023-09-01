@@ -2,3 +2,34 @@
 <br>
 <h2>Complete System Audit Log</h2>
   
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="header-cell">Button Pressed</th>
+        <th scope="col" class="header-cell">Username</th>
+        <th scope="col" class="header-cell"> User Email</th>
+        <th scope="col" class="header-cell"> Transaction Date</th>
+        <th scope="col" class="header-cell"> Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of AuditTrail">
+        <td>{{ x.buttonPressed }}</td>
+        <td>{{ x.userName }}</td>
+        <td>{{ x.userEmail }}</td>
+        <td>{{ x.transactionDate }}</td>
+        <td>
+            <ng-container *ngIf="x.quantity; else na">
+                {{ x.quantity }}
+            </ng-container>
+            <ng-template #na>NA</ng-template>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="text-center" *ngIf="AuditTrail.length === 0">
+      <h3>Nothing in System Audit Log.</h3>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="(AddAuditLog('Test'))">Test</button>

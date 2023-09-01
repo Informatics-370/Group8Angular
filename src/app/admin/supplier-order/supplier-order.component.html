@@ -38,14 +38,14 @@
                 <!-- Ordered -->
                 <td>
                     <input *ngIf="order.supplierOrderStatus" type="checkbox"
-                        [(ngModel)]="order.supplierOrderStatus.ordered" (change)="updateOrder(order)">
+                        [(ngModel)]="order.supplierOrderStatus.ordered" (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Ordered')">
                 </td>
 
                 <!-- Paid -->
                 <td>
                     <input *ngIf="order.supplierOrderStatus" type="checkbox"
                         [(ngModel)]="order.supplierOrderStatus.paid" [disabled]="!order.supplierOrderStatus.ordered"
-                        (change)="updateOrder(order)">
+                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Paid')">
                 </td>
 
                 <!-- Received -->
@@ -53,7 +53,7 @@
                     <input *ngIf="order.supplierOrderStatus" type="checkbox"
                         [(ngModel)]="order.supplierOrderStatus.received"
                         [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid"
-                        (change)="updateOrder(order)">
+                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received')">
                 </td>
                 <!-- Add this to your <tr> element -->
                 <!-- <td> Mens moet nie supplier orders kan delete nie agv audit trail of iets ek kan nie onthou nie maar Prof het so gese.
@@ -141,7 +141,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="closeAddSupplierOrderModal()">Close</button>
                 <button type="button" class="btn btn-primary" [disabled]="addSupplierOrderForm.invalid"
-                    (click)="createOrder(addSupplierOrderForm.value)">Add</button>
+                    (click)="createOrder(addSupplierOrderForm.value); AddAuditLog('Supplier Order Added')">Add</button>
             </div>
         </div>
     </div>
