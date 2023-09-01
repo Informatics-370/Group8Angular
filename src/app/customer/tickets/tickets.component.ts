@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
 
+
 import { DataServiceService } from '../services/data-service.service';
 import { PaymentService } from '../services/payment.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,8 +13,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TicketsComponent {
   purchasedTickets: TicketPurchase[] = [];
+  showModal: boolean[] = [];
 
-  constructor(private paymentService: PaymentService, private toastr : ToastrService) { }
+  constructor(private paymentService: PaymentService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.loadUserTickets();
@@ -31,33 +33,41 @@ export class TicketsComponent {
     );
   }
 
+
+
   getEventTime(eventDate: string | Date): string {
     const date = new Date(eventDate);
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    
+
     // padStart is used to ensure that hours and minutes less than 10 start with a '0'
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-}
-
-onDeleteTicket(ticketId: number | undefined): void {
-  if (ticketId === undefined) {
-    this.toastr.error('Ticket ID is not available, cannot delete the ticket.');
-    return;
   }
 
-  this.paymentService.deletePurchasedTicket(ticketId).subscribe(
-    () => {
-      this.toastr.success('Ticket deleted successfully');
-      // Reload the tickets by calling the loadUserTickets method again
-      this.loadUserTickets();
-    },
-    (error) => {
-      this.toastr.error('Failed to delete the ticket');
-      console.error(error);
+  onDeleteTicket(ticketId: number | undefined): void {
+    if (ticketId === undefined) {
+      this.toastr.error('Ticket ID is not available, cannot delete the ticket.');
+      return;
     }
-  );
+
+    this.paymentService.deletePurchasedTicket(ticketId).subscribe(
+      () => {
+        this.toastr.success('Ticket deleted successfully');
+        // Reload the tickets by calling the loadUserTickets method again
+        this.loadUserTickets();
+      },
+      (error) => {
+        this.toastr.error('Failed to delete the ticket');
+        console.error(error);
+      }
+    );
+  }
+
+
+
+  toggleModal(index: number): void {
+    this.showModal[index] = !this.showModal[index];
+  }
 }
 
 
-}
