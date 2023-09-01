@@ -100,6 +100,15 @@ export class PdfService {
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+       
+    if(currentDate == null){
+      this.toastr.warning('Please input begin and end date','Error');
+
+    } else{
+      this.toastr.success('Generating...','Report');
+    }
+
+
   await delay(1234);
   // if(this.getWineName(inventoryData.wineID) == 'Unknown'){
 
@@ -224,6 +233,15 @@ export class PdfService {
   this.headerString = await this.toBase64('assets/download.png');
     this.loadWines();
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    if(currentDate == null){
+      this.toastr.warning('Please input begin and end date','Error');
+
+    } else{
+      this.toastr.success('Generating...','Report');
+    }
+
+
 
   await delay(1234);
     return new Promise<Blob>((resolve, reject) => {
@@ -350,6 +368,14 @@ export class PdfService {
     let generatedDate = Date.now();
 
     let documentDefinition: any;
+
+    if(beginDate == null || endDate == null){
+      this.toastr.warning('Please input begin and end date','Error');
+
+    } else{
+      this.toastr.success('Generating...','Report');
+    }
+
 
     if (eventData.length > 0) {
       documentDefinition = {
@@ -482,6 +508,13 @@ export class PdfService {
   async generateEventsReport(eventData: Event[], beginDate: Date, endDate: Date, currentDate: string): Promise<Blob> {
     type Alignment = 'left' | 'right' | 'center' | 'justify';
     this.headerString = await this.toBase64('assets/download.png');
+    if(beginDate == null || endDate == null){
+      this.toastr.warning('Please input begin and end date','Error');
+
+    } else{
+      this.toastr.success('Generating...','Report');
+    }
+
     return new Promise<Blob>((resolve, reject) => {
       let documentDefinition: any;
       let formattedBeginDate = new Date(beginDate).toLocaleDateString();
@@ -617,6 +650,8 @@ export class PdfService {
   async generateSupplierOrdersPdf(supplierOrderData: SuppOrderAndVATViewModel[]): Promise<void> {
     type Alignment = 'left' | 'right' | 'center' | 'justify';
     this.headerString = await this.toBase64('assets/download.png');
+    this.toastr.success('Generating...','Report');
+
     console.log(supplierOrderData);
     if (!supplierOrderData || supplierOrderData.length === 0) {
       this.toastr.error("No supplier order data provided.");
@@ -782,6 +817,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
       console.log('SupplierOrder And VAT:', supplierOrderData);
       let generatedDate = Date.now();
       let supplierTotals: { [key: string]: number } = {};
+      this.toastr.success('Generating...','Report');
 
       // Extract VAT percentage
       if (!supplierOrderData[0].vaTs?.percentage) {
@@ -956,6 +992,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
     type Alignment = 'left' | 'right' | 'center' | 'justify';
     let documentDefinition: any;
     this.headerString = await this.toBase64('assets/download.png');
+    this.toastr.success('Generating...','Report');
 
     if (blacklistData.length > 0) {
       documentDefinition = {
@@ -1058,6 +1095,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
     return new Promise<Blob>(async (resolve, reject) => {
       let documentDefinition: any;
       this.headerString = await this.toBase64('assets/download.png');
+      this.toastr.success('Generating...','Report');
 
       if (blacklistData.length > 0) {
         documentDefinition = {
