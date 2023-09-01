@@ -4,6 +4,11 @@ import { VarietalService } from '../services/varietal.service';
 import { Varietal } from 'src/app/Model/varietal';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 
 @Component({
@@ -13,10 +18,13 @@ import { Router } from '@angular/router';
 })
 export class VarietalComponent {
 
-  constructor(private toastr : ToastrService, private router: Router,  private varietalService: VarietalService) { }
+  constructor(private toastr : ToastrService, private router: Router,  private varietalService: VarietalService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.loadVarietals();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   varietals: Varietal[] = [];
@@ -101,5 +109,44 @@ export class VarietalComponent {
       
       this.closeDeleteVarietalModal();
     }
+  }
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'Wine Varietal: ' + (this.editingVarietal ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
   }
 }

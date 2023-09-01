@@ -59,7 +59,7 @@
      </div>
      <div class="modal-footer">
        <button type="button" class="btn btn-secondary" (click)="closeDeleteCustomerModal()">No</button>
-       <button type="button" class="btn btn-primary" (click)="deleteCustomer()">Yes</button>
+       <button type="button" class="btn btn-primary" (click)="deleteCustomer(); AddAuditLog('Customer Account: Deleted')">Yes</button>
      </div>
    </div>
  </div>

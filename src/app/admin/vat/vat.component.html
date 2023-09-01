@@ -21,7 +21,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeVatModal()"></button>
       </div>
       <div class="modal-body">
-        <form #vatForm="ngForm" (ngSubmit)="submitVatForm(vatForm)">
+        <form #vatForm="ngForm" (ngSubmit)="submitVatForm(vatForm); onSubmitClick()">
           <div class="mb-3">
             <label for="percentage" class="form-label">Percentage</label>
             <input type="number" class="form-control" id="percentage" [(ngModel)]="currentVat.percentage" name="percentage" required [min]="0.01" [max]="100" #percentageField="ngModel">

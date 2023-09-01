@@ -6,6 +6,11 @@ import { Superuser } from 'src/app/Model/superuser';
 import { SuperuserRegistrationViewModel } from 'src/app/Model/superuserRegisterViewModel';
 import { SuperuserViewModel } from 'src/app/Model/superuserViewModel';
 import { SuperuserService } from '../services/superuser.service';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-superuser',
@@ -28,13 +33,16 @@ export class SuperuserComponent {
   searchTerm: string = '';
   filteredSuperusers: Superuser[] = [];
 
-  constructor(private superuserService: SuperuserService, private toastr : ToastrService){ }
+  constructor(private superuserService: SuperuserService, private toastr : ToastrService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService){ }
 
   ngOnInit(): void { 
     this.getSuperusers();
     const today = new Date();
     this.maxDate = this.formatDate(today);
     this.clearConfirmationInput();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   searchSuperusers() {
@@ -230,4 +238,45 @@ export class SuperuserComponent {
   
     return age >= 18;
   }  
+
+
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'Superuser Account: ' + (this.editingSuperuser ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
+  }
 }

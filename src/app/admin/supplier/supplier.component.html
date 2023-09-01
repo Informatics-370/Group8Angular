@@ -21,7 +21,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{{editingSupplier ? 'Edit Supplier' : 'Add Supplier'}}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeSupplierModal()"></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeSupplierModal(); onSubmitClick()"></button>
       </div>
       <div class="modal-body">
         <form #supplierForm="ngForm" (ngSubmit)="submitSupplierForm(supplierForm)">
@@ -117,7 +117,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteSupplierModal()">No</button>
-      <button type="button" class="btn btn-primary" (click)="deleteSupplier(supplierToDeleteDetails.supplierID)">Yes</button>
+      <button type="button" class="btn btn-primary" (click)="deleteSupplier(supplierToDeleteDetails.supplierID); AddAuditLog('Supplier: Deleted')">Yes</button>
     </div>
   </div>
 </div>

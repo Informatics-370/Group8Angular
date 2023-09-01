@@ -52,7 +52,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{editingEventPrice ? 'Edit EventPrice' : 'Add EventPrice'}}</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeEventPriceModal()"></button>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeEventPriceModal(); onSubmitClick()"></button>
         </div>
         <div class="modal-body">
           <form #eventPriceForm="ngForm" (ngSubmit)="submitEventPriceForm(eventPriceForm)">
@@ -99,7 +99,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeDeleteEventPriceModal()">No</button>
-          <button type="button" class="btn btn-primary" (click)="deleteEventPrice()">Yes</button>
+          <button type="button" class="btn btn-primary" (click)="deleteEventPrice(); AddAuditLog('Event Price: Deleted')">Yes</button>
         </div>
       </div>
     </div>

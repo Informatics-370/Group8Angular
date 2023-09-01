@@ -6,6 +6,11 @@ import { ToastrService } from 'ngx-toastr';
 import { Register } from 'src/app/Model/register';
 import { EmployeeRegistrationViewModel } from 'src/app/Model/employeeRegisterViewModel';
 import { EmployeeViewModel } from 'src/app/Model/employeeViewModel';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 
 @Component({
@@ -29,12 +34,17 @@ export class EmployeeComponent {
   searchTerm: string = '';
   filteredEmployees: Employee[] = [];
 
-  constructor(private employeeService: EmployeeService, private toastr : ToastrService){ }
+  constructor(private employeeService: EmployeeService, private toastr : ToastrService,
+    private customerService: CustomersService,
+    private auditLogService: AuditlogService,
+    private dataService: DataServiceService){ }
 
   ngOnInit(): void { 
     this.getEmployees();
     const today = new Date();
     this.maxDate = this.formatDate(today);
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   formatDate(date: Date): string {
@@ -231,4 +241,44 @@ export class EmployeeComponent {
   
     return age >= 18;
   }  
+
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'Employee Account: ' + (this.editingEmployee ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
+  }
 }

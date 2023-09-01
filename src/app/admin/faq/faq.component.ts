@@ -4,6 +4,11 @@ import { FAQService } from '../services/faq.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-faq',
@@ -20,11 +25,14 @@ export class FaqComponent implements OnInit {
   faqToDeleteDetails: any;
   showDeleteFAQModal = false;
   
-  constructor(private faqService: FAQService, private router: Router, private toastr: ToastrService) {}
+  constructor(private faqService: FAQService, private router: Router, private toastr: ToastrService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) {}
 
   //When the page is called these methods are automatically called
   ngOnInit(): void {
     this.loadFAQs();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   //retrieves all the information in the FAQ table from the database and stores it in the FAQ's array.
@@ -139,5 +147,44 @@ export class FaqComponent implements OnInit {
         this.toastr.error('Error, please try again', 'Delete');
       }
     });
+  }
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'FAQ: ' + (this.editingFAQ ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
   }
 }

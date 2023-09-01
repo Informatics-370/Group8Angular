@@ -15,6 +15,11 @@ import { Wine } from 'src/app/Model/wine';
 import { SuppOrderAndVATViewModel } from 'src/app/Model/SupplierOrdersVATs';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
 import { VAT } from 'src/app/Model/vat';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale);
 
@@ -32,7 +37,8 @@ export class ReportComponent {
     private pdfService: PdfService,
     private inventoryService: InventoryService,
     private salesService: SalesService,
-    private wineService: WineService) { }
+    private wineService: WineService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private adataService: DataServiceService) { }
 
   showRefundsModal: boolean = false;
   currentDate = new Date();
@@ -52,6 +58,8 @@ export class ReportComponent {
   ngOnInit(): void {
     this.loadInventory();
     this.loadWines();
+    this.userDetails = this.adataService.getUserFromToken();
+    this.loadUserData();
   }
 
   async loadInventory(): Promise<void> {
@@ -449,6 +457,39 @@ export class ReportComponent {
         }
       }
     });
+  }
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
   }
 }
 

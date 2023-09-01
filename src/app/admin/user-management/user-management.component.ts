@@ -3,6 +3,10 @@ import { UserRolesViewModel } from 'src/app/Model/userRolesViewModel';
 import { UserManagementService } from '../services/user-management.service';
 import { ToastrService } from 'ngx-toastr';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-user-management',
@@ -15,7 +19,8 @@ export class UserManagementComponent {
   public users: UserRolesViewModel[] = [];
   private editableUsers = new Set<UserRolesViewModel>();
 
-  constructor(private userManagementService: UserManagementService, private toastr: ToastrService, private dataService: DataServiceService) { }
+  constructor(private userManagementService: UserManagementService, private toastr: ToastrService, private dataService: DataServiceService
+    , private customerService: CustomersService,private auditLogService: AuditlogService) { }
 
   searchTerm: string = '';
   filteredUsers: UserRolesViewModel[] = [];
@@ -23,6 +28,8 @@ export class UserManagementComponent {
   ngOnInit(){
     this.getAllUsers();
     this.getAllRoles();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   getAllUsers(){
@@ -77,6 +84,7 @@ export class UserManagementComponent {
           this.searchTerm = '';
           this.getAllUsers();
           this.getAllRoles();
+          this.AddAuditLog('User Access: Updated');
         },
         error => this.toastr.error('Error, failed to update', 'User Roles')
       );
@@ -102,5 +110,39 @@ export class UserManagementComponent {
   
     this.filteredUsers = this.users.filter(sup => 
       (sup.userEmail && sup.userEmail.toLowerCase().includes(lowercasedTerm)));
+  }
+
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
   }
 }

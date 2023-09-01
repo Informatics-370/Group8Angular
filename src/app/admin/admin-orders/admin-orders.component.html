@@ -40,14 +40,14 @@
 
           <!-- Show "Mark as Placed" only if the status is 1 -->
           <button *ngIf="order.orderStatusId === 1" class="btn btn-warning"
-            (click)="updateOrderStatus(order.wineOrderId, 2)">Mark as Placed</button>
+            (click)="updateOrderStatus(order.wineOrderId, 2); AddAuditLog('Client Order Status: Placed')">Mark as Placed</button>
 
           <!-- Existing buttons, but now they are displayed conditionally -->
           <div *ngIf="order.orderStatusId !== 1">
             <button class="btn btn-success" [disabled]="order.orderStatusId !== 2"
-              (click)="updateOrderStatus(order.wineOrderId, 3)">Mark as Received</button><br /><br />
+              (click)="updateOrderStatus(order.wineOrderId, 3); AddAuditLog('Client Order Status: Received')">Mark as Received</button><br /><br />
             <button class="btn btn-primary" [disabled]="order.orderStatusId !== 3"
-              (click)="updateOrderStatus(order.wineOrderId, 4)">Mark as Collected</button>
+              (click)="updateOrderStatus(order.wineOrderId, 4); AddAuditLog('Client Order Status: Collected')">Mark as Collected</button>
           </div>
 
 

@@ -26,7 +26,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeFAQModal()"></button>
       </div>
       <div class="modal-body">
-        <form #faqForm="ngForm" (ngSubmit)="submitFAQForm(faqForm)">
+        <form #faqForm="ngForm" (ngSubmit)="submitFAQForm(faqForm); onSubmitClick()">
           <div class="mb-3">
             <label for="question" class="form-label">FAQ Question</label>
             <input type="text" class="form-control" id="question" [(ngModel)]="currentFAQ.question" name="question" required #questionField="ngModel">
@@ -101,7 +101,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteFAQModal()">No</button>
-      <button type="button" class="btn btn-primary" (click)="deleteFAQ(faqToDeleteDetails.faqid)">Yes</button>
+      <button type="button" class="btn btn-primary" (click)="deleteFAQ(faqToDeleteDetails.faqid); AddAuditLog('FAQ: Deleted')">Yes</button>
     </div>
   </div>
 </div>
