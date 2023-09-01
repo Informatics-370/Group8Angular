@@ -90,7 +90,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeWineModal()"></button>
       </div>
       <div class="modal-body">
-        <form #wineForm="ngForm" (ngSubmit)="submitWineForm(wineForm)">
+        <form #wineForm="ngForm" (ngSubmit)="submitWineForm(wineForm); onSubmitClick()">
           <div class="mb-3">
             <label for="name" class="form-label">Wine Name</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
@@ -241,7 +241,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteWineModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="deleteWine()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteWine(); AddAuditLog('Wine: Deleted')">Yes</button>
       </div>
     </div>
   </div>

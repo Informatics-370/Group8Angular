@@ -54,7 +54,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeVarietalModal()"></button>
       </div>
       <div class="modal-body">
-        <form #varietalForm="ngForm" (ngSubmit)="submitVarietalForm(varietalForm)">
+        <form #varietalForm="ngForm" (ngSubmit)="submitVarietalForm(varietalForm); onSubmitClick()">
 
           <div class="mb-3">
             <label for="varietalName" class="form-label">Varietal Name</label>
@@ -106,7 +106,7 @@
      </div>
      <div class="modal-footer">
        <button type="button" class="btn btn-secondary" (click)="closeDeleteVarietalModal()">No</button>
-       <button type="button" class="btn btn-primary" (click)="deleteVarietal()">Yes</button>
+       <button type="button" class="btn btn-primary" (click)="deleteVarietal(); AddAuditLog('Wine Varietal: Deleted')">Yes</button>
      </div>
    </div>
  </div>

@@ -87,7 +87,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteEventModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="deleteEvent()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteEvent(); AddAuditLog('Event: Deleted')">Yes</button>
       </div>
     </div>
   </div>
@@ -106,7 +106,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEventModal()"></button>
       </div>
       <div class="modal-body">
-        <form #eventForm="ngForm" (ngSubmit)="submitEventForm(eventForm)">
+        <form #eventForm="ngForm" (ngSubmit)="submitEventForm(eventForm); onSubmitClick()">
 
           <div class="mb-3">
             <label for="eventName" class="form-label">Event Name</label>

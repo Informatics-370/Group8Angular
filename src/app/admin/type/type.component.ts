@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { WinetypeService } from '../services/winetype.service';
 import { WineType } from 'src/app/Model/winetype';
 import { ToastrService } from 'ngx-toastr';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-type',
@@ -12,10 +17,13 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TypeComponent {
 
-  constructor(private toastr : ToastrService, private router: Router,  private winetypeService: WinetypeService) { }
+  constructor(private toastr : ToastrService, private router: Router,  private winetypeService: WinetypeService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.loadWinetypes();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   winetypes: WineType[] = [];
@@ -99,5 +107,44 @@ export class TypeComponent {
       this.toastr.warning('An error occurred, wine type referenced by wine.', 'Error');
       this.closeDeleteWineTypeModal();
     }
+  }
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'Wine Type: ' + (this.editingWinetype ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
   }
 }

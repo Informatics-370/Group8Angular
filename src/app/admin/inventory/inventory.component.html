@@ -73,7 +73,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeInventoryModal()"></button>
       </div>
       <div class="modal-body">
-        <form #inventoryForm="ngForm" (ngSubmit)="submitInventoryForm(inventoryForm)">
+        <form #inventoryForm="ngForm" (ngSubmit)="submitInventoryForm(inventoryForm); onSubmitClick()">
           
           <!-- Wine Name Field -->
           <div class="mb-3">
@@ -175,7 +175,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteInventoryModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="deleteInventory()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteInventory(); AddAuditLog('Inventory: Deleted')">Yes</button>
       </div>
     </div>
   </div>

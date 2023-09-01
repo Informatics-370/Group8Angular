@@ -3,6 +3,11 @@ import { EarlyBirdService } from '../services/earlybird.service';
 import { EarlyBird } from 'src/app/Model/earlybird';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-early-bird',
@@ -21,11 +26,14 @@ export class EarlyBirdComponent implements OnInit {
   earlyBirdToDelete: any = null;
   isSaving = false;
 
-  constructor(private earlyBirdService: EarlyBirdService, private toastr : ToastrService){ }
+  constructor(private earlyBirdService: EarlyBirdService, private toastr : ToastrService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService){ }
 
   ngOnInit(): void {
     // you can load initial data here if needed.
     this.loadEarlyBirds();
+    this.userDetails = this.dataService.getUserFromToken();
+      this.loadUserData();
   }
 
   async loadEarlyBirds(): Promise<void> {
@@ -127,5 +135,44 @@ export class EarlyBirdComponent implements OnInit {
     }
   }
   
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'Early Bird: ' + (this.editingEarlyBird ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
+  }
   
 }

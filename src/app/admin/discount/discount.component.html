@@ -98,7 +98,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDiscountModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="discountForm.invalid" (click)="submitDiscountForm(discountForm)">
+        <button type="button" class="btn btn-primary" [disabled]="discountForm.invalid" (click)="submitDiscountForm(discountForm); onSubmitClick()">
           {{editingDiscount ? 'Save Changes' : 'Save'}}
         </button>
       </div>
@@ -124,7 +124,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="deleteDiscount()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteDiscount(); AddAuditLog('Discount: Deleted')">Yes</button>
       </div>
     </div>
   </div>

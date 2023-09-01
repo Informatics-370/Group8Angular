@@ -62,7 +62,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeSuperuserModal()"></button>
       </div>
       <div class="modal-body">
-        <form #superuserForm="ngForm" (ngSubmit)="submitSuperuserForm(superuserForm)">
+        <form #superuserForm="ngForm" (ngSubmit)="submitSuperuserForm(superuserForm); onSubmitClick()">
           <!-- FIRST NAME -->
           <div class="mb-3">
             <label for="firstName" class="form-label">First Name:</label>
@@ -214,7 +214,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteSuperuserModal()">No</button>
-      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteSuperuser()">Yes</button>
+      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteSuperuser(); AddAuditLog('Superuser: Deleted')">Yes</button>
     </div>
   </div>
 </div>

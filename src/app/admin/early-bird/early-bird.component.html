@@ -56,7 +56,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEarlyBirdModal()"></button>
       </div>
       <div class="modal-body">
-        <form #earlyBirdForm="ngForm" (ngSubmit)="submitEarlyBirdForm(earlyBirdForm)">
+        <form #earlyBirdForm="ngForm" (ngSubmit)="submitEarlyBirdForm(earlyBirdForm); onSubmitClick()">
 
           <div class="mb-3">
             <label for="percentage" class="form-label">Percentage</label>
@@ -115,7 +115,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>
-      <button type="button" class="btn btn-primary" (click)="deleteEarlyBird()">Yes</button>
+      <button type="button" class="btn btn-primary" (click)="deleteEarlyBird(); AddAuditLog('Early Bird: Deleted')">Yes</button>
     </div>
   </div>
 </div>

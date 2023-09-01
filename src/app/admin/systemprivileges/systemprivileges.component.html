@@ -52,7 +52,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{editingSystemPrivilege ? 'Edit SystemPrivilege' : 'Add System Privilege'}}</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemPrivilegeModal()"></button>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemPrivilegeModal(); onSubmitClick()"></button>
         </div>
         <div class="modal-body">
           <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm)">
@@ -111,7 +111,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteSystemPrivilegeModal()">No</button>
-      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteSystemPrivilege()">Yes</button>
+      <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteSystemPrivilege(); AddAuditLog('System Privilege: Deleted')">Yes</button>
     </div>
   </div>
 </div>

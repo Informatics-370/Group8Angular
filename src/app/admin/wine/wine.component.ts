@@ -10,6 +10,11 @@ import { WineType } from 'src/app/Model/winetype';
 import { Varietal } from 'src/app/Model/varietal';
 import { ToastrService } from 'ngx-toastr';
 import { Validators } from '@angular/forms';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 
 @Component({
@@ -27,12 +32,16 @@ export class WineComponent implements OnInit {
   fileUploaded!: boolean;
   currentWineImageURL: string | undefined;
 
-  constructor(private toastr: ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService, private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef,) { }
+  constructor(private toastr: ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService
+    , private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.loadVarietals();
     this.loadWines();
     this.loadWinetypes();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
   //--------------------------------------------------------------------------------------------------------------------------------
   //Methods to display the Wines, WineTypes and WineVarietals in the tables
@@ -468,4 +477,43 @@ export class WineComponent implements OnInit {
 
   // <!-- Varietal ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
+
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
+  }
+
+  onSubmitClick() {
+    const auditLogMessage =
+      'Wine: ' + (this.editingWine ? 'Updated' : 'Added');
+    this.AddAuditLog(auditLogMessage);
+  }
 }

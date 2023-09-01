@@ -4,6 +4,11 @@ import { SupplierService } from '../services/supplier.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-supplier',
@@ -21,11 +26,14 @@ export class SupplierComponent implements OnInit {
     supplierToDeleteDetails: any;
     showDeleteSupplierModal = false;
   
-  constructor(private supplierService: SupplierService, private router: Router, private toastr: ToastrService) {}
+  constructor(private supplierService: SupplierService, private router: Router, private toastr: ToastrService
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) {}
 
   //When the page is called these methods are automatically called
   ngOnInit(): void {
     this.loadSuppliers();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
 // ****************** Methods to display the list of Suppliers. *****************************************************************************************************************
@@ -149,4 +157,43 @@ loadSuppliers(): void {
 
 //******************* Delete Modal-related methods *********************************************************************************************************************************
 
+
+AuditTrail: AuditTrail[] = [];
+currentAudit: AuditTrail = new AuditTrail();
+user: Customer | undefined;
+userDetails: any;
+
+loadUserData() {
+  const userEmail = this.userDetails?.email;
+
+  if (userEmail != null) {
+    this.customerService.GetCustomer(userEmail).subscribe(
+      (result: any) => {
+        console.log(result);
+        // Access the user object within the result
+        this.user = result.user; // Assign the user data to the variable
+      },
+      (error: any) => {
+        console.log(error);
+        this.toastr.error('Failed to load user data.');
+      }
+    );
+  }
+}
+
+async AddAuditLog(button: string): Promise<void> {
+  this.loadUserData();
+  this.currentAudit.buttonPressed = button;
+  this.currentAudit.userName = this.user?.first_Name;
+  this.currentAudit.userEmail = this.user?.email;
+  console.log(this.currentAudit);
+  const data = await this.auditLogService.addAuditLog(this.currentAudit);
+  this.AuditTrail.push(data);
+}
+
+onSubmitClick() {
+  const auditLogMessage =
+    'Supplier: ' + (this.editingSupplier ? 'Updated' : 'Added');
+  this.AddAuditLog(auditLogMessage);
+}
 }

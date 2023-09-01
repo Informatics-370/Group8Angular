@@ -13,6 +13,11 @@ import { Varietal } from 'src/app/Model/varietal';
 import { WinetypeService } from '../services/winetype.service';
 import { VarietalService } from '../services/varietal.service';
 import * as XLSX from 'xlsx';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 
 
@@ -64,6 +69,7 @@ export class InventoryComponent implements OnInit{
                 private wineService: WineService,
                 private winetypeService: WinetypeService,
                 private varietalService: VarietalService
+                , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService
                ) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -73,6 +79,8 @@ export class InventoryComponent implements OnInit{
       this.loadInventory();
       this.loadWines();
       this.populateExcelArray();
+      this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -467,4 +475,43 @@ exportexcel(): void {
   window.URL.revokeObjectURL(url);
 }
 
+
+AuditTrail: AuditTrail[] = [];
+currentAudit: AuditTrail = new AuditTrail();
+user: Customer | undefined;
+userDetails: any;
+
+loadUserData() {
+  const userEmail = this.userDetails?.email;
+
+  if (userEmail != null) {
+    this.customerService.GetCustomer(userEmail).subscribe(
+      (result: any) => {
+        console.log(result);
+        // Access the user object within the result
+        this.user = result.user; // Assign the user data to the variable
+      },
+      (error: any) => {
+        console.log(error);
+        this.toastr.error('Failed to load user data.');
+      }
+    );
+  }
+}
+
+async AddAuditLog(button: string): Promise<void> {
+  this.loadUserData();
+  this.currentAudit.buttonPressed = button;
+  this.currentAudit.userName = this.user?.first_Name;
+  this.currentAudit.userEmail = this.user?.email;
+  console.log(this.currentAudit);
+  const data = await this.auditLogService.addAuditLog(this.currentAudit);
+  this.AuditTrail.push(data);
+}
+
+onSubmitClick() {
+  const auditLogMessage =
+    'Inventory on Hand: ' + (this.editingInventory ? 'Updated' : 'Added');
+  this.AddAuditLog(auditLogMessage);
+}
 }

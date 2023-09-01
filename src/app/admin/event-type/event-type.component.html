@@ -60,7 +60,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{editingEventType ? 'Edit EventType' : 'Add EventType'}}</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeEventTypeModal()"></button>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeEventTypeModal(); onSubmitClick()"></button>
         </div>
         <div class="modal-body">
           <form #eventTypeForm="ngForm" (ngSubmit)="submitEventTypeForm(eventTypeForm)">
@@ -110,7 +110,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteEventTypeModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="deleteEventType()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteEventType(); AddAuditLog('Event Type: Deleted')">Yes</button>
       </div>
     </div>
   </div>
