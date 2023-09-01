@@ -108,3 +108,10 @@
       }
     }
   }
+
+ /* Responsive Styles */
+@media (max-width: 768px) {
+  #assistant-popup-button {
+    display: none; /* This line hides the button */
+  }
+}
