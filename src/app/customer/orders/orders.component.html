@@ -1,5 +1,15 @@
+<br>
+<br>
+<div class="row align-items-center mb-3 header">
+  <div class="col-md-6">
+    <h2 class="title">My Orders</h2>
+  </div>
+</div>
+
+
+
 <div *ngIf="orders.length === 0" class="my-5 text-center">
-  <p class="lead">You have not placed any orders yet.</p>
+  <p class="lead">You have not purchased any Orders yet.</p>
 </div>
 
 <div *ngFor="let order of orders; let i = index" class="my-3">
