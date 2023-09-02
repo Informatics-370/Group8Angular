@@ -186,7 +186,7 @@
               <option *ngFor="let eventType of eventTypes" [value]="eventType.eventTypeID">{{eventType.eventTypeName}}
               </option>
             </select>
-            <div *ngIf="eventTypeField.invalid && eventTypeField.touched" class="alert alert-danger">
+            <div *ngIf="eventTypeField.invalid && eventTypeField.touched && eventTypeField.value == 0" class="alert alert-danger">
               <div *ngIf="eventTypeField.errors?.['required']">Event Type is required.</div>
             </div>
           </div>
@@ -234,9 +234,15 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
-          [disabled]="earlyBirdField.value == '' || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent
-          ? 'Save Changes' : 'Save'}}</button>
+        <button type="button" class="btn btn-primary"
+         [disabled]="(earlyBirdField.value == null || earlyBirdField.value == '') 
+         || (eventTypeField.value==0 
+         || eventTypeField.value == null 
+         || eventTypeField.value == undefined) 
+         || eventForm.invalid 
+         ||  (!fileUploaded || invalidFileType) 
+          ||  isSubmitting">{{editingEvent? 'Save Changes' : 'Save'}}
+        </button>
 
 
       </div>
