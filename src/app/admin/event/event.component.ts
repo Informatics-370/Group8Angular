@@ -129,6 +129,8 @@ export class EventComponent {
     this.editingEvent = true;
     // Set the image URL/path of the event being edited.
 
+ 
+this.fileUploaded = true;
     let eventToEdit = this.events.find(event => event.eventID === id);
     this.currentEventImageURL = eventToEdit?.filePath || '';
 
@@ -147,6 +149,7 @@ export class EventComponent {
   closeEventModal() {
     this.showEventModal = false;
     this.ngOnInit();
+    this.fileUploaded = false;
   }
 
   openDeleteEventModal(event: any): void {
