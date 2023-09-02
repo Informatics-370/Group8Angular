@@ -11,6 +11,7 @@ export class SupplierOrder {
   supplierOrderID: number | undefined;
   quantity_Ordered: number | undefined;
   dateOrdered: Date | undefined;
+  wineID: number | undefined;
   wineName: string | undefined;
   wineYear: string | undefined;
   wineType: string | undefined;
