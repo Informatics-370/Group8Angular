@@ -19,6 +19,8 @@ export class OrdersComponent implements OnInit {
   wines: Wine[] = [];
   currentOrderId: number | null = null;
   currentWineId: number | null = null;
+  phoneNumber: string = '';
+
 
   //Refunds
   showRefundModal: boolean = false;
@@ -31,6 +33,8 @@ export class OrdersComponent implements OnInit {
     let token = localStorage.getItem('Token') || '';
     let decodedToken = jwt_decode(token) as DecodedToken;
     let email = decodedToken.sub;
+    this.phoneNumber = decodedToken.phoneNumber; 
+    console.log("Phone Number:", this.phoneNumber);
     await this.loadOrders(email);
     await this.loadWines();
   }
@@ -82,7 +86,7 @@ async requestRefund(orderId: number, wineId: number, description: string, refNum
   //console.log('Order Total:', order.orderTotal);
 
   try {
-    await this.refundService.requestRefund(wineId, email, cost, description, refNum).toPromise(); // pass the description
+    await this.refundService.requestRefund(wineId, email, cost, description, refNum, this.phoneNumber).toPromise(); // pass the description
     this.toastr.success('Refund request has been sent.', 'Success');
     order.isRefunded = true;
     //console.log('Order Total:', order.orderTotal);
@@ -94,6 +98,7 @@ async requestRefund(orderId: number, wineId: number, description: string, refNum
       this.toastr.error('Could not send refund request.', 'Error');
     }
   }
+  console.log('Phone Number:', this.phoneNumber);
 }
 
 

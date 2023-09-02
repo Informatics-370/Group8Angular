@@ -6,6 +6,7 @@
       <tr>
         <th scope="col" class="header-cell">Wine Name</th>
         <th scope="col" class="header-cell">Email</th>
+        <th scope="col" class="header-cell">Phone Number</th>
         <th scope="col" class="header-cell">Description</th>
         <th scope="col" class="header-cell">Requested On</th>
         <th scope="col" class="header-cell">Order Reference</th>
@@ -17,6 +18,7 @@
       <tr *ngFor="let request of refundRequests">
         <td>{{ getWineName(request.wineId)}}</td>
         <td>{{request.email}}</td>
+        <td>{{request.phoneNumber}}</td>
         <td>{{request.description}}</td>
         <td>{{request.requestedOn | date:'short'}}</td>
         <td>{{request.orderRefNum}}</td>
