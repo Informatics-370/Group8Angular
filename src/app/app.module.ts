@@ -66,6 +66,7 @@ import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
 import { ChartsComponent } from './admin/charts/charts.component';
 import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
 import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
+import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
 
 
 @NgModule({
@@ -119,6 +120,7 @@ import { HelpResourcesComponent } from './admin/help-resources/help-resources.co
     ChartsComponent,
     ScanTicketComponent,
     HelpResourcesComponent,
+    AccessRestrictedComponent,
   ],
   imports: [
     BrowserModule,

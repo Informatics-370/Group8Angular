@@ -109,7 +109,9 @@ export class  DataServiceService {
     return this.httpClient.post(`${this.userUrl}/ForgotPassword`, forgotPasswordViewModel);
   }
 
-
+  getCurrentUser(): UserViewModel | null {
+    return this.getUserFromToken();
+  }
 
   isAdmin(): boolean {
     const roles = this.userValue?.roles;
