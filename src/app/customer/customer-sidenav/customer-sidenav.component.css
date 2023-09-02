@@ -105,5 +105,13 @@
 
   .sidenav .nav-item .nav-link i {
     margin-right: 0;
+    text-align: center; /* Center align */
+    display: block; /* To make the icon take up the full width */
+    padding: 15px 0; /* Equal padding from top and bottom */
+    margin-left: 9px; /* Shifts icons 8 pixels to the left */
+  }
+
+  .sidenav .nav-item .nav-link {
+    padding: 0; /* Removing padding from nav-link to make the icon centered */
   }
 }
