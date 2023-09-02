@@ -45,32 +45,34 @@ import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
 import { ChartsComponent } from './admin/charts/charts.component';
 import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
+import { AuthGuard } from './auth.guard';
+import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: '/clienthome', pathMatch: 'full' },
-  { path: 'wine', component: WineComponent },
-  { path: 'inventory', component: InventoryComponent },
-  { path: 'event', component: EventComponent },
-  { path: 'faq', component: FaqComponent },
-  { path: 'supplier', component: SupplierComponent },
-  { path: 'report', component: ReportComponent },
-  { path: 'blacklist', component: BlacklistComponent },
-  { path: 'vat', component: VatComponent},
-  { path: 'employees', component: EmployeeComponent},
-  { path: 'systemprivileges', component: SystemprivilegesComponent},
-  { path: 'superuser', component: SuperuserComponent},
-  { path: 'customers', component: CustomersComponent},
-  { path: 'users', component: UserManagementComponent},
-  { path: 'writeoff', component: WriteoffComponent},
-  {path: 'varietal', component: VarietalComponent},
-  {path: 'type', component: TypeComponent},
-  {path: 'discount', component: DiscountComponent},
-  {path: 'earlybird', component: EarlyBirdComponent},
-  {path: 'eventtype', component:EventTypeComponent},
-  {path: 'eventprice', component: EventPriceComponent}, 
-  {path: 'help', component: HelpResourcesComponent},
-  { path: 'TicketPurchases/Scan/:token', component: ScanTicketComponent },
+  { path: 'wine', component: WineComponent, canActivate: [AuthGuard]},
+  { path: 'inventory', component: InventoryComponent, canActivate: [AuthGuard] },
+  { path: 'event', component: EventComponent, canActivate: [AuthGuard] },
+  { path: 'faq', component: FaqComponent, canActivate: [AuthGuard] },
+  { path: 'supplier', component: SupplierComponent, canActivate: [AuthGuard] },
+  { path: 'report', component: ReportComponent, canActivate: [AuthGuard] },
+  { path: 'blacklist', component: BlacklistComponent, canActivate: [AuthGuard] },
+  { path: 'vat', component: VatComponent, canActivate: [AuthGuard]},
+  { path: 'employees', component: EmployeeComponent, canActivate: [AuthGuard]},
+  { path: 'systemprivileges', component: SystemprivilegesComponent, canActivate: [AuthGuard]},
+  { path: 'superuser', component: SuperuserComponent, canActivate: [AuthGuard]},
+  { path: 'customers', component: CustomersComponent, canActivate: [AuthGuard]},
+  { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard]},
+  { path: 'writeoff', component: WriteoffComponent, canActivate: [AuthGuard]},
+  {path: 'varietal', component: VarietalComponent, canActivate: [AuthGuard]},
+  {path: 'type', component: TypeComponent, canActivate: [AuthGuard]},
+  {path: 'discount', component: DiscountComponent, canActivate: [AuthGuard]},
+  {path: 'earlybird', component: EarlyBirdComponent, canActivate: [AuthGuard]},
+  {path: 'eventtype', component:EventTypeComponent, canActivate: [AuthGuard]},
+  {path: 'eventprice', component: EventPriceComponent, canActivate: [AuthGuard]}, 
+  {path: 'help', component: HelpResourcesComponent, canActivate: [AuthGuard]},
+  { path: 'TicketPurchases/Scan/:token', component: ScanTicketComponent, canActivate: [AuthGuard] },
   
   
   //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS
@@ -92,11 +94,12 @@ const routes: Routes = [
   {path: 'supplierOrder', component : SupplierOrderComponent},
   {path: 'adminOrder', component: AdminOrdersComponent},
   {path: 'refunds', component: RefundsComponent},
-  {path: 'refundrequests', component: RefundRequestComponent},
+  {path: 'refundrequests', component: RefundRequestComponent, canActivate: [AuthGuard]},
   {path: 'userrefunds', component: MyRefundsComponent},
   {path: 'chatbot', component: ChatbotComponent},
-  {path: 'auditlogs', component: AuditLogsComponent},
-  {path: 'charts', component: ChartsComponent}
+  {path: 'auditlogs', component: AuditLogsComponent, canActivate: [AuthGuard]},
+  {path: 'charts', component: ChartsComponent, canActivate: [AuthGuard]},
+  { path: 'access-restricted', component: AccessRestrictedComponent},
   
 ];
 

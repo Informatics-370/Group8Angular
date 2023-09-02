@@ -1,28 +1,38 @@
-<div *ngIf="isAdmin" class="container-fluid sidebar-container">
-  <div class="row">
-    <div class="col-3 col-md-2">
-      <app-sidenav></app-sidenav>
-    </div>
-    <div class="col-9 col-md-10">
-      <router-outlet></router-outlet>
-      <app-spinner></app-spinner>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="!isAdmin">
-  <app-navbar></app-navbar>
-  <div class="row">
-    <div class="col-3 col-md-2" *ngIf="showCustomerSideNav">
-      <app-customer-sidenav></app-customer-sidenav>
-    </div>
-    <div [ngClass]="{'col-12': !showCustomerSideNav, 'col-9 col-md-10': showCustomerSideNav}">
-      <router-outlet></router-outlet>
-      <app-spinner></app-spinner>
+<!-- Content to display when NOT on the access-restricted page -->
+<div *ngIf="!isAccessRestricted">
+  
+  <!-- For Admin -->
+  <div *ngIf="isAdmin" class="container-fluid sidebar-container">
+    <div class="row">
+      <div class="col-3 col-md-2">
+        <app-sidenav></app-sidenav>
+      </div>
+      <div class="col-9 col-md-10">
+        <router-outlet></router-outlet>
+        <app-spinner></app-spinner>
+      </div>
     </div>
   </div>
+  
+  <!-- For Non-Admin -->
+  <div *ngIf="!isAdmin">
+    <app-navbar></app-navbar>
+    <div class="row">
+      <div class="col-3 col-md-2" *ngIf="showCustomerSideNav">
+        <app-customer-sidenav></app-customer-sidenav>
+      </div>
+      <div [ngClass]="{'col-12': !showCustomerSideNav, 'col-9 col-md-10': showCustomerSideNav}">
+        <router-outlet></router-outlet>
+        <app-spinner></app-spinner>
+      </div>
+    </div>
+  </div>
+  
+  <app-chatbot></app-chatbot>
+  
 </div>
 
-<app-chatbot></app-chatbot>
-
-
+<!-- Content to display ONLY on the access-restricted page -->
+<div *ngIf="isAccessRestricted">
+  <router-outlet></router-outlet>
+</div>

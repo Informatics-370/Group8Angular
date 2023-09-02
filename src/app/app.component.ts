@@ -15,6 +15,8 @@ import { timer } from 'rxjs';
 
 export class AppComponent {
   logoutTimer: any;
+  isAccessRestricted = false;
+
   loggedOutUser: UserViewModel ={
     email: '',
     username: '',
@@ -60,7 +62,8 @@ export class AppComponent {
           '/writeoff',
           '/auditlogs',
           '/charts',
-          '/help'
+          '/help',
+          'access-restricted'
         ];
 
         const custroutes = [
@@ -82,6 +85,7 @@ export class AppComponent {
         // Check if the new URL is '/userinformation'
         this.showCustomerSideNav = custroutes.some(route => event.urlAfterRedirects.startsWith(route));
 
+        this.isAccessRestricted = event.urlAfterRedirects.startsWith('/access-restricted');
       }
     });
   }
