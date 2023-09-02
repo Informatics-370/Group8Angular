@@ -234,15 +234,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-        <button type="button" class="btn btn-primary"
-         [disabled]="(earlyBirdField.value == null || earlyBirdField.value == '') 
-         || (eventTypeField.value==0 
-         || eventTypeField.value == null 
-         || eventTypeField.value == undefined) 
-         || eventForm.invalid 
-         ||  (!fileUploaded || invalidFileType) 
-          ||  isSubmitting">{{editingEvent? 'Save Changes' : 'Save'}}
-        </button>
+        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
+          [disabled]="earlyBirdField.value == '' || eventTypeField.value==0 || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent
+          ? 'Save Changes' : 'Save'}}</button>
 
 
       </div>

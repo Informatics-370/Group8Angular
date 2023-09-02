@@ -30,6 +30,7 @@ export class Event {
         price: number = 0,
         filePath: string = '',
         displayItem: boolean = true,  // Corrected this line
+        
         earlyBirdID?: number, // Made this parameter optional
         earlyBird?: EarlyBird, // Added this parameter
 
