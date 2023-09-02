@@ -1,8 +1,6 @@
 import { EarlyBird } from "./earlybird";
-// import { EventType } from "./eventtype";
-import { EventPrice } from "./eventprice";
-// import { Booking } from "./booking";
-import { EarlyBirdComponent } from "../admin/early-bird/early-bird.component";
+import { EventType } from "./eventtype";
+
 
 export class Event {
     eventID: number;
@@ -16,6 +14,9 @@ export class Event {
     displayItem:  boolean | undefined;
     earlyBirdID?: number;
     earlyBird?: EarlyBird = new EarlyBird();
+
+    eventTypeID?: number;
+    eventType?: EventType;
    
 
 
@@ -32,6 +33,9 @@ export class Event {
         earlyBirdID?: number, // Made this parameter optional
         earlyBird?: EarlyBird, // Added this parameter
 
+        eventTypeID?: number, // Add this line
+        eventType?: EventType  // Add this line
+
     ) {
         this.eventID = eventID;
         this.name = name;
@@ -44,6 +48,9 @@ export class Event {
         this.displayItem = displayItem;
         this.earlyBirdID = earlyBirdID;
         this.earlyBird = earlyBird; // Assigned the parameter value
+
+        this.eventTypeID = eventTypeID;  // Add this line
+        this.eventType = eventType;      // Add this line
 
     }
 }

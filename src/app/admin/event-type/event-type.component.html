@@ -22,7 +22,7 @@
     <tbody>
       <tr *ngFor="let eventType of eventTypes">
         <td>{{ eventType.eventTypeName }}</td>
-        <td>{{ eventType.eventDescription }}</td>
+        <!-- <td>{{ eventType.eventDescription }}</td> -->
         <td>
           <button class="btn btn-primary"
             (click)="eventType.eventTypeID !== undefined && openEditEventTypeModal(eventType.eventTypeID)"
@@ -75,11 +75,11 @@
   
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
-              <input type="text" class="form-control" id="description" [(ngModel)]="currentEventType.eventDescription" name="description"
-                required #description="ngModel">
-              <div *ngIf="description.invalid && description.touched" class="alert alert-danger">
+              <!-- <input type="text" class="form-control" id="description" [(ngModel)]="currentEventType.eventDescription" name="description"
+                required #description="ngModel"> -->
+              <!-- <div *ngIf="description.invalid && description.touched" class="alert alert-danger">
                 <div *ngIf="description.errors?.['required']">Description is required.</div>
-              </div>
+              </div> -->
             </div>
   
             <div class="modal-footer">
