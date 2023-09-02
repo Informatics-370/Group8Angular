@@ -56,21 +56,24 @@ async getRefundRequests(): Promise<void> {
 
   async updateStatus(id: number, status: string): Promise<void> {
     try {
-        const statusAsNumber = this.refundStatuses.indexOf(status);
-        if (statusAsNumber === -1) {
-          throw new Error(`Invalid status: ${status}`);
-        }
-        await this.refundService.updateStatus(id, statusAsNumber).toPromise();
-        // After updating the status on the server, update it locally
-        const request = this.refundRequests.find(r => r.id === id);
-        if (request) {
-            request.status = statusAsNumber;
-        }
+      const statusAsNumber = this.refundStatuses.indexOf(status);
+      const request = this.refundRequests.find(r => r.id === id);
+      if (statusAsNumber === -1 || !request) {
+        throw new Error(`Invalid status or request: ${status}`);
+      }
+  
+      await this.refundService.updateStatus(id, statusAsNumber, request.orderRefNum).toPromise();
+  
+      // After updating the status on the server, update it locally
+      if (request) {
+        request.status = statusAsNumber;
+      }
     } catch (error) {
-        console.error('Error:', error);
-        // Display an error message to the user
+      console.error('Error:', error);
+      // Display an error message to the user
     }
   }
+  
   
   
 }

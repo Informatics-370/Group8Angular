@@ -14,4 +14,5 @@ export interface RefundRequest {
     description: string;
     status: RefundStatus;
     orderRefNum: string;
+    phoneNumber: string
 }

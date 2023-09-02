@@ -214,7 +214,7 @@ export class CartComponent implements OnInit {
             ).subscribe(
                 () => {
                     console.log('Order created and cart cleared successfully.');
-                    this.toastr.info('Order created and payment successful!', 'Success');
+                    this.toastr.info('Order created', 'Success');
                     this.cartTotal = 0; // Reset the cart total
                     this.loadCart(winePurchase.userEmail);
                 },

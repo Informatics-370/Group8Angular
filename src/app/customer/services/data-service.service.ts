@@ -12,6 +12,7 @@ import { loginUpdateViewModel } from 'src/app/Model/loginUpdateViewModel';
 import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 
 export interface DecodedToken {
+  phoneNumber: string;
   unique_name: string; // this will contain the username
   sub: string; // this will contain the email
   "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string[];
