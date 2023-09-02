@@ -28,7 +28,15 @@
         <td class="d-none d-md-table-cell">{{ request.requestedOn | date:'short' }}</td>
         <td class="d-none d-md-table-cell">R{{ request.cost }}</td>
         <td>{{ getStatusName(request.status) }}</td>
+
+        
       </tr>
     </tbody>
+    
   </table>
+
+  <div class="text-center empty-wishlist" *ngIf="refundRequests.length === 0">
+    <h3>No wines currently in your refunds.</h3>
+  </div>
 </div>
+
