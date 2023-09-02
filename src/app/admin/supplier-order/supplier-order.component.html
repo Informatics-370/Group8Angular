@@ -31,29 +31,31 @@
             <tr *ngFor="let order of supplierOrders; let i = index">
                 <td>{{ order.wineName }}</td>
                 <td>{{ order.quantity_Ordered }}</td>
-                <td>{{ order.orderTotal }}</td>
+                <td>R{{ order.orderTotal }}</td>
                 <td>{{ order.dateOrdered }}</td>
                 <td>{{ order.supplier?.name }}</td>
 
                 <!-- Ordered -->
                 <td>
-                    <input *ngIf="order.supplierOrderStatus" type="checkbox"
-                        [(ngModel)]="order.supplierOrderStatus.ordered" (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Ordered')">
+                    <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sOrdered"
+                        [(ngModel)]="order.supplierOrderStatus.ordered" [disabled]="order.supplierOrderStatus.received"
+                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Ordered')">
                 </td>
 
                 <!-- Paid -->
                 <td>
-                    <input *ngIf="order.supplierOrderStatus" type="checkbox"
-                        [(ngModel)]="order.supplierOrderStatus.paid" [disabled]="!order.supplierOrderStatus.ordered"
+                    <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sPaid"
+                        [(ngModel)]="order.supplierOrderStatus.paid" [disabled]="!order.supplierOrderStatus.ordered || order.supplierOrderStatus.received" 
                         (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Paid')">
                 </td>
 
                 <!-- Received -->
                 <td>
-                    <input *ngIf="order.supplierOrderStatus" type="checkbox"
+                    <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sReceived"
                         [(ngModel)]="order.supplierOrderStatus.received"
-                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid"
-                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received')">
+                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid "
+                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received')"
+                        (click)="openStockTakeModal(selectedStocktake)">
                 </td>
                 <!-- Add this to your <tr> element -->
                 <!-- <td> Mens moet nie supplier orders kan delete nie agv audit trail of iets ek kan nie onthou nie maar Prof het so gese.
@@ -147,28 +149,82 @@
     </div>
 </div>
 
-<!-- Delete Supplier Order Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteSupplierOrderModal}"
-    [ngStyle]="{'display': showDeleteSupplierOrderModal ? 'block' : 'none'}">
+
+
+<!-- Add StockTake Modal -->
+<!-- <div class="modal" tabindex="-1" [ngClass]="{'show': showStockTakeModel}"
+    [ngStyle]="{'display': showStockTakeModel ? 'block' : 'none'}">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete Confirmation</h5>
+                <h5 class="modal-title">Stocktake Entry</h5>
                 <button type="button" class="btn-close" aria-label="Close"
-                    (click)="closeDeleteSupplierOrderModal()"></button>
+                    (click)="closeStockTakeModal()"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this supplier order?
-                <!-- <br>
-                <p></p>
-                <p>Order ID: {{ supplierOrderToDelete?.supplierOrderID }}</p>
-                <p>Quantity Ordered: {{ supplierOrderToDelete?.quantity_Ordered }}</p>
-                <p>Supplier ID: {{ supplierOrderToDelete?.supplierID }}</p> -->
+                <form #stocktakeForm="ngForm" (ngSubmit)="submitStocktake(stocktakeForm)">
+                    <div class="mb-3">
+                        <label for="wineName" class="form-label">Wine Name</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Name"></i>
+                        <input type="text" class="form-control" id="wineName" name="wineName" *ngFor="let order of supplierOrders"
+                        {{ order.wineName }} required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the quantity ordered"></i>
+                        <input type="number" class="form-control" id="quantityOrdered" name="quantityOrdered" *ngFor="let stocktake of stocktakes"
+                            [(ngModel)]="stocktake.quantityOrdered" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantityReceived" class="form-label">Quantity Received</label>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the quantity received"></i>
+                        <input type="number" class="form-control" id="quantityReceived" name="quantityReceived" *ngFor="let stocktake of stocktakes"
+                            [(ngModel)]="stocktake.quantityReceived" min="1" required>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeDeleteSupplierOrderModal()">No</button>
-                <button type="button" class="btn btn-primary" (click)="deleteOrder()">Yes</button>
+                <button type="button" class="btn btn-secondary" (click)="closeStockTakeModal()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="stocktakeForm.invalid"
+                    (click)="submitStocktake(stocktakeForm)">Add</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showStockTakeModel}"
+    [ngStyle]="{'display': showStockTakeModel ? 'block' : 'none'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Stocktake Entry</h5>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="closeStockTakeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form #stocktakeForm="ngForm" (ngSubmit)="submitStocktake(stocktakeForm)">
+                    <div class="mb-3">
+                        <label for="wineName" class="form-label">Wine Name</label>
+                        <input type="text" class="form-control" id="wineName" name="wineName" [(ngModel)]="selectedStocktake.wineName" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
+                        <input type="number" class="form-control" id="quantityOrdered" name="quantityOrdered" [(ngModel)]="selectedStocktake.quantityOrdered" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantityReceived" class="form-label">Quantity Received</label>
+                        <input type="number" class="form-control" id="quantityReceived" name="quantityReceived" [(ngModel)]="selectedStocktake.quantityReceived" min="1" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeStockTakeModal()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="!selectedStocktake || stocktakeForm.invalid"
+                    (click)="submitStocktake(stocktakeForm)">Update</button>
             </div>
         </div>
     </div>
 </div>
+
+

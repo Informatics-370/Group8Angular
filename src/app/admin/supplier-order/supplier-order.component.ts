@@ -11,6 +11,9 @@ import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
 import { delay, timeout } from 'rxjs';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { StockTake } from 'src/app/Model/stocktake';
+import { StockTakeService } from '../services/stocktake.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier-order',
@@ -20,13 +23,20 @@ import { DataServiceService } from 'src/app/customer/services/data-service.servi
 export class SupplierOrderComponent implements OnInit {
   supplierOrders: SupplierOrder[] = [];
   selectedOrder?: SupplierOrder | null = null;
+  currentOrder: SupplierOrder = new SupplierOrder();
   showDeleteSupplierOrderModal = false;
   supplierOrderToDelete: SupplierOrder | null = null;
   showAddSupplierOrderModal = false;
   suppliers: Supplier[] = [];
+  showStockTakeModel = false;
+  stocktakes: StockTake[] = [];
+  selectedStocktake: any = {};
 
   constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService,
-    private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
+    private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService,
+    private stocktakeService: StockTakeService) { 
+      this.selectedStocktake = new StockTake();
+    }
 
   ngOnInit(): void {
     this.getSupplierOrders();
@@ -75,6 +85,7 @@ export class SupplierOrderComponent implements OnInit {
   }
 
   createOrder(order: SupplierOrder): void {
+    console.log('Hallo Dihan', order);
     order.dateOrdered = new Date();
     order.orderTotal = order.winePrice! * order.quantity_Ordered!;
     order.supplierOrderStatus = new SupplierOrderStatus(); // Initialize orderStatus
@@ -83,6 +94,7 @@ export class SupplierOrderComponent implements OnInit {
       createdOrder => {
         this.supplierOrders.push(createdOrder);
         this.closeAddSupplierOrderModal(); // Close the Add Supplier Order modal after saving
+        console.log(createdOrder);
         this.toastr.success('Successfully added', 'Order');
       },
       error => {
@@ -92,25 +104,13 @@ export class SupplierOrderComponent implements OnInit {
     );
   }
   
-
-  openDeleteSupplierOrderModal(order: SupplierOrder): void {
-    this.supplierOrderToDelete = order;
-    this.showDeleteSupplierOrderModal = true;
+  Stocktake(order: SupplierOrder, form: NgForm): void{
+    let wineName = order.wineName;
+    let quantityOrdered = order.quantity_Ordered;
   }
 
-  closeDeleteSupplierOrderModal(): void {
-    this.showDeleteSupplierOrderModal = false;
-  }
 
-  deleteOrder(): void {
-    if (this.supplierOrderToDelete) {
-      this.supplierOrderService.deleteSupplierOrder(this.supplierOrderToDelete.supplierOrderID!).subscribe(() => {
-        this.getSupplierOrders();
-        this.selectedOrder = null;
-        this.closeDeleteSupplierOrderModal();
-      });
-    }
-  }
+
 
   updateOrder(order: SupplierOrder): void {
     
@@ -121,6 +121,11 @@ export class SupplierOrderComponent implements OnInit {
       if (!order.supplierOrderStatus.ordered) {
         order.supplierOrderStatus.paid = false;
         order.supplierOrderStatus.received = false;
+      }
+
+      if (order.supplierOrderStatus.received){
+        console.log('Big brain on its way', order);
+        this.showStockTakeModel = true;
       }
 
       const statusDTO: UpdateSupplierOrderStatusDTO = {
@@ -179,6 +184,83 @@ export class SupplierOrderComponent implements OnInit {
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
   }
-  
-}
 
+
+  // openStockTakeModal() {
+  //   this.showStockTakeModel = true;
+  // }
+
+  // closeStockTakeModal() {
+  //   this.showStockTakeModel = false;
+  // }
+
+
+
+
+
+  // async submitStocktake(stocktakeForm: NgForm): Promise<void> {
+  //   if (stocktakeForm.valid) {
+  //     try {
+  //       const stocktakeData = stocktakeForm.value;
+  //       console.log('EK sukkel', stocktakeData);
+  
+  //       // Assuming you have a stocktakeService to add a new stocktake
+  //       const submittedStocktake: StockTake = await this.stocktakeService.AddStockTake(stocktakeData).toPromise();
+        
+  //       this.stocktakes.push(submittedStocktake);
+  //       this.closeStockTakeModal();
+  //       stocktakeForm.resetForm();
+  //       console.log(submittedStocktake);
+        
+  //       this.toastr.success('Stocktake entry added successfully', 'Stocktake');
+  //     } catch (error) {
+  //       console.error(error);
+  //       this.toastr.error('Failed to add stocktake', 'Stocktake');
+  //       this.closeStockTakeModal();
+  //     }
+  //   }
+  // }
+
+
+  
+
+  openStockTakeModal(stocktake: StockTake) {
+    this.selectedStocktake = stocktake;
+    this.showStockTakeModel = true;
+    console.log(this.selectedStocktake);
+  }
+
+  closeStockTakeModal() {
+    this.selectedStocktake = null;
+    this.showStockTakeModel = false;
+  }
+
+  async submitStocktake(stocktakeForm: NgForm): Promise<void> {
+    if (stocktakeForm.valid && this.selectedStocktake) {
+      try {
+        const updatedData = {
+          stocktakeID: this.selectedStocktake.stocktakeID,
+          wineName: this.selectedStocktake.wineName,
+          quantityOrdered: this.selectedStocktake.quantityOrdered,
+          quantityReceived: stocktakeForm.value.quantityReceived,
+        };
+  
+        const updatedStocktake: StockTake = await this.stocktakeService
+          .AddStockTake(updatedData)
+          .toPromise();
+  
+        // Update the selectedStocktake with the updated data
+        this.selectedStocktake.quantityReceived = updatedStocktake.quantityReceived;
+  
+        this.closeStockTakeModal();
+        stocktakeForm.resetForm();
+        this.toastr.success('Stocktake entry updated successfully', 'Stocktake');
+      } catch (error) {
+        console.error(error);
+        this.toastr.error('Failed to update stocktake', 'Stocktake');
+        this.closeStockTakeModal();
+      }
+    }
+  }
+
+}
