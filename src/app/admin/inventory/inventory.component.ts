@@ -20,6 +20,9 @@ import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
 import { WriteOffs } from 'src/app/Model/writeOffs';
 import { WriteOffsService } from '../services/write-offs.service';
+import { StockTakeService } from '../services/stocktake.service';
+import { StockTake } from 'src/app/Model/stocktake';
+import { SupplierOrder } from 'src/app/Model/supplierOrder';
 
 
 
@@ -65,7 +68,8 @@ export class InventoryComponent implements OnInit{
                 private wineService: WineService,
                 private winetypeService: WinetypeService,
                 private varietalService: VarietalService
-                , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService, private writeoffsService: WriteOffsService
+                , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService
+                , private writeoffsService: WriteOffsService, private stocktakeService: StockTakeService
                ) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -77,7 +81,7 @@ export class InventoryComponent implements OnInit{
       this.populateExcelArray();
       this.userDetails = this.dataService.getUserFromToken();
       this.loadUserData();
-     
+      this.loadStockTake();
 
     }
 
@@ -100,15 +104,14 @@ getWinetypeName(wineTypeID?: number): string {
   return winetype?.name || 'Unknown';
 }
 
-updateFieldsBasedOnWineName(wineID: number): void {
-  console.log('Selected Wine ID:', wineID);
-  let selectedWine = this.allWines.find(x => x.wineID == (wineID));
+updateFieldsBasedOnWineName(wineIDs: number): void {
+  
+  console.log('Selected Wine ID:', wineIDs);
+  let selectedWine = this.allWines.find(x => x.wineID == (wineIDs));
   console.log('All Wines:', this.allWines);
   console.log('Selected Wine:', selectedWine);
   console.log(this.currentInventory)
   if (selectedWine) {
-    // this.varietalService.getVarietal(selectedWine.varietalID);
-    // this.winetypeService.getWinetype(selectedWine.wineTypeID);
     this.getWinetypeName(selectedWine.wineTypeID);
     this.getVarietalName(selectedWine.varietalID);
     this.currentInventory.wineTypeID = selectedWine.wineTypeID; // Update wineType
@@ -243,12 +246,19 @@ async submitInventoryForm(form: NgForm): Promise<void> {
         }
         this.toastr.success('Successfully updated', 'Inventory');
       } else {
+console.log('WineID',this.currentInventory.wineID)
+        let isExistingInventory = this.inventory.find(x => x.wineID === this.currentInventory.wineID);
+        console.log('Copy Check ',isExistingInventory)
+        if (isExistingInventory) {
+          this.toastr.warning('Wine with this ID is already added to the inventory.', 'Inventory');
+        } else {
         // Add inventory
         const data = await this.inventoryService.addInventory(this.currentInventory);
         this.inventory.push(data);
         this.loadInventory();
         this.toastr.success('Successfully added', 'Inventory');
       }
+    }
       this.closeInventoryModal();
       if (!this.editingInventory) {
         form.resetForm();
@@ -437,13 +447,9 @@ public WriteOffReasonSelected: string ='NA';
 
 async AddWriteOff(form: NgForm){
   if (form.valid) {
-
-    let selectedWriteOffReason = form.value.WriteOffReason;
     console.log('Write Off Quantity',this.quantityWriteOff)
-
-
     let newWriteOff: WriteOffs = {
-      writeOffID: this.currentInventory.inventoryID,
+      writeOffID: 0,
       wineName: this.getWineName(this.currentInventory.wineID), 
       writeOff_Reason: this.WriteOffReasonSelected,
       quantity: this.quantityWriteOff,
@@ -468,6 +474,8 @@ try{
       }
       this.closeWROModal();
       this.toastr.success('Write Off successful', 'Success');
+      this.showWROModal = false;
+      this.AddAuditLog('Inventory Written Off');
     } catch (error) {
       console.error('Error adding Write Off:', error);
       this.toastr.error('Failed to add Write Off', 'Error');
@@ -494,8 +502,64 @@ closeWROModal() {
 this.showWROModal = false;
 }
 
+currentPage: string = 'inventoryOnHand';
+
+showCurrentPage() {
+  this.currentPage = 'inventoryOnHand'; // Switch to the "Current Page" tab
 }
-function getElementById(arg0: string): number {
-  throw new Error('Function not implemented.');
+
+showStockTakePage() {
+  this.currentPage = 'stockTake'; // Switch to the "Write Offs" tab
 }
+
+stocktake: StockTake[] = [];
+
+async loadStockTake(): Promise<void> {
+  try {
+    this.stocktakeService.GetStockTake().subscribe((result: any) => {
+      this.stocktake = result;
+      console.log(this.stocktake);
+    });
+  } catch (error) {
+    console.error(error);
+    this.toastr.error(
+      'Error, failed to connect to the database',
+      'AuditLog Table'
+    );
+  }
+  };
+
+showSuppOModal: boolean = false;
+currentStockTake: StockTake = new StockTake();
+public WineNameSelected: string ='NA';
+InventoryID: number = 0;
+
+
+openSuppOModal(id: number) {
+  this.InventoryID = id;
+  this.showSuppOModal = true;
+}
+
+
+updateFieldsBasedOnWineSelected(): void {
+  const selectedStockTakeID = parseInt(this.WineNameSelected, 10);
+
+  // Find the selected stocktake from the array
+  const selectedStockTake = this.stocktake.find((st) => st.stocktakeID === selectedStockTakeID);
+
+  // Update currentStockTake with the selected stocktake
+  this.currentStockTake = selectedStockTake ? { ...selectedStockTake } : new StockTake();
+}
+
+
+UpdateStockTake(form: NgForm){
+
+}
+
+closeSuppOModal() {
+this.showSuppOModal = false;
+}
+
+}
+
 

@@ -1,7 +1,14 @@
+<br>
+<div class="btn-group" role="group" aria-label="Tabs">
+  <button type="button" class="btn btn-primary" (click)="showCurrentPage()">Inventory On Hand</button>
+  <button type="button" class="btn btn-primary" (click)="showStockTakePage()">StockTake</button>
+</div>
+<br>
+<br>
+
+<div *ngIf="currentPage === 'inventoryOnHand'">
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
 
-<br>
-<br>
 <div class="row align-items-center">
   <div class="col">
     <h2>Inventory on Hand</h2>
@@ -41,7 +48,7 @@
         <td>
          
           <i class="bi bi-dash-circle text-primary fs-3" (click)="openWROModal(x.wineID)"></i>
-          <i class="bi bi-plus-circle-fill text-primary fs-3" (click)="increaseQuantity(x)"></i>
+          <i class="bi bi-plus-circle-fill text-primary fs-3" (click)="openSuppOModal(x.inventoryID)"></i>
           
         </td>
       <td>
@@ -136,7 +143,8 @@
           <div class="mb-3">
             <label for="quantityOnHand" class="form-label">Quantity On Hand</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the amount of Wine you have on hand"></i>
-            <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required [min]="0.01" #quantityOnHandField="ngModel">
+            <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required [min]="0.01" #quantityOnHandField="ngModel"
+            [disabled]="editingInventory">
             <div *ngIf="quantityOnHandField.invalid && quantityOnHandField.touched" class="alert alert-danger">
               <div *ngIf="quantityOnHandField.errors?.['required']">Quantity On Hand is required.</div>
               <div *ngIf="quantityOnHandField.errors?.['min']">Quantity On Hand cannot be zero or less.</div>
@@ -147,7 +155,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeInventoryModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="inventoryForm.invalid" (click)="submitInventoryForm(inventoryForm)">
+        <button type="button" class="btn btn-primary" [disabled]="inventoryForm.invalid" (click)="submitInventoryForm(inventoryForm); onSubmitClick()">
           {{editingInventory ? 'Save Changes' : 'Save'}}
         </button>
       </div>
@@ -237,3 +245,88 @@
 </div>
 
 <!--************************************************************ WriteOff Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showSuppOModal}"
+[ngStyle]="{'display': showSuppOModal ? 'block' : 'none'}">
+<div class="modal-dialog">
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Supplier Order</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeSuppOModal()"></button>
+  </div>
+
+  <div class="modal-body">
+    <form #StockTakeForm="ngForm" (ngSubmit)="UpdateStockTake(StockTakeForm)">      
+
+      <select id="TestWineName" name="WineName" required [(ngModel)]="WineNameSelected" (ngModelChange)="updateFieldsBasedOnWineSelected()">
+        <option value="" disabled selected>Select a StockTake to add to Quantity On Hand</option>
+        <option *ngFor="let x of stocktake" [value]="x.stocktakeID">{{x.wineName}}</option>
+      </select>
+      
+      <div class="mb-3">
+        <label for="DateDone" class="form-label">Stocktake Date Done:</label>
+        <p *ngIf="currentStockTake?.wineName">{{currentStockTake.dateDone | date:'dd/MM/yyyy HH:mm'}}</p>
+      </div>
+      
+      <div class="mb-3">
+        <label for="quantityReceived" class="form-label">Stocktake Quantity Received:</label>
+        <p *ngIf="currentStockTake?.wineName">{{currentStockTake.quantityReceived}}</p>
+      </div>
+      
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeSuppOModal()">Close</button>
+    <button type="button" class="btn btn-primary" [disabled]="writeROForm.invalid" (click)="AddWriteOff(writeROForm)">Write Off</button>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div *ngIf="currentPage === 'stockTake'">
+
+  <div class="row align-items-center">
+    <div class="col">
+      <h2>StockTake Table</h2>
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="header-cell">Wine Name</th>
+        <th scope="col" class="header-cell">Date Done</th>
+        <th scope="col" class="header-cell">Quantity Ordered</th>
+        <th scope="col" class="header-cell">Quantity Received</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let x of stocktake">
+        <td>{{ x.wineName }}</td>
+        <td>{{ x.dateDone | date:'dd/MM/yyyy HH:mm'}}</td>
+        <td>{{ x.quantityOrdered }}</td>
+        <td>{{ x.quantityReceived }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="text-center" *ngIf="inventory.length === 0">
+      <h3>a StockTake has not happended yet. </h3>
+    </div>
+
+
+
+</div>
