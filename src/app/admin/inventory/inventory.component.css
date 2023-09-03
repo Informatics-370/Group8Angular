@@ -19,4 +19,60 @@ table {
     padding: 0.25rem 0.5rem;
   }
   
+
+  select#WriteOffReason {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  /* Style the options in the dropdown */
+  select#WriteOffReason option {
+    padding: 10px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  /* Style the selected option */
+  select#WriteOffReason option:checked {
+    background-color: #007bff; /* Change the background color of the selected option */
+    color: #fff; /* Change the text color of the selected option */
+  }
+  
+  /* Add a hover effect for the options */
+  select#WriteOffReason option:hover {
+    background-color: #f8f9fa; /* Change the background color on hover */
+  }
+  
+  /* Style the disabled "Select a Write-Off Reason" option */
+  select#WriteOffReason option[disabled] {
+    color: #ccc; /* Change the text color of the disabled option */
+  }
+  
+  /* Add a border color when the dropdown is focused */
+  select#WriteOffReason:focus {
+    border-color: #007bff; /* Change the border color on focus */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a subtle box shadow on focus */
+  }
+  
+  /* Style the dropdown arrow */
+  select#WriteOffReason::-ms-expand {
+    display: none; /* Hide the default arrow on Microsoft browsers */
+  }
+  
+  select#WriteOffReason::before {
+    content: "\f107"; /* Use a custom icon (you can replace this with an icon of your choice) */
+    font-family: FontAwesome;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
   

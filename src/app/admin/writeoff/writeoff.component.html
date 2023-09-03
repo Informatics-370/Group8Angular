@@ -1,6 +1,12 @@
+<br>
+<div class="btn-group" role="group" aria-label="Tabs">
+  <button type="button" class="btn btn-primary" (click)="showCurrentPage()">Write-Off Reason</button>
+  <button type="button" class="btn btn-primary" (click)="showWriteOffsPage()">Write Offs</button>
+</div>
+<br>
+<br>
 
-<br>
-<br>
+<div *ngIf="currentPage === 'current'">
 <div class="row align-items-center">
   <div class="col">
     <h2>Write Off Reason</h2>
@@ -112,3 +118,41 @@
 </div>
 
 <!--************************************************************ Delete Modal *************************************************************************************************-->
+</div>
+
+<div *ngIf="currentPage === 'writeoffs'">
+  <div class="row align-items-center">
+    <div class="col">
+      <h2>Write Offs</h2>
+    </div>
+  </div>
+  
+  <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
+  
+  
+  
+  <!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
+  
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="header-cell">Write-Off Reason</th>
+        <th scope="col" class="header-cell">Write-Off Date</th> 
+        <th scope="col" class="header-cell">Wine Name</th>  
+        <th scope="col" class="header-cell">Quantity</th>    
+      </tr>
+    </thead>
+    <tbody>      
+        <tr *ngFor="let x of writeOff">
+          <td>{{ x.writeOff_Reason }}</td>
+          <td>{{ x.writeOff_Date }}</td>
+          <td>{{ x.wineName }}</td>
+          <td>{{ x.quantity }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="text-center" *ngIf="writeOffReason.length === 0">
+      <h3>No Write-Offs currently in your system.</h3>
+    </div> 
+</div>
