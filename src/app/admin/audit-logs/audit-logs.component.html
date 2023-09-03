@@ -1,9 +1,26 @@
 <br>
 <br>
-<h2>Complete System Audit Log</h2>
-  
+<!-- Add this code to your HTML file -->
+<div class="container">
+  <h2>Complete System Audit Log</h2>
 
-<table class="table table-striped">
+  <!-- Add a single search input field -->
+  <div class="row">
+    <div class="col-md-8">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search"
+        [(ngModel)]="searchInput"
+        (ngModelChange)="search()"
+      />
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary" (click)="search()">Search</button>
+    </div>
+  </div>
+
+  <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col" class="header-cell">Button Pressed</th>
@@ -18,17 +35,18 @@
         <td>{{ x.buttonPressed }}</td>
         <td>{{ x.userName }}</td>
         <td>{{ x.userEmail }}</td>
-        <td>{{ x.transactionDate }}</td>
+        <td>{{ x.transactionDate | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>
-            <ng-container *ngIf="x.quantity; else na">
-                {{ x.quantity }}
-            </ng-container>
-            <ng-template #na>NA</ng-template>
+          <ng-container *ngIf="x.quantity; else na">
+            {{ x.quantity }}
+          </ng-container>
+          <ng-template #na>NA</ng-template>
         </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <div class="text-center" *ngIf="AuditTrail.length === 0">
-      <h3>Nothing in System Audit Log.</h3>
-    </div>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="text-center" *ngIf="AuditTrail.length === 0">
+    <h3>Nothing in System Audit Log.</h3>
+  </div>
+</div>
