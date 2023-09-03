@@ -9,6 +9,8 @@ import { Customer } from 'src/app/Model/customer';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { WriteOffs } from 'src/app/Model/writeOffs';
+import { WriteOffsService } from '../services/write-offs.service';
 
 @Component({
   selector: 'app-writeoff',
@@ -24,13 +26,17 @@ export class WriteoffComponent {
   wORToDeleteDetails: any;
   showDeleteWORModal = false;
 
+  currentPage: string = 'current';
+
   constructor(private writeORService: WriteORService, private router: Router, private toastr: ToastrService
-    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) {}
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService,
+    private writeoffsService: WriteOffsService) {}
 
   ngOnInit(): void {
     this.loadWORs();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    this.loadWROs();
   }
 
 
@@ -161,4 +167,34 @@ onSubmitClick() {
     'Write-Off Reason: ' + (this.editingWOR ? 'Updated' : 'Added');
   this.AddAuditLog(auditLogMessage);
 }
+
+
+
+showCurrentPage() {
+  this.currentPage = 'current'; // Switch to the "Current Page" tab
+}
+
+showWriteOffsPage() {
+  this.currentPage = 'writeoffs'; // Switch to the "Write Offs" tab
+}
+
+  writeOff: WriteOffs[] = [];
+  showWROModal: boolean = false;
+  currentWRO: WriteOffs = new WriteOffs();
+
+  async loadWROs(): Promise<void> {
+    try {
+      this.writeoffsService.getWriteOffs().subscribe((result: any) => {
+        this.writeOff = result;
+        console.log(this.writeOff);
+      });
+    } catch (error) {
+      console.error(error);
+      this.toastr.error(
+        'Error, failed to connect to the database',
+        'AuditLog Table'
+      );
+    }
+    };
+
 }

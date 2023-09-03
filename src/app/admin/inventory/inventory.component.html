@@ -40,7 +40,7 @@
       <td>{{ x.quantityOnHand }}</td>
         <td>
          
-          <i class="bi bi-dash-circle text-primary fs-3" (click)="decreaseQuantity(x)"></i>
+          <i class="bi bi-dash-circle text-primary fs-3" (click)="openWROModal(x.wineID)"></i>
           <i class="bi bi-plus-circle-fill text-primary fs-3" (click)="increaseQuantity(x)"></i>
           
         </td>
@@ -139,7 +139,7 @@
             <input type="number" class="form-control" id="quantityOnHand" [(ngModel)]="currentInventory.quantityOnHand" name="quantityOnHand" required [min]="0.01" #quantityOnHandField="ngModel">
             <div *ngIf="quantityOnHandField.invalid && quantityOnHandField.touched" class="alert alert-danger">
               <div *ngIf="quantityOnHandField.errors?.['required']">Quantity On Hand is required.</div>
-              <div *ngIf="stockLimitField.errors?.['min']">Quantity On Hand cannot be zero or less.</div>
+              <div *ngIf="quantityOnHandField.errors?.['min']">Quantity On Hand cannot be zero or less.</div>
             </div>
           </div>
 
@@ -189,3 +189,51 @@
 
 
 <button type="button" class="btn btn-primary" (click)="exportexcel()">Export to Excel</button>
+<!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
+
+
+<!--************************************************************ WriteOff Modal ***********************************************************************************************-->
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showWROModal}"
+[ngStyle]="{'display': showWROModal ? 'block' : 'none'}">
+<div class="modal-dialog">
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Write Off</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeWROModal()"></button>
+  </div>
+
+  <div class="modal-body">
+    <form #writeROForm="ngForm" (ngSubmit)="AddWriteOff(writeROForm)">      
+      
+      <div class="mb-3">
+        <label for="WineName" class="form-label">Wine Name:</label>
+        <p>{{getWineName(currentInventory.wineID) }}</p>
+      </div>
+
+      <div class="mb-3">
+        <label for="WriteOffReason" class="form-label">Write Off Reason:</label>
+        <br>
+         <select id="WriteOffReason"  name="WriteOffReason" required [(ngModel)]="WriteOffReasonSelected">
+          <option value="" disabled selected>Select a Write-Off Reason</option>
+          <option *ngFor="let x of WriteOffReasons" [value]="x">{{x}}</option>
+        </select> 
+      </div>        
+      
+      <div class="mb-3">
+        <label for="quantityOnHand" class="form-label">Quantity Writing Off</label>
+        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the amount of Wine you want to write off"></i>
+        <input type="number" class="form-control" id="quantityWriteOff" name="quantityWriteOff" required [max]="currentInventory.quantityOnHand" [(ngModel)]="quantityWriteOff">
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeWROModal()">Close</button>
+    <button type="button" class="btn btn-primary" [disabled]="writeROForm.invalid" (click)="AddWriteOff(writeROForm)">Write Off</button>
+  </div>
+</div>
+</div>
+</div>
+
+<!--************************************************************ WriteOff Modal ***********************************************************************************************-->
