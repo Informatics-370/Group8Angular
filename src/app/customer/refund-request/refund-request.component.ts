@@ -19,7 +19,9 @@ export class RefundRequestComponent {
   async ngOnInit(): Promise<void> {
     try {
         await this.loadWines();
+        console.log("Loaded Wines:", this.wines);
         await this.getRefundRequests();
+        console.log("Loaded Refund Requests:", this.refundRequests); 
     } catch (error) {
         console.error('Error:', error);
         // Consider adding an alert or notification to inform the user about the error.
@@ -44,6 +46,7 @@ async getRefundRequests(): Promise<void> {
   }
 
   getWineName(wineId: number): string {
+    console.log("Looking for wine with ID:", wineId);
     const wine = this.wines.find(w => w.wineID === wineId);
     return wine ? wine.name : 'Unknown';
   }
