@@ -42,6 +42,7 @@ async loadDiscounts(): Promise<void> {
   showDeleteDiscountModal = false;
   discountToDeleteDetails: any;
   discountToDelete: any = null;
+  searchQuery: string = '';
 
 
   // Discount methods---------------------------------------------------------------------------------.>
@@ -182,6 +183,21 @@ async loadDiscounts(): Promise<void> {
   onSubmitClick() {
     const auditLogMessage = 'Discount: ' + (this.editingDiscount ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+}
+
+searchDiscounts(): void {
+  const query = this.searchQuery.toLowerCase();
+
+  if (query.trim() === '') {
+    // If the search query is empty, show all FAQs
+    return;
+  }
+
+  this.discounts = this.discounts.filter((discount) => {
+    return discount.discountDescription?.toLowerCase().includes(query)
+    || discount.discountCode?.toLowerCase().includes(query)
+    || discount.discountPercentage?.toString().toLowerCase().includes(query);
+  });
 }
 
 }

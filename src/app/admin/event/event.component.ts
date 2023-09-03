@@ -31,6 +31,7 @@ export class EventComponent {
   tempEvent: Event = new Event();
   minDateTime!: string;
   fileUploaded = false;  // Property to track if a file is uploaded
+  searchQuery: string = '';
 
 
 
@@ -373,7 +374,19 @@ this.fileUploaded = true;
     this.AddAuditLog(auditLogMessage);
   }
 
+  searchEvents(): void {
+    const query = this.searchQuery.toLowerCase();
 
+    if (query.trim() === '') {
+      // If the search query is empty, show all FAQs
+      return;
+    }
+
+    this.events = this.events.filter((event) => {
+      return event.description?.toLowerCase().includes(query)
+      || event.name?.toLowerCase().includes(query);
+    });
+  }
 
 
 }

@@ -6,6 +6,12 @@
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
     <h2>Discount</h2>
+    <div class="row mb-3">
+      <div class="col-md-3">    
+        <input type="text" class="form-control" placeholder="Search Discounts" 
+        [(ngModel)]="searchQuery" (keyup)="searchDiscounts()">
+      </div>
+    </div>
   </div>
   <div class="col-md-6 text-end">
     <button class="btn btn-success" (click)="openAddDiscountModal()">

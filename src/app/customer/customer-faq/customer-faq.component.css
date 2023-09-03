@@ -128,3 +128,9 @@ body {
   font-weight: 300;
   margin: 2em 0;
 }
+
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+}

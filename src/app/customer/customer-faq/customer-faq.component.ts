@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 export class CustomerFaqComponent implements AfterViewInit {
   faqs: FAQ[] = [];
   shownAnswers = new Set<number>(); // Initialize an empty Set
+  searchQuery: string = '';
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2, private faqService: FAQService, private toastr: ToastrService) {}
 
@@ -59,5 +60,19 @@ export class CustomerFaqComponent implements AfterViewInit {
     } else {
       this.shownAnswers.add(index);
     }
+  }
+
+  searchFAQs(): void {
+    const query = this.searchQuery.toLowerCase();
+    this.shownAnswers.clear(); // Clear shown answers when performing a new search
+
+    if (query.trim() === '') {
+      // If the search query is empty, show all FAQs
+      return;
+    }
+
+    this.faqs = this.faqs.filter((faq) => {
+      return faq.question?.toLowerCase().includes(query) || faq.answer?.toLowerCase().includes(query);
+    });
   }
 }

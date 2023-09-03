@@ -33,6 +33,7 @@ export class TypeComponent {
   showDeleteWinetypeModal = false;
   winetypeToDeleteDetails: any;
   winetypeToDelete: any = null;
+  searchQuery: string = '';
 
   async loadWinetypes(): Promise<void> {
     try {
@@ -146,5 +147,18 @@ export class TypeComponent {
     const auditLogMessage =
       'Wine Type: ' + (this.editingWinetype ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  searchTypes(): void {
+    const query = this.searchQuery.toLowerCase();
+
+    if (query.trim() === '') {
+      // If the search query is empty, show all FAQs
+      return;
+    }
+
+    this.winetypes = this.winetypes.filter((winetype) => {
+      return winetype.description?.toLowerCase().includes(query) || winetype.name?.toLowerCase().includes(query);
+    });
   }
 }

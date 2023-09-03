@@ -34,6 +34,7 @@ export class VarietalComponent {
   showDeleteVarietalModal = false;
   varietalToDeleteDetails: any;
   varietalToDelete: any = null;
+  searchQuery: string = '';
 
   async loadVarietals(): Promise<void> {
     try {
@@ -148,5 +149,18 @@ export class VarietalComponent {
     const auditLogMessage =
       'Wine Varietal: ' + (this.editingVarietal ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  searchVarietals(): void {
+    const query = this.searchQuery.toLowerCase();
+
+    if (query.trim() === '') {
+      // If the search query is empty, show all FAQs
+      return;
+    }
+
+    this.varietals = this.varietals.filter((varietal) => {
+      return varietal.description?.toLowerCase().includes(query) || varietal.name?.toLowerCase().includes(query);
+    });
   }
 }

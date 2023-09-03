@@ -6,6 +6,13 @@
     </div>
   </div>
 </div>
+<br/>
+<div class="row mb-3">
+  <div class="col-md-3 container faq-container" >
+    <input type="text" class="form-control" placeholder="Search FAQ's" 
+    [(ngModel)]="searchQuery" (keyup)="searchFAQs()">
+  </div>
+</div>
 
 <div class="container">
   <div class="accordion">
