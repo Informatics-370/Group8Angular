@@ -76,4 +76,36 @@ export class AuditLogsComponent {
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
   }
+
+
+  searchInput: string = '';
+
+
+  async search(): Promise<void> {
+    const searchText = this.searchInput.toLowerCase();
+    
+    if (!searchText) {
+      // If the search input is empty, reset the table to show all data
+      this.loadAuditLog();
+      return;
+    }
+  
+    try {
+      // Fetch the full audit log
+      const result: AuditTrail[] = await this.auditLogService.getAuditLog().toPromise();
+      
+      // Filter the AuditTrail array based on the search input
+      this.AuditTrail = result.filter((audit) => {
+        return (
+          audit.transactionDate?.toString().toLowerCase().includes(searchText) ||
+          audit.userName?.toLowerCase().includes(searchText) ||
+          audit.userEmail?.toLowerCase().includes(searchText) ||
+          audit.buttonPressed?.toLowerCase().includes(searchText)
+        );
+      });
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error, failed to connect to the database', 'AuditLog Table');
+    }
+  }
 }
