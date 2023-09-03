@@ -53,9 +53,9 @@
                 <td>
                     <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sReceived"
                         [(ngModel)]="order.supplierOrderStatus.received"
-                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid "
+                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid"
                         (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received')"
-                        (click)="openStockTakeModal(selectedStocktake)">
+                        (click)="openStockTakeModal(order.supplierOrderID!)">
                 </td>
                 <!-- Add this to your <tr> element -->
                 <!-- <td> Mens moet nie supplier orders kan delete nie agv audit trail of iets ek kan nie onthou nie maar Prof het so gese.
@@ -206,21 +206,21 @@
                 <form #stocktakeForm="ngForm" (ngSubmit)="submitStocktake(stocktakeForm)">
                     <div class="mb-3">
                         <label for="wineName" class="form-label">Wine Name</label>
-                        <input type="text" class="form-control" id="wineName" name="wineName" [(ngModel)]="selectedStocktake.wineName" disabled>
+                        <p>{{currentOrder.wineName }}</p>
                     </div>
                     <div class="mb-3">
                         <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
-                        <input type="number" class="form-control" id="quantityOrdered" name="quantityOrdered" [(ngModel)]="selectedStocktake.quantityOrdered" disabled>
+                        <p>{{currentOrder.quantity_Ordered }}</p>
                     </div>
                     <div class="mb-3">
                         <label for="quantityReceived" class="form-label">Quantity Received</label>
-                        <input type="number" class="form-control" id="quantityReceived" name="quantityReceived" [(ngModel)]="selectedStocktake.quantityReceived" min="1" required>
+                        <input type="number" class="form-control" id="quantityReceived" name="quantityReceived" min="1" required  [(ngModel)]="QuantityReceived">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="closeStockTakeModal()">Close</button>
-                <button type="button" class="btn btn-primary" [disabled]="!selectedStocktake || stocktakeForm.invalid"
+                <button type="button" class="btn btn-primary" [disabled]="stocktakeForm.invalid"
                     (click)="submitStocktake(stocktakeForm)">Update</button>
             </div>
         </div>

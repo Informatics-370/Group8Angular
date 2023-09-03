@@ -19,8 +19,8 @@ export class StockTakeService {
     return this.httpClient.get<StockTake[]>(`${this.apiUrl}/GetStockTake`);
   }
 
-  AddStockTake(stocktake: StockTake): Observable<any> {
-    return this.httpClient.post(`${this.apiUrl}/AddStockTake`, stocktake);
+  async AddStockTake(stocktake: StockTake): Promise<StockTake> {
+    return firstValueFrom(this.httpClient.post<StockTake>(this.apiUrl+ "/AddStockTake", stocktake));
   }
 
   

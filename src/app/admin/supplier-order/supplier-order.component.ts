@@ -222,12 +222,16 @@ export class SupplierOrderComponent implements OnInit {
   // }
 
 
-  
 
-  openStockTakeModal(stocktake: StockTake) {
-    this.selectedStocktake = stocktake;
+
+  openStockTakeModal(id: number) {
+    let originalOrder = this.supplierOrders.find(x => x.supplierOrderID === id);
+    if (originalOrder) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentOrder = {...originalOrder};
+    }
     this.showStockTakeModel = true;
-    console.log(this.selectedStocktake);
+    console.log('Current Order', this.currentOrder)
   }
 
   closeStockTakeModal() {
@@ -235,32 +239,31 @@ export class SupplierOrderComponent implements OnInit {
     this.showStockTakeModel = false;
   }
 
+
+  public QuantityReceived: number = 0;
+  
+
   async submitStocktake(stocktakeForm: NgForm): Promise<void> {
-    if (stocktakeForm.valid && this.selectedStocktake) {
-      try {
-        const updatedData = {
-          stocktakeID: this.selectedStocktake.stocktakeID,
-          wineName: this.selectedStocktake.wineName,
-          quantityOrdered: this.selectedStocktake.quantityOrdered,
-          quantityReceived: stocktakeForm.value.quantityReceived,
-        };
+
+    if (stocktakeForm.valid) {
+      console.log('Quantity Received',this.QuantityReceived)
+      let newStockTake: StockTake = {
+        stocktakeID: 0,
+        wineName: this.currentOrder.wineName!,
+        quantityOrdered: this.currentOrder.quantity_Ordered!,
+        quantityReceived: this.QuantityReceived,
+        dateDone: new Date(),
+        added: false
+      };
+    console.log(newStockTake);
   
-        const updatedStocktake: StockTake = await this.stocktakeService
-          .AddStockTake(updatedData)
-          .toPromise();
-  
-        // Update the selectedStocktake with the updated data
-        this.selectedStocktake.quantityReceived = updatedStocktake.quantityReceived;
-  
-        this.closeStockTakeModal();
-        stocktakeForm.resetForm();
-        this.toastr.success('Stocktake entry updated successfully', 'Stocktake');
-      } catch (error) {
-        console.error(error);
-        this.toastr.error('Failed to update stocktake', 'Stocktake');
-        this.closeStockTakeModal();
-      }
-    }
+  try{
+    await this.stocktakeService.AddStockTake(newStockTake);
+    stocktakeForm.resetForm();
+    this.closeStockTakeModal();
+  }
+    catch{}
   }
 
+}
 }
