@@ -53,8 +53,8 @@
                 <td>
                     <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sReceived"
                         [(ngModel)]="order.supplierOrderStatus.received"
-                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid"
-                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received')"
+                        [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid || order.supplierOrderStatus.received"
+                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received'); openStockTakeModal(order.supplierOrderID!)"
                         (click)="openStockTakeModal(order.supplierOrderID!)">
                 </td>
                 <!-- Add this to your <tr> element -->
@@ -199,8 +199,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Stocktake Entry</h5>
-                <button type="button" class="btn-close" aria-label="Close"
-                    (click)="closeStockTakeModal()"></button>
+                <!-- <button type="button" class="btn-close" aria-label="Close"
+                    (click)="closeStockTakeModal()"></button> -->
             </div>
             <div class="modal-body">
                 <form #stocktakeForm="ngForm" (ngSubmit)="submitStocktake(stocktakeForm)">
@@ -219,9 +219,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeStockTakeModal()">Close</button>
+                <!-- <button type="button" class="btn btn-secondary" (click)="closeStockTakeModal()">Close</button> -->
                 <button type="button" class="btn btn-primary" [disabled]="stocktakeForm.invalid"
-                    (click)="submitStocktake(stocktakeForm)">Update</button>
+                    (click)="submitStocktake(stocktakeForm); AddAuditLog('Stocktake: Added to Quantity On Hand')">Update</button>
             </div>
         </div>
     </div>
