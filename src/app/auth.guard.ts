@@ -19,7 +19,7 @@ state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
     const viewportWidth = window.innerWidth;
 
-    if (viewportWidth < 1024) { // Adjust this value as per your need
+    if (viewportWidth < 500) { // Adjust this value as per your need
       this.router.navigate(['/access-restricted']);
       return false;
     }
