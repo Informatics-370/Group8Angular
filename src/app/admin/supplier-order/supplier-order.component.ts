@@ -14,6 +14,7 @@ import { DataServiceService } from 'src/app/customer/services/data-service.servi
 import { StockTake } from 'src/app/Model/stocktake';
 import { StockTakeService } from '../services/stocktake.service';
 import { NgForm } from '@angular/forms';
+import { refresh } from 'aos';
 
 @Component({
   selector: 'app-supplier-order',
@@ -93,9 +94,10 @@ export class SupplierOrderComponent implements OnInit {
     this.supplierOrderService.createSupplierOrder(order).subscribe(
       createdOrder => {
         this.supplierOrders.push(createdOrder);
-        this.closeAddSupplierOrderModal(); // Close the Add Supplier Order modal after saving
         console.log(createdOrder);
         this.toastr.success('Successfully added', 'Order');
+        this.closeAddSupplierOrderModal(); // Close the Add Supplier Order modal after saving
+        this.getSupplierOrders();
       },
       error => {
         this.toastr.error('Failed to add order', 'Order');
@@ -241,7 +243,6 @@ export class SupplierOrderComponent implements OnInit {
 
 
   public QuantityReceived: number = 0;
-  
 
   async submitStocktake(stocktakeForm: NgForm): Promise<void> {
 

@@ -238,7 +238,7 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeWROModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="writeROForm.invalid" (click)="AddWriteOff(writeROForm)">Write Off</button>
+    <button type="button" class="btn btn-primary" [disabled]="writeROForm.invalid" (click)="AddWriteOff(writeROForm);  AddAuditLog('Write Off: Added')">Write Off</button>
   </div>
 </div>
 </div>
@@ -251,38 +251,37 @@
 <div class="modal-dialog">
 <div class="modal-content">
   <div class="modal-header">
-    <h5 class="modal-title">Supplier Order</h5>
+    <h5 class="modal-title">Add Supplier Order Quantity</h5>
     <button type="button" class="btn-close" aria-label="Close" (click)="closeSuppOModal()"></button>
   </div>
-
   <div class="modal-body">
     <form #StockTakeForm="ngForm" (ngSubmit)="UpdateStockTake(StockTakeForm)">      
-
+      <div class="mb-3">
+        <label for="WineName" class="form-label">Stocktake Wine name:</label>
+        <br>
       <select id="TestWineName" name="WineName" required [(ngModel)]="WineNameSelected" (ngModelChange)="updateFieldsBasedOnWineSelected()">
         <option value="" disabled selected>Select a StockTake to add to Quantity On Hand</option>
-        <option *ngFor="let x of stocktake" [value]="x.stocktakeID">{{x.wineName}}</option>
+        <option *ngFor="let x of dropdownOptions" [value]="x.stocktakeID">{{x.wineName}}</option>
       </select>
-      
+      </div>      
       <div class="mb-3">
         <label for="DateDone" class="form-label">Stocktake Date Done:</label>
         <p *ngIf="currentStockTake?.wineName">{{currentStockTake.dateDone | date:'dd/MM/yyyy HH:mm'}}</p>
-      </div>
-      
+      </div>      
       <div class="mb-3">
         <label for="quantityReceived" class="form-label">Stocktake Quantity Received:</label>
         <p *ngIf="currentStockTake?.wineName">{{currentStockTake.quantityReceived}}</p>
-      </div>
-      
-
+      </div>     
     </form>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeSuppOModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="writeROForm.invalid" (click)="AddWriteOff(writeROForm)">Write Off</button>
+    <button type="button" class="btn btn-primary" [disabled]="StockTakeForm.invalid" (click)="UpdateStockTake(StockTakeForm); AddAuditLog('StockTake: Added')">Add Stock</button>
   </div>
 </div>
 </div>
 </div>
+
 </div>
 
 

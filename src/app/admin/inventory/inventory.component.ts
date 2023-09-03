@@ -302,18 +302,24 @@ async deleteInventory(): Promise<void> {
 //******************* Delete Modal-related methods *********************************************************************************************************************************
 
 // Function to increase the Quantity on Hand for a specific wine
-increaseQuantity(item: any) {
-  if (item.quantityOnHand > -1) {
-    item.quantityOnHand++;
-    // Update the inventory using the service
-    this.inventoryService.updateInventory(item.inventoryID, item)
-      .then(() => {
-        this.toastr.success('Quantity increased successfully', 'Inventory');
-      })
-      .catch((error) => {
-        console.error(error);
-        this.toastr.error('Error occurred while updating quantity', 'Inventory Reason');
-      });
+increaseQuantity(quantityReceived: number): void {
+  if (quantityReceived > 0) {
+    // You may need to fetch the item from your inventory based on your data structure
+    const selectedItem = this.inventory.find(item => item.inventoryID === this.InventoryID);
+
+    if (selectedItem) {
+      selectedItem.quantityOnHand += quantityReceived;
+
+      // Update the inventory using the service
+      this.inventoryService.updateInventory(selectedItem.inventoryID, selectedItem)
+        .then(() => {
+          this.toastr.success('Quantity increased successfully', 'Inventory');
+        })
+        .catch((error) => {
+          console.error(error);
+          this.toastr.error('Error occurred while updating quantity', 'Inventory Reason');
+        });
+    }
   }
 }
 
@@ -518,6 +524,7 @@ async loadStockTake(): Promise<void> {
   try {
     this.stocktakeService.GetStockTake().subscribe((result: any) => {
       this.stocktake = result;
+      this.updateDropdownOptions();
       console.log(this.stocktake);
     });
   } catch (error) {
@@ -533,11 +540,17 @@ showSuppOModal: boolean = false;
 currentStockTake: StockTake = new StockTake();
 public WineNameSelected: string ='NA';
 InventoryID: number = 0;
+dropdownOptions: StockTake[] = [];
 
 
 openSuppOModal(id: number) {
   this.InventoryID = id;
   this.showSuppOModal = true;
+}
+
+updateDropdownOptions(): void {
+  // Filter the stocktake array to include only items where "added" is false
+  this.dropdownOptions = this.stocktake.filter((item: StockTake) => !item.added);
 }
 
 
@@ -552,8 +565,27 @@ updateFieldsBasedOnWineSelected(): void {
 }
 
 
-UpdateStockTake(form: NgForm){
+async UpdateStockTake(form: NgForm): Promise<void> {
+  if (form.valid && this.currentStockTake) {
+    // Update the Added property of the selected stocktake
+    this.currentStockTake.added = true;
 
+    try {
+      // Update the stocktake
+      const updatedStockTake = await this.stocktakeService.UpdateStockTake(this.currentStockTake);
+      console.log('StockTake updated successfully:', updatedStockTake);
+
+      // Call the increaseQuantity method with the quantity received
+      this.increaseQuantity(updatedStockTake.quantityReceived);
+
+      // Close the modal or perform any other actions you need
+      this.closeSuppOModal();
+      this.loadStockTake();
+    } catch (error) {
+      console.error('Error updating StockTake:', error);
+      // Handle error, show a message, etc.
+    }
+  }
 }
 
 closeSuppOModal() {

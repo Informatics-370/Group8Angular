@@ -23,6 +23,11 @@ export class StockTakeService {
     return firstValueFrom(this.httpClient.post<StockTake>(this.apiUrl+ "/AddStockTake", stocktake));
   }
 
+  async UpdateStockTake(stocktake: StockTake): Promise<StockTake> {
+    return firstValueFrom(this.httpClient.put<StockTake>(`${this.apiUrl}/UpdateStockTake/${stocktake.stocktakeID}`, stocktake));
+  }
+  
+
   
 }
 
