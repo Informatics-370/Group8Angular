@@ -182,7 +182,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeEmployeeModal()">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="employeeForm?.invalid">
+            <button type="submit" class="btn btn-primary" [disabled]="employeeForm?.invalid || isSubmitting">
               {{editingEmployee ? 'Save Changes' : 'Save'}}
             </button>
           </div>
