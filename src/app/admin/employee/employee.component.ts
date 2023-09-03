@@ -21,7 +21,7 @@ import { CustomersService } from '../services/customers.service';
 export class EmployeeComponent {
 
   @ViewChild('employeeForm') employeeForm!: NgForm;
-
+  isSubmitting: boolean = false;
   employees: Employee[] = [];
   currentEmployee: Employee = new Employee();
   showEmployeeModal: boolean = false;
@@ -107,6 +107,7 @@ export class EmployeeComponent {
   }
 
   async submitEmployeeForm(form: NgForm): Promise<void> {
+    this.isSubmitting = true;
     console.log('Submitting form with editingEmployee flag:', this.editingEmployee);
     if (form.valid) {
       try {
@@ -118,12 +119,14 @@ export class EmployeeComponent {
                 // Update the original Employee object with the changes made to the clone
                 this.employees[index] = data;
                 this.toastr.success("Employee updated.", "Update employee");
+                this.isSubmitting = false;
               }
               this.closeEmployeeModal();
             },
             (error: any) => {
               console.error(error);
               this.toastr.error("Failed to update superuser.", "Update Superuser");
+              this.isSubmitting = false;
             }
           );
         } else {
@@ -156,15 +159,14 @@ export class EmployeeComponent {
             console.log(data);
             this.employees.push(data);
             this.toastr.success("A new employee has been added to the system.", "Add Employee");
-            form.resetForm();
+            this.getEmployees();
+            this.closeEmployeeModal();
+            this.isSubmitting = false;
           }, error => {
             console.error(error);
             this.toastr.error("Adding a new employee failed, please try again later.", "Employee add failed");
+            this.isSubmitting = false;
           });
-        }
-        this.closeEmployeeModal();
-        if (!this.editingEmployee) {
-          form.resetForm();
         }
       } catch (error) {
         console.error(error);
@@ -177,19 +179,22 @@ export class EmployeeComponent {
     if (this.employeeToDelete != null) {
       try {
         this.employeeService.DeleteEmployee(this.employeeToDelete).subscribe((result: any) => {
-
+          this.employees = this.employees.filter(employee => employee.id !== this.employeeToDelete);
+          this.toastr.success("The employee has been deleted.", "Delete Employee");
+          this.getEmployees();
+          this.closeDeleteEmployeeModal();
+        }, (error) => {
+          console.error('Error deleting employee:', error);
+          console.log('Error Response Body:', error.error);
+          this.toastr.error("Deleting the selected employee account failed, please try again later.", "Delete Employee");
         });
-        console.log(this.employeeToDelete);
-        this.employees = this.employees.filter(employee => employee.id !== this.employeeToDelete);
-        this.toastr.success("The employee has been deleted.", "Delete Employee");
       } catch (error) {
-        console.error('Error deleting employee:', error);
-        this.toastr.error("Deleting the selected employee account failed, please try again later.", "Delete Employee");
+        console.error('Unexpected error:', error);
+        this.toastr.error("An unexpected error occurred, please try again later.", "Delete Employee");
       }
-      this.closeDeleteEmployeeModal();
-      location.reload();
     }
-  }
+}
+
 
   clearConfirmationInput(): void {
     this.deleteConfirmationText = ''; // Clear the input field

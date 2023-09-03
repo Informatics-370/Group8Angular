@@ -182,7 +182,9 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeSuperuserModal()">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="superuserForm.invalid">
+            <button type="submit" 
+                    class="btn btn-primary" 
+                    [disabled]="superuserForm.invalid || isSubmitting">
               {{editingSuperuser ? 'Save Changes' : 'Save'}}
             </button>
           </div>

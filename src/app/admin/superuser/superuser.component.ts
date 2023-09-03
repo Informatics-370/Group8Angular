@@ -11,6 +11,7 @@ import { Customer } from 'src/app/Model/customer';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-superuser',
@@ -20,7 +21,7 @@ import { CustomersService } from '../services/customers.service';
 export class SuperuserComponent {
 
   @ViewChild('superuserForm') superuserForm!: NgForm;
-  
+  isSubmitting: boolean = false;
   superusers: Superuser[] = [];
   currentSuperuser: Superuser = new Superuser();
   showSuperuserModal: boolean = false;
@@ -127,6 +128,7 @@ export class SuperuserComponent {
   }
 
   async submitSuperuserForm(form: NgForm): Promise<void> {
+    this.isSubmitting = true;
     console.log('Submitting form with editingSuperuser flag:', this.editingSuperuser);
     if (form.valid) {
       try {
@@ -138,12 +140,14 @@ export class SuperuserComponent {
                 // Update the original Superuser object with the changes made to the clone
                 this.superusers[index] = data;
                 this.toastr.success("Superuser updated.", "Update Superuser");
+                this.isSubmitting = false;
               }
               this.closeSuperuserModal();
             },
             (error: any) => {
               console.error(error);
               this.toastr.error("Failed to update superuser.", "Update Superuser");
+              this.isSubmitting = false;
             }
           );
         } else {
@@ -176,15 +180,14 @@ export class SuperuserComponent {
             console.log(data);
             this.superusers.push(data);
             this.toastr.success("A new superuser has been added to the system.", "Add Superuser");
-            form.resetForm();
+            this.getSuperusers();
+            this.closeSuperuserModal();
+            this.isSubmitting = false;
           }, error => {
             console.error(error);
             this.toastr.error("Adding a new superuser failed, please try again later.", "Superuser add failed");
+            this.isSubmitting = false;
           });
-        }
-        this.closeSuperuserModal();
-        if (!this.editingSuperuser) {
-          form.resetForm();
         }
       } catch (error) {
         console.error(error);
@@ -194,22 +197,25 @@ export class SuperuserComponent {
   }
 
   async deleteSuperuser(): Promise<void> {
-    console.log("here");
     if (this.superuserToDelete != null) {
       try {
         this.superuserService.DeleteSuperuser(this.superuserToDelete).subscribe((result: any) => {
-
+          this.superusers = this.superusers.filter(superuser => superuser.id !== this.superuserToDelete);
+          this.toastr.success("The superuser has been deleted.", "Delete Superuser");
+          this.getSuperusers();
+          this.closeDeleteSuperuserModal();
+        }, (error) => {
+          console.error('Error deleting superuser:', error);
+          console.log('Error Response Body:', error.error);
+          this.toastr.error("Deleting the selected superuser account failed, please try again later.", "Delete Superuser");
         });
-        console.log(this.superuserToDelete);
-        this.superusers = this.superusers.filter(superuser => superuser.id !== this.superuserToDelete);
-        this.toastr.success("The superuser has been deleted.", "Delete Superuser");
       } catch (error) {
-        console.error('Error deleting superuser:', error);
-        this.toastr.error("Deleting the selected superuser account failed, please try again later.", "Delete Superuser");
+        console.error('Unexpected error:', error);
+        this.toastr.error("An unexpected error occurred, please try again later.", "Delete Superuser");
       }
-      this.closeDeleteSuperuserModal();
     }
-  }
+}
+
 
   // VALIDATION
 
