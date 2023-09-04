@@ -43,7 +43,7 @@ export class SystemprivilegesComponent {
       (result: any) => {
         console.log(result);
         this.systemPrivileges = result;
-        this.filteredSystemPrivileges = this.systemPrivileges;
+        this.filteredSystemPrivileges = result;
       },
       (error: any) => {
         console.error(error);
@@ -96,7 +96,8 @@ export class SystemprivilegesComponent {
     if (form.valid) {
       try {
         if (this.editingSystemPrivilege) {
-          await this.privilegeService.UpdateSystemPrivilege(this.currentSystemPrivilege.id!, this.currentSystemPrivilege);
+          this.privilegeService.UpdateSystemPrivilege(this.currentSystemPrivilege.id!, this.currentSystemPrivilege).subscribe((result: any) => {
+          });
           const index = this.systemPrivileges.findIndex(systemPrivilege => systemPrivilege.id === this.currentSystemPrivilege.id);
           if (index !== -1) {
             // Update the original SystemPrivilege object with the changes made to the clone
@@ -105,7 +106,8 @@ export class SystemprivilegesComponent {
           }
         } else {
           this.privilegeService.AddSystemPrivilege(this.currentSystemPrivilege).subscribe(data => {
-            this.systemPrivileges.push(data);
+            this.filteredSystemPrivileges.push(data);
+            // this.systemPrivileges.push(data);
             this.toastr.success("A new system privilege has been added to the system", "System Privilege added");
             this.closeSystemPrivilegeModal();
             form.resetForm();
@@ -127,11 +129,15 @@ async deleteSystemPrivilege(): Promise<void> {
   if (this.systemPrivilegeToDelete != null) {
       try {
           this.privilegeService.DeleteSystemPrivilege(this.systemPrivilegeToDelete).subscribe((result: any) => {
-            
+            this.systemPrivileges = this.systemPrivileges.filter(sys => sys.id !== this.systemPrivilegeToDelete);
+            this.toastr.success("The system privilege has been deleted successfully", "System privilege deleted");
+            this.getSystemPrivileges();
+            this.closeDeleteSystemPrivilegeModal();
+          }, (error) => {
+            console.error('Error deleting system privilege:', error);
+            console.log('Error Response Body:', error.error);
+            this.toastr.error("Deleting the selected system privilege failed, please try again later.", "Delete System Privilege");
           });
-          this.systemPrivileges = this.systemPrivileges.filter(SystemPrivilege => SystemPrivilege.id !== this.systemPrivilegeToDelete);
-          this.toastr.success("The system privilege has been deleted successfully", "System privilege deleted");
-          this.closeDeleteSystemPrivilegeModal();
       } catch (error) {
           console.error(error);
           this.toastr.error("Deleting system privilege failed, please try again later.", "System privilege delete failed");
