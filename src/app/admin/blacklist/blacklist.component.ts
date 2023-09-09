@@ -17,6 +17,8 @@ import { Customer } from 'src/app/Model/customer';
 })
 export class BlacklistComponent implements OnInit {
   blacklistC: Blacklist[] = [];
+  customerEmails: string[] = [];
+  emailSelected: boolean = false;
   showBlacklistModal: boolean = false;
   editingBlacklistC: boolean = false;
   currentBlacklistC: Blacklist = new Blacklist();
@@ -37,6 +39,7 @@ export class BlacklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBlacklistCs();
+    this.loadCustomerEmails();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
   }
@@ -56,6 +59,34 @@ export class BlacklistComponent implements OnInit {
       );
     }
   }
+
+  async loadCustomerEmails(): Promise<void> {
+    try {
+      this.customerService.GetCustomers().subscribe(async (result: any) => {
+        let notOnBlacklist: string[] = [];
+
+        // Extracting emails from the result
+        const allEmails = result.map((customer: any) => customer.email);
+
+        // Checking each email against the blacklist
+        for (let email of allEmails) {
+          const isBlacklisted = await this.blacklistService.checkBlacklist(email);
+          if (!isBlacklisted) {
+            notOnBlacklist.push(email);
+          }
+        }
+
+        // Assigning the non-blacklisted emails to customerEmails
+        this.customerEmails = notOnBlacklist;
+      });
+    } catch (error) {
+      console.log(error);
+      this.toastr.error('Error, failed to load customer emails', 'Customer emails');
+    }
+}
+
+
+
 
   // ****************** Methods to display the list of Blacklisted Customers. ************************************************************************************************
 
@@ -88,6 +119,14 @@ export class BlacklistComponent implements OnInit {
     this.showBlacklistModal = true;
   }
 
+  onEmailChange(): void {
+    if (this.currentBlacklistC['email']) {
+      this.emailSelected = true;
+    } else {
+      this.emailSelected = false;
+    }
+  }
+
   async submitBlacklistCForm(form: NgForm): Promise<void> {
     console.log(
       'Submitting form with editing Blacklist flag:',
@@ -107,6 +146,7 @@ export class BlacklistComponent implements OnInit {
           if (index !== -1) {
             this.blacklistC[index] = this.currentBlacklistC;
           }
+          this.loadCustomerEmails();
           this.toastr.success('Successfully updated', 'Customer');
         } else {
           // Add Blacklist Customer
@@ -114,6 +154,7 @@ export class BlacklistComponent implements OnInit {
             this.currentBlacklistC
           );
           this.blacklistC.push(data);
+          this.loadCustomerEmails();
           this.toastr.success('Successfully added', 'Customer');
         }
         this.closeBlacklistCModal();
@@ -152,6 +193,7 @@ export class BlacklistComponent implements OnInit {
         await this.blacklistService.deleteBlacklistC(
           this.blacklistCToDeleteDetails.blacklistID
         );
+        console.log(this.blacklistCToDeleteDetails);
         this.blacklistC = this.blacklistC.filter(
           (x) => x.blacklistID !== this.blacklistCToDeleteDetails.blacklistID
         );
@@ -162,6 +204,7 @@ export class BlacklistComponent implements OnInit {
           'Blacklist Customer to remove is null, undefined, or has an undefined BlacklistID property.'
         );
       }
+      this.loadCustomerEmails();
       this.closeDeleteBlacklistCModal();
     }
   }
