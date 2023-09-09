@@ -36,7 +36,8 @@
       <td>{{ emp.email }}</td>
       <td>{{ emp.phoneNumber }}</td>
       <td>{{ emp.iD_Number }}</td>
-      <td>{{ emp.hire_Date }}</td>
+      <td>{{ emp.hire_Date | date:'dd/MM/yyyy HH:mm' }}</td>
+
       <td>
         <button class="btn btn-primary"
           (click)="emp.id !== undefined && openEditEmployeeModal(emp.id)"
@@ -56,50 +57,58 @@
 <div class="modal" tabindex="-1" [ngClass]="{'show': showEmployeeModal}" [ngStyle]="{'display': showEmployeeModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{editingEmployee ? 'Edit Employee' : 'Add Employee'}}</h5>
+      <div class="modal-header">{{editingEmployee ? 'Edit Employee' : 'Add Employee'}}
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEmployeeModal()"></button>
       </div>
       <div class="modal-body">
         <form #employeeForm="ngForm" (ngSubmit)="submitEmployeeForm(employeeForm); onSubmitClick()">
           <!-- FIRST NAME -->
-          <div class="mb-3">
-            <label for="firstName" class="form-label">First Name:</label>
+          <div class="d-flex justify-content-between">
+            <label for="firstName" class="form-label">First Name:
             <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the first name of the employee."></i>
-            <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="firstName" required pattern="^[A-Za-z ]+$">
+          </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+            <input type="text" class="form-control" id="empName" [(ngModel)]="currentEmployee.first_Name" name="firstName" required pattern="^[A-Za-z ]+$" placeholder="Please enter the employee's first name here">
             <div *ngIf="employeeForm.controls['firstName']?.invalid && employeeForm.controls['firstName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['firstName'].errors?.['required']">First Name is required.</div>
               <div *ngIf="employeeForm.controls['firstName'].errors?.['pattern']">First Name should not contain numerical values.</div>
             </div>
-          </div>
           
           <!-- LAST NAME -->
-          <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name:</label>
+          <div class="d-flex justify-content-between">
+            <label for="lastName" class="form-label">Last Name:
             <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the last name of the employee."></i>
-            <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z ]+$">
+              </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+            <input type="text" class="form-control" id="empLastName" [(ngModel)]="currentEmployee.last_Name" name="lastName" required pattern="^[A-Za-z ]+$" placeholder="Please enter the employee's last name here">
             <div *ngIf="employeeForm.controls['lastName']?.invalid && employeeForm.controls['lastName'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
               <div *ngIf="employeeForm.controls['lastName'].errors?.['pattern']">Last Name should not contain numerical values.</div>
             </div>
-          </div>
 
           <!--! PHONE NUMBER -->
-          <div class="mb-3">
-            <label for="phoneNumber" class="form-label">Phone number:</label>
+          <div class="d-flex justify-content-between">
+            <label for="phoneNumber" class="form-label">Phone number:
             <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the phone number of the employee."></i>
-            <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$">
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+            <input type="text" class="form-control" id="empPhoneNumber" [(ngModel)]="currentEmployee.phoneNumber" name="phoneNumber" required pattern="^[0-9]{10}$" placeholder="Please enter the employee's phone number here">
             <div *ngIf="employeeForm.controls['phoneNumber']?.invalid && employeeForm.controls['phoneNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['required']">Phone number is required.</div>
               <div *ngIf="employeeForm.controls['phoneNumber'].errors?.['pattern']">Phone number must be exactly 10 digits.</div>
             </div>
-          </div>
 
           <!--! ID NUMBER -->
-          <div class="mb-3">
-            <label for="idNumber" class="form-label">ID Number:</label>
+          <div class="d-flex justify-content-between">
+            <label for="idNumber" class="form-label">ID Number:
             <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the ID Number of the employee."></i>
-            <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idNumber" required pattern="^[0-9]{13}$">
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+            <input type="text" class="form-control" id="empIDNumber" [(ngModel)]="currentEmployee.iD_Number" name="idNumber" required pattern="^[0-9]{13}$" placeholder="Please enter the employee's ID Number here">
             <div *ngIf="employeeForm.controls['idNumber']?.invalid && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['required']">ID Number is required.</div>
               <div *ngIf="employeeForm.controls['idNumber'].errors?.['pattern']">ID Number must be exactly 13 digits.</div>
@@ -111,14 +120,16 @@
             <div *ngIf="!isOlderThan18() && employeeForm.controls['idNumber'].touched" class="alert alert-danger">
               You have to be older than 18 to start working here.
             </div>
-          </div>
 
           <!-- Display fields only for adding new employee (not editing) -->
           <ng-container *ngIf="!editingEmployee">
             <!-- TITLE -->
-            <div class="mb-3">
-              <label for="title" class="form-label">Title:</label>
+            <div class="d-flex justify-content-between">
+              <label for="title" class="form-label">Title:
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the title of the employee."></i>
+              </label>
+              <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
               <select class="form-select" id="empTitle" [(ngModel)]="currentEmployee.title" name="title" required>
                 <option value="" disabled selected>Select a title</option>
                 <option value="Mr">Mr</option>
@@ -129,44 +140,52 @@
               <div *ngIf="employeeForm.controls['title']?.invalid && employeeForm.controls['title'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['title'].errors?.['required']">Title is required.</div>
               </div>
-            </div>
             
 
             <!-- EMAIL -->
-            <div class="mb-3">
-              <label for="email" class="form-label">Email: </label>
+            <div class="d-flex justify-content-between">
+              <label for="email" class="form-label">Email: 
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the email of the employee."></i>
-              <input type="email" class="form-control" id="empEmail" [(ngModel)]="currentEmployee.email" name="email" required>
+              </label>
+              <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+              <input type="email" class="form-control" id="empEmail" [(ngModel)]="currentEmployee.email" name="email" required placeholder="Please enter the employee's email here">
               <div *ngIf="employeeForm.controls['email']?.invalid && employeeForm.controls['email'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['email'].errors?.['required']">Email is required.</div>
                 <div *ngIf="employeeForm.controls['email'].errors?.['email']">Invalid email format.</div>
               </div>
-            </div>
 
             <!-- DISPLAY NAME -->
-            <div class="mb-3">
-              <label for="displayName" class="form-label">Display Name:</label>
+            <div class="d-flex justify-content-between">
+              <label for="displayName" class="form-label">Display Name:
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the display name of the employee."></i>
-              <input type="text" class="form-control" id="empDisplayName" [(ngModel)]="currentEmployee.username" name="displayName" required>
+              </label>
+              <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+              <input type="text" class="form-control" id="empDisplayName" [(ngModel)]="currentEmployee.username" name="displayName" required placeholder="Please enter the employee's display name here">
               <div *ngIf="employeeForm.controls['displayName']?.invalid && employeeForm.controls['displayName'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['displayName'].errors?.['required']">Display Name is required.</div>
               </div>
-            </div>
 
             <!-- PASSWORD -->
-            <div class="mb-3">
-              <label for="password" class="form-label">Password:</label>
+            <div class="d-flex justify-content-between">
+              <label for="password" class="form-label">Password:
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="This is disabled as the system generates a password for the user."></i>
-              <input type="password" class="form-control" id="empPassword" [(ngModel)]="currentEmployee.password" name="password" required disabled>
+              </label>
+              <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+              <input type="password" class="form-control" id="empPassword" [(ngModel)]="currentEmployee.password" name="password" required disabled placeholder="Your password is auto-generated">
               <div *ngIf="employeeForm.controls['password']?.invalid && employeeForm.controls['password'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['password'].errors?.['required']">Password is required.</div>
               </div>
-            </div>
 
              <!-- GENDER -->
-             <div class="mb-3">
-              <label for="gender" class="form-label">Gender:</label>
+             <div class="d-flex justify-content-between">
+              <label for="gender" class="form-label">Gender:
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide the gender of the employee."></i>
+              </label>
+              <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
               <select class="form-select" id="empGender" [(ngModel)]="currentEmployee.gender" name="gender" required>
                 <option value="" disabled selected>Select a gender</option>
                 <option value="Male">Male</option>
@@ -175,9 +194,7 @@
               </select>
               <div *ngIf="employeeForm.controls['gender']?.invalid && employeeForm.controls['gender'].touched" class="alert alert-danger">
                 <div *ngIf="employeeForm.controls['gender'].errors?.['required']">Gender is required.</div>
-              </div>
-            </div>
-            
+              </div>            
           </ng-container>
 
           <div class="modal-footer">
@@ -199,19 +216,21 @@
 [ngStyle]="{'display': showDeleteEmployeeModal ? 'block' : 'none'}">
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title">Delete Confirmation</h5>
+    <div class="modal-header">Delete Confirmation
       <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteEmployeeModal()"></button>
     </div>
     <div class="modal-body">
       Are you sure you want to delete this Employee?
       <p></p>
-      <p>ID: {{ employeeToDeleteDetails?.id }}</p>
-      <p>Name: {{ employeeToDeleteDetails?.first_Name }}</p>
-      <p>Surname: {{ employeeToDeleteDetails?.last_Name }}</p>
-      <label for="confirmationInput">Type "Confirm" to proceed:</label>
-      <input type="text" id="confirmationInput" [(ngModel)]="deleteConfirmationText" placeholder="Type 'Confirm' here" (focus)="clearConfirmationInput()">
-    </div>
+      <div>
+        <p>Name: {{ employeeToDeleteDetails?.first_Name }}</p>
+        <p>Surname: {{ employeeToDeleteDetails?.last_Name }}</p>
+      </div>
+      <div class="d-flex align-items-center">
+        <label for="confirmationInput" style="padding-right: 5px;">Type "Confirm" to proceed:</label>
+        <input type="text" class="form-control" id="confirmationInput" [(ngModel)]="deleteConfirmationText" 
+                placeholder="Type 'Confirm' here" (focus)="clearConfirmationInput()" style="flex-basis: 180px; max-width: 250px;">
+      </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeDeleteEmployeeModal()">No</button>
       <button type="button" class="btn btn-primary" [disabled]="deleteConfirmationText !== 'Confirm'" (click)="deleteEmployee(); AddAuditLog('Employee Account: Deleted')">Yes</button>
