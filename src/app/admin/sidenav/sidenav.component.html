@@ -125,7 +125,15 @@
         <span>Blacklist</span>
       </a>
     </li>
-    <li class="nav-item" (click)="showRefundSubnav = !showRefundSubnav">
+
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/refundrequest" routerLinkActive="active">
+        <i class="bi bi-coin me-2"></i>
+        <span>Refunds</span>
+      </a>
+    </li>
+
+    <!-- <li class="nav-item" (click)="showRefundSubnav = !showRefundSubnav">
       <a class="nav-link">
         <i class="bi bi-coin me-2"></i>
         <span>Refunds</span>
@@ -133,18 +141,13 @@
       </a>
     <ul *ngIf="showRefundSubnav" class="nav flex-column ml-3 sub-nav">
       <li class="nav-item" style="background-color: rgb(59, 59, 255);">
-        <a class="nav-link" routerLink="/refundrequests">
+        <a class="nav-link" routerLink="/refundrequests">asdf
           <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
           <span style="margin-left: 15px;">Refund Requests</span>
         </a>
       </li>
-      <!-- <li class="nav-item" style="background-color: rgb(59, 59, 255);">
-        <a class="nav-link" routerLink="/refunds">
-          <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
-          <span style="margin-left: 15px;">All Refunds</span>
-        </a>
-      </li> -->
-    </ul>
+      
+    </ul> -->
     <li class="nav-item">
       <a class="nav-link" routerLink="/vat" routerLinkActive="active">
         <i class="bi bi-currency-dollar me-2"></i>
