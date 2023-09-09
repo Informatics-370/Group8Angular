@@ -42,7 +42,7 @@ import { UserInformationComponent } from './customer/user-information/user-infor
 import { UsernameAndPasswordComponent } from './customer/username-and-password/username-and-password.component';
 import { OrdersComponent } from './customer/orders/orders.component';
 import { TicketsComponent } from './customer/tickets/tickets.component';
-import { RefundRequestComponent } from './customer/refund-request/refund-request.component';
+import { RefundRequestComponent } from './admin/refund-request/refund-request.component';
 import { MyRefundsComponent } from './customer/my-refunds/my-refunds.component';
 import { WishlistComponent } from './customer/wishlist/wishlist.component';
 import { NavbarComponent } from './customer/navbar/navbar.component';
@@ -54,10 +54,8 @@ import { CustomersComponent } from './admin/customers/customers.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.component';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
-import { RefundsComponent } from './admin/refunds/refunds.component';
 import { ClientAboutComponent } from './customer/client-about/client-about.component';
 import { ClientContactComponent } from './customer/client-contact/client-contact.component';
-import { RefundRequestsComponent } from './admin/refund-requests/refund-requests.component';
 import { UserRefundsComponent } from './customer/user-refunds/user-refunds.component';
 import { WriteoffComponent } from './admin/writeoff/writeoff.component';
 import { ChatbotComponent } from './customer/chatbot/chatbot.component';
@@ -109,10 +107,8 @@ import { AccessRestrictedComponent } from './admin/access-restricted/access-rest
     UserManagementComponent,
     SupplierOrderComponent,
     AdminOrdersComponent,
-    RefundsComponent,
     ClientAboutComponent,
     ClientContactComponent,
-    RefundRequestsComponent,
     UserRefundsComponent,
     WriteoffComponent,
     ChatbotComponent,

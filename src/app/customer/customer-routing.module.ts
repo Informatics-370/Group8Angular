@@ -7,7 +7,6 @@ import { ClientEventsComponent } from './client-events/client-events.component';
 import { ClientProductsComponent } from './client-products/client-products.component';
 import { MyRefundsComponent } from './my-refunds/my-refunds.component';
 import { OrdersComponent } from './orders/orders.component';
-import { RefundRequestComponent } from './refund-request/refund-request.component';
 import { TicketsComponent } from './tickets/tickets.component';
 import { UserInformationComponent } from './user-information/user-information.component';
 import { UsernameAndPasswordComponent } from './username-and-password/username-and-password.component';
@@ -26,7 +25,6 @@ const routes: Routes = [
   {path: 'clientproducts', component: ClientProductsComponent},
   {path: 'myrefunds', component: MyRefundsComponent},
   {path: 'orders', component: OrdersComponent},
-  {path: 'refundrequest', component: RefundRequestComponent},
   {path: 'tickets', component: TicketsComponent},
   {path: 'userinformation', component: UserInformationComponent},
   {path: 'usernameandpassword', component: UsernameAndPasswordComponent},

@@ -27,6 +27,7 @@ import { WriteoffComponent } from './writeoff/writeoff.component';
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 import { ScanTicketComponent } from './scan-ticket/scan-ticket.component';
 import { HelpResourcesComponent } from './help-resources/help-resources.component';
+import { RefundRequestComponent } from './refund-request/refund-request.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -40,20 +41,21 @@ const routes: Routes = [
   { path: 'blacklist', component: BlacklistComponent },
   { path: 'vat', component: VatComponent},
   { path: 'employees', component: EmployeeComponent},
-  {path: 'varietal', component: VarietalComponent},
-  {path: 'type', component: TypeComponent},
-  {path: 'discount', component: DiscountComponent},
-  {path: 'earlybird', component: EarlyBirdComponent},
-  {path: 'eventtype', component:EventTypeComponent},
-  {path: 'eventprice', component: EventPriceComponent},
-  {path: 'systemprivileges', component: SystemprivilegesComponent},
-  {path: 'superuser', component: SuperuserComponent},
-  {path: 'customers', component: CustomersComponent},
-  {path: 'users', component: UserManagementComponent},
-  {path:'supplierOrder', component: SupplierOrderComponent},
-  {path: 'adminOrder', component: AdminOrdersComponent},
-  {path: 'auditlogs', component: AuditLogsComponent},
-  {path: 'help', component: HelpResourcesComponent},
+  { path: 'varietal', component: VarietalComponent},
+  { path: 'type', component: TypeComponent},
+  { path: 'discount', component: DiscountComponent},
+  { path: 'earlybird', component: EarlyBirdComponent},
+  { path: 'eventtype', component:EventTypeComponent},
+  { path: 'eventprice', component: EventPriceComponent},
+  { path: 'systemprivileges', component: SystemprivilegesComponent},
+  { path: 'superuser', component: SuperuserComponent},
+  { path: 'customers', component: CustomersComponent},
+  { path: 'users', component: UserManagementComponent},
+  { path: 'supplierOrder', component: SupplierOrderComponent},
+  { path: 'refundrequest', component: RefundRequestComponent},
+  { path: 'adminOrder', component: AdminOrdersComponent},
+  { path: 'auditlogs', component: AuditLogsComponent},
+  { path: 'help', component: HelpResourcesComponent},
   { path: 'Tickets/Scan/:token', component: ScanTicketComponent },
 
 

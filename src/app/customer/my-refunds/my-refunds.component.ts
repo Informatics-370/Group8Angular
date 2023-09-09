@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RefundRequest, RefundStatus } from 'src/app/Model/RefundRequest';
-import { RefundService } from '../services/refund.service';
+import { RefundService } from '../../admin/services/refund.service';
 import { WineService } from 'src/app/admin/services/wine.service';
 import { DecodedToken } from '../services/data-service.service';
 import { Wine } from 'src/app/Model/wine';
