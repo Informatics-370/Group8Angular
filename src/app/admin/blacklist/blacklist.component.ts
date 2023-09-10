@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Blacklist } from 'src/app/Model/blacklist';
 import { BlacklistService } from '../services/blacklist.service';
 import { Router } from '@angular/router';
@@ -9,6 +9,8 @@ import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
 import { AuditTrail } from 'src/app/Model/audit-trail';
 import { Customer } from 'src/app/Model/customer';
+import { NgModel } from '@angular/forms';
+import { BlacklistDelete } from 'src/app/Model/blacklistDelete';
 
 @Component({
   selector: 'app-blacklist',
@@ -16,6 +18,7 @@ import { Customer } from 'src/app/Model/customer';
   styleUrls: ['./blacklist.component.css'],
 })
 export class BlacklistComponent implements OnInit {
+  @ViewChild('reasonField') reasonField: NgModel | undefined;
   blacklistC: Blacklist[] = [];
   customerEmails: string[] = [];
   emailSelected: boolean = false;
@@ -25,6 +28,7 @@ export class BlacklistComponent implements OnInit {
   blacklistCToDelete: any = null;
   blacklistCToDeleteDetails: any;
   showDeleteBlacklistCModal = false;
+  reason: string = '';
 
   constructor(
     private blacklistService: BlacklistService,
@@ -102,6 +106,7 @@ export class BlacklistComponent implements OnInit {
 
   closeBlacklistCModal() {
     this.showBlacklistModal = false;
+    this.reason = '';
   }
 
   openEditBlacklistCModal(id: number) {
@@ -182,6 +187,7 @@ export class BlacklistComponent implements OnInit {
 
   closeDeleteBlacklistCModal(): void {
     this.showDeleteBlacklistCModal = false;
+    this.reason = '';
   }
 
   async deleteBlacklistC(): Promise<void> {
@@ -190,8 +196,13 @@ export class BlacklistComponent implements OnInit {
       this.blacklistCToDeleteDetails.blacklistID !== undefined
     ) {
       try {
+        var blacklistDeleteViewModel = new BlacklistDelete();
+
+        blacklistDeleteViewModel.id = this.blacklistCToDeleteDetails.blacklistID;
+        blacklistDeleteViewModel.reason = this.reason;
+
         await this.blacklistService.deleteBlacklistC(
-          this.blacklistCToDeleteDetails.blacklistID
+          blacklistDeleteViewModel
         );
         console.log(this.blacklistCToDeleteDetails);
         this.blacklistC = this.blacklistC.filter(

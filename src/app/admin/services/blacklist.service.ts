@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/app/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Blacklist } from 'src/app/Model/blacklist';
 import { firstValueFrom } from 'rxjs';
+import { BlacklistDelete } from 'src/app/Model/blacklistDelete';
 
 
 
@@ -34,9 +35,15 @@ export class BlacklistService {
     return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, blacklistC));
   }
 
-  async deleteBlacklistC(id: number): Promise<any> {
-    return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
-  }
+  async deleteBlacklistC(blacklistDelete: BlacklistDelete): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const options = {
+        headers: headers,
+        body: blacklistDelete
+    };
+    return firstValueFrom(this.http.delete(`${this.apiUrl}/${blacklistDelete.id}`, options));
+}
+
 
   //Check if user is in Blacklist table
   async checkBlacklist(email: string): Promise<boolean> {
