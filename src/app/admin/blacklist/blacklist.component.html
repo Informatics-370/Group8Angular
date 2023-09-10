@@ -52,7 +52,8 @@
 
 <!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
 
-<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}" [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
+<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}"
+  [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">{{editingBlacklistC ? 'Edit Blacklist Customer' : 'Add Customer to Blacklist'}}
@@ -61,46 +62,57 @@
 
       <div class="modal-body">
         <form #blacklistForm="ngForm" (ngSubmit)="submitBlacklistCForm(blacklistForm)">
-
-          <!-- Select Dropdown for Customer Emails (Shown only when adding) -->
-          <div class="mb-3" *ngIf="!editingBlacklistC">
-            <label for="blacklistCEmail" class="form-label">Customer e-mail</label>
-            <select class="form-control" id="blacklistCEmail" [(ngModel)]="currentBlacklistC['email']" name="blacklistCEmail" (change)="onEmailChange()" #customerField="ngModel">
-              <option value="" disabled>Select a customer email</option>
-              <option *ngFor="let email of customerEmails" [value]="email">{{email}}</option>
-            </select>
-            <div *ngIf="customerField.invalid" class="alert alert-danger">
-              <div>Email is required.</div>
+    
+            <!-- Add Mode: Dropdown for Customer Emails -->
+            <ng-container *ngIf="!editingBlacklistC">
+                <div class="d-flex justify-content-between">
+                    <label for="blacklistCEmail" class="form-label">Customer e-mail <i class="fa fa-question-circle"
+                            data-bs-toggle="tooltip" title="Select the account you want to add to the blacklist."></i>
+                    </label>
+                    <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+                </div>
+                <select class="form-control" id="blacklistCEmail" [(ngModel)]="currentBlacklistC['email']"
+                    name="blacklistCEmail" (change)="onEmailChange()" #customerField="ngModel">
+                    <option value="" disabled>Select a customer email</option>
+                    <option *ngFor="let email of customerEmails" [value]="email">{{email}}</option>
+                </select>
+                <div *ngIf="customerField.invalid" class="alert alert-danger">
+                    <div>Email is required.</div>
+                </div>
+            </ng-container>
+    
+            <!-- Edit Mode: Display email as text -->
+            <div *ngIf="editingBlacklistC">
+                <label style="padding-bottom: 4px;">Customer e-mail</label>
+                <p>{{currentBlacklistC['email']}}</p>
             </div>
-          </div>
-
-          <!-- Display email as text when editing -->
-          <div *ngIf="editingBlacklistC">
-            <label style="padding-bottom: 4px;">Customer e-mail</label>
-            <p>{{currentBlacklistC['email']}}</p>
-          </div>
-
-          <!-- Reason Input -->
-          <div class="mb-3" *ngIf="!editingBlacklistC ? currentBlacklistC['email'] && emailSelected : true">
-            <label for="blacklistReason" class="form-label">Reason for being on the blacklist</label>
-            <input type="text" class="form-control" id="blacklistReason" 
-                  [(ngModel)]="currentBlacklistC.reason" name="blacklistReason" 
-                  required #reasonField="ngModel" placeholder="Please enter the reason here">
-            <div *ngIf="reasonField.invalid && reasonField.touched" class="alert alert-danger">
-              <div *ngIf="reasonField.errors?.['required']">Reason is required.</div>
+    
+            <!-- Reason Input (Displayed after email is selected in Add mode or always in Edit mode) -->
+            <div class="d-flex justify-content-between" *ngIf="editingBlacklistC || currentBlacklistC['email']">
+                <label for="blacklistReason" class="form-label">Reason for being on the blacklist <i
+                        class="fa fa-question-circle" data-bs-toggle="tooltip"
+                        title="Provide the reason for adding the customer to the blacklist."></i>
+                </label>
+                <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
             </div>
-          </div>
+            <input type="text" class="form-control" id="blacklistReason" [(ngModel)]="currentBlacklistC.reason"
+                    name="blacklistReason" required #reasonField="ngModel" placeholder="Please enter the reason here" 
+                    *ngIf="editingBlacklistC || currentBlacklistC['email']">
+
+            <div *ngIf="reasonField?.invalid && reasonField?.touched" class="alert alert-danger">
+                <div *ngIf="reasonField?.errors?.['required']">Reason is required.</div>
+            </div>
         </form>
-      </div>
+    </div>
 
       <!-- Modal Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeBlacklistCModal()">Close</button>
-        <button type="button" class="btn btn-primary" 
-          [disabled]="!blacklistForm.valid || (!editingBlacklistC && !currentBlacklistC['email'])" 
+        <button type="button" class="btn btn-primary"
+          [disabled]="!blacklistForm.valid || (!editingBlacklistC && !currentBlacklistC['email'])"
           (click)="submitBlacklistCForm(blacklistForm); onSubmitClick()">
-              {{editingBlacklistC ? 'Save Changes' : 'Save'}}
-          </button>
+          {{editingBlacklistC ? 'Save Changes' : 'Save'}}
+        </button>
 
       </div>
     </div>
@@ -127,10 +139,18 @@
         <p>Are you sure you want to remove this customer from the blacklist?</p>
         <p>Customer Email: {{ blacklistCToDeleteDetails?.email }}</p>
         <p>Reason for being on blacklist: {{ blacklistCToDeleteDetails?.reason }}</p>
+        <div class="d-flex justify-content-between">
+          <label for="removalReason">Removal Reason: <i
+            class="fa fa-question-circle" data-bs-toggle="tooltip"
+            title="Provide the reason for removing the customer from the blacklist."></i>
+          </label>
+          <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+        </div>
+        <input type="text" id="removalReason" [(ngModel)]="reason" class="form-control" placeholder="Enter removal reason">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteBlacklistCModal()">No</button>
-        <button type="button" class="btn btn-primary"
+        <button type="button" class="btn btn-primary" [disabled]="!reason" 
           (click)="deleteBlacklistC(); AddAuditLog('Blacklist Customer: Deleted')">Yes</button>
       </div>
     </div>
