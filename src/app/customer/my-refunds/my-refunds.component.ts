@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RefundRequest, RefundStatus } from 'src/app/Model/RefundRequest';
+import { RefundRequest } from 'src/app/Model/RefundRequest';
 import { RefundService } from '../../admin/services/refund.service';
 import { WineService } from 'src/app/admin/services/wine.service';
 import { DecodedToken } from '../services/data-service.service';
@@ -48,17 +48,17 @@ ngOnDestroy(): void {
   }
 }
 
-statusDisplayNames = {
-  [RefundStatus.InProgress]: 'In Progress',
-  [RefundStatus.Approved]: 'Approved',
-  [RefundStatus.NotApproved]: 'Not Approved',
-};
+// statusDisplayNames = {
+//   [RefundStatus.InProgress]: 'In Progress',
+//   [RefundStatus.Approved]: 'Approved',
+//   [RefundStatus.NotApproved]: 'Not Approved',
+// };
 
 
 
-getStatusName(status: RefundStatus): string {
-  return this.statusDisplayNames[status];
-}
+// getStatusName(status: RefundStatus): string {
+//   return this.statusDisplayNames[status];
+// }
 
 
   async getUserRefundRequests(email: string): Promise<void> {

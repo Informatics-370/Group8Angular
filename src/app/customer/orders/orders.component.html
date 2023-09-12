@@ -40,8 +40,6 @@
           order.orderStatusId === 2 ? 'Shipment On The Way' :
           order.orderStatusId === 3 ? 'Ready For Pickup' : 'Order Successfully Collected' }}
         </p>
-
-
       </div>
 
 
@@ -56,7 +54,7 @@
           <h4 class="custom-text-size">Order Total: {{ order.orderTotal | number }}</h4>
         </div>
         <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatusId === 4"
-          class="btn btn-outline-danger" (click)="openRefundModal(order.wineOrderId, order.wineOrderId)">
+          class="btn btn-outline-danger" (click)="openRefundModal(order)">
           Request Refund
         </button>
         <p *ngIf="!order.isRefunded && !checkRefundAvailability(order)" class="text-warning">Refund unavailable</p>
@@ -69,33 +67,43 @@
 
 
 
-<!--Refunds request pop up modal-->
-<div class="modal" tabindex="-1" [ngClass]="{'show': showRefundModal}"
-  [ngStyle]="{'display': showRefundModal ? 'block' : 'none'}">
-  <div class="modal-dialog">
+<!-- Refunds request pop up modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showRefundModal}" [ngStyle]="{'display': showRefundModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Request Refund</h5>
+      <div class="modal-header">Request Refund
         <button type="button" class="btn-close" aria-label="Close" (click)="closeRefundModal()"></button>
       </div>
       <div class="modal-body">
         <form #refundForm="ngForm" (ngSubmit)="submitRefundForm(refundForm)">
-          <div class="mb-3">
-            <label for="refundDescription" class="form-label">Reason for refund</label>
-            <input type="text" class="form-control" id="refundDescription" [(ngModel)]="currentRefundDescription"
-              name="refundDescription" required #descriptionField="ngModel"
-              placeholder="Please enter the reason for the refund request here">
-            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="alert alert-danger">
-              <div *ngIf="descriptionField.errors?.['required']">Refund Reason is required.</div>
+          <div *ngFor="let item of currentOrderItems" class="card mb-3">
+            <div class="card-header text-center">
+              <h4>{{ item.wine.name }}</h4>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="quantity" class="form-label">Select the quantity you want refunded: </label>
+                <select class="form-control" [(ngModel)]="item.refundQuantity" name="refundQuantity{{ item.wineId }}" required>
+                  <option value="" disabled selected>Select a quantity</option>
+                  <option *ngFor="let num of [].constructor(item.quantity+1); let i = index" [value]="i">{{ i }}</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="refundDescription" class="form-label">Reason for refund</label>
+                <input type="text" class="form-control" [(ngModel)]="item.refundReason" name="refundReason{{ item.wineId }}" [required]="item.refundQuantity > 0 || currentOrderItems.length === 1" placeholder="Please enter your refund reason here.">
+                <div *ngIf="item.refundQuantity > 0 && !item.refundReason" class="alert alert-danger">
+                  Reason is required when refunding this wine.
+                </div>
+              </div>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeRefundModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="refundForm.invalid"
-          (click)="submitRefundForm(refundForm)">Submit Request</button>
+        <button type="button" class="btn btn-primary" [disabled]="refundForm.invalid" (click)="submitRefundForm(refundForm)">Submit Request</button>
       </div>
     </div>
   </div>
 </div>
+
