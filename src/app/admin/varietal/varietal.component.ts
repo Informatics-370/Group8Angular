@@ -9,6 +9,8 @@ import { Customer } from 'src/app/Model/customer';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { WinetypeService } from '../services/winetype.service';
+import { WineType } from 'src/app/Model/winetype';
 
 
 @Component({
@@ -17,12 +19,15 @@ import { CustomersService } from '../services/customers.service';
   styleUrls: ['./varietal.component.css']
 })
 export class VarietalComponent {
+  wineTypes: WineType[] | undefined;
 
-  constructor(private toastr : ToastrService, private router: Router,  private varietalService: VarietalService
-    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
+
+  constructor(private toastr : ToastrService, private router: Router,  private varietalService: VarietalService, private wineTypeService : WinetypeService,
+     private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.loadVarietals();
+    this.loadWineTypes();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
   }
@@ -41,6 +46,15 @@ export class VarietalComponent {
     } catch (error) {
       console.error(error);
       this.toastr.error('Error, please try again', 'Varietal Table');
+    }
+  }
+
+  async loadWineTypes(): Promise<void> {
+    try {
+      this.wineTypes = await this.wineTypeService.getWinetypes();
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error, please try again', 'Wine Types');
     }
   }
 

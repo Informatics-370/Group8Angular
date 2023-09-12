@@ -93,31 +93,29 @@
         <form #wineForm="ngForm" (ngSubmit)="submitWineForm(wineForm); onSubmitClick()">
           <div class="mb-3">
             <label for="name" class="form-label">Wine Name</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Name"></i>
-            <input type="text" class="form-control" id="name" [(ngModel)]="currentWine.name" name="name"
-              required #wineNameField="ngModel">
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Name"></i>
+            <input type="text" class="form-control" id="name" [(ngModel)]="currentWine.name" name="name" required
+              #wineNameField="ngModel">
             <div *ngIf="wineNameField.invalid && wineNameField.touched" class="alert alert-danger">
               <div *ngIf="wineNameField.errors?.['required']">Wine name is required.</div>
             </div>
           </div>
 
-        <div class="mb-3">
+          <div class="mb-3">
             <label for="vintage" class="form-label">Wine Vintage</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Vintage {The year the wine was made in.}"></i>
-            <input type="text" class="form-control" id="vintage" [(ngModel)]="currentWine.vintage"
-              name="vintage" required #wineVintageField="ngModel" pattern="^\d{4}$">
+              title="Please enter the Wine Vintage {The year the wine was made in.}"></i>
+            <input type="text" class="form-control" id="vintage" [(ngModel)]="currentWine.vintage" name="vintage"
+              required #wineVintageField="ngModel" pattern="^\d{4}$">
             <div *ngIf="wineVintageField.invalid && wineVintageField.touched" class="alert alert-danger">
               <div *ngIf="wineVintageField.errors?.['required']">Wine vintage is required.</div>
-            <div *ngIf="wineVintageField.errors?.['pattern']">Wine Vintage must be a valid Year in format yyyy.</div>
+              <div *ngIf="wineVintageField.errors?.['pattern']">Wine Vintage must be a valid Year in format yyyy.</div>
             </div>
           </div>
 
           <div class="mb-3">
             <label for="wineTastingNote" class="form-label">Wine Tasting Note</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Tasting notes"></i>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Tasting notes"></i>
             <textarea type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
               name="wineTastingNote" required maxlength="255" required (input)="updateCharacterCount($event)"
               #wineTastingNoteField="ngModel"></textarea>
@@ -130,10 +128,9 @@
 
           <div class="mb-3">
             <label for="price" class="form-label">Wine Price</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Price"></i>
-            <input type="number" class="form-control" id="price" [(ngModel)]="currentWine.price"
-              name="price" required [min]="0.01" #winePriceField="ngModel">
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Price"></i>
+            <input type="number" class="form-control" id="price" [(ngModel)]="currentWine.price" name="price" required
+              [min]="0.01" #winePriceField="ngModel">
             <div *ngIf="winePriceField.invalid && winePriceField.touched" class="alert alert-danger">
               <div *ngIf="winePriceField.errors?.['required']">Wine price is required.</div>
               <div *ngIf="winePriceField.errors?.['min']">Wine price cannot be zero.</div>
@@ -143,13 +140,13 @@
           <div class="mb-3">
             <label for="displayItem" class="form-label">Display Wine in Shop</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please Choose Yes or No Depeding if you want to show the Wine on the Shop"></i>
+              title="Please Choose Yes or No Depeding if you want to show the Wine on the Shop"></i>
             <select class="form-control" required [(ngModel)]="currentWine.displayItem" id="displayItem"
               name="displayItem" #wineDisplayField="ngModel">
               <option [ngStyle]="{'color': 'grey'}" [value]="null" disabled selected>----Select an option----</option>
               <option [value]="true">Yes</option>
               <option [value]="false">No</option>
-            </select>       
+            </select>
             <div *ngIf="(wineDisplayField.value === null || wineDisplayField.invalid) && wineDisplayField.touched"
               class="alert alert-danger">
               <div>Display in shop selection is required.</div>
@@ -161,12 +158,13 @@
           <div class="mb-3">
             <label for="wineType" class="form-label">Wine Type</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please select the appropriate the Wine Type"></i>
+              title="Please select the appropriate the Wine Type"></i>
             <select class="form-control" id="wineType" [(ngModel)]="currentWine.wineTypeID" name="wineType" required
-              #wineTypeField="ngModel">
+              #wineTypeField="ngModel" (change)="onWineTypeChange()">
               <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a wine type----</option>
               <option *ngFor="let winetype of winetypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
             </select>
+
             <div *ngIf="(wineTypeField.value == '0' || wineTypeField.invalid) && wineTypeField.touched"
               class="alert alert-danger">
               <div>Wine type is required.</div>
@@ -174,15 +172,17 @@
           </div>
 
 
-          <div class="mb-3">
+          <div class="mb-3" *ngIf="currentWine.wineTypeID && currentWine.wineTypeID !== 0">
             <label for="varietal" class="form-label">Wine Varietal</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please select the appropriate the Wine Varietal"></i>
-            <select class="form-control" id="varietal" [(ngModel)]="currentWine.varietalID" name="varietal"
-              required #wineVarietalField="ngModel">
+              title="Please select the appropriate the Wine Varietal"></i>
+            <select class="form-control" id="varietal" [(ngModel)]="currentWine.varietalID" name="varietal" required
+              #wineVarietalField="ngModel">
               <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a varietal----</option>
-              <option *ngFor="let varietal of varietals" [value]="varietal.varietalID">{{varietal.name}}</option>
+              <option *ngFor="let varietal of filteredVarietals" [value]="varietal.varietalID">{{varietal.name}}
+              </option>
             </select>
+
 
             <div *ngIf="(wineVarietalField.value == '0' || wineVarietalField.invalid) && wineVarietalField.touched"
               class="alert alert-danger">
@@ -195,26 +195,28 @@
           <div class="mb-3">
             <label for="filePath" class="form-label">Wine Image</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please Choose the image you want to display for the Wine"></i>
-            <input type="file" class="form-control" id="filePath" accept=".png, .jpg, .jpeg" (change)="onFileSelected($event)">
+              title="Please Choose the image you want to display for the Wine"></i>
+            <input type="file" class="form-control" id="filePath" accept=".png, .jpg, .jpeg"
+              (change)="onFileSelected($event)">
             <!-- Display error if no file is uploaded or invalid type -->
             <div *ngIf="(!fileUploaded || invalidFileType) && wineForm.submitted" class="alert alert-danger">
               Valid wine image (PNG or JPEG) is required.
             </div>
           </div>
-          
+
           <div *ngIf="selectedFile || editingWine" class="mb-3">
-            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentWineImageURL" alt="Selected Image" class="img-thumbnail">
+            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentWineImageURL" alt="Selected Image"
+              class="img-thumbnail">
           </div>
-          </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
-            <button type="button" class="btn btn-primary" 
-              [disabled]="wineForm.invalid || (!fileUploaded || invalidFileType) || wineDisplayField.value == 'null' || wineTypeField.value == '0' || isSaving == true || wineVarietalField.value == '0'" 
-              (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
-          </div>
-          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
+        <button type="button" class="btn btn-primary"
+          [disabled]="wineForm.invalid || (!fileUploaded || invalidFileType) || wineDisplayField.value == 'null' || wineTypeField.value == '0' || isSaving == true"
+          (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
+      </div>
+
     </div>
   </div>
 </div>

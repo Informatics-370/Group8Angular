@@ -104,7 +104,7 @@ export class TypeComponent {
     } catch (error) {
       console.error(error);
      
-      this.toastr.warning('An error occurred, wine type referenced by wine.', 'Error');
+      this.toastr.warning('An error occurred, wine type referenced by wine or varietal.', 'Error');
       this.closeDeleteWineTypeModal();
     }
   }

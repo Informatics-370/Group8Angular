@@ -18,12 +18,14 @@
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Description</th>
+        <th scope="col">Wine Type</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let varietal of varietals">
         <td>{{ varietal.name }}</td>
         <td>{{ varietal.description }}</td>
+        <td>{{varietal.wineType?.name}}</td>
         <td>
           <button class="btn btn-primary"
             (click)="varietal.varietalID !== undefined && openEditVarietalModal(varietal.varietalID)"
@@ -77,6 +79,23 @@
               <div *ngIf="descField.errors?.['required']">Varietal description is required.</div>
             </div>
           </div>
+
+          
+          <div class="mb-3">
+            <label for="wineType" class="form-label">Wine Type</label>
+            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please select the appropriate the Wine Type"></i>
+            <select class="form-control" id="wineType" [(ngModel)]="currentVarietal.wineTypeID" name="wineType" required
+              #wineTypeField="ngModel">
+              <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a wine type----</option>
+              <option *ngFor="let winetype of wineTypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
+            </select>
+            <div *ngIf="(wineTypeField.value == '0' || wineTypeField.invalid) && wineTypeField.touched"
+              class="alert alert-danger">
+              <div>Wine type is required.</div>
+            </div>
+          </div>
+
 
         </form>
       </div>
