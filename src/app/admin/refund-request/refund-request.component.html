@@ -1,32 +1,72 @@
 <br/>
 <br/>
-<h1>Customer Refund Requests</h1>
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col" class="header-cell">Wine Name</th>
-        <th scope="col" class="header-cell">Email</th>
-        <th scope="col" class="header-cell">Phone Number</th>
-        <th scope="col" class="header-cell">Description</th>
-        <th scope="col" class="header-cell">Requested On</th>
-        <th scope="col" class="header-cell">Order Reference</th>
-        <th scope="col" class="header-cell">Cost</th>
-        <th scope="col" class="header-cell">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let request of refundRequests">
-        <td>{{ getWineName(request.wineId)}}</td>
-        <td>{{request.email}}</td>
-        <td>{{request.phoneNumber}}</td>
-        <td>{{request.description}}</td>
-        <td>{{request.requestedOn | date:'short'}}</td>
-        <td>{{request.orderRefNum}}</td>
-        <td>R{{request.cost}}</td>
-        <select [(ngModel)]="selectedStatuses[request.id]" (change)="updateStatus(request.id, selectedStatuses[request.id])">
-          <option *ngFor="let status of refundStatuses" [value]="status">{{status}}</option>
-        </select>
-      </tr>
-    </tbody>
-  </table>
-  
+<!-- Refunds -->
+<div class="row align-items-center mb-3">
+  <div class="col-md-6">
+    <h2>All Refunds</h2>
+  </div>
+  <!-- <input type="text" class="form-control" placeholder="Search for refunds..." [(ngModel)]="searchTerm" (input)="searchRefunds()"> -->
+</div>
+
+<!-- Refunds table -->
+<div class="text-center" *ngIf="refundRequests.length === 0">
+  <h3>No refunds found.</h3>
+</div>
+
+<table class="table table-striped" *ngIf="refundRequests.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">Order ID</th>
+      <th scope="col">Reason(s)</th>
+      <th scope="col">Date</th>
+      <th scope="col">Status</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let refund of refundRequests">
+      <td>{{ refund.wineOrderId }}</td>
+      <td *ngFor="let item of refund.refundItems">{{ item.reason }}</td>
+      <td>{{ refund.requestDate | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td>{{ refund.status }}</td>
+      <!-- Action buttons like edit or delete -->
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="refund.refundRequestId !== undefined && openModal(refund.refundRequestId)">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<div #refundModal class="modal fade" [ngClass]="{'show': showRefundsModal}" [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1" aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">Edit Refund Status
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="mb-3">
+            <label class="form-label">Wines in this refund request:</label>
+            <ul>
+                <li *ngFor="let wine of wineDetails">{{ wine.WineName }} ({{ wine.Quantity }})</li>
+            </ul>
+        </div>
+
+          <label for="status" class="form-label">Status</label>
+          <select class="form-control" id="status" [(ngModel)]="selectedRefund.status">
+            <option value="" disabled selected>Select a refund response</option>
+            <option *ngFor="let statusOption of statuses" [value]="statusOption">{{ statusOption }}</option>
+          </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="saveChanges()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
