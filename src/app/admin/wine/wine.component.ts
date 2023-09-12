@@ -42,6 +42,7 @@ export class WineComponent implements OnInit {
     this.loadWinetypes();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    
   }
   //--------------------------------------------------------------------------------------------------------------------------------
   //Methods to display the Wines, WineTypes and WineVarietals in the tables
@@ -96,6 +97,7 @@ export class WineComponent implements OnInit {
   wineToDelete: any = null;
   selectedFile: File | null = null;
   searchQuery: string = '';
+
 
   invalidFileType: boolean = false;  // Add this new variable to track if uploaded file is of invalid type
   onFileSelected(wine: any) {
@@ -392,6 +394,9 @@ export class WineComponent implements OnInit {
   showDeleteVarietalModal = false;
   varietalToDeleteDetails: any;
   varietalToDelete: any = null;
+  filteredVarietals: Varietal[] = [];
+ 
+
 
 
   // Modal-related methods
@@ -474,7 +479,16 @@ export class WineComponent implements OnInit {
     }
   }
 
-
+  onWineTypeChange() {
+    const wineTypeID = Number(this.currentWine.wineTypeID); // Convert to Number
+    const selectedWineType = this.winetypes.find(w => w.wineTypeID === wineTypeID);
+    if (selectedWineType) {
+      this.filteredVarietals = selectedWineType.varietals;
+    } else {
+      this.filteredVarietals = [];
+    }
+  }
+  
   // <!-- Varietal ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 
