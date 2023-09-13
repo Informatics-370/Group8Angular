@@ -32,12 +32,15 @@ export class RefundService {
     return this.http.get<RefundRequest[]>(`${this.baseUrl}/${email}`);
   }
 
-  getWineDetailsForRefund(refundRequestId: number): Observable<any> {
+  getRefundItems(refundRequestId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/GetWineDetailsForRefund/${refundRequestId}`);
   }
 
-  updateRefundStatus(refundRequestId: number, newStatus: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/UpdateRefundStatus`, { refundRequestId, newStatus });
-  }
+  updateRefundStatus(refundRequestId: number, itemsStatuses: any[]): Observable<any> {
+    return this.http.put(`${this.baseUrl}/UpdateRefundStatus/${refundRequestId}`, itemsStatuses);
+}
 
+  getAllResponses(): Observable<any[]>{
+    return this.http.get<any[]>(`${this.baseUrl}/allRefundsResponses`);
+  }
 }

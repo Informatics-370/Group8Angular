@@ -4,6 +4,8 @@ export interface RefundItem {
   wineOrderItemId: number;
   quantity: number;
   reason: string;
+  status?: string;
+  response?: string;
 }
 
 export interface RefundRequest {
