@@ -73,40 +73,6 @@ export class OrdersComponent implements OnInit {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Request a refund
-  // async requestRefund(orderId: number, wineId: number, description: string, refNum: string): Promise<void> {
-  //   let token = localStorage.getItem('Token') || '';
-  //   let decodedToken = jwt_decode(token) as DecodedToken;
-  //   let email = decodedToken.sub;
-
-  //   // Find the corresponding order
-  //   let order = this.orders.find(o => o.wineOrderId === orderId);
-  //   if (!order) {
-  //     console.error('Order not found.');
-  //     this.toastr.error('Order not found.', 'Error');
-  //     return;
-  //   }
-  //   refNum = order.orderRefNum;
-  //   // Use the cost from the order
-  //   let cost = order.orderTotal;
-  //   //console.log('Order Total:', order.orderTotal);
-
-  //   try {
-  //     await this.refundService.requestRefund(wineId, email, cost, description, refNum, this.phoneNumber).toPromise(); // pass the description
-  //     this.toastr.success('Refund request has been sent.', 'Success');
-  //     order.isRefunded = true;
-  //     //console.log('Order Total:', order.orderTotal);
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     if (error && typeof error === 'string') {
-  //       this.toastr.error(error); // Display the error message from the API
-  //     } else {
-  //       this.toastr.error('Could not send refund request.', 'Error');
-  //     }
-  //   }
-  //   console.log('Phone Number:', this.phoneNumber);
-  // }
-
   openRefundModal(order: Order): void {
     this.currentOrderItems = order.orderItems.map(item => ({
       wineId: item.wineId,
@@ -128,59 +94,53 @@ export class OrdersComponent implements OnInit {
   async submitRefundForm(form: NgForm): Promise<void> {
     if (form.invalid) return;
 
-    let refundItems: RefundItem[] = [];
-    let userOrders: any[] = [];
+    const email = this.dataService.getUserFromToken()?.email;
+    if (!email) return;
 
-    if (this.currentOrderItems.length === 1) {
-        refundItems = this.currentOrderItems
-            .filter(item => item.refundReason && +item.refundQuantity > 0)
-            .map(item => ({
-                wineOrderItemId: item.wineId || item.wineID,
-                quantity: +item.refundQuantity,
-                reason: item.refundReason
-            }));
-        this.sendRefundRequest(refundItems);
-    } else {
-        var email = this.dataService.getUserFromToken()!.email;
-       
-      
-        this.orderService.getOrdersForUser(email).subscribe((result: any) => {
-          userOrders = result;
-          
-          // Get the specific order based on the currentOrderId
-          let currentOrder = userOrders.find(order => order.wineOrderId === this.currentOrderId);
-          console.log("Current Order:", currentOrder);
+    try {
+        const userOrders = await this.orderService.getOrdersForUser(email).toPromise();
+        if (!userOrders) {
+          console.error('User orders not found.');
+          return;
+      }
+        const currentOrder = userOrders.find(order => order.wineOrderId === this.currentOrderId);
 
-          if (!currentOrder) {
-              console.error('Current order not found in user orders.');
-              return;
-          }
-      
-          refundItems = this.currentOrderItems
-    .filter(item => item.refundReason && +item.refundQuantity > 0)
-    .flatMap(item => {  
-        
-        let matchingOrderItem = currentOrder.orderItems.find((oi: any) => oi.wineId === item.wineId);
-
-
-        if (!matchingOrderItem) {
-            console.error(`No matching order item found for wineId: ${item.wineId || item.wineID}`);
-            return [];  // Return an empty array instead of null
-        }else{
-          console.log(`Matched wineOrderItemId: ${matchingOrderItem.wineOrderItemId}`);
+        if (!currentOrder) {
+            console.error('Current order not found in user orders.');
+            return;
         }
 
+        const refundItems = this.extractRefundItems(currentOrder);
 
-        return [{
-            wineOrderItemId: matchingOrderItem.wineOrderItemId,
-            quantity: +item.refundQuantity,
-            reason: item.refundReason
-        }];
-    });
-          this.sendRefundRequest(refundItems);
-      });
+        if (refundItems.length > 0) {
+            this.sendRefundRequest(refundItems);
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        this.toastr.error('Could not process refund.', 'Error');
     }
 }
+
+extractRefundItems(currentOrder: any): RefundItem[] {
+    return this.currentOrderItems
+        .filter(item => item.refundReason && +item.refundQuantity > 0)
+        .flatMap(item => {
+            const matchingOrderItem = currentOrder.orderItems.find((oi: any) => oi.wineId === item.wineId);
+
+            if (!matchingOrderItem) {
+                console.error(`No matching order item found for wineId: ${item.wineId || item.wineID}`);
+                return [];
+            }
+
+            return [{
+                wineOrderItemId: matchingOrderItem.wineOrderItemId,
+                quantity: +item.refundQuantity,
+                reason: item.refundReason
+            }];
+        });
+}
+
 
 async sendRefundRequest(refundItems: RefundItem[]): Promise<void> {
     if (this.currentOrderId === null) {

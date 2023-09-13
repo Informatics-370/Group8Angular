@@ -1,9 +1,10 @@
-<br/>
-<br/>
+<br />
+<br />
 <!-- Refunds -->
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
     <h2>All Refunds</h2>
+    <button class="btn btn-secondary btn-sm" (click)="toggleIncompleteRefunds()">Toggle Incomplete Refunds</button>
   </div>
   <!-- <input type="text" class="form-control" placeholder="Search for refunds..." [(ngModel)]="searchTerm" (input)="searchRefunds()"> -->
 </div>
@@ -16,22 +17,20 @@
 <table class="table table-striped" *ngIf="refundRequests.length > 0">
   <thead>
     <tr>
-      <th scope="col">Order ID</th>
-      <th scope="col">Reason(s)</th>
+      <th scope="col">Order Ref Number</th>
       <th scope="col">Date</th>
       <th scope="col">Status</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let refund of refundRequests">
-      <td>{{ refund.wineOrderId }}</td>
-      <td *ngFor="let item of refund.refundItems">{{ item.reason }}</td>
+    <tr *ngFor="let refund of displayedRefunds">
+      <td>{{ orderRefNumMapping[refund.wineOrderId] }}</td>
       <td>{{ refund.requestDate | date:'dd/MM/yyyy HH:mm' }}</td>
       <td>{{ refund.status }}</td>
       <!-- Action buttons like edit or delete -->
       <td>
-        <button class="btn btn-primary btn-sm" (click)="refund.refundRequestId !== undefined && openModal(refund.refundRequestId)">
+        <button class="btn btn-primary btn-sm" (click)="editRefund(refund)">
           <i class="fas fa-pencil-alt"></i>
         </button>
       </td>
@@ -41,31 +40,74 @@
 
 
 
-<div #refundModal class="modal fade" [ngClass]="{'show': showRefundsModal}" [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1" aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div #refundModal class="modal fade" [ngClass]="{'show': showRefundsModal}"
+  [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1"
+  aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">Edit Refund Status
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
         <div class="mb-3">
           <div class="mb-3">
             <label class="form-label">Wines in this refund request:</label>
-            <ul>
-                <li *ngFor="let wine of wineDetails">{{ wine.WineName }} ({{ wine.Quantity }})</li>
-            </ul>
-        </div>
-
-          <label for="status" class="form-label">Status</label>
-          <select class="form-control" id="status" [(ngModel)]="selectedRefund.status">
-            <option value="" disabled selected>Select a refund response</option>
-            <option *ngFor="let statusOption of statuses" [value]="statusOption">{{ statusOption }}</option>
-          </select>
+            <!-- Table to display wine details -->
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Wine Name</th>
+                  <th class="text-end">Quantity</th>
+                  <th class="text-end">Cost (ZAR)</th>
+                  <th class="text-end">Reason</th>
+                  <th class="text-end">Refund Response</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let wine of wineDetails; let i = index">
+                  <td>{{ wine.wineName }}</td>
+                  <td class="text-end">{{ wine.quantity }}</td>
+                  <td class="text-end">{{ wine.cost | currency:'R':'symbol':'1.2-2' }}</td>
+                  <td class="text-end">{{ wine.reason }}</td>
+                  <td *ngIf="selectedRefund.status ===  'Completed'"> {{ wine.status }}</td>
+                  <td *ngIf="selectedRefund.status !== 'Completed'">
+                    <select class="form-control" value="Select a response" [(ngModel)]="wine.status" required>
+                      <!-- <option value="" disabled>In Progress</option> -->
+                      <option *ngFor="let statusOption of refundReponses">{{ statusOption.description }}</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveChanges()">Save changes</button>
+        <button *ngIf="selectedRefund.status !== 'Completed'" type="button" class="btn btn-primary"
+          (click)="openConfirmModal()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #confirmModal class="modal fade" [ngClass]="{'show': showConfirmModal}"
+  [ngStyle]="{'display': showConfirmModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1"
+  aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">Confirmation</div>
+      <div class="modal-body">
+        <p>Please type "Confirm" to proceed.</p>
+        <input type="text" [(ngModel)]="confirmText" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="closeConfirmModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="confirmText !== 'Confirm'" (click)="saveChanges()">
+          Confirm
+        </button>
       </div>
     </div>
   </div>
