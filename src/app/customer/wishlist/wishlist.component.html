@@ -7,6 +7,13 @@
   </div>
 </div>
 
+<div class="row mb-3">
+  <div class="col-md-6">
+    <input type="text" class="form-control" placeholder="Search Wines" [(ngModel)]="searchQuery"
+      (input)="filterWines()">
+  </div>
+</div>
+
 <div class="table-responsive custom-table-container">
   <table class="table table-striped custom-table">
     <thead>
@@ -21,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let wine of wines; let i = index">
+      <tr *ngFor="let wine of paginatedWines; let i = index">
         <td class="d-none d-md-table-cell">
           <div *ngIf="wine.filePath" class="image-container mb-3">
             <img [src]="wine.filePath" alt="Wine Image" class="img-thumbnail" style="width: 100px; height: 100px;">
@@ -31,7 +38,7 @@
         <td class="d-none d-md-table-cell align-middle">{{ wine.vintage }}</td>
         <td class="d-none d-md-table-cell align-middle">{{ getVarietalName(wine.varietalID) }}</td>
         <td class="d-none d-md-table-cell align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td>
-        <td class="d-none d-md-table-cell align-middle">{{ wine.price }}</td>
+        <td class="d-none d-md-table-cell align-middle">R {{ wine.price }}</td>
         <td class="align-middle">
 
 
@@ -71,4 +78,10 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="pagination">
+  <button class="btn btn-link" (click)="previousPage()">Previous</button>
+  <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn btn-link" (click)="nextPage()">Next</button>
 </div>

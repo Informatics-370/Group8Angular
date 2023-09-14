@@ -65,6 +65,7 @@ import { ChartsComponent } from './admin/charts/charts.component';
 import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
 import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
 import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -120,6 +121,7 @@ import { AccessRestrictedComponent } from './admin/access-restricted/access-rest
   ],
   imports: [
     BrowserModule,
+    NgxPaginationModule,
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
@@ -129,7 +131,8 @@ import { AccessRestrictedComponent } from './admin/access-restricted/access-rest
       positionClass: 'toast-top-right',
       preventDuplicates: true,}),
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    
   ],
   providers: [
     SpinnerService,
