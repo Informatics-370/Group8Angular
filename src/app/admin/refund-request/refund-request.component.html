@@ -53,7 +53,6 @@
         <div class="mb-3">
           <div class="mb-3">
             <label class="form-label">Wines in this refund request:</label>
-            <!-- Table to display wine details -->
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -70,11 +69,13 @@
                   <td class="text-end">{{ wine.quantity }}</td>
                   <td class="text-end">{{ wine.cost | currency:'R':'symbol':'1.2-2' }}</td>
                   <td class="text-end">{{ wine.reason }}</td>
-                  <td *ngIf="selectedRefund.status ===  'Completed'"> {{ wine.status }}</td>
+                  <td *ngIf="selectedRefund.status ===  'Completed'">{{ wine.status }}</td>
                   <td *ngIf="selectedRefund.status !== 'Completed'">
-                    <select class="form-control" value="Select a response" [(ngModel)]="wine.status" required>
-                      <!-- <option value="" disabled>In Progress</option> -->
-                      <option *ngFor="let statusOption of refundReponses">{{ statusOption.description }}</option>
+                    <select class="form-control" [(ngModel)]="wine.status" required>
+                      <!-- Add an initial placeholder value -->
+                      <option value="" disabled>Select a response</option>
+                      <!-- Loop through available status options -->
+                      <option *ngFor="let statusOption of refundReponses" [hidden]="statusOption.description === 'In Progress'">{{ statusOption.description }}</option>
                     </select>
                   </td>
                 </tr>
@@ -85,12 +86,13 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
-        <button *ngIf="selectedRefund.status !== 'Completed'" type="button" class="btn btn-primary"
-          (click)="openConfirmModal()">Save changes</button>
+        <button *ngIf="selectedRefund.status !== 'Completed'" type="button" class="btn btn-primary" [disabled]="isAnyStatusEmpty()" (click)="openConfirmModal()">Save changes</button>
+
       </div>
     </div>
   </div>
 </div>
+
 
 <div #confirmModal class="modal fade" [ngClass]="{'show': showConfirmModal}"
   [ngStyle]="{'display': showConfirmModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1"

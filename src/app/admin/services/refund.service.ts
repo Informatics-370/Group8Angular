@@ -43,4 +43,8 @@ export class RefundService {
   getAllResponses(): Observable<any[]>{
     return this.http.get<any[]>(`${this.baseUrl}/allRefundsResponses`);
   }
+
+  getResponseById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/getResponse/${id}`);
+  }
 }
