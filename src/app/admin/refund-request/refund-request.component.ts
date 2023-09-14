@@ -3,6 +3,8 @@ import { RefundItem, RefundRequest } from 'src/app/Model/RefundRequest';
 import { RefundService } from '../services/refund.service';
 import { OrderService } from 'src/app/customer/services/order.service';
 import { ToastrService } from 'ngx-toastr';
+import { RefundReponseViewModel } from 'src/app/Model/refundResponseViewModel';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-refund-request',
@@ -20,6 +22,7 @@ export class RefundRequestComponent {
     refundItems: [],
   };
   refundItems: RefundItem[] = [];
+  responseViewModel: RefundReponseViewModel[] = [];
   showRefundsModal: boolean = false;
   showConfirmModal: boolean = false;
   showOnlyIncomplete: boolean = false;
@@ -57,7 +60,7 @@ export class RefundRequestComponent {
           });
         if (element.refundItems) {
           element.refundItems.forEach((item) => {
-            console.log('Item:', item);
+            //console.log('Item:', item);
             item.response = responseMapping[item.status!] || 'Unknown Status';
           });
         }
@@ -70,6 +73,13 @@ export class RefundRequestComponent {
       this.refundReponses = data;
       console.log('loadRefundResponses:', this.refundReponses);
     });
+  }
+
+  getRefundItemResponse(id: number) {
+    this.refundService.getResponseById(id).subscribe((result: any) => {
+      this.responseViewModel = result;
+      console.log("ResponseViewModel:", result);
+    })
   }
 
   toggleIncompleteRefunds(): void {
@@ -87,19 +97,34 @@ export class RefundRequestComponent {
 
   editRefund(refund: RefundRequest): void {
     this.selectedRefund = { ...refund };
-    console.log(this.selectedRefund);
+  
     if (refund.refundRequestId !== undefined) {
-      this.refundService
-        .getRefundItems(refund.refundRequestId)
+      this.refundService.getResponseById(this.selectedRefund.refundRequestId!)
+        .pipe(
+          switchMap((result: any) => {
+            this.responseViewModel = result;
+            return this.refundService.getRefundItems(refund.refundRequestId!);
+          })
+        )
         .subscribe((data: any) => {
           this.wineDetails = data;
-          this.wineDetails.forEach((wine) => {
-            wine.status = wine.status;
+          console.log("WineDetails before match:",this.wineDetails);
+          console.log("RefundResponseViewModel:",this.responseViewModel);
+          this.wineDetails.forEach((wine, index) => {
+            wine.hasDescription = true; // By default, assume it has a description
+            if(this.responseViewModel[index] && this.responseViewModel[index].description){
+              wine.status = this.responseViewModel[index].description;
+            } else {
+              wine.status = '';
+              wine.hasDescription = false; // Flagging that there's no description
+            }
           });
+          console.log("wineDetails:", this.wineDetails);
           this.showRefundsModal = true;
         });
     }
   }
+  
 
   saveChanges(): void {
     if (this.selectedRefund.refundRequestId !== undefined) {
@@ -131,6 +156,11 @@ export class RefundRequestComponent {
     this.showRefundsModal = false;
     this.showConfirmModal = false;
   }
+
+  isAnyStatusEmpty(): boolean {
+    return this.wineDetails.some(wine => !wine.status || wine.status.trim() === '');
+}
+
 
   openModal(id: number): void {
     this.showRefundsModal = true;
