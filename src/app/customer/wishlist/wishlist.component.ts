@@ -11,6 +11,7 @@ import { WishlistItem } from 'src/app/Model/WishListItem';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../services/cart.service';
 
+
 interface DecodedToken {
   sub: string;
 }
@@ -32,6 +33,11 @@ export class WishlistComponent implements OnInit {
   userEmail: string = '';
   showImageModal: boolean = false;
   currentImage: any;
+  searchQuery: string = '';
+  filteredWines: Wine[] = [];
+  pageSize: number = 2;
+  currentPage: number = 1;
+  
 
 
 
@@ -65,6 +71,7 @@ export class WishlistComponent implements OnInit {
       // Fetch varietals and winetypes from your API
       this.varietals = await this.varietalService.getVarietals();
       this.winetypes = await this.winetypeService.getWinetypes();
+      this.filteredWines = [...this.wines];
     } catch (error) {
       console.error(error);
     }
@@ -152,6 +159,50 @@ async removeFromWishlist(wishlistItemID: number | undefined): Promise<void> {
   //   this.showImageModal = false;
   //   this.currentImage = null;
   // }
+
+  
+
+  filterWines() {
+    if (this.searchQuery.trim() === '') {
+      this.filteredWines = [...this.wines]; // If the search query is empty, show all wines
+    } else {
+      const searchTerm = this.searchQuery.toLowerCase().trim();
+      this.filteredWines = this.wines.filter(wine =>
+        wine.name.toLowerCase().includes(searchTerm) ||
+        wine.vintage.toString().includes(searchTerm) ||
+        this.getVarietalName(wine.varietalID).toLowerCase().includes(searchTerm) ||
+        this.getWinetypeName(wine.wineTypeID).toLowerCase().includes(searchTerm) ||
+        wine.price.toString().includes(searchTerm)
+      );
+    }
+  }
+
+  get paginatedWines(): Wine[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.filteredWines.slice(startIndex, endIndex);
+  }
+
+  changePage(page: number) {
+    this.currentPage = page;
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.changePage(this.currentPage - 1);
+    }
+  }
+
+  nextPage() {
+    const totalPages = Math.ceil(this.filteredWines.length / this.pageSize);
+    if (this.currentPage < totalPages) {
+      this.changePage(this.currentPage + 1);
+    }
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredWines.length / this.pageSize);
+  }
   
 
 }
