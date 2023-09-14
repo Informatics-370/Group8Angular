@@ -57,6 +57,13 @@ export class UserInformationComponent implements OnInit {
     }
   }
 
+  getFirstSixDigitsOfIDNumber(): string {
+    if (this.user && this.user.iD_Number) {
+      return this.user.iD_Number.substring(0, 6) + '*******';
+    }
+    return '';
+  }
+
   openEditCustomerModal() {
     // Implement logic to open the edit customer modal here
     this.showEditCustomerModal = true;

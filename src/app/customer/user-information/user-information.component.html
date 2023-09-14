@@ -4,17 +4,44 @@
     <h1>Hello, {{ user.title }}. {{ user.first_Name }} {{ user.last_Name }}</h1>
 
     <h2>Account details:</h2>
-    <ul>
-      <!-- Display information -->
-      <li><strong>Title:</strong> {{ user.title }}</li>
-      <li><strong>First name:</strong> {{ user.first_Name }}</li>
-      <li><strong>Last name:</strong> {{ user.last_Name }}</li>
-      <li><strong>Email:</strong> {{ user.email }}</li>
-      <li><strong>Phone number:</strong> {{ user.phoneNumber }}</li>
-      <li><strong>ID Number:</strong> {{ user.iD_Number }}</li>
-      <li><strong>Gender:</strong> {{ user.gender }}</li>
-      <li><strong>Email Two-Factor Authentication:</strong><span *ngIf="user.twoFactorEnabled; else disabledText"> Enabled</span><ng-template #disabledText> Disabled</ng-template></li>
-    </ul>
+    <table>
+      <tr>
+        <td align=""><strong>Title:</strong></td>
+        <td>{{ user.title }}</td>
+      </tr>
+      <tr>
+        <td><strong>First name:</strong></td>
+        <td>{{ user.first_Name }}</td>
+      </tr>
+      <tr>
+        <td><strong>Last name:</strong></td>
+        <td>{{ user.last_Name }}</td>
+      </tr>
+      <tr>
+        <td><strong>Email:</strong></td>
+        <td>{{ user.email }}</td>
+      </tr>
+      <tr>
+        <td><strong>Phone number:</strong></td>
+        <td>{{ user.phoneNumber }}</td>
+      </tr>
+      <tr>
+        <td><strong>ID Number:</strong></td>
+        <td>{{ getFirstSixDigitsOfIDNumber() }}</td>
+      </tr>
+      <tr>
+        <td><strong>Gender:</strong></td>
+        <td>{{ user.gender }}</td>
+      </tr>
+      <tr>
+        <td><strong>Email Two-Factor Authentication:</strong></td>
+        <td>
+          <span *ngIf="user.twoFactorEnabled; else disabledText">Enabled</span>
+          <ng-template #disabledText>Disabled</ng-template>
+        </td>
+      </tr>
+    </table>
+    
 
     <!-- Edit and Delete Buttons -->
     <div class="d-flex gap-3">
@@ -35,7 +62,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit Customer</h5>
+        Edit Customer
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEditCustomerModal()"></button>
       </div>
       <div class="modal-body">
@@ -63,7 +90,7 @@
             <div class="mb-3">
               <label for="title" class="form-label">First Name:</label>
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Enter your first name."></i>
-              <input type="text" class="form-control" id="editName" [(ngModel)]="user!.first_Name" name="first_Name" required>
+              <input type="text" class="form-control" id="editName" [(ngModel)]="user!.first_Name" name="first_Name" required placeholder="Enter Name">
               <div *ngIf="editCustomerForm.controls['first_Name']?.invalid && editCustomerForm.controls['first_Name'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['first_Name'].errors?.['required']">First name is required.</div>
               </div>
@@ -73,7 +100,7 @@
             <div class="mb-3">
               <label for="last_Name" class="form-label">Last Name:</label>
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Enter your last name."></i>
-              <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$"> 
+              <input type="text" class="form-control" id="editlast_Name" [(ngModel)]="user!.last_Name" name="last_Name" required pattern="^[A-Za-z ]+$" placeholder="Enter Last Name"> 
               <div *ngIf="editCustomerForm.controls['last_Name']?.invalid && editCustomerForm.controls['last_Name'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['required']">Last name is required.</div>
                 <div *ngIf="editCustomerForm.controls['last_Name'].errors?.['pattern']">Last Name should not contain numerical values.</div>
@@ -85,7 +112,7 @@
             <div class="mb-3">
               <label for="email" class="form-label">Email:</label>
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide a valid email address."></i>
-              <input type="text" class="form-control" id="editEmail" [(ngModel)]="user!.email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+              <input type="text" class="form-control" id="editEmail" [(ngModel)]="user!.email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="Enter Email">
               <div *ngIf="editCustomerForm.controls['email']?.invalid && editCustomerForm.controls['email'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['email'].errors?.['required']">Email is required.</div>
                 <div *ngIf="editCustomerForm.controls['email'].errors?.['pattern']">Invalid email format.</div>
@@ -97,7 +124,7 @@
               <label for="phoneNumber" class="form-label">Phone Number:</label>
               <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                 title="Enter a 10-digit phone number starting with 0."></i>
-              <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^0[0-9]{9}$">
+              <input type="text" class="form-control" id="editphoneNumber" [(ngModel)]="user!.phoneNumber" name="phoneNumber" required pattern="^0[0-9]{9}$" placeholder="Enter Phone Number">
               <div *ngIf="editCustomerForm.controls['phoneNumber']?.invalid && editCustomerForm.controls['phoneNumber'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['required']">Phone Number is required.</div>
                 <div *ngIf="editCustomerForm.controls['phoneNumber'].errors?.['pattern']">Phone Number must be a valid 10-digit number.</div>
@@ -108,7 +135,7 @@
             <div class="mb-3">
               <label for="iD_Number" class="form-label">ID Number:</label>
               <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Provide your 13-digit ID number."></i>
-              <input type="text" class="form-control" id="editiD_Number" [(ngModel)]="user!.iD_Number" name="iD_Number" required pattern="^[0-9]{13}$">
+              <input type="text" class="form-control" id="editiD_Number" [(ngModel)]="user!.iD_Number" name="iD_Number" required pattern="^[0-9]{13}$" placeholder="Enter ID Number">
               <div *ngIf="editCustomerForm.controls['iD_Number']?.invalid && editCustomerForm.controls['iD_Number'].touched" class="alert alert-danger">
                 <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['required']">ID Number is required.</div>
                 <div *ngIf="editCustomerForm.controls['iD_Number'].errors?.['pattern']">ID Number must be a 13-digit number.</div>
