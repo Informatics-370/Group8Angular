@@ -1,6 +1,6 @@
 /* User Information Page Styles */
 .user-info {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f2f2f2;
@@ -19,15 +19,19 @@
     margin-bottom: 10px;
   }
   
-  ul {
+  table {
     list-style: none;
     padding: 0;
     margin: 0;
+    
   }
   
-  li {
+  td {
     font-size: 18px;
     margin-bottom: 5px;
+    padding-bottom: 10px;
+    padding-right: 1px;
+    margin-right: 1px;
   }
   
   strong {
