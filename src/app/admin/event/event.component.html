@@ -5,6 +5,11 @@
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
     <h2>Event</h2>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control mb-3" placeholder="Search" [(ngModel)]="searchQuery" (input)="filterEvents()">
+      </div>
+    </div>
   </div>
   <div class="col-md-6 text-end">
     <button class="btn btn-success" (click)="openAddEventModal()">
@@ -16,31 +21,31 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Image</th>
-      <th scope="col">Name</th>
-     <th scope="col">Type</th>
-      <th scope="col">Date</th>
-      <th scope="col">Tickets Available</th>
-      <th scope="col">Tickets Sold</th>
-      <th scope="col">Price (ZAR)</th>
-      <th scope="col">Early Bird Limit</th>
-      <th scope="col">Early Bird Percentage</th>
-      <th scope="col">Display</th>
+      <th scope="col" class="d-none d-md-table-cell">Image</th>
+      <th scope="col" class="d-none d-md-table-cell">Name</th>
+      <th scope="col" class="d-none d-md-table-cell">Type</th>
+      <th scope="col" class="d-none d-md-table-cell">Date</th>
+      <th scope="col" class="d-none d-md-table-cell">Tickets Available</th>
+      <th scope="col" class="d-none d-md-table-cell">Tickets Sold</th>
+      <th scope="col" class="d-none d-md-table-cell">Price (ZAR)</th>
+      <th scope="col" class="d-none d-md-table-cell">Early Bird Limit</th>
+      <th scope="col" class="d-none d-md-table-cell">Early Bird Percentage</th>
+      <th scope="col" class="d-none d-md-table-cell">Display</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let event of events">
-      <td><img [src]="event.filePath" alt="{{ event.name }}'s Image" width="140" height="100"></td>
-      <td>{{ event.name }}</td>
-      <td>{{ event.eventType?.eventTypeName }}</td>
-      <td>{{ event.eventDate | date:'short' }}</td>
-      <td>{{ event.tickets_Available }}</td>
-      <td>{{ event.tickets_Sold }}</td>
-      <td>{{ event.price }}</td>
-      <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.limit : '' }}</td>
+    <tr *ngFor="let event of filteredEvents">      
+      <td class="align-middle"><img [src]="event.filePath" alt="{{ event.name }}'s Image" width="140" height="100"></td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.name }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.eventType?.eventTypeName }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.eventDate | date:'short' }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.tickets_Available }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.tickets_Sold }}</td>
+      <td class="d-none d-md-table-cell align-middle" style="text-align: right;">{{ event.price | currency:'R':'symbol':'1.2-2' }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.limit : 'N/A' }}</td>
       <!-- New Column -->
-      <td>{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : '' }}</td>
-      <td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : 'N/A' }}</td>
+      <td class="align-middle">
         <input type="checkbox" [checked]="event.displayItem" (change)="toggleDisplay(event)">
 
 

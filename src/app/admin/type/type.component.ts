@@ -33,6 +33,8 @@ export class TypeComponent {
   showDeleteWinetypeModal = false;
   winetypeToDeleteDetails: any;
   winetypeToDelete: any = null;
+  searchText: string = ''; // Property to store the search text
+  filteredTypes: WineType[] = [];
 
   async loadWinetypes(): Promise<void> {
     try {
@@ -146,5 +148,12 @@ export class TypeComponent {
     const auditLogMessage =
       'Wine Type: ' + (this.editingWinetype ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  searchTypes() {
+    this.filteredTypes = this.winetypes.filter((types) =>
+      types.name?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      types.description?.toLowerCase().includes(this.searchText.toLowerCase())
+    );
   }
 }

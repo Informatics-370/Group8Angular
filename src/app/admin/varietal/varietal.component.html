@@ -4,7 +4,14 @@
 
  <div class="row align-items-center mb-3" style="margin-top:15px ;">
     <div class="col-md-6">
-      <h2>Varietal</h2>
+      <h2>Varietal</h2>    
+    
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Search Varietals" [(ngModel)]="searchText" (input)="searchVarietals()">
+        </div>
+      </div>
+
     </div>
     <div class="col-md-6 text-end">
       <button class="btn btn-success" (click)="openAddVarietalModal()">
@@ -22,7 +29,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let varietal of varietals">
+      <tr *ngFor="let varietal of (searchText ? filteredVarietals : varietals)">
         <td>{{ varietal.name }}</td>
         <td>{{ varietal.description }}</td>
         <td>{{varietal.wineType?.name}}</td>

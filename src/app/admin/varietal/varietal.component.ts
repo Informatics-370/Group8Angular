@@ -39,6 +39,8 @@ export class VarietalComponent {
   showDeleteVarietalModal = false;
   varietalToDeleteDetails: any;
   varietalToDelete: any = null;
+  searchText: string = ''; // Property to store the search text
+  filteredVarietals: Varietal[] = [];
 
   async loadVarietals(): Promise<void> {
     try {
@@ -162,5 +164,16 @@ export class VarietalComponent {
     const auditLogMessage =
       'Wine Varietal: ' + (this.editingVarietal ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  searchVarietals() {
+    this.filteredVarietals = this.varietals.filter((varietal) => {
+      const nameMatches = varietal.name?.toLowerCase().includes(this.searchText.toLowerCase());
+      const descriptionMatches = varietal.description?.toLowerCase().includes(this.searchText.toLowerCase());
+      const wineTypeMatches = varietal.wineType?.name?.toLowerCase().includes(this.searchText.toLowerCase());
+  
+      // Return true if any of the properties match the search text
+      return nameMatches || descriptionMatches || wineTypeMatches;
+    });
   }
 }

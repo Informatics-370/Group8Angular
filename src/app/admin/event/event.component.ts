@@ -53,6 +53,8 @@ export class EventComponent {
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Convert local time to UTC
     this.minDateTime = now.toISOString().slice(0, 16);
 
+    this.filteredEvents = this.events;
+
   }
 
   formatDateTime(date: Date): string {
@@ -84,6 +86,8 @@ export class EventComponent {
   eventToDeleteDetails: any;
   eventToDelete: any = null;
   currentEventImageURL!: string;
+  searchQuery: string = ''; // Variable to capture user input
+  filteredEvents: Event[] = [];
 
   //--------------------------------------------------------------------------------------------------------------------------------
   // Methods to load and get event-related information
@@ -129,7 +133,7 @@ export class EventComponent {
     this.editingEvent = true;
     // Set the image URL/path of the event being edited.
 
- 
+
 this.fileUploaded = true;
     let eventToEdit = this.events.find(event => event.eventID === id);
     this.currentEventImageURL = eventToEdit?.filePath || '';
@@ -164,7 +168,11 @@ this.fileUploaded = true;
   }
 
   getEarlyBirdById(id: number): EarlyBird | undefined {
-    return this.earlyBirds.find(earlyBird => earlyBird.earlyBirdID === id);
+    var earlyBirdvalue = this.earlyBirds.find(earlyBird => earlyBird.earlyBirdID === id);
+    if (earlyBirdvalue === undefined) {
+      earlyBirdvalue = new EarlyBird();
+    }
+    return earlyBirdvalue;
   }
 
 
@@ -181,7 +189,7 @@ this.fileUploaded = true;
         this.currentEvent.earlyBird = undefined;
       }
       if (this.currentEvent.earlyBirdID === null) {
-        this.currentEvent.earlyBirdID = 0;
+        this.currentEvent.earlyBirdID = 0
       }
       if (this.editingEvent) {
         const pathArray = this.currentEvent.filePath.split('/');
@@ -371,6 +379,28 @@ this.fileUploaded = true;
     const auditLogMessage =
       'Event: ' + (this.editingEvent ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  filterEvents(): void {
+    if (this.searchQuery.trim() === '') {
+      // If the search query is empty, show all events
+      this.filteredEvents = this.events;
+    } else {
+      // If there is a search query, filter events based on it
+      const query = this.searchQuery.toLowerCase();
+      this.filteredEvents = this.events.filter(event => {
+        // Your filter logic here, e.g., searching through all fields
+        return (
+          event.name.toLowerCase().includes(query) ||
+          (event.eventType?.eventTypeName || '').toLowerCase().includes(query) ||
+          event.eventDate.toString().toLowerCase().includes(query) ||
+          event.tickets_Available.toString().toLowerCase().includes(query) ||
+          event.tickets_Sold.toString().toLowerCase().includes(query) ||
+          event.price.toString().toLowerCase().includes(query)
+          // Add more fields as needed
+        );
+      });
+    }
   }
 
 

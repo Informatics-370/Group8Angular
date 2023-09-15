@@ -6,6 +6,11 @@
 <div class="row align-items-center">
   <div class="col">
     <h1>FAQ's</h1>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search FAQ's" [(ngModel)]="searchText" (input)="searchFAQs()">
+      </div>
+    </div>
   </div>
   <div class="col text-end">    
     <button class="btn btn-success" (click)="openAddFAQModal()">
@@ -66,7 +71,8 @@
       </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let faq of faqs">
+
+        <tr *ngFor="let faq of (searchText ? filteredFaqs : faqs)">
             <td>{{ faq.question }}</td>
             <td>{{ faq.answer }}</td>
             <td>

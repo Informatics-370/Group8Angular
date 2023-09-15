@@ -65,7 +65,7 @@
   <tbody>
     <tr *ngFor="let vat of vats">
       <td>{{ vat.percentage }}</td>
-      <td>{{ vat.date }}</td>
+      <td>{{ vat.date | date:'yyyy-MM-dd' }}</td>
       <td>
         <button class="btn btn-primary" (click)="vat.vatid !== undefined && openEditVatModal(vat.vatid)" style="margin-right: 4px;">
           <i class="fas fa-pencil-alt"></i>
