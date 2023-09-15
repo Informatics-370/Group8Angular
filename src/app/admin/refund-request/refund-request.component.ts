@@ -31,6 +31,8 @@ export class RefundRequestComponent {
   orderRefNumMapping: { [key: number]: string } = {};
   refundStatusMapping: { [refundRequestId: number]: string } = {};
   confirmText: string = '';
+  searchTerm: string = '';
+  displayedRefundsForSearch: RefundRequest[] = [];
 
   constructor(
     private refundService: RefundService,
@@ -42,10 +44,36 @@ export class RefundRequestComponent {
     this.loadRefundResponses();
   }
 
+  searchRefunds() {
+    let filteredRefunds = [...this.refundRequests];
+  
+    // If we're only showing incomplete refunds, filter those first
+    if (this.showOnlyIncomplete) {
+      filteredRefunds = filteredRefunds.filter(refund => refund.status !== 'Completed');
+    }
+  
+    // If there's a search term, further filter the results
+    if (this.searchTerm) {
+      const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
+      filteredRefunds = filteredRefunds.filter(refund => {
+        return (
+          (this.orderRefNumMapping[refund.wineOrderId] && this.orderRefNumMapping[refund.wineOrderId].toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (refund.requestDate && refund.requestDate.toString().includes(this.searchTerm)) ||
+          (refund.status && refund.status.toLowerCase().includes(lowerCaseSearchTerm))
+        );
+      });
+    }
+  
+    this.displayedRefundsForSearch = filteredRefunds;
+  }
+  
+
+
   loadRefunds() {
     this.refundService.getAllRefunds().subscribe((data) => {
       this.refundRequests = data;
       console.log('loadRefunds', this.refundRequests);
+      this.displayedRefundsForSearch = [...this.refundRequests];
 
       let responseMapping: { [responseValue: string]: string } = {};
       this.refundReponses.forEach((response) => {
@@ -84,16 +112,9 @@ export class RefundRequestComponent {
 
   toggleIncompleteRefunds(): void {
     this.showOnlyIncomplete = !this.showOnlyIncomplete;
+    this.searchRefunds();
   }
-
-  get displayedRefunds() {
-    if (this.showOnlyIncomplete) {
-      return this.refundRequests.filter(
-        (refund) => refund.status === 'Incomplete'
-      );
-    }
-    return this.refundRequests;
-  }
+  
 
   editRefund(refund: RefundRequest): void {
     this.selectedRefund = { ...refund };

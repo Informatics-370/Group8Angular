@@ -12,3 +12,31 @@ table {
     margin: 20px 0;
   }
   
+  .form-check-label {
+    font-size: 1.25rem; /* Increase the font size */
+    margin-left: 0.5rem;
+}
+
+.form-switch .form-check-input {
+    transform: scale(1.5); /* Increase the scale of the toggle */
+}
+
+/* Adjust the size of the toggle when it's checked */
+.form-switch .form-check-input:checked {
+    transform: scale(1.8); /* Increase the scale of the checked toggle */
+}
+/* Custom styles for offsetting labels */
+.offset-label {
+    margin-left: 0.1rem; /* Offset labels by 0.1rem to the right */
+    display: none;
+}
+
+/* Show the first label when checkbox is checked */
+.form-check-input:checked ~ .form-check-label .current-label {
+    display: inline-block;
+}
+
+/* Show the second label when checkbox is unchecked */
+.form-check-input:not(:checked) ~ .form-check-label .past-label {
+    display: inline-block;
+}

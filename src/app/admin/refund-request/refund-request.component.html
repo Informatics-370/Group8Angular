@@ -2,12 +2,26 @@
 <br />
 <!-- Refunds -->
 <div class="row align-items-center mb-3">
+  <!-- Left column: Heading and Search bar -->
   <div class="col-md-6">
     <h2>All Refunds</h2>
-    <button class="btn btn-secondary btn-sm" (click)="toggleIncompleteRefunds()">Toggle Incomplete Refunds</button>
+    <input type="text" class="form-control" placeholder="Search for refunds..." [(ngModel)]="searchTerm" (input)="searchRefunds()">
   </div>
-  <!-- <input type="text" class="form-control" placeholder="Search for refunds..." [(ngModel)]="searchTerm" (input)="searchRefunds()"> -->
 </div>
+<div class="row align-items-center mb-3">
+  <div class="col-md-6 offset-md-0.1">
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" 
+             (click)="toggleIncompleteRefunds()">
+      <label class="form-check-label" for="flexSwitchCheckChecked">
+          <span class="offset-label current-label">Incomplete Refunds </span>
+          <span class="offset-label past-label">All Refunds</span>
+      </label>
+    </div>
+</div>
+</div>
+
+
 
 <!-- Refunds table -->
 <div class="text-center" *ngIf="refundRequests.length === 0">
@@ -24,18 +38,18 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let refund of displayedRefunds">
+    <tr *ngFor="let refund of displayedRefundsForSearch">
       <td>{{ orderRefNumMapping[refund.wineOrderId] }}</td>
       <td>{{ refund.requestDate | date:'dd/MM/yyyy HH:mm' }}</td>
       <td>{{ refund.status }}</td>
-      <!-- Action buttons like edit or delete -->
+      <!-- Action buttons like edit or view -->
       <td>
         <button class="btn btn-primary btn-sm" (click)="editRefund(refund)">
-          <i class="fas fa-pencil-alt"></i>
+          <i [class]="refund.status === 'Completed' ? 'fas fa-eye' : 'fas fa-pencil-alt'"></i>
         </button>
       </td>
     </tr>
-  </tbody>
+  </tbody>  
 </table>
 
 

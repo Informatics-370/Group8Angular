@@ -1,4 +1,4 @@
-<!-- Refunds Table
+<!-- Refunds Table -->
 <br>
 <br>
 <div class="row align-items-center mb-3 refund-header">
@@ -12,26 +12,25 @@
   <table class="table table-striped refund-table">
     <thead>
       <tr>
-        <th scope="col">Wine Name</th>
-        <th scope="col" class="d-none d-md-table-cell">Email</th>
-        <th scope="col" class="d-none d-md-table-cell">Description</th>
-        <th scope="col" class="d-none d-md-table-cell">Requested On</th>
-        <th scope="col" class="d-none d-md-table-cell">Cost</th>
-        <th scope="col">Status</th>
+        <th scope="col">Order Ref</th>
+        <th scope="col" class="d-none d-md-table-cell">Refund Date</th>
+        <th scope="col" class="d-none d-md-table-cell">Status</th>
+        <th scope="col" class="d-none d-md-table-cell">View details</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let request of refundRequests">
-        <td>{{ getWineName(request.wineId)}}</td>
-        <td class="d-none d-md-table-cell">{{ request.email }}</td>
-        <td class="d-none d-md-table-cell">{{ request.description }}</td>
-        <td class="d-none d-md-table-cell">{{ request.requestedOn | date:'short' }}</td>
-        <td class="d-none d-md-table-cell">R{{ request.cost }}</td>
-        <td>{{ getStatusName(request.status) }}</td>
-
-        
-      </tr>
+      <tr *ngFor="let request of refundRequests; let i = index">
+        <td>{{ orderRefNumMapping[request.wineOrderId] }}</td>
+        <td>{{ request.requestDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ request.status }}</td>
+        <!-- Action buttons like edit or delete -->
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="editRefund(request)">
+            <i class="fas fa-eye"></i>
+          </button>
+      </td>
     </tbody>
+    
     
   </table>
 
@@ -39,4 +38,85 @@
     <h3>No wines currently in your refunds.</h3>
   </div>
 </div>
- -->
+
+
+<!-- <div class="modal fade" id="refundDetailsModal" [ngClass]="{'show': showRefundsModal}"
+[ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1"
+aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">View Refund
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">X
+        </button>
+      </div>
+      <div class="modal-body">Order Ref: {{ selectedRefund?.orderRef }}
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Wine Name</th>
+              <th>Quantity Refunded</th>
+              <th>Refund Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of refundOrderItems">
+              <td>{{ item.wineName }}</td>
+              <td>{{ item.quantityRefunded }}</td>
+              <td>{{ item.refundDate | date:'short' }}</td>
+              <td>{{ item.status }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div #refundModal class="modal fade" [ngClass]="{'show': showRefundsModal}"
+  [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}" id="refundStatusEditModal" tabindex="-1"
+  aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">Refund Details
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="mb-3">
+            <label class="form-label">Wines in this refund request:</label>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Wine Name</th>
+                  <th class="text-end">Quantity</th>
+                  <th class="text-end">Cost (ZAR)</th>
+                  <th class="text-end">Reason</th>
+                  <th class="text-end">Refund Response</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let wine of wineDetails; let i = index">
+                  <td>{{ wine.wineName }}</td>
+                  <td class="text-end">{{ wine.quantity }}</td>
+                  <td class="text-end">{{ wine.cost | currency:'R':'symbol':'1.2-2' }}</td>
+                  <td class="text-end">{{ wine.reason }}</td>
+                  <td *ngIf="selectedRefund.status ===  'Completed'">{{ wine.status }}</td>
+                  <td *ngIf="selectedRefund.status !== 'Completed'">In Progress</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
