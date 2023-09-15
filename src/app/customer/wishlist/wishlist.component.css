@@ -41,3 +41,11 @@
     border-radius: 5px;
   }
   
+  .pagination {
+    display: flex;
+    align-items: center;
+  }
+  
+  .page-info {
+    margin: 0 20px; /* Adjust the value to control the spacing */
+  }
