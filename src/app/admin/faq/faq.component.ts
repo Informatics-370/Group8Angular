@@ -24,6 +24,8 @@ export class FaqComponent implements OnInit {
   faqToDelete: any = null;
   faqToDeleteDetails: any;
   showDeleteFAQModal = false;
+  searchText: string = ''; 
+  filteredFaqs: FAQ[] = []; 
   
   constructor(private faqService: FAQService, private router: Router, private toastr: ToastrService
     , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) {}
@@ -186,5 +188,12 @@ export class FaqComponent implements OnInit {
     const auditLogMessage =
       'FAQ: ' + (this.editingFAQ ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  searchFAQs() {
+    this.filteredFaqs = this.faqs.filter((faqs) =>
+      faqs.question?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      faqs.answer?.toLowerCase().includes(this.searchText.toLowerCase())
+    );
   }
 }

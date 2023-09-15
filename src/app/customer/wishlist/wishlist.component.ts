@@ -35,7 +35,7 @@ export class WishlistComponent implements OnInit {
   currentImage: any;
   searchQuery: string = '';
   filteredWines: Wine[] = [];
-  pageSize: number = 2;
+  pageSize: number = 5;
   currentPage: number = 1;
   
 

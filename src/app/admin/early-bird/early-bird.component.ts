@@ -25,6 +25,8 @@ export class EarlyBirdComponent implements OnInit {
   earlyBirdToDeleteDetails: any;
   earlyBirdToDelete: any = null;
   isSaving = false;
+  searchText: string = '';
+  filteredBirds: EarlyBird[] = [];
 
   constructor(private earlyBirdService: EarlyBirdService, private toastr : ToastrService
     , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService){ }
@@ -173,6 +175,13 @@ export class EarlyBirdComponent implements OnInit {
     const auditLogMessage =
       'Early Bird: ' + (this.editingEarlyBird ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
+  }
+
+  searchBirds() {
+    this.filteredBirds = this.earlyBirds.filter((earlyBird) =>
+      earlyBird.percentage?.toString().toLowerCase().includes(this.searchText.toLowerCase()) ||
+      earlyBird.limit?.toString().toLowerCase().includes(this.searchText.toLowerCase())
+    );
   }
   
 }
