@@ -5,6 +5,12 @@
   <div class="col">
     <h2>Supplier</h2>
   </div>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Search Early" [(ngModel)]="searchQuery"
+        (input)="filterSuppliers()">
+    </div>
+  </div>
   <div class="col text-end">    
     <button class="btn btn-success" (click)="openAddSupplierModal()">
       <i class="fas fa-plus"></i> Add
@@ -26,16 +32,22 @@
       <div class="modal-body">
         <form #supplierForm="ngForm" (ngSubmit)="submitSupplierForm(supplierForm)">
           <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" [(ngModel)]="currentSupplier.name" name="name" required #nameField="ngModel">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Name <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Supplier Name"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
+            <input type="text" class="form-control" id="name" [(ngModel)]="currentSupplier.name" name="name" required #nameField="ngModel" placeholder="Enter Supplier Name">
             <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
               <div *ngIf="nameField.errors?.['required']">Name is required.</div>
             </div>
           </div>
           
           <div class="mb-3">
-            <label for="phone" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phoneNumber" name="phone" required #phoneInput="ngModel" pattern="[0-9]{10,14}">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="phone" class="form-label">Phone Number <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Supplier Phone Number"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="currentSupplier.phoneNumber" name="phone" required #phoneInput="ngModel" pattern="[0-9]{10,14}" placeholder=" Enter Supplier Phone Number">
             <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="alert alert-danger">
               <div *ngIf="phoneInput.errors && phoneInput.errors['required']">Phone number is required.</div>
               <div *ngIf="phoneInput.errors && phoneInput.errors['pattern']">Phone number should be between 10 and 14 digits.</div>
@@ -43,8 +55,11 @@
           </div>
           
           <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required email #emailField="ngModel">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+                <label for="email" class="form-label">Email <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Supplier Email"></i></label>            
+                <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
+            <input type="email" class="form-control" id="email" [(ngModel)]="currentSupplier.email" name="email" required email #emailField="ngModel" placeholder=" Enter Supplier Email">
             <div *ngIf="emailField.invalid && emailField.touched" class="alert alert-danger">
               <div *ngIf="emailField.errors?.['required']">Email is required.</div>
               <div *ngIf="emailField.errors?.['email']">Please enter a valid email address.</div>
@@ -76,15 +91,15 @@
     </thead>
     <tbody>
         <!-- *ngFor="let supplier of suppliers" -->
-        <tr *ngFor="let x of suppliers">
-          <td>{{ x.name }}</td>
-          <td>{{ x.phoneNumber }}</td>
-          <td>{{ x.email }}</td>
+        <tr *ngFor="let supplier of paginatedSuppliers">
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.phoneNumber }}</td>
+          <td>{{ supplier.email }}</td>
         <td>
-          <button class="btn btn-primary" style="margin-right: 4px;" (click)="x.supplierID !== undefined && openEditSupplierModal(x.supplierID)">
+          <button class="btn btn-primary" style="margin-right: 4px;" (click)="supplier.supplierID !== undefined && openEditSupplierModal(supplier.supplierID)">
             <i class="fas fa-pencil-alt"></i>
           </button>
-          <button class="btn btn-danger" (click)="x.supplierID!== undefined && openDeleteSupplierModal(x)">
+          <button class="btn btn-danger" (click)="supplier.supplierID!== undefined && openDeleteSupplierModal(supplier)">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
@@ -92,7 +107,7 @@
       </tbody>
     </table>
     
-    <div class="text-center" *ngIf="suppliers.length === 0">
+    <div class="text-center" *ngIf="paginatedSuppliers.length === 0">
       <h3>No suppliers currently in your system.</h3>
     </div>
 
@@ -122,5 +137,16 @@
   </div>
 </div>
 </div>
+<br>
+<br>
 
+<div class="pagination">
+  <button class="btn btn-light" (click)="previousPage()">
+    &laquo; Previous
+  </button>
+  <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn btn-light" (click)="nextPage()">
+    Next &raquo;
+  </button>
+</div>
 <!--************************************************************ Delete Modal *************************************************************************************************-->

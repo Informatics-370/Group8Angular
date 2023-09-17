@@ -21,6 +21,10 @@ export class SupplierComponent implements OnInit {
   showModal: boolean = false;
   editingSupplier: boolean = false;
   currentSupplier: Supplier = new Supplier();
+  searchQuery: string = '';
+  filteredSuppliers: Supplier[] = [];
+  pageSize: number = 5;
+  currentPage: number = 1;
 
     supplierToDelete: any = null;
     supplierToDeleteDetails: any;
@@ -34,13 +38,14 @@ export class SupplierComponent implements OnInit {
     this.loadSuppliers();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    // this.filteredSuppliers = [...this.suppliers];
   }
 
 // ****************** Methods to display the list of Suppliers. *****************************************************************************************************************
   
 loadSuppliers(): void {
     this.supplierService.getSuppliers().subscribe({
-      next: (data: Supplier[]) => this.suppliers = data,
+      next: (data: Supplier[]) => this.filteredSuppliers = data,
       error: (error: any) => {
         console.error(error);
         this.toastr.error('Error, failed to connect to the database', 'Supplier Table');
@@ -195,5 +200,45 @@ onSubmitClick() {
   const auditLogMessage =
     'Supplier: ' + (this.editingSupplier ? 'Updated' : 'Added');
   this.AddAuditLog(auditLogMessage);
+}
+
+filterSuppliers() {
+  if (this.searchQuery.trim() === '') {
+    this.filteredSuppliers = [...this.suppliers]; // If the search query is empty, show all wines
+  } else {
+    const searchTerm = this.searchQuery.toLowerCase().trim();
+    this.filteredSuppliers = this.suppliers.filter(supplier =>
+      supplier.name?.toLowerCase().includes(searchTerm) ||
+      supplier.email?.toLowerCase().includes(searchTerm) ||
+      supplier.phoneNumber?.toString().includes(searchTerm)
+    );
+  }
+}
+
+get paginatedSuppliers(): Supplier[] {
+  const startIndex = (this.currentPage - 1) * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  return this.filteredSuppliers.slice(startIndex, endIndex);
+}
+
+changePage(page: number) {
+  this.currentPage = page;
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.changePage(this.currentPage - 1);
+  }
+}
+
+nextPage() {
+  const totalPages = Math.ceil(this.filteredSuppliers.length / this.pageSize);
+  if (this.currentPage < totalPages) {
+    this.changePage(this.currentPage + 1);
+  }
+}
+
+get totalPages(): number {
+  return Math.ceil(this.filteredSuppliers.length / this.pageSize);
 }
 }

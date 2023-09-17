@@ -12,7 +12,14 @@
 }
 
 #card-img {
-  margin-top: 30px;
+  width: 100%;
+  max-width: 300px; /* Set the maximum width for the container */
+  position: relative;
+  padding-bottom: 75%; /* Set the aspect ratio (4:3 in this example) */
+  overflow: hidden;
+  margin-top: 30px; /* Adjust the top margin as needed */
+  margin-right: auto;
+  margin-left: auto;
 }
   
 .cart-icons {
@@ -91,4 +98,10 @@
   font-size: 4rem;
   color: white;
   text-align: center;
+}
+
+input[type=text] {
+  width: 40%;
+  text-align: center;
+  border: none;
 }
