@@ -17,6 +17,7 @@
   font-family: 'Cinzel Decorative', cursive;
   color: #444;
   text-align: center;
+  
 }
 
 .us {
@@ -58,7 +59,7 @@
   transform: translate(-50%, -50%);
   width: 50%;
   height: 25vh;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(204, 200, 200, 0.822);
   backdrop-filter: blur(10px);
   border-radius: 25px;
   display: flex;
