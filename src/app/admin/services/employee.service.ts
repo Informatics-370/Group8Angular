@@ -13,7 +13,6 @@ export class EmployeeService {
   private apiUrl = `${environment.baseApiUrl}api/Employees`;
 
   constructor(private httpClient: HttpClient) { }
-
   private setHeaders() {
     this.headers = new HttpHeaders({
         'Content-Type': 'application/json'

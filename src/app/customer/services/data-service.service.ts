@@ -22,7 +22,7 @@ export interface DecodedToken {
   providedIn: 'root'
 })
 export class  DataServiceService {
-  private headers: HttpHeaders;
+  
   // Decode JWT Token
   private userSubject: BehaviorSubject<UserViewModel | null>;
   public user: Observable<UserViewModel | null>;
@@ -31,19 +31,24 @@ export class  DataServiceService {
   private custUrl = `${environment.baseApiUrl}api/Customers`;
 
   constructor(private httpClient: HttpClient) {
+    this.userSubject = new BehaviorSubject<UserViewModel | null>(this.getUserFromToken());
+    this.user = this.userSubject.asObservable();
+  }
+  headers: HttpHeaders | undefined;
+  private setHeaders() {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
     // Retrieve the token from localStorage
-    const token = localStorage.getItem('Token');
-
+    let token = localStorage.getItem('Token');
     if (token) {
-      this.headers = this.headers.set('Authorization', `Bearer ${token}`);
-      console.log(this.headers);
+      token = JSON.parse(token);
+      this.headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
     }
-    this.userSubject = new BehaviorSubject<UserViewModel | null>(this.getUserFromToken());
-    this.user = this.userSubject.asObservable();
   }
 
   public get userValue(): UserViewModel | null {
@@ -61,6 +66,7 @@ export class  DataServiceService {
   }
 
   GetUserIdByEmail(email: string): Observable<string> {
+    this.setHeaders();
     return this.httpClient.get<string>(`${this.userUrl}/GetUserByEmail/${email}`)
       .pipe(
         map((response: any) => response.userId) // Extract the userId from the response
@@ -97,10 +103,12 @@ export class  DataServiceService {
   }
 
   getUser(email: string){
+    this.setHeaders();
     return this.httpClient.get(`${this.custUrl}/GetUser/${email}`, { headers: this.headers });
   }
 
   updateLoginDetails(id: string, loginCredentials: loginUpdateViewModel){
+    this.setHeaders();
     return this.httpClient.put<any>(`${this.userUrl}/UpdateLoginDetails/${id}`, loginCredentials, { headers: this.headers });
   }
 
@@ -124,38 +132,38 @@ export class  DataServiceService {
     return roles.some(role => ['Superuser', 'Employee'].includes(role));
   }
 
-  isEmployee(): boolean {
-    const roles = this.userValue?.roles;
-    if (!roles) {
-      return false;
-    }
-    if (roles.includes("Employee")) {
-      return true;
-    }
-    return false;
-  }
+  // isEmployee(): boolean {
+  //   const roles = this.userValue?.roles;
+  //   if (!roles) {
+  //     return false;
+  //   }
+  //   if (roles.includes("Employee")) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  isCustomer(): boolean {
-    const roles = this.userValue?.roles;
-    if (!roles) {
-      return false;
-    }
-    if (roles.includes("Customer")) {
-      return true;
-    }
-    return false;
-  }
+  // isCustomer(): boolean {
+  //   const roles = this.userValue?.roles;
+  //   if (!roles) {
+  //     return false;
+  //   }
+  //   if (roles.includes("Customer")) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  isSuperuser(): boolean {
-    const roles = this.userValue?.roles;
-    if (!roles) {
-      return false;
-    }
-    if (roles.includes("Superuser")) {
-      return true;
-    }
-    return false;
-  }
+  // isSuperuser(): boolean {
+  //   const roles = this.userValue?.roles;
+  //   if (!roles) {
+  //     return false;
+  //   }
+  //   if (roles.includes("Superuser")) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   isUserLoggedIn(): boolean {
     const token = localStorage.getItem('Token');

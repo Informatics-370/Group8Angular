@@ -11,43 +11,60 @@ import { BlacklistDelete } from 'src/app/Model/blacklistDelete';
   providedIn: 'root'
 })
 export class BlacklistService {
+  headers: HttpHeaders | undefined;
 
   private apiUrl = `${environment.baseApiUrl}api/Blacklists`;
 
   constructor(private http: HttpClient) {}
+  private setHeaders() {
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Retrieve the token from localStorage
+    let token = localStorage.getItem('Token');
+    if (token) {
+      token = JSON.parse(token);
+      this.headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+    }
+  }
 
 
   // Blacklist crud operations ----------------------------------------------------.>
   async getBlacklist(): Promise<Blacklist[]> {
-    return firstValueFrom(this.http.get<Blacklist[]>(this.apiUrl));
+    this.setHeaders()
+    return firstValueFrom(this.http.get<Blacklist[]>(this.apiUrl, { headers: this.headers}));
   }
 
   async getBlacklistC(id: number): Promise<Blacklist> {
-    return firstValueFrom(this.http.get<Blacklist>(`${this.apiUrl}/${id}`));
+    this.setHeaders()
+    return firstValueFrom(this.http.get<Blacklist>(`${this.apiUrl}/${id}`, { headers: this.headers}));
   }
 
   async addBlacklistC(blacklistC: Blacklist): Promise<Blacklist> {
-    return firstValueFrom(this.http.post<Blacklist>(this.apiUrl, blacklistC));
+    this.setHeaders()
+    return firstValueFrom(this.http.post<Blacklist>(this.apiUrl, blacklistC, { headers: this.headers}));
   }
 
   async updateBlacklistC(id: number, blacklistC: Blacklist): Promise<any> {
+    this.setHeaders()
     console.log('Updating Blacklist Customer with ID:', id, 'and data:', blacklistC);
-    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, blacklistC));
+    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, blacklistC, { headers: this.headers}));
   }
 
   async deleteBlacklistC(blacklistDelete: BlacklistDelete): Promise<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const options = {
-        headers: headers,
-        body: blacklistDelete
-    };
-    return firstValueFrom(this.http.delete(`${this.apiUrl}/${blacklistDelete.id}`, options));
+    this.setHeaders()
+    return firstValueFrom(this.http.delete(`${this.apiUrl}/${blacklistDelete.id}`, { headers: this.headers}));
 }
 
 
   //Check if user is in Blacklist table
   async checkBlacklist(email: string): Promise<boolean> {
-    return firstValueFrom(this.http.get<boolean>(`${this.apiUrl}/check/${email}`));
+    this.setHeaders()
+    return firstValueFrom(this.http.get<boolean>(`${this.apiUrl}/check/${email}`, { headers: this.headers}));
   }
 }
 
