@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RefundItem, RefundRequest } from 'src/app/Model/RefundRequest';
@@ -8,12 +8,28 @@ import { environment } from 'src/app/environment';
   providedIn: 'root'
 })
 export class RefundService {
-
+  headers: HttpHeaders | undefined;
   private baseUrl = `${environment.baseApiUrl}api/Refunds`;
 
   constructor(private http: HttpClient) { }
+  private setHeaders() {
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Retrieve the token from localStorage
+    let token = localStorage.getItem('Token');
+    if (token) {
+      token = JSON.parse(token);
+      this.headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+    }
+  }
 
   requestRefund(wineOrderId: number, reason: string, refundItems: RefundItem[]): Observable<RefundRequest> {
+    this.setHeaders()
     const requestData = {
       wineOrderId: wineOrderId,
       reason: reason,
@@ -21,11 +37,12 @@ export class RefundService {
     };
     console.log('RequestData:', requestData);
 
-    return this.http.post<RefundRequest>(`${this.baseUrl}/RequestARefund`, requestData);
+    return this.http.post<RefundRequest>(`${this.baseUrl}/RequestARefund`, requestData, { headers: this.headers});
   }
     
   getAllRefunds(): Observable<RefundRequest[]> {
-    return this.http.get<RefundRequest[]>(`${this.baseUrl}`);
+    this.setHeaders()
+    return this.http.get<RefundRequest[]>(`${this.baseUrl}`, { headers: this.headers});
   }
 
   // getUserRefundRequests(email: string): Observable<RefundRequest[]> {
@@ -33,22 +50,27 @@ export class RefundService {
   // }
 
   getRefundItems(refundRequestId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/GetWineDetailsForRefund/${refundRequestId}`);
+    this.setHeaders()
+    return this.http.get(`${this.baseUrl}/GetWineDetailsForRefund/${refundRequestId}`, { headers: this.headers});
   }
 
   updateRefundStatus(refundRequestId: number, itemsStatuses: any[]): Observable<any> {
-    return this.http.put(`${this.baseUrl}/UpdateRefundStatus/${refundRequestId}`, itemsStatuses);
+    this.setHeaders()
+    return this.http.put(`${this.baseUrl}/UpdateRefundStatus/${refundRequestId}`, itemsStatuses, { headers: this.headers});
   }
 
   getAllResponses(): Observable<any[]>{
-    return this.http.get<any[]>(`${this.baseUrl}/allRefundsResponses`);
+    this.setHeaders()
+    return this.http.get<any[]>(`${this.baseUrl}/allRefundsResponses`, { headers: this.headers});
   }
 
   getResponseById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/getResponse/${id}`);
+    this.setHeaders()
+    return this.http.get<any>(`${this.baseUrl}/getResponse/${id}`, { headers: this.headers});
   }
 
   getCustomerRefund(email: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/CustomerRefunds/${email}`);
+    this.setHeaders()
+    return this.http.get<any>(`${this.baseUrl}/CustomerRefunds/${email}`, { headers: this.headers});
   }
 }
