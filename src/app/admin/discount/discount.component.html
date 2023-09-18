@@ -117,10 +117,11 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteModal()"></button>
       </div>
       <div class="modal-body">
-        Are you sure you want to delete this discount?
+        <p>Are you sure you want to delete this discount?</p>
+<br/>
         <p>Discount Code: {{ discountToDeleteDetails?.discountCode }}</p>
         <p>Discount Description: {{ discountToDeleteDetails?.discountDescription }}</p>
-        <p>Discount Percentage Amount: {{ discountToDeleteDetails?.discountAmount }}</p>
+        <p>Discount Percentage: {{ discountToDeleteDetails?.discountPercentage }}%</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>

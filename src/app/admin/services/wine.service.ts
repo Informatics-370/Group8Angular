@@ -74,7 +74,15 @@ export class WineService {
 
   async deleteWine(id: number): Promise<any> {
     this.setHeaders();
-    return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`, {headers: this.headers}));
+    try {
+      return await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`, {headers: this.headers}));
+    } catch (error: any) {  // Explicitly annotate type to 'any' or appropriate type.
+      if (error.status === 400) {
+        // Handle the "can't delete wine" error specifically
+        throw new Error('This wine is part of an existing order and cannot be deleted.');
+      }
+      throw error;
+    }
   }
 
   purchaseWine(wineID: number): Promise<any> {

@@ -251,10 +251,16 @@ this.fileUploaded = true;
   }
 
 
+  public displayedEventImageURL: string | undefined;
 
-  getObjectURL(file: File): string {
+   getObjectURL(file: File): string {
+    // Clean up any old blob URLs to prevent memory leak
+    if (this.displayedEventImageURL) {
+      URL.revokeObjectURL(this.displayedEventImageURL);
+    }
     return URL.createObjectURL(file);
   }
+
 
   // Add this new variable to track if uploaded file is of invalid type
   invalidFileType: boolean = false;
@@ -276,6 +282,11 @@ this.fileUploaded = true;
       this.invalidFileType = false;
       this.selectedFile = file;
       this.currentEvent.filePath = this.selectedFile?.name ?? '';
+
+  if (this.displayedEventImageURL) {
+    URL.revokeObjectURL(this.displayedEventImageURL);
+  }
+  this.displayedEventImageURL = URL.createObjectURL(file);
     }
 
     if (event.target.files && event.target.files.length > 0) {
@@ -295,11 +306,22 @@ this.fileUploaded = true;
       }
       this.toastr.success('Event has been deleted successfully.', 'Delete Event');
       this.closeDeleteEventModal();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      this.toastr.error('Error, please try again', 'Delete Event');
+      if (typeof error === 'object' && error !== null && 'status' in error) {
+        const httpError = error as { status: number }; // Type cast
+        if (httpError.status === 400) {
+          this.toastr.warning('Event cannot be deleted because tickets have already been purchased for the event and event date has not passed', 'Delete Event');
+        } else {
+          this.toastr.error('Error, please try again', 'Delete Event');
+        }
+      } else {
+        this.toastr.error('An unknown error occurred', 'Delete Event');
+      }
     }
   }
+  
+  
 
 
 
