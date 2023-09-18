@@ -135,12 +135,12 @@ export class PdfService {
                 ['No.', 'Wine Name', 'Wine Varietal', 'Wine Type', 'Wine Price', 'Stock Limit', 'Quantity on Hand'],
                 ...inventoryData.map((item, index) => [
                   index + 1,
-                  this.getWineName(item.wineID) || 'N/A',
-                  this.getVarietalName(item.varietalID) || 'N/A',
-                  this.getWinetypeName(item.wineTypeID) || 'N/A',
-                  'R ' + item.winePrice || 'N/A',
-                  item.stockLimit || 'N/A',
-                  item.quantityOnHand || 'N/A'
+                  { text: this.getWineName(item.wineID) || 'N/A', noWrap: false },
+                  { text: this.getVarietalName(item.varietalID) || 'N/A', noWrap: false },
+                  { text: this.getWinetypeName(item.wineTypeID) || 'N/A', noWrap: false },
+                  { text: 'R ' + item.winePrice || 'N/A', noWrap: false },
+                  { text: item.stockLimit || 'N/A', noWrap: false },
+                  { text: item.quantityOnHand || 'N/A', noWrap: false },
                 ])
               ]
             }
@@ -264,12 +264,12 @@ export class PdfService {
                   ['No.', 'Wine Name', 'Wine Varietal', 'Wine Type', 'Wine Price', 'Stock Limit', 'Quantity on Hand'],
                   ...inventoryData.map((item, index) => [
                     index + 1,
-                    this.getWineName(item.wineID) || 'N/A',
-                    this.getVarietalName(item.varietalID) || 'N/A',
-                    this.getWinetypeName(item.wineTypeID) || 'N/A',
-                    'R ' + item.winePrice || 'N/A',
-                    item.stockLimit || 'N/A',
-                    item.quantityOnHand || 'N/A'
+                    { text: this.getWineName(item.wineID) || 'N/A', noWrap: false },
+                    { text: this.getVarietalName(item.varietalID) || 'N/A', noWrap: false },
+                    { text: this.getWinetypeName(item.wineTypeID) || 'N/A', noWrap: false },
+                    { text: 'R ' + item.winePrice || 'N/A', noWrap: false },
+                    { text: item.stockLimit || 'N/A', noWrap: false },
+                    { text: item.quantityOnHand || 'N/A', noWrap: false },
                   ])
                 ]
               }
@@ -410,14 +410,14 @@ export class PdfService {
         
                         return [
                             index + 1,
-                            event.name,
-                            new Date(event.eventDate).toLocaleDateString(),
-                            event.tickets_Available,
-                            event.tickets_Sold,
-                            `R${event.price}`,
-                            `R${earlyBirdDiscountAmount.toFixed(2)}`,  // Added "Early Bird Discount" column value and fixed it to two decimal places
-                            `R${totalRevenue.toFixed(2)}`, // Fixing to two decimal places for cleaner display
-                            eventActive
+                            { text: event.name, noWrap: false },
+                            { text: new Date(event.eventDate).toLocaleDateString(), noWrap: false },
+                            { text: event.tickets_Available, noWrap: false },
+                            { text: event.tickets_Sold, noWrap: false },
+                            { text: `R${event.price}`, noWrap: false },
+                            { text: `R${earlyBirdDiscountAmount.toFixed(2)}`, noWrap: false },  // Added "Early Bird Discount" column value and fixed it to two decimal places
+                            { text: `R${totalRevenue.toFixed(2)}`, noWrap: false }, // Fixing to two decimal places for cleaner display
+                            { text: eventActive, noWrap: false },
                         ];
                     })
                 ]
@@ -554,14 +554,14 @@ export class PdfService {
           
                           return [
                               index + 1,
-                              event.name,
-                              new Date(event.eventDate).toLocaleDateString(),
-                              event.tickets_Available,
-                              event.tickets_Sold,
-                              `R${event.price}`,
-                              `R${earlyBirdDiscountAmount.toFixed(2)}`,  // Added "Early Bird Discount" column value and fixed it to two decimal places
-                              `R${totalRevenue.toFixed(2)}`, // Fixing to two decimal places for cleaner display
-                              eventActive
+                              { text: event.name, noWrap: false },
+                              { text: new Date(event.eventDate).toLocaleDateString(), noWrap: false },
+                              { text: event.tickets_Available, noWrap: false },
+                              { text: event.tickets_Sold, noWrap: false },
+                              { text: `R${event.price}`, noWrap: false },
+                              { text: `R${earlyBirdDiscountAmount.toFixed(2)}`, noWrap: false },  // Added "Early Bird Discount" column value and fixed it to two decimal places
+                              { text: `R${totalRevenue.toFixed(2)}`, noWrap: false }, // Fixing to two decimal places for cleaner display
+                              { text: eventActive, noWrap: false },
                           ];
                       })
                   ]
@@ -647,6 +647,9 @@ export class PdfService {
 
 
   //---------------------------------------------------  Events  ----------------------------------------------------------------
+
+    //---------------------------------------------------  Supplier Order  ----------------------------------------------------------------
+
   async generateSupplierOrdersPdf(supplierOrderData: SuppOrderAndVATViewModel[]): Promise<void> {
     type Alignment = 'left' | 'right' | 'center' | 'justify';
     this.headerString = await this.toBase64('assets/download.png');
@@ -707,12 +710,12 @@ export class PdfService {
   
           body.push([
             index + 1,
-            supplierNames[index],
-            order.wineName,
-            quantityOrdered,
-            "R " + (order.orderTotal ?? 0).toFixed(2),
-            `R ${vat.toFixed(2)}`,
-            `R ${totalWithVat.toFixed(2)}`
+            { text: supplierNames[index], noWrap: false },
+            { text: order.wineName, noWrap: false },
+            { text: quantityOrdered, noWrap: false },
+            { text: "R " + (order.orderTotal ?? 0).toFixed(2), noWrap: false },
+            { text: `R ${vat.toFixed(2)}`, noWrap: false },
+            { text: `R ${totalWithVat.toFixed(2)}`, noWrap: false },
           ]);
         });
 
@@ -856,12 +859,12 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
   
           body.push([
             index + 1,
-            supplierNames[index],
-            order.wineName,
-            quantityOrdered,
-            "R " + (order.orderTotal ?? 0).toFixed(2),
-            `R ${vat.toFixed(2)}`,
-            `R ${totalWithVat.toFixed(2)}`
+            { text: supplierNames[index], noWrap: false },
+            { text: order.wineName, noWrap: false },
+            { text: quantityOrdered, noWrap: false },
+            { text: "R " + (order.orderTotal ?? 0).toFixed(2), noWrap: false },
+            { text: `R ${vat.toFixed(2)}`, noWrap: false },
+            { text: `R ${totalWithVat.toFixed(2)}`, noWrap: false },
           ]);
         });
 
@@ -981,6 +984,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
 }
 
 
+    //---------------------------------------------------  Supplier Order  ----------------------------------------------------------------
 
 
 
@@ -1012,8 +1016,8 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
                 ...blacklistData.map((entry, index) => [
 
                   index + 1,
-                  entry.email,
-                  entry.reason,
+                  { text: entry.email, noWrap: false },
+                  { text: entry.reason, noWrap: false },
                 ]),
               ],
             },
@@ -1114,8 +1118,8 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
                   ['No.', 'Email', 'Reason'],
                   ...blacklistData.map((entry, index) => [
                     index + 1,
-                    entry.email,
-                    entry.reason,
+                    { text: entry.email, noWrap: false },
+                    { text: entry.reason, noWrap: false },
                   ]),
                 ],
               },
@@ -1197,9 +1201,11 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
     });
   }
 
+    //---------------------------------------------------  Blacklist  ----------------------------------------------------------------
 
 
 
+    //---------------------------------------------------  Wines  ----------------------------------------------------------------
 
 
 async generateWinesReport(winesData: Wine[], currentDate: string): Promise<Blob> {
@@ -1235,9 +1241,9 @@ return new Promise<Blob>((resolve, reject) => {
 
                 return [
                 index + 1,
-                item.name|| 'N/A',
-                this.getVarietalName(item.varietalID) || 'N/A',
-                this.getWinetypeName(item.wineTypeID) || 'N/A',
+                {text: item.name, noWrap: false}|| 'N/A',
+                {text: this.getVarietalName(item.varietalID), noWrap: false} || 'N/A',
+                {text: this.getWinetypeName(item.wineTypeID), noWrap: false} || 'N/A',
                 'R ' + item.price || 'N/A',
                 wineActive
               ];
@@ -1346,9 +1352,9 @@ async generateWinesReportpdf(winesData: Wine[], currentDate: string): Promise<Bl
 
                   return [
                   index + 1,
-                  item.name|| 'N/A',
-                  this.getVarietalName(item.varietalID) || 'N/A',
-                  this.getWinetypeName(item.wineTypeID) || 'N/A',
+                  {text: item.name, noWrap: false}|| 'N/A',
+                  {text: this.getVarietalName(item.varietalID), noWrap: false} || 'N/A',
+                  {text: this.getWinetypeName(item.wineTypeID), noWrap: false} || 'N/A',
                   'R ' + item.price || 'N/A',
                   wineActive
                 ];
@@ -1420,6 +1426,9 @@ async generateWinesReportpdf(winesData: Wine[], currentDate: string): Promise<Bl
     pdfMake.createPdf(documentDefinition).download(`wines_report_${currentDate}.pdf`);
   });
 }
+
+    //---------------------------------------------------  Wines  ----------------------------------------------------------------
+
 
 async toBase64(url: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
