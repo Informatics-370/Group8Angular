@@ -16,17 +16,23 @@
             <div class="card mb-3 shadow-sm">
                 <div class="row g-0">
                     <div class="col-lg-4 col-md-12">
-                        <img src="{{ wine.filePath }}" class="img-fluid rounded-start" alt="...">
+                        <img src="{{ wine.filePath }}" id="card-img" class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="col-lg-8 col-md-12">
                         <div class="card-body">
-                            <h4 class="card-title"><b>{{ wine.name }}</b></h4>
-                            <p class="card-text">R{{ wine.price }}.00</p>
-                            <p></p>
-                            <!-- Description button -->
-                            <button class="btn-description" data-bs-toggle="modal"
-                                [attr.data-bs-target]="'#descriptionModal' + wine.wineID">Description</button>
-                            <p></p>
+                            <div class="d-flex justify-content-between" style="margin: 0px;">
+                                <h2 class="card-title"><b><span style="font-family: 'Garamond', serif; color: #B55933;">{{ wine.name }}</span></b></h2>
+                            </div>
+                            <br>
+                            <p>Vintage: {{ wine.vintage }}</p>
+                            <p>Varietal: {{ wine.varietal.name }}</p>
+                            <br>
+                            <p>
+                                {{ truncateText(wine.wineTastingNote, 100) }}
+                                <a href="#" class="btn-description" data-bs-toggle="modal" [attr.data-bs-target]="'#descriptionModal' + wine.wineID">More info</a>                                
+                            </p>
+                            <br>
+                            <p class="card-text"><b>{{ wine.price | currency:'R':'symbol':'1.2-2' }}</b></p>
                             <br>
                             <!-- Inside your ngFor loop -->
                             <div class="cart-icons">
@@ -45,33 +51,36 @@
 
                             <!-- Modal -->
                             <div class="modal fade" [id]="'descriptionModal' + wine.wineID" tabindex="-1"
-                                aria-labelledby="descriptionModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title" id="descriptionModalLabel">{{ wine.name }}
-                                                Description</h2>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h3><b>Vintage:</b></h3>
-                                            <p>{{ wine.vintage }}</p>
+     aria-labelledby="descriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content with-background">
+            <div class="modal-header">
+                <h1 class="modal-title" id="descriptionModalLabel">
+                    <span style="font-family: 'Garamond', serif; color: #B55933;"><b>{{ wine.name }} Description</b></span>
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Vintage:</b></span></h3>
+                <p>{{ wine.vintage }}</p>
 
-                                            <h3><b>Varietal:</b></h3>
-                                            <p>{{ wine.varietal.name }}</p>
-                                            <p>{{wine.varietal.description}}</p>
+                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Varietal:</b></span></h3>
+                <p>{{ wine.varietal.name }}</p>
+                <p><b>Description:</b></p>
+                <p>{{ wine.varietal.description }}</p>
 
-                                            <h3><b>Wine type:</b></h3>
-                                            <p>{{ wine.wineType.name }}</p>
-                                            <p>{{ wine.wineType.description }}</p>
+                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Wine Type:</b></span></h3>
+                <p>{{ wine.wineType.name }}</p>
+                <p><b>Description:</b></p>
+                <p>{{ wine.wineType.description }}</p>
 
-                                            <h3><b>Tasting note</b></h3>
-                                            <p>{{ wine.wineTastingNote }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Tasting Note</b></span></h3>
+                <p>{{ wine.wineTastingNote }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
                         </div>
                     </div>
                 </div>
