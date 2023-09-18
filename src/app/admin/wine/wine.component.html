@@ -204,10 +204,10 @@
             </div>
           </div>
 
-          <div *ngIf="selectedFile || editingWine" class="mb-3">
-            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentWineImageURL" alt="Selected Image"
-              class="img-thumbnail">
+          <div *ngIf="displayedImageURL || editingWine" class="mb-3">
+            <img [src]="displayedImageURL ? displayedImageURL : currentWineImageURL" alt="Selected Image" class="img-thumbnail">
           </div>
+          
         </form>
       </div>
       <div class="modal-footer">

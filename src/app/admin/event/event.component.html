@@ -231,19 +231,15 @@
             </div>
           </div>
 
-          <div *ngIf="selectedFile || editingEvent" class="mb-3">
-            <img [src]="selectedFile ? getObjectURL(selectedFile) : currentEventImageURL" alt="Selected Image"
-              class="img-thumbnail">
+          <div *ngIf="displayedEventImageURL || editingEvent" class="mb-3">
+            <img [src]="displayedEventImageURL ? displayedEventImageURL : currentEventImageURL" alt="Selected Image" class="img-thumbnail">
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
         <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
-          [disabled]="earlyBirdField.value == '' || eventTypeField.value==0 || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent
-          ? 'Save Changes' : 'Save'}}</button>
-
-
+          [disabled]="earlyBirdField.value == '' || eventTypeField.value==0 || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent? 'Save Changes' : 'Save'}}</button>
       </div>
     </div>
   </div>

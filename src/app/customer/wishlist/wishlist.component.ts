@@ -10,7 +10,7 @@ import jwt_decode from 'jwt-decode';
 import { WishlistItem } from 'src/app/Model/WishListItem';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../services/cart.service';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 interface DecodedToken {
   sub: string;
@@ -47,7 +47,8 @@ export class WishlistComponent implements OnInit {
     private varietalService: VarietalService, // Inject VarietalService
     private winetypeService: WinetypeService, // Inject WinetypeService
     private cartService: CartService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cd: ChangeDetectorRef
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -97,44 +98,60 @@ openDeleteWineModal(item: WishlistItem) {
     this.showDeleteWineModal = true;
 }
 
-
 async removeFromWishlist(wishlistItemID: number | undefined): Promise<void> {
-  if (typeof wishlistItemID === 'number') {  // Check if the ID is defined and is a number
-    try {
-      let token = localStorage.getItem('Token') || '';
-      let decodedToken = jwt_decode(token) as DecodedToken;
-      let email = decodedToken.sub;
-      console.log(`Deleting item ${wishlistItemID} from wishlist of ${email}`);
-      await this.wishlistService.removeFromWishlist(email, wishlistItemID)
-        .toPromise();  // Convert Observable to Promise
-      // Update the wishlist items and wines in the local state
+  try {
+    if (typeof wishlistItemID === 'number') {  // Check if the ID is defined and is a number
+      // Your existing code ...
+      const wineIDToDelete = this.wishlistItems.find(item => item.wishlistItemID === wishlistItemID)?.wineID;
+
+      // Decode token and get email
+      const token = localStorage.getItem('Token') || '';
+      const decodedToken = jwt_decode(token) as DecodedToken;
+      const email = decodedToken.sub;
+
+      await this.wishlistService.removeFromWishlist(email, wishlistItemID).toPromise();
+
+      // Optimized: Create new array instances for wishlistItems and wines in a single step
       this.wishlistItems = this.wishlistItems.filter(item => item.wishlistItemID !== wishlistItemID);
-      this.wines = this.wines.filter(wine => wine.wineID !== this.wishlistItems.find(item => item.wishlistItemID === wishlistItemID)?.wineID);
-    } catch (error) {
-      console.error(`Failed to remove wine with ID ${wishlistItemID} from wishlist:`, error);
-      this.toastr.error('Failed to Remove from Wihslist', this.wineToDeleteDetails?.name)
+      if (typeof wineIDToDelete === 'number') {
+        this.wines = this.wines.filter(wine => wine.wineID !== wineIDToDelete);
+      }
+      
     }
+  } catch (error) {
+    console.error(`Failed to remove wishlist item with ID ${wishlistItemID}:`, error);
+    this.toastr.error('Failed to Remove from Wishlist');
   }
 }
 
 
-  async deleteWishlistItem() {
-    if (this.wishlistItemToDelete) {
-      try{
+async deleteWishlistItem() {
+  if (this.wishlistItemToDelete) {
+    try {
+      console.log("Before:", JSON.stringify(this.wishlistItems)); // Before logging
+      console.log("Before:", JSON.stringify(this.wines)); // Before logging
+
       await this.removeFromWishlist(this.wishlistItemToDelete.wishlistItemID);
-      const itemIndex = this.wishlistItems.findIndex(item => item.wishlistItemID === this.wishlistItemToDelete?.wishlistItemID);
-      const wineIndex = this.wines.findIndex(wine => wine.wineID === this.wishlistItemToDelete?.wineID);
-      if (itemIndex !== -1) this.wishlistItems.splice(itemIndex, 1); // Remove the item from the array
-      if (wineIndex !== -1) this.wines.splice(wineIndex, 1); // Remove the wine details from the array
-      console.log('deleted:', this.wishlistItemToDelete )
-      this.toastr.success('Successfully Removed from Wihslist', this.wineToDeleteDetails?.name)
-      }catch (error){
-        return;
-      }      
-      this.closeDeleteWineModal();
-      
+
+      console.log("After:", JSON.stringify(this.wishlistItems)); // After logging
+      console.log("After:", JSON.stringify(this.wines)); // After logging
+
+      this.toastr.success('Successfully Removed from Wishlist', this.wineToDeleteDetails?.name);
+
+      this.cd.detectChanges(); // force change detection
+      console.log('Change detection triggered.');
+      location.reload();
+    } catch (error) {
+      console.error("Delete operation failed", error);
+      this.toastr.error('Failed to Remove from Wishlist', this.wineToDeleteDetails?.name);
     }
+
+    this.closeDeleteWineModal();
   }
+}
+
+
+
 
   closeDeleteWineModal() {
     this.showDeleteWineModal = false;

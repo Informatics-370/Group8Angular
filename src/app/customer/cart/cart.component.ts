@@ -191,7 +191,7 @@ export class CartComponent implements OnInit {
             // Create and submit the payment form
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = 'https://www.payfast.co.za/eng/process';
+            form.action = 'https://sandbox.payfast.co.za/eng/process';
             form.target = '_self';
 
             for (const key in payfastRequest) {

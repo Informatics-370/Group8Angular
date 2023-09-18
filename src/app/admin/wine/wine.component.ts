@@ -100,33 +100,49 @@ export class WineComponent implements OnInit {
 
 
   invalidFileType: boolean = false;  // Add this new variable to track if uploaded file is of invalid type
+  public displayedImageURL: string | undefined;
+
   onFileSelected(wine: any) {
     if (wine.target.files && wine.target.files[0]) {
       const file = wine.target.files[0];
       const fileType = file["type"];
       const validImageTypes = ["image/jpeg", "image/png"];
-
+  
       if (!validImageTypes.includes(fileType)) {
         // Invalid file type
         this.invalidFileType = true;
         this.fileUploaded = false;
         return;
       }
-
+  
       this.invalidFileType = false;
       this.selectedFile = file;
       this.currentWine.filePath = this.selectedFile?.name ?? '';
+      
+      // Update displayedImageURL here with null check
+      if (this.selectedFile) {
+        this.displayedImageURL = this.getObjectURL(this.selectedFile);
+      }
     }
-
+  
     if (wine.target.files && wine.target.files.length > 0) {
       this.fileUploaded = true;
     } else {
       this.fileUploaded = false;
     }
+  
+    // Trigger manual change detection
+    this.changeDetector.detectChanges();
   }
+  
+  
 
 
   getObjectURL(file: File): string {
+    // Clean up any old blob URLs to prevent memory leak
+    if (this.displayedImageURL) {
+      URL.revokeObjectURL(this.displayedImageURL);
+    }
     return URL.createObjectURL(file);
   }
 
@@ -261,20 +277,34 @@ export class WineComponent implements OnInit {
 
   async deleteWine(): Promise<void> {
     try {
+      // Verify that wine details exist and that wineID is not undefined.
       if (this.wineToDeleteDetails && this.wineToDeleteDetails.wineID !== undefined) {
+        // Attempt to delete the wine.
         await this.wineService.deleteWine(this.wineToDeleteDetails.wineID);
+  
+        // Remove deleted wine from the local list.
         this.wines = this.wines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
+  
+        // Notify user of successful delete.
         this.toastr.success('Wine has been deleted successfully.', 'Successful');
+  
+        // Close the modal.
         this.closeDeleteWineModal();
       } else {
+        // Log the error and notify user.
         console.log("Wine to delete is null, undefined, or has an undefined WineID property.");
         this.toastr.warning('Unable to delete wine, please check the wine details.', 'Error');
       }
-    } catch (error) {
+    } catch (error: any) {  // Explicitly annotate type to 'any' or appropriate type.
       console.error(error);
-      this.toastr.error('An error occurred, please try again.', 'Error');
+      if (error.message === 'This wine is part of an existing order and cannot be deleted.') {
+        this.toastr.warning('This wine is part of an existing order and cannot be deleted.', 'Error');
+      } else {
+        this.toastr.error('An error occurred, please try again.', 'Error');
+      }
     }
   }
+  
 
 
 
