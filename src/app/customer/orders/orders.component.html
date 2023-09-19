@@ -3,6 +3,15 @@
 <div class="row align-items-center mb-3 header">
   <div class="col-md-6">
     <h2 class="title">My Orders</h2>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search Orders" [(ngModel)]="searchQuery"
+          (input)="filterOrders()">
+      </div>
+    </div>
+
+
   </div>
 </div>
 
@@ -11,54 +20,92 @@
 <div *ngIf="orders.length === 0" class="my-5 text-center">
   <p >You have not purchased any Wine Orders yet.</p>
 </div>
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div *ngFor="let order of orders; let i = index" class="my-3">
+      <div class="card shadow p-3 mb-5 bg-light rounded">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="card-title">Order # {{ i + 1 }} </h2>
+            <h3 class="text-muted">Reference code: {{order.orderRefNum | uppercase}}</h3>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <h4 class="custom-text-size">Order Date: {{ order.orderDate | date:'longDate' }}</h4>
+          </div>
+          <!-- Order Status Display -->
+          <div class="d-flex align-items-center mt-2">
+            <br />
+            <p class="card-text" [ngClass]="{
+              'status-processed': order.orderStatusId === 1, 
+              'status-shipped': order.orderStatusId === 2,
+              'status-ready-for-pickup': order.orderStatusId === 3, 
+              'status-collected': order.orderStatusId === 4
+            }">
+              <i *ngIf="order.orderStatusId === 1" class="fas fa-spinner"></i>
+              <i *ngIf="order.orderStatusId === 2" class="fas fa-truck"></i>
+              <i *ngIf="order.orderStatusId === 3" class="fas fa-store"></i>
+              <i *ngIf="order.orderStatusId === 4" class="fas fa-check-circle"></i>
 
-<div *ngFor="let order of orders; let i = index" class="my-3">
-  <div class="card shadow p-3 mb-5 bg-light rounded">
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 class="card-title">Order # {{ i + 1 }} </h2>
-        <h3 class="text-muted">Reference code: {{order.orderRefNum | uppercase}}</h3>
-      </div>
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <h4 class="custom-text-size">Order Date: {{ order.orderDate | date:'longDate' }}</h4>
-      </div>
-      <!-- Order Status Display -->
-      <div class="d-flex align-items-center mt-2">
-        <br />
-        <p class="card-text" [ngClass]="{
-          'status-processed': order.orderStatusId === 1, 
-          'status-shipped': order.orderStatusId === 2,
-          'status-ready-for-pickup': order.orderStatusId === 3, 
-          'status-collected': order.orderStatusId === 4
-         }">
-          <i *ngIf="order.orderStatusId === 1" class="fas fa-spinner"></i>
-          <i *ngIf="order.orderStatusId === 2" class="fas fa-truck"></i>
-          <i *ngIf="order.orderStatusId === 3" class="fas fa-store"></i>
-          <i *ngIf="order.orderStatusId === 4" class="fas fa-check-circle"></i>
+              {{ order.orderStatusId === 1 ? 'Processing Your Order' :
+              order.orderStatusId === 2 ? 'Shipment On The Way' :
+              order.orderStatusId === 3 ? 'Ready For Pickup' : 'Order Successfully Collected' }}
+            </p>
+          </div>
 
-          {{ order.orderStatusId === 1 ? 'Processing Your Order' :
-          order.orderStatusId === 2 ? 'Shipment On The Way' :
-          order.orderStatusId === 3 ? 'Ready For Pickup' : 'Order Successfully Collected' }}
-        </p>
-      </div>
+          <table>
+            <tr>
+              <td colspan="1">
+                <div class="mt-4">
+                  <h4 class="custom-text-size">Order Items:</h4>
+                </div>
+              </td>
+              <td class="text-right">
+                <div class="mt-4">
+                  <h4 class="custom-text-size">Qty</h4>
+                </div>
+              </td>
+            </tr>
+            <tr *ngFor="let item of order.orderItems">
+              <td>
+                <div class="mt-4">
+                  <h4 class="custom-text-size pl-3 text-muted">{{ getWineName(item.wineId) }}</h4>
+                </div>
+              </td>
+              <td class="text-right">
+                <div class="mt-4">
+                  <h4 class="custom-text-size text-muted">{{ item.quantity }}</h4>
+                </div>
+              </td>
+            </tr>
+            <br>
+            <tr>
+              <!-- <div class="d-flex justify-content-between align-items-center mt-3"> -->
+                <td colspan="1">                
+                  <div class="mt-4">
+                    <h4 class="custom-text-size">Order Total: </h4>
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="mt-4">
+                  <h4 class="custom-text-size">{{ order.orderTotal | currency:'R':'symbol':'1.2-2' }}</h4>
+                  </div>
+                </td>
+              <!-- </div> -->
+            </tr>            
+          </table>
 
-
-      <div class="mt-4">
-        <h4 class="custom-text-size text-muted">Order Items:</h4>
-        <div *ngFor="let item of order.orderItems">
-          <h4 class="custom-text-size pl-3">{{ getWineName(item.wineId) }} - Quantity: {{ item.quantity }}</h4>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <td *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatusId === 4">
+              <button class="btn btn-outline-danger" (click)="openRefundModal(order)">Request Refund</button>
+            </td>
+            <td *ngIf="!order.isRefunded && !checkRefundAvailability(order)">
+              <p class="text-warning">Refund unavailable</p>
+            </td>
+            <td *ngIf="order.isRefunded">
+              <p class="text-warning">Refund already placed for this order</p>
+            </td>
+          </div>
         </div>
-      </div>
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <div>
-          <h4 class="custom-text-size">Order Total: {{ order.orderTotal | currency:'R':'symbol':'1.2-2' }}</h4>
-        </div>
-        <button *ngIf="!order.isRefunded && checkRefundAvailability(order) && order.orderStatusId === 4"
-          class="btn btn-outline-danger" (click)="openRefundModal(order)">
-          Request Refund
-        </button>
-        <p *ngIf="!order.isRefunded && !checkRefundAvailability(order)" class="text-warning">Refund unavailable</p>
-        <p *ngIf="order.isRefunded" class="text-warning">Refund already placed for this order</p>
       </div>
     </div>
   </div>

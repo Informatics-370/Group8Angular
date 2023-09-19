@@ -51,36 +51,35 @@
 
                             <!-- Modal -->
                             <div class="modal fade" [id]="'descriptionModal' + wine.wineID" tabindex="-1"
-     aria-labelledby="descriptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content with-background">
-            <div class="modal-header">
-                <h1 class="modal-title" id="descriptionModalLabel">
-                    <span style="font-family: 'Garamond', serif; color: #B55933;"><b>{{ wine.name }} Description</b></span>
-                </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body ">
-                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Vintage:</b></span></h3>
-                <p>{{ wine.vintage }}</p>
+                                aria-labelledby="descriptionModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content with-background">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title" id="descriptionModalLabel">
+                                                <span style="font-family: 'Garamond', serif; color: #B55933;"><b>{{ wine.name }} Description</b></span>
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body ">
+                                            <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Vintage:</b></span></h3>
+                                            <p>{{ wine.vintage }}</p>
 
-                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Varietal:</b></span></h3>
-                <p>{{ wine.varietal.name }}</p>
-                <p><b>Description:</b></p>
-                <p>{{ wine.varietal.description }}</p>
+                                            <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Varietal:</b></span></h3>
+                                            <p>{{ wine.varietal.name }}</p>
+                                            <p><b>Description:</b></p>
+                                            <p>{{ wine.varietal.description }}</p>
 
-                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Wine Type:</b></span></h3>
-                <p>{{ wine.wineType.name }}</p>
-                <p><b>Description:</b></p>
-                <p>{{ wine.wineType.description }}</p>
+                                            <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Wine Type:</b></span></h3>
+                                            <p>{{ wine.wineType.name }}</p>
+                                            <p><b>Description:</b></p>
+                                            <p>{{ wine.wineType.description }}</p>
 
-                <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Tasting Note</b></span></h3>
-                <p>{{ wine.wineTastingNote }}</p>
-            </div>
-        </div>
-    </div>
-</div>
-
+                                            <h3><span style="font-family: 'Garamond', serif; color: #B55933;"><b>Tasting Note</b></span></h3>
+                                            <p>{{ wine.wineTastingNote }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

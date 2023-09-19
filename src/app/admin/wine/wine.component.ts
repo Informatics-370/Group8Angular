@@ -314,8 +314,8 @@ export class WineComponent implements OnInit {
       this.wines = this.allWines.filter(wine =>
         wine.name.toLowerCase().includes(query) ||
         wine.vintage.toString().includes(query) ||
-        wine.varietalID.toString().includes(query) ||
-        wine.wineTypeID.toString().includes(query) ||
+        this.getVarietalName(wine.varietalID).toLowerCase().includes(query) ||
+        this.getWinetypeName(wine.wineTypeID).toLowerCase().includes(query) ||
         wine.price.toString().includes(query)
       );
     } else {
