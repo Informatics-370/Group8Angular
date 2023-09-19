@@ -21,6 +21,8 @@ export class OrdersComponent implements OnInit {
   currentOrderId: number | null = null;
   currentWineId: number | null = null;
   phoneNumber: string = '';
+  searchQuery: string = '';
+  allOrders: Order[] = [];
 
   //Refunds
   showRefundModal: boolean = false;
@@ -47,10 +49,13 @@ export class OrdersComponent implements OnInit {
   }
 
   async loadOrders(email: string): Promise<void> {
+    console.log( "Hello" + this.allOrders);
     try {
-      this.orders =
+      this.allOrders =
         (await this.orderService.getOrdersForUser(email).toPromise()) || [];
+        this.filterOrders();
       console.log(this.orders);
+      
     } catch (error) {
       console.error('Error:', error);
       // this.toastr.error('Could not load order history.', 'Error');
@@ -173,6 +178,21 @@ async sendRefundRequest(refundItems: RefundItem[]): Promise<void> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  filterOrders(): void {
+    if (this.searchQuery.trim() !== '') {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.orders = this.allOrders.filter(order =>
+        order.orderDate.toString().toLowerCase().includes(query) ||
+        order.orderRefNum.toLowerCase().includes(query) ||
+        this.getWineName(order.wineOrderId).toLowerCase().includes(query) ||
+        //order.orderItems.quantity.toString().toLowerCase().includes(query) ||
+        order.orderTotal.toString().includes(query)
+      );
+    } else {
+      this.orders = [...this.allOrders];
     }
   }
 }
