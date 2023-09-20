@@ -23,6 +23,7 @@ export class OrdersComponent implements OnInit {
   phoneNumber: string = '';
   searchQuery: string = '';
   allOrders: Order[] = [];
+  selectedTimeFrame: string = 'all';
 
   //Refunds
   showRefundModal: boolean = false;
@@ -46,6 +47,7 @@ export class OrdersComponent implements OnInit {
     console.log('Phone Number:', this.phoneNumber);
     await this.loadOrders(email);
     await this.loadWines();
+    this.filterOrdersByTimeFrame();
   }
 
   async loadOrders(email: string): Promise<void> {
@@ -185,14 +187,59 @@ async sendRefundRequest(refundItems: RefundItem[]): Promise<void> {
     if (this.searchQuery.trim() !== '') {
       const query = this.searchQuery.toLowerCase().trim();
       this.orders = this.allOrders.filter(order =>
-        order.orderDate.toString().toLowerCase().includes(query) ||
         order.orderRefNum.toLowerCase().includes(query) ||
         this.getWineName(order.wineOrderId).toLowerCase().includes(query) ||
-        //order.orderItems.quantity.toString().toLowerCase().includes(query) ||
-        order.orderTotal.toString().includes(query)
+        order.orderTotal.toString().toLowerCase().includes(query)
       );
     } else {
       this.orders = [...this.allOrders];
     }
   }
+
+  generateYearOptions(): number[] {
+    const currentYear = new Date().getFullYear();
+    const years: number[] = [];
+  
+    for (let i = 0; i < 4; i++) {
+      years.push(currentYear - i);
+    }
+  
+    return years;
+  }
+
+  filterOrdersByTimeFrame(): void {
+    const currentYear = new Date().getFullYear();
+    
+    if (this.selectedTimeFrame === 'all') {
+      // Show all orders
+      this.orders = [...this.allOrders];
+    } else if (this.selectedTimeFrame === '3') {
+      // Filter for the past 3 months
+      const filterDate = new Date();
+      filterDate.setMonth(filterDate.getMonth() - 3);
+      this.filterOrdersByDateRange(filterDate, new Date());
+    } else if (this.selectedTimeFrame === '6') {
+      // Filter for the past 6 months
+      const filterDate = new Date();
+      filterDate.setMonth(filterDate.getMonth() - 6);
+      this.filterOrdersByDateRange(filterDate, new Date());
+    } else {
+      // Filter for a specific year
+      const selectedYear = parseInt(this.selectedTimeFrame, 10);
+      const filterDate = new Date(selectedYear, 0, 1); // Set to the first day of the selected year
+      const endOfYear = new Date(selectedYear + 1, 0, 1);
+      this.filterOrdersByDateRange(filterDate, endOfYear);
+    }
+  }
+  
+  filterOrdersByDateRange(startDate: Date, endDate: Date): void {
+    // Filter orders based on the selected time frame
+    this.orders = this.allOrders.filter(order => {
+      const orderDate = new Date(order.orderDate);
+      return (
+        orderDate >= startDate && orderDate < endDate
+      );
+    });
+  }
+  
 }

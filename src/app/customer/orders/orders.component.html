@@ -11,6 +11,20 @@
       </div>
     </div>
 
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <select class="form-control" [(ngModel)]="selectedTimeFrame" (change)="filterOrdersByTimeFrame()">
+          <option value="all">All Orders</option>
+          <option value="3">Past 3 Months</option>
+          <option value="6">Past 6 Months</option>
+          <!-- Dynamically generate options for the current year plus past 3 years -->
+          <ng-container *ngFor="let year of generateYearOptions()">
+            <option [value]="year">{{ year }}</option>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
 
   </div>
 </div>
