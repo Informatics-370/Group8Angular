@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/app/environment'; // update with your path to environment file
 import { Cart } from 'src/app/Model/Cart';
 import { Wine } from 'src/app/Model/wine';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,14 @@ export class CartService {
   private apiUrl = `${environment.baseApiUrl}api/cart`;  // Append your endpoint to base URL
 
   constructor(private http: HttpClient) { }  // Inject HttpClient
+
+  public cartCountSubject = new BehaviorSubject<number>(0);
+  public cartCount$ = this.cartCountSubject.asObservable();
+
+  setCartCount(count: number): void {
+    this.cartCountSubject.next(count);
+  }
+
   private setHeaders() {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -71,6 +80,10 @@ applyDiscount(email: string, newTotal: number): Observable<any> {
 clearCart(email: string): Observable<any> {
   this.setHeaders();
   return this.http.delete<any>(`${this.apiUrl}/${email}/clear`, { headers: this.headers });
+}
+
+resetCartCounter(): void {
+  this.setCartCount(0);
 }
 
 }

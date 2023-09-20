@@ -28,4 +28,19 @@
     right: 15px;
     z-index: 1000;
   }
+
+  .row {
+    display: flex;
+    min-height: 100vh; /* or whatever minimum height you prefer */
+    flex-direction: row;
+  }
+
+  .col-9.col-md-10 {
+    flex: 3;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  .col-3.col-md-2 {
+    height: 100vh;
+  }
   

@@ -57,6 +57,18 @@ export class EventComponent {
 
   }
 
+  invalidLeadingZero: boolean = false;
+
+  sanitizeInput(value: number): void {
+    const strValue = value.toString();
+    if (strValue.startsWith('0')) {
+      // Remove leading zeros and set invalid flag
+      this.invalidLeadingZero = true;
+    } else {
+      this.invalidLeadingZero = false;
+    }
+  }
+
   formatDateTime(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -206,8 +218,10 @@ this.fileUploaded = true;
 
         if (this.selectedFile) {
           formData.append('File', this.selectedFile, this.selectedFile.name);
+          console.log('File appended');
+        } else {
+          console.log('No File selected');
         }
-
 
         // Log formData entries for debugging
         console.log("Logging formData Entries:");
@@ -266,35 +280,36 @@ this.fileUploaded = true;
   invalidFileType: boolean = false;
 
   onFileSelected(event: any) {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      const fileType = file["type"];
-      const validImageTypes = ["image/jpeg", "image/png"];
-
-      // Check if the file is a valid image type
-      if (!validImageTypes.includes(fileType)) {
-        this.invalidFileType = true;
-        this.fileUploaded = false;
-        return;
-      }
-
-      // File type is valid, proceed
-      this.invalidFileType = false;
-      this.selectedFile = file;
-      this.currentEvent.filePath = this.selectedFile?.name ?? '';
-
-  if (this.displayedEventImageURL) {
-    URL.revokeObjectURL(this.displayedEventImageURL);
-  }
-  this.displayedEventImageURL = URL.createObjectURL(file);
-    }
-
-    if (event.target.files && event.target.files.length > 0) {
-      this.fileUploaded = true;
-    } else {
+    // Check if any file is selected
+    const file = event.target.files && event.target.files[0];
+    if (!file) {
       this.fileUploaded = false;
+      return;
     }
+  
+    // Check if the selected file is of a valid image type
+    const fileType = file.type;
+    const validImageTypes = ["image/jpeg", "image/png"];
+    if (!validImageTypes.includes(fileType)) {
+      this.invalidFileType = true;
+      this.fileUploaded = false;
+      return;
+    }
+  
+    // If it's a valid image type, proceed with setting the necessary variables
+    this.invalidFileType = false;
+    this.selectedFile = file;
+    this.currentEvent.filePath = file.name;
+  
+    // Create and revoke object URLs to prevent memory leak
+    if (this.displayedEventImageURL) {
+      URL.revokeObjectURL(this.displayedEventImageURL);
+    }
+  
+    this.displayedEventImageURL = URL.createObjectURL(file);
+    this.fileUploaded = true; // Mark file as successfully uploaded
   }
+  
 
 
   async deleteEvent(): Promise<void> {

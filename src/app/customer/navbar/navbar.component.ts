@@ -10,6 +10,8 @@ import { ForgotPasswordViewModel } from 'src/app/Model/forgotPasswordViewModel';
 import { ScrollServiceService } from '../services/scroll-service.service';
 import { NgForm } from '@angular/forms';
 import { AppComponent } from 'src/app/app.component';
+import { Subscription } from 'rxjs';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +21,7 @@ import { AppComponent } from 'src/app/app.component';
 export class NavbarComponent {
 
   appComponent = new AppComponent(this.router, this.dataService, this.toastr);
+
 
   @ViewChild('Registerform') registerForm!: NgForm;
   userName = '';
@@ -124,12 +127,24 @@ if(idYear < year){
 return false;
 } 
 
-  constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router, private scrollService: ScrollServiceService){ }
+  constructor(public dataService: DataServiceService, private toastr: ToastrService, private router: Router, private scrollService: ScrollServiceService, private cartService: CartService){ }
 
   ngOnInit() {
     this.dataService.getUserFromToken();
     console.log(this.dataService.getUserFromToken());
     console.log(this.isAdmin());
+
+  // Set initial value
+  this.cartCount = this.cartService.cartCountSubject.getValue();
+
+  // Update value when it changes
+  this.cartCountSubscription = this.cartService.cartCount$.subscribe(count => {
+    this.cartCount = count;
+  });
+  }
+
+  ngOnDestroy(): void {
+    this.cartCountSubscription.unsubscribe();
   }
 
   isPasswordInvalid(): boolean {
@@ -425,4 +440,10 @@ sendPasswordResetLink() {
   scrollToContact() {
     this.scrollService.changeTarget('contact');
   }
+
+  //Cart count for cart icon
+  cartCount: number = 0;
+  cartCountSubscription!: Subscription;
+
+
 }

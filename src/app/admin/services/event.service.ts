@@ -40,8 +40,9 @@ export class EventService {
   }
 
   async addEvent(event: FormData): Promise<Event> {
-    this.setHeaders()
-    return firstValueFrom(this.http.post<Event>(this.apiUrl, event, { headers: this.headers}));
+    this.setHeaders(); // Make sure this doesn't set 'Content-Type'
+    const headers = this.headers?.delete('Content-Type'); // Remove Content-Type
+    return firstValueFrom(this.http.post<Event>(this.apiUrl, event, { headers }));
   }
 
   async updateEvent(id: number, event: FormData): Promise<any> {

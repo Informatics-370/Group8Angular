@@ -16,6 +16,7 @@ import { OrderService } from '../services/order.service';
 import { Order } from 'src/app/Model/order';
 import { switchMap } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -217,6 +218,8 @@ export class CartComponent implements OnInit {
                     this.toastr.info('Order created', 'Success');
                     this.cartTotal = 0; // Reset the cart total
                     this.loadCart(winePurchase.userEmail);
+                    // Reset the cart counter
+                    this.cartService.resetCartCounter();
                 },
                 error => {
                     console.error('Error:', error);

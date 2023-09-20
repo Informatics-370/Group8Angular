@@ -4,6 +4,8 @@ import { ChartsService } from '../services/charts.service';
 import { BarController, BarElement  } from 'chart.js';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 
 interface GenderDistribution {
@@ -312,6 +314,20 @@ loadSalesReport() {
     console.error('Start date and end date must be defined.');
   }
 }
+
+// Function to generate PDF
+generatePDF() {
+  const data = document.getElementById('pdfContent'); // div containing both the canvas and table
+  html2canvas(data!).then((canvas: HTMLCanvasElement) => {
+    const imgWidth = 208; // image width in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const contentDataURL = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+    pdf.save('sales-report.pdf');
+  });
+}
+
 }
 
 
