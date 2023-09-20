@@ -50,12 +50,14 @@ export class ClientProductsComponent implements OnInit {
   incrementCounter(wineId: number): void {
     let quantity = this.quantityMap.get(wineId) || 1;
     this.quantityMap.set(wineId, ++quantity);
+    this.updateGlobalCartCounter();
   }
 
   decrementCounter(wineId: number): void {
     let quantity = this.quantityMap.get(wineId);
     if (quantity && quantity > 0) {
       this.quantityMap.set(wineId, --quantity);
+      this.updateGlobalCartCounter();
     }
   }
 
@@ -204,6 +206,7 @@ export class ClientProductsComponent implements OnInit {
       () => {
         console.log('Wine added to cart!');
         this.toastr.success('Successfully added to Cart', 'Wine');
+        this.updateGlobalCartCounter();
       },
       error => {
         console.log('Failed to add wine to cart');
@@ -214,6 +217,15 @@ export class ClientProductsComponent implements OnInit {
 
   truncateText(text: string, maxLength: number): string {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+  }
+
+  //Cart counter for cart icon
+  updateGlobalCartCounter(): void {
+    let totalCount = 0;
+    this.quantityMap.forEach((quantity) => {
+      totalCount += quantity;
+    });
+    this.cartService.setCartCount(totalCount);
   }
 
 }

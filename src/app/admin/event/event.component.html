@@ -157,13 +157,15 @@
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
               title="Please enter the ticket price for the Event "></i>
             <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.price" name="eventPrice"
-              required #eventPriceField="ngModel" min="1">
-            <div *ngIf="eventPriceField.invalid && eventPriceField.touched" class="alert alert-danger">
+              required #eventPriceField="ngModel" min="1" (input)="sanitizeInput(currentEvent.price)">
+            <div *ngIf="eventPriceField.invalid && eventPriceField.touched || invalidLeadingZero" class="alert alert-danger">
               <div *ngIf="eventPriceField.errors?.['required']">Event price is required.</div>
               <div *ngIf="eventPriceField.errors?.['min'] && !eventPriceField.errors?.['required']">Event price must be
                 greater than 0.</div>
+              <div *ngIf="invalidLeadingZero">Event price should not start with 0.</div>
             </div>
           </div>
+          
 
           <div class="mb-3">
             <label for="ticketsAvailable" class="form-label">Tickets Available</label>

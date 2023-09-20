@@ -1,5 +1,6 @@
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 
+
 .sidebar {
   overflow-y: auto;
   min-height: 100vh;
@@ -7,6 +8,7 @@
   flex-direction: column;
   background-color: rgb(3, 3, 172);
   color: white;
+  flex: 1;
 }
 
 .sidebar .nav-link {
