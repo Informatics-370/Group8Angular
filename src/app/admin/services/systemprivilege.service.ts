@@ -56,4 +56,19 @@ export class SystemprivilegeService {
   DeleteSystemPrivilege(id: string): Observable<any> {
     return this.httpClient.delete(`${this.apiUrl}/DeleteSystemPrivilege/${id}`, {headers: this.headers});
 }
+
+  GetDistinctMethodPrivileges():Observable<any>{
+    this.setHeaders();
+    return this.httpClient.get(`${this.apiUrl}/MethodMapping`, { headers: this.headers })
+  }
+
+  GetMethodPrivilegeIDs(): Observable<any> {
+    this.setHeaders();
+    return this.httpClient.get(`${this.apiUrl}/MethodPrivilegeMapping`, { headers: this.headers });
+  }
+
+  GetPrivilegeIdByName(privilegeName: string): Observable<any> {
+    this.setHeaders();
+    return this.httpClient.get(`${this.apiUrl}/GetIdByName/${privilegeName}`, { headers: this.headers})
+  }
 }
