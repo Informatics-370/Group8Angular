@@ -10,8 +10,22 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class CartService {
-  headers: HttpHeaders | undefined;
+  private headers: HttpHeaders | undefined;
+  private setHeaders() {
+    this.headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+    });
 
+    // Retrieve the token from localStorage
+    let token = localStorage.getItem('Token');
+    if (token) {  
+      token = JSON.parse(token);
+        this.headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+    }
+  }
   private apiUrl = `${environment.baseApiUrl}api/cart`;  // Append your endpoint to base URL
 
   constructor(private http: HttpClient) { }  // Inject HttpClient
@@ -21,22 +35,6 @@ export class CartService {
 
   setCartCount(count: number): void {
     this.cartCountSubject.next(count);
-  }
-
-  private setHeaders() {
-    this.headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    // Retrieve the token from localStorage
-    let token = localStorage.getItem('Token');
-    if (token) {
-      token = JSON.parse(token);
-      this.headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      });
-    }
   }
 
   getCart(email: string): Observable<Cart> {
@@ -57,12 +55,12 @@ export class CartService {
 
   incrementCartItemQuantity(email: string, cartItemId: number): Observable<any> {
     this.setHeaders();
-    return this.http.put<any>(`${this.apiUrl}/${email}/increment/${cartItemId}`, { headers: this.headers });
+    return this.http.put<any>(`${this.apiUrl}/${email}/increment/${cartItemId}`,{} ,{ headers: this.headers });
 }
 
 decrementCartItemQuantity(email: string, cartItemId: number): Observable<any> {
   this.setHeaders();
-    return this.http.put<any>(`${this.apiUrl}/${email}/decrement/${cartItemId}`, { headers: this.headers });
+  return this.http.put(`${this.apiUrl}/${email}/decrement/${cartItemId}`, {}, { headers: this.headers });
 }
 
 

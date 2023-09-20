@@ -8,6 +8,7 @@ import { Customer } from 'src/app/Model/customer';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { MethodPrivilegeMapping } from 'src/app/Model/methodPrivilegeMapping';
 
 @Component({
   selector: 'app-systemprivileges',
@@ -36,6 +37,8 @@ export class SystemprivilegesComponent {
     this.getSystemPrivileges();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    this.loadMethodData();
+    this.getSystemPrivilegeByMethod();
   }
 
   getSystemPrivileges(){
@@ -59,16 +62,57 @@ export class SystemprivilegesComponent {
   }
 
   openEditSystemPrivilegeModal(id: string) {
-    console.log('Opening edit early bird modal for ID:', id);
+    console.log('Opening edit modal for ID:', id);
     this.editingSystemPrivilege = true;
+
     // Find the original SystemPrivilege object
     const originalSystemPrivilege = this.systemPrivileges.find(systemPrivilege => systemPrivilege.id === id);
+    
     if (originalSystemPrivilege) {
-      // Clone the original SystemPrivilege object and assign it to currentSystemPrivilege
-      this.currentSystemPrivilege = {...originalSystemPrivilege};
+        // Filter methods based on the provided ID
+        let assignedMethods = [];
+        
+        for (let method in this.methodsWithPrivileges) {
+            if (this.methodsWithPrivileges[method].includes(id)) {
+                // Find the correct controller for the method
+                const matchingController = this.allMethodMappings.find(mapping => mapping.methodNames.includes(method));
+                if (matchingController) {
+                    assignedMethods.push({
+                        controllerName: matchingController.controllerName, // Retrieve the controller name from allMethodMappings
+                        methodNames: [method]
+                    });
+                }
+            }
+        }
+
+        // Deep clone the original SystemPrivilege object and assign it to currentSystemPrivilege
+        this.currentSystemPrivilege = {
+            ...originalSystemPrivilege,
+            controllerMethods: assignedMethods
+        };
+        console.log("CurrentSystemPrivilege:", this.currentSystemPrivilege);
     }
+
     this.showSystemPrivilegeModal = true;
 }
+
+
+
+
+
+
+
+//   openEditSystemPrivilegeModal(id: string) {
+//     console.log('Opening edit early bird modal for ID:', id);
+//     this.editingSystemPrivilege = true;
+//     // Find the original SystemPrivilege object
+//     const originalSystemPrivilege = this.systemPrivileges.find(systemPrivilege => systemPrivilege.id === id);
+//     if (originalSystemPrivilege) {
+//       // Clone the original SystemPrivilege object and assign it to currentSystemPrivilege
+//       this.currentSystemPrivilege = {...originalSystemPrivilege};
+//     }
+//     this.showSystemPrivilegeModal = true;
+// }
 
   closeSystemPrivilegeModal() {
     this.showSystemPrivilegeModal = false;
@@ -90,39 +134,85 @@ export class SystemprivilegesComponent {
     this.showDeleteSystemPrivilegeModal = false;
   }
 
-  async submitSystemPrivilegeForm(form: NgForm): Promise<void> {
-    console.log('Submitting form with editingSystemPrivilege flag:', this.editingSystemPrivilege);
-    console.log(this.currentSystemPrivilege);
-    if (form.valid) {
-      try {
-        if (this.editingSystemPrivilege) {
-          this.privilegeService.UpdateSystemPrivilege(this.currentSystemPrivilege.id!, this.currentSystemPrivilege).subscribe((result: any) => {
-          });
-          const index = this.systemPrivileges.findIndex(systemPrivilege => systemPrivilege.id === this.currentSystemPrivilege.id);
-          if (index !== -1) {
-            // Update the original SystemPrivilege object with the changes made to the clone
-            this.systemPrivileges[index] = this.currentSystemPrivilege;
-            this.toastr.success("System privilege has been updated successfully", "System privilege update");
-          }
-        } else {
-          this.privilegeService.AddSystemPrivilege(this.currentSystemPrivilege).subscribe(data => {
-            this.filteredSystemPrivileges.push(data);
-            // this.systemPrivileges.push(data);
-            this.toastr.success("A new system privilege has been added to the system", "System Privilege added");
-            this.closeSystemPrivilegeModal();
-            form.resetForm();
-          }, error => {
-            console.error(error);
-            this.toastr.error("Adding a new system privilege failed, please try again later.", "System privilege add failed");
-          });
+  handleMethodSelectionChange(event: any, controllerName: string, methodName: string) {
+    const isChecked = event.target.checked;
+    
+    // Check if controller already exists in currentSystemPrivilege.controllerMethods
+    let controllerMethod = this.currentSystemPrivilege.controllerMethods.find(
+      cm => cm.controllerName === controllerName
+    );
+  
+    // If controller does not exist and method is checked, create a new one
+    if (!controllerMethod && isChecked) {
+      controllerMethod = {
+        controllerName: controllerName,
+        methodNames: [methodName]
+      };
+      this.currentSystemPrivilege.controllerMethods.push(controllerMethod);
+    } else if (controllerMethod) {
+      if (isChecked && !controllerMethod.methodNames.includes(methodName)) {
+        // If the method was checked and doesn't exist, add it
+        controllerMethod.methodNames.push(methodName);
+      } else if (!isChecked && controllerMethod.methodNames.includes(methodName)) {
+        // If the method was unchecked and exists, remove it
+        const index = controllerMethod.methodNames.indexOf(methodName);
+        controllerMethod.methodNames.splice(index, 1);
+  
+        // If no methods left for this controller, remove the controllerMethod object
+        if (controllerMethod.methodNames.length === 0) {
+          const controllerIndex = this.currentSystemPrivilege.controllerMethods.indexOf(controllerMethod);
+          this.currentSystemPrivilege.controllerMethods.splice(controllerIndex, 1);
         }
-      } catch (error) {
-        console.error(error);
-        this.toastr.error("Adding or updating a system privilege failed, please try again later.", "System privilege action failed");
       }
     }
-    this.closeSystemPrivilegeModal();
+  }
+  
+
+
+
+async submitSystemPrivilegeForm(form: NgForm): Promise<void> {  
+if (form.valid) {
+      try {
+          if (this.editingSystemPrivilege) {
+              this.privilegeService.UpdateSystemPrivilege(this.currentSystemPrivilege.id!, this.currentSystemPrivilege).subscribe((result: any) => {
+                this.getSystemPrivilegeByMethod();
+                this.loadMethodData();
+              });
+              const index = this.systemPrivileges.findIndex(systemPrivilege => systemPrivilege.id === this.currentSystemPrivilege.id);
+              if (index !== -1) {
+                  // Update the original SystemPrivilege object with the changes made to the clone
+                  this.systemPrivileges[index] = this.currentSystemPrivilege;
+
+                  this.getSystemPrivilegeByMethod();
+                  this.loadMethodData();
+                  this.toastr.success("System privilege has been updated successfully", "System privilege update");
+                  this.closeSystemPrivilegeModal();
+              }
+          } else {
+              this.privilegeService.AddSystemPrivilege(this.currentSystemPrivilege).subscribe(data => {
+                  this.filteredSystemPrivileges.push(data);
+
+                  this.closeSystemPrivilegeModal();
+                  this.getSystemPrivilegeByMethod();
+                  this.loadMethodData();
+
+                  this.toastr.success("A new system privilege has been added to the system", "System Privilege added");
+                  this.closeSystemPrivilegeModal();
+                  form.resetForm();
+              }, error => {
+                  console.error(error);
+                  this.toastr.error("Adding a new system privilege failed, please try again later.", "System privilege add failed");
+              });
+          }
+      } catch (error) {
+          console.error(error);
+          this.toastr.error("Adding or updating a system privilege failed, please try again later.", "System privilege action failed");
+      }
+  }
+  this.closeSystemPrivilegeModal();
 }
+
+
 
 
 async deleteSystemPrivilege(): Promise<void> {
@@ -163,6 +253,54 @@ searchSystemPrivileges() {
     (sup.name && sup.name.toLowerCase().includes(lowercasedTerm)));
 }
 
+
+//////////// METHOD MAPPING
+
+allMethodMappings: MethodPrivilegeMapping[] = [];
+selectedMethods: { [key: string]: boolean } = {};
+// This would contain a mapping from method names to their associated systemPrivilegeIds
+methodsWithPrivileges: { [methodName: string]: string[] } = {};
+currentMethod: any;
+userRoles: string[] = [];
+
+loadMethodData() {
+  this.privilegeService.GetDistinctMethodPrivileges().subscribe((result: any) => {
+    this.allMethodMappings = result;
+    console.log("MethodNames:", this.allMethodMappings); 
+  });
+}
+
+getSystemPrivilegeByMethod() {
+  this.privilegeService.GetMethodPrivilegeIDs().subscribe((result: any) => {
+    console.log(result);
+    result.forEach((item:any) => {
+      //console.log("Item:", item);
+      if(!this.methodsWithPrivileges[item.methodName]) {
+          this.methodsWithPrivileges[item.methodName] = [];
+      }
+      this.methodsWithPrivileges[item.methodName].push(item.privilegeID);
+    });
+  })
+}
+
+
+
+isMethodAssignedToSystemPrivilege(controllerName: string, methodName: string): boolean {
+  // Filter all controller objects in currentSystemPrivilege with the given controllerName
+  const matchingControllers = this.currentSystemPrivilege.controllerMethods.filter(m => m.controllerName === controllerName);
+
+  // If any of the matching controllers have the method name in its methodNames array, return true
+  for (const controller of matchingControllers) {
+    if (controller.methodNames.includes(methodName)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
+
 AuditTrail: AuditTrail[] = [];
 currentAudit: AuditTrail = new AuditTrail();
 user: Customer | undefined;
@@ -185,6 +323,8 @@ loadUserData() {
     );
   }
 }
+
+
 
 async AddAuditLog(button: string): Promise<void> {
   this.loadUserData();

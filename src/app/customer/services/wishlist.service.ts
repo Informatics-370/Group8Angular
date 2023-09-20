@@ -36,10 +36,12 @@ export class WishlistService {
   }
 
   addToWishlist(email: string, wishlistItem: WishlistItem): Observable<Wishlist> {
-    return this.http.post<Wishlist>(`${this.apiUrl}/${email}`, wishlistItem);
+    this.setHeaders();
+    return this.http.post<Wishlist>(`${this.apiUrl}/${email}`, wishlistItem, { headers: this.headers });
   }
 
   removeFromWishlist(email: string, wishlistItemId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${email}/${wishlistItemId}`);
+    this.setHeaders();
+    return this.http.delete<void>(`${this.apiUrl}/${email}/${wishlistItemId}`, { headers: this.headers });
   }
 }
