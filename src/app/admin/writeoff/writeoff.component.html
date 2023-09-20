@@ -67,7 +67,11 @@
         <form #writeORForm="ngForm" (ngSubmit)="submitWORForm(writeORForm); onSubmitClick()">        
 
           <div class="mb-3">
-            <label for="WriteOffReason" class="form-label">Write Off Reason Description</label>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="WriteOffReason" class="form-label">Write Off Reason Description <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Write Off Reason Description"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <input type="text" class="form-control" id="WriteOffReason" [(ngModel)]="currentWOR.description"
               name="writeOffReason" required #reasonField="ngModel">
           </div>   

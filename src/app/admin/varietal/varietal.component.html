@@ -66,9 +66,11 @@
         <form #varietalForm="ngForm" (ngSubmit)="submitVarietalForm(varietalForm); onSubmitClick()">
 
           <div class="mb-3">
-            <label for="varietalName" class="form-label">Varietal Name</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Varietal Name"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="varietalName" class="form-label">Varietal Name <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Wine Varietal Name"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
               name="varietalName" required #nameField="ngModel">
             <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
@@ -77,9 +79,11 @@
           </div>
 
           <div class="mb-3">
-            <label for="varietalDescription" class="form-label">Varietal Description</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Varietal Description"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+                <label for="varietalDescription" class="form-label">Varietal Description <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Wine Varietal Description"></i></label>            
+                <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <textarea type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
               name="varietalDescription" required #descField="ngModel"></textarea>
             <div *ngIf="descField.invalid && descField.touched" class="alert alert-danger">
@@ -89,9 +93,11 @@
 
           
           <div class="mb-3">
-            <label for="wineType" class="form-label">Wine Type</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please select the appropriate the Wine Type"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+                <label for="wineType" class="form-label">Wine Type <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                  title="Please select the appropriate the Wine Type"></i></label>                
+                <span style="color: #ff6666; font-size: smaller;">* Required</span> 
+            </div>
             <select class="form-control" id="wineType" [(ngModel)]="currentVarietal.wineTypeID" name="wineType" required
               #wineTypeField="ngModel">
               <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a wine type----</option>

@@ -2,6 +2,12 @@
 <br>
 <div class="container">
   <h2>Complete System Audit Log</h2>
+  <!-- <div class="row mb-3">
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Search Early" [(ngModel)]="searchQuery"
+        (input)="filterAuditTrails()">
+    </div>
+  </div> -->
 
   <!-- Add a single search input field -->
   <div class="row">
@@ -49,3 +55,13 @@
     <h3>Nothing in System Audit Log.</h3>
   </div>
 </div>
+
+<!-- <div class="pagination">
+  <button class="btn btn-light" (click)="previousPage()">
+    &laquo; Previous
+  </button>
+  <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn btn-light" (click)="nextPage()">
+    Next &raquo;
+  </button>
+</div> -->

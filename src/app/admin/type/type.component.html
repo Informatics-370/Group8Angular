@@ -62,9 +62,10 @@
         <form #winetypeForm="ngForm" (ngSubmit)="submitWinetypeForm(winetypeForm); onSubmitClick()">
 
           <div class="mb-3">
-            <label for="winetypeName" class="form-label">Wine type Name</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Type Name"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="winetypeName" class="form-label">Wine type Name <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Type Name"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <input type="text" class="form-control" id="winetypeName" [(ngModel)]="currentWinetype.name"
               name="winetypeName" required #winetypeNameField="ngModel">
             <div *ngIf="winetypeNameField.invalid && winetypeNameField.touched" class="alert alert-danger">
@@ -73,9 +74,10 @@
           </div>
 
           <div class="mb-3">
-            <label for="winetypeDescription" class="form-label">Wine type Description</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Wine Type Description"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="winetypeDescription" class="form-label">Wine type Description <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Type Description"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <textarea type="text" class="form-control" id="winetypeDescription"
               [(ngModel)]="currentWinetype.description" name="winetypeDescription" required #winetypeDescriptionField="ngModel"></textarea>
             <div *ngIf="winetypeDescriptionField.invalid && winetypeDescriptionField.touched" class="alert alert-danger">

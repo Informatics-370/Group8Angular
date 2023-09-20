@@ -66,9 +66,11 @@
         <form #earlyBirdForm="ngForm" (ngSubmit)="submitEarlyBirdForm(earlyBirdForm); onSubmitClick()">
 
           <div class="mb-3">
-            <label for="percentage" class="form-label">Percentage</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the Early bird discount percentage"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="percentage" class="form-label">Percentage <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Early bird discount percentage"></i></label>
+                <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <input type="number" class="form-control" id="percentage" [(ngModel)]="currentEarlyBird.percentage"
               name="percentage" percentage required min="1" max="100" #percentage="ngModel">
             <div *ngIf="percentage.invalid && percentage.touched" class="alert alert-danger">
@@ -82,9 +84,11 @@
           </div>
 
           <div class="mb-3">
-            <label for="limit" class="form-label">Limit</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-                title="Please enter the amount of people who can use the early bird"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="limit" class="form-label">Limit <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+              title="Please enter the amount of people who can use the early bird"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <input type="number" class="form-control" id="limit" [(ngModel)]="currentEarlyBird.limit" name="limit"
               limit required min="1" max="998" #limit="ngModel">
             <div *ngIf="limit.invalid && limit.touched" class="alert alert-danger">
