@@ -33,16 +33,22 @@
       <div class="modal-body">
         <form #faqForm="ngForm" (ngSubmit)="submitFAQForm(faqForm); onSubmitClick()">
           <div class="mb-3">
-            <label for="question" class="form-label">FAQ Question</label>
-            <input type="text" class="form-control" id="question" [(ngModel)]="currentFAQ.question" name="question" required #questionField="ngModel">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="question" class="form-label">FAQ Question <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the FAQ Question"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
+            <input type="text" class="form-control" id="question" [(ngModel)]="currentFAQ.question" name="question" required #questionField="ngModel" placeholder="Enter Question">
             <div *ngIf="questionField.invalid && questionField.touched" class="alert alert-danger">
               <div *ngIf="questionField.errors?.['required']">Question is required.</div>
             </div>
           </div>
           
           <div class="mb-3">
-            <label for="answer" class="form-label">FAQ Answer</label>
-            <input type="text" class="form-control" id="answer" [(ngModel)]="currentFAQ.answer" name="answer" required #answerField="ngModel">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="answer" class="form-label">FAQ Answer <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the FAQ Answer"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
+            <input type="text" class="form-control" id="answer" [(ngModel)]="currentFAQ.answer" name="answer" required #answerField="ngModel" placeholder="Enter Answer">            
             <div *ngIf="answerField.invalid && answerField.touched" class="alert alert-danger">
               <div *ngIf="answerField.errors?.['required']">Answer is required.</div>
             </div>

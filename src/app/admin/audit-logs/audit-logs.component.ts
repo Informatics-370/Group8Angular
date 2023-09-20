@@ -19,6 +19,11 @@ export class AuditLogsComponent {
   currentAudit: AuditTrail = new AuditTrail();
   user: Customer | undefined;
   userDetails: any;
+  currentPage: number = 1; // Current page
+  pageSize: number = 10; // Items per page
+  filteredAuditTrails: AuditTrail[] = [];
+  searchQuery: string = '';
+  searchInput: string = '';
 
   constructor(
     private auditLogService: AuditlogService,
@@ -31,6 +36,7 @@ export class AuditLogsComponent {
     this.loadAuditLog();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    this.filteredAuditTrails = [...this.AuditTrail];
   }
 
   loadUserData() {
@@ -78,7 +84,7 @@ export class AuditLogsComponent {
   }
 
 
-  searchInput: string = '';
+  
 
 
   async search(): Promise<void> {
@@ -108,4 +114,45 @@ export class AuditLogsComponent {
       this.toastr.error('Error, failed to connect to the database', 'AuditLog Table');
     }
   }
+
+  // filterAuditTrails() {
+  //   if (this.searchQuery.trim() === '') {
+  //     this.filteredAuditTrails = [...this.AuditTrail]; // If the search query is empty, show all wines
+  //   } else {
+  //     const searchTerm = this.searchQuery.toLowerCase().trim();
+  //     this.filteredAuditTrails = this.AuditTrail.filter(audit =>
+  //       audit.transactionDate?.toString().toLowerCase().includes(searchTerm) ||
+  //       audit.userName?.toLowerCase().includes(searchTerm) ||
+  //       audit.userEmail?.toLowerCase().includes(searchTerm) ||
+  //       audit.buttonPressed?.toLowerCase().includes(searchTerm)
+  //     );
+  //   }
+  // }
+
+  // get paginatedAuditTrails(): AuditTrail[] {
+  //   const startIndex = (this.currentPage - 1) * this.pageSize;
+  //   const endIndex = startIndex + this.pageSize;
+  //   return this.filteredAuditTrails.slice(startIndex, endIndex);
+  // }
+
+  // changePage(page: number) {
+  //   this.currentPage = page;
+  // }
+
+  // previousPage() {
+  //   if (this.currentPage > 1) {
+  //     this.changePage(this.currentPage - 1);
+  //   }
+  // }
+
+  // nextPage() {
+  //   const totalPages = Math.ceil(this.filteredAuditTrails.length / this.pageSize);
+  //   if (this.currentPage < totalPages) {
+  //     this.changePage(this.currentPage + 1);
+  //   }
+  // }
+
+  // get totalPages(): number {
+  //   return Math.ceil(this.filteredAuditTrails.length / this.pageSize);
+  // }
 }

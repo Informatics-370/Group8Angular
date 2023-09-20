@@ -23,7 +23,10 @@
       <div class="modal-body">
         <form #vatForm="ngForm" (ngSubmit)="submitVatForm(vatForm); onSubmitClick()">
           <div class="mb-3">
-            <label for="percentage" class="form-label">Percentage</label>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="percentage" class="form-label">Percentage <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Percentage"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <input type="number" class="form-control" id="percentage" [(ngModel)]="currentVat.percentage" name="percentage" required [min]="0.01" [max]="100" #percentageField="ngModel">
             <div *ngIf="percentageField.invalid && percentageField.touched" class="alert alert-danger">
               <div *ngIf="percentageField.errors?.['required']">Percentage is required.</div>
@@ -34,7 +37,10 @@
           
           
           <div class="mb-3">
-            <label for="date" class="form-label">Date</label>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="date" class="form-label">Date <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Date"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
             <input type="date" class="form-control" id="date" [(ngModel)]="currentVat.date" name="date" required [min]="minDate">
           </div>
           

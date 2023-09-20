@@ -12,6 +12,12 @@
 <div class="row align-items-center">
   <div class="col">
     <h2>Inventory on Hand</h2>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search Inventory" [(ngModel)]="searchQuery"
+          (input)="filterWines()">
+      </div>
+    </div>
   </div>
 <div class="col text-end">    
   <button class="btn btn-success" (click)="openAddInventoryModal()">

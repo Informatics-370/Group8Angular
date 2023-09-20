@@ -145,14 +145,14 @@ async loadWines(): Promise<void> {
 }
 
 
-filterWines(): void {
+filterWines() {
   if (this.searchQuery.trim() !== '') {
     const query = this.searchQuery.toLowerCase().trim();
     this.wines = this.allWines.filter(wine =>
       wine.name.toLowerCase().includes(query) ||
       wine.vintage.toString().includes(query) ||
-      wine.varietalID.toString().includes(query) ||
-      wine.wineTypeID.toString().includes(query) ||
+      this.getVarietalName(wine.varietalID).toLowerCase().includes(query) ||
+        this.getWinetypeName(wine.wineTypeID).toLowerCase().includes(query) ||
       wine.price.toString().includes(query)
     );
   } else {
