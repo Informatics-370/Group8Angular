@@ -122,6 +122,7 @@ export class OrdersComponent implements OnInit {
         if (refundItems.length > 0) {
             this.sendRefundRequest(refundItems);
         }
+        this.loadOrders(email)
 
     } catch (error) {
         console.error('Error:', error);

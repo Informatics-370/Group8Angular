@@ -60,6 +60,6 @@ export class OrderService {
   updateOrderStatus(orderId: number, newStatus: number): Observable<any> {
     this.setHeaders();
     // Assuming newStatus is required in the URL as well
-    return this.http.put(`${this.baseUrl}/UpdateOrder/${orderId}?newStatus=${newStatus}`, { headers: this.headers });
+    return this.http.put(`${this.baseUrl}/UpdateOrder/${orderId}?newStatus=${newStatus}`, {},  { headers: this.headers });
   }
 }
