@@ -46,6 +46,7 @@ import { ChartsComponent } from './admin/charts/charts.component';
 import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
 import { AuthGuard } from './auth.guard';
 import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
+import { DonationsComponent } from './customer/donations/donations.component';
 
 
 const routes: Routes = [
@@ -97,6 +98,7 @@ const routes: Routes = [
   {path: 'userrefunds', component: MyRefundsComponent},
   {path: 'chatbot', component: ChatbotComponent},
   { path: 'access-restricted', component: AccessRestrictedComponent},
+  {path: 'donations', component: DonationsComponent}
   
 ];
 

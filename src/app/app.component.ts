@@ -73,7 +73,7 @@ export class AppComponent {
           '/wishlist',
           '/usernameandpassword',
           '/userrefunds',
-          '/chatbot'
+          '/chatbot',
 
         ]
 
