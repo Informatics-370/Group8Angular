@@ -128,7 +128,7 @@ export class FaqComponent implements OnInit {
 
   openDeleteFAQModel(selectedSuppllier: any): void {
     this.faqToDelete = selectedSuppllier.supplierid;
-    console.log("Supplier : ", this.faqToDelete)
+    console.log("FAQ : ", this.faqToDelete)
     this.faqToDeleteDetails = selectedSuppllier;
     this.showDeleteFAQModal = true;
   }

@@ -90,8 +90,6 @@ loadSuppliers(): void {
   submitSupplierForm(form: NgForm): void {
     if (form.valid) {
       if (this.editingSupplier) {
-
-
         // Update Supplier
         this.supplierService.updateSupplier(this.currentSupplier.supplierID!, this.currentSupplier).subscribe({
           next: () => {
@@ -101,6 +99,7 @@ loadSuppliers(): void {
             }
             this.closeSupplierModal();
             this.toastr.success('Successfully updated', 'Update');
+            this.loadSuppliers(); // Refresh the supplier list
           },
           error: (error: any) => {
             console.error(error);
@@ -108,11 +107,9 @@ loadSuppliers(): void {
           }
         });
       } else {
-
-        
         // Check for duplicate Supplier entries before adding
         if (this.isDuplicateSupplier(this.currentSupplier)) {
-          alert('Supplier with the same name, phone number or email already exists!');
+          alert('Supplier with the same name, phone number, or email already exists!');
         } else {
           this.supplierService.addSupplier(this.currentSupplier).subscribe({
             next: (data: Supplier) => {
@@ -120,17 +117,19 @@ loadSuppliers(): void {
               this.closeSupplierModal();
               form.resetForm();
               this.toastr.success('Successfully added', 'Add');
+              this.loadSuppliers(); // Refresh the supplier list
             },
-            error: (error: any) => { 
-            console.error(error)
-            this.toastr.error('Error, please try again', 'Add');
-            this.closeSupplierModal();
-      }
+            error: (error: any) => {
+              console.error(error)
+              this.toastr.error('Error, please try again', 'Add');
+              this.closeSupplierModal();
+            }
           });
         }
       }
     }
   }
+  
   
 //******************* Delete Modal-related methods *********************************************************************************************************************************
 
@@ -148,15 +147,16 @@ loadSuppliers(): void {
   deleteSupplier(id: number): void {
     this.supplierService.deleteSupplier(id).subscribe({
       next: () => {
-      this.suppliers = this.suppliers.filter(x => x.supplierID !== id)
-      this.toastr.success('Successfully deleted', 'Supplier');      
-      this.showDeleteSupplierModal = false;
-    },
-      error: (error: any) => { 
-      console.error(error)
-      this.toastr.error('Deletion failed, please try again', 'Error');
-      this.showDeleteSupplierModal = false;
-    }
+        this.suppliers = this.suppliers.filter(x => x.supplierID !== id)
+        this.toastr.success('Successfully deleted', 'Supplier');
+        this.showDeleteSupplierModal = false;
+        this.loadSuppliers(); // Refresh the supplier list
+      },
+      error: (error: any) => {
+        console.error(error)
+        this.toastr.error('Deletion failed, please try again', 'Error');
+        this.showDeleteSupplierModal = false;
+      }
     });
   }
 
