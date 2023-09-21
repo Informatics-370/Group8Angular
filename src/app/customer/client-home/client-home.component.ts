@@ -1,8 +1,10 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import jwt_decode from 'jwt-decode';
 import { ScrollServiceService } from '../services/scroll-service.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
+import { compileDeclareNgModuleFromMetadata } from '@angular/compiler';
 
 @Component({
   selector: 'app-client-home',
@@ -29,37 +31,42 @@ export class ClientHomeComponent implements OnInit {
   email: string | undefined;
   userName: string | undefined;
 
-constructor(private scrollService: ScrollServiceService, private router: Router, private route: ActivatedRoute) { }
-  ngOnInit() {
-    // Decode the JWT token
-  //   this.decodedToken = jwt_decode(this.token);
+//constructor(private scrollService: ScrollServiceService, private router: Router, private route: ActivatedRoute) { }
+constructor(private activatedRoute: ActivatedRoute, private router: Router) {}  
 
-  //   // Extract user information from the decoded token
-  //   this.email = this.decodedToken.sub; // Assuming the email claim is named 'sub'
-  //   this.userRole = this.decodedToken.roles;
-  //   this.userName = this.decodedToken.unique_name;
-   
-  //   // Output the extracted information to the console
-  //   console.log(this.userRole);
-  //   console.log(this.email);
-  //   console.log(this.userName);
-
-  //   this.route.fragment.subscribe(fragment => {
-  //     if (fragment) {
-  //       const element = document.querySelector("#" + fragment);
-  //       if (element) element.scrollIntoView({behavior: "smooth"});
-  //     }
-  //   });
-    
-   }
-  
-  ngAfterViewChecked() {
-    this.scrollService.currentTarget.subscribe(target => {
-      if (target === 'contact' && this.targetElement) {
-        this.targetElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
-        this.scrollService.changeTarget('default');  // reset the target after scrolling
-      }
-    });
+ngOnInit() {
+  // Check if the URL contains the fragment
+  if (this.router.url.includes('#contact-section')) {
+      this.scrollToFragment('contact-section');
   }
-  
+
+  // Continue to listen for route changes if you still want the behavior when navigating within the same page
+  this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+  ).subscribe(() => {
+      this.activatedRoute.fragment.subscribe(fragment => {
+          if (fragment) {
+              this.scrollToFragment(fragment);
+          }
+      });
+  });
+}
+
+private scrollToFragment(fragment: string) {
+  const element = document.getElementById(fragment);
+  if (element) {
+      element.scrollIntoView({behavior: "smooth"});
+      setTimeout(() => {
+        this.removeFragment();
+      }, 1000);
+  }
+}
+
+
+removeFragment(): void {
+  if (this.router.url.includes('clienthome') && this.router.url.includes('#')) {
+      this.router.navigate([this.router.url.split('#')[0]]);
+  }
+}
+
 }
