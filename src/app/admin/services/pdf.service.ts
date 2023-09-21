@@ -14,6 +14,7 @@ import { WinetypeService } from './winetype.service';
 import { VarietalService } from './varietal.service';
 import { SupplierService } from './supplier.service';
 import { SuppOrderAndVATViewModel } from 'src/app/Model/SupplierOrdersVATs';
+import { VAT } from 'src/app/Model/vat';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -668,12 +669,19 @@ export class PdfService {
 
   // Extract VAT percentage
   if (!supplierOrderData[0].vaTs?.percentage) {
-      this.toastr.error("No vat data in your request, please ensure that you have a VAT percentage in your system")
-      return;
-  }
+    if (!supplierOrderData[0].vaTs) {
+        supplierOrderData[0].vaTs = {
+            vatid: 0,
+            percentage: 15,
+            date: new Date() // Assuming the date format you want is a Date object
+        };
+    }
+}
+
+
   const vatPercentage = supplierOrderData[0].vaTs.percentage ?? 0.15; // Convert to a proportion for calculation
       let body: any[] = [
-          ['#', 'Supplier Name', 'Wine Name', 'Quantity Ordered', 'Order Cost', `VAT (${supplierOrderData[0].vaTs.percentage}%)`, 'Sub-Total']
+          ['#', 'Supplier', 'Wine', 'Quantity Ordered', 'Cost (excl VAT)', `VAT (${supplierOrderData[0].vaTs.percentage}%)`, 'Sub-Total']
       ];
       let supplierTotalBody: any[] = [
         ['Supplier Name', 'Total Amount Paid']
@@ -686,9 +694,9 @@ export class PdfService {
 
       flattenedSupplierOrders.forEach((order, index) => {
         const vat = (order.orderTotal ?? 0) * vatPercentage / 100;  
-        const totalWithVat = (order.orderTotal ?? 0) + vat;
+        const orderValue = order.orderTotal!;
 
-        supplierTotals[order.supplierID!] = (supplierTotals[order.supplierID!] || 0) + totalWithVat;
+        supplierTotals[order.supplierID!] = (supplierTotals[order.supplierID!] || 0) + orderValue;
       });
 
 
@@ -704,18 +712,19 @@ export class PdfService {
       ).then(async supplierNames => {
         flattenedSupplierOrders.forEach((order, index) => {
           const vat = (order.orderTotal ?? 0) * vatPercentage/100;  // Use extracted VAT percentage for calculation
-          const totalWithVat = (order.orderTotal ?? 0) + vat;
+          const totalWithVat = (order.orderTotal ?? 0);
+          const orderValue = (order.orderTotal || 0) * (1-vatPercentage/100);
           grandTotal += totalWithVat;
           const quantityOrdered = order.quantity_Ordered ?? 0;
   
           body.push([
             index + 1,
-            { text: supplierNames[index], noWrap: false },
-            { text: order.wineName, noWrap: false },
-            { text: quantityOrdered, noWrap: false },
-            { text: "R " + (order.orderTotal ?? 0).toFixed(2), noWrap: false },
-            { text: `R ${vat.toFixed(2)}`, noWrap: false },
-            { text: `R ${totalWithVat.toFixed(2)}`, noWrap: false },
+            { text: supplierNames[index], noWrap: true },
+            { text: order.wineName, noWrap: true },
+            { text: quantityOrdered, noWrap: true },
+            { text: `R ${orderValue.toFixed(2)}`, noWrap: true },
+            { text: `R ${vat.toFixed(2)}`, noWrap: true },
+            { text: `R ${totalWithVat.toFixed(2)}`, noWrap: true },
           ]);
         });
 
@@ -752,7 +761,7 @@ export class PdfService {
                   {
                       table: {
                           headerRows: 1,
-                          widths: ['5%', '13%', '16%', '11%', '18%', '15%', '22%'],
+                          widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                           body: body
                       },
                       layout: {
@@ -823,14 +832,21 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
       this.toastr.success('Generating...','Report');
 
       // Extract VAT percentage
-      if (!supplierOrderData[0].vaTs?.percentage) {
-        this.toastr.error("No vat data in your request, please ensure that you have a VAT percentage in your system")
-        return;
-    }
+     // Extract VAT percentage
+     if (!supplierOrderData[0].vaTs?.percentage) {
+      if (!supplierOrderData[0].vaTs) {
+          supplierOrderData[0].vaTs = {
+              vatid: 0,
+              percentage: 15,
+              date: new Date() // Assuming the date format you want is a Date object
+          };
+      }
+  }
+  
       const vatPercentage = supplierOrderData[0].vaTs.percentage ?? 0.15; // Convert to a proportion for calculation
 
       let body: any[] = [
-          ['#', 'Supplier Name', 'Wine Name', 'Quantity Ordered', 'Order Cost', `VAT (${supplierOrderData[0].vaTs.percentage}%)`, 'Sub-Total']
+        ['#', 'Supplier', 'Wine', 'Quantity Ordered', 'Cost (excl VAT)', `VAT (${supplierOrderData[0].vaTs.percentage}%)`, 'Sub-Total']
       ];
       let supplierTotalBody: any[] = [
         ['Supplier Name', 'Total Amount Paid']
@@ -853,7 +869,8 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
       ).then(async supplierNames => {
         flattenedSupplierOrders.forEach((order, index) => {
           const vat = (order.orderTotal ?? 0) * vatPercentage/100;  // Use extracted VAT percentage for calculation
-          const totalWithVat = (order.orderTotal ?? 0) + vat;
+          const totalWithVat = (order.orderTotal ?? 0);
+          const orderValue = (order.orderTotal || 0) * (1-vatPercentage/100);
           grandTotal += totalWithVat;
           const quantityOrdered = order.quantity_Ordered ?? 0;
   
@@ -862,7 +879,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
             { text: supplierNames[index], noWrap: false },
             { text: order.wineName, noWrap: false },
             { text: quantityOrdered, noWrap: false },
-            { text: "R " + (order.orderTotal ?? 0).toFixed(2), noWrap: false },
+            { text: `R ${orderValue.toFixed(2)}`, noWrap: false },
             { text: `R ${vat.toFixed(2)}`, noWrap: false },
             { text: `R ${totalWithVat.toFixed(2)}`, noWrap: false },
           ]);
@@ -873,13 +890,13 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
 
         flattenedSupplierOrders.forEach((order) => {
           const vat = (order.orderTotal ?? 0) * vatPercentage / 100;
-          const totalWithVat = (order.orderTotal ?? 0) + vat;
+          const orderValue = order.orderTotal!;
       
           if (order.supplierID !== undefined) {
               if (!supplierTotals[order.supplierID]) {
                   supplierTotals[order.supplierID] = 0;  // Initialize if not already set
               }
-              supplierTotals[order.supplierID] += totalWithVat;  // Add to the supplier's total
+              supplierTotals[order.supplierID] += orderValue;  // Add to the supplier's total
           }
       });
       
@@ -916,7 +933,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
                   {
                       table: {
                           headerRows: 1,
-                          widths: ['5%', '13%', '16%', '11%', '18%', '15%', '22%'],
+                          widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                           body: body
                       },
                       layout: {
