@@ -19,6 +19,7 @@ import { SupplierOrderComponent } from './admin/supplier-order/supplier-order.co
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { AuditLogsComponent } from './admin/audit-logs/audit-logs.component';
 import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
+import { CalendarComponent } from './admin/calendar/calendar.component';
 
 
 //Client side
@@ -76,6 +77,7 @@ const routes: Routes = [
   { path: 'refundrequest', component: RefundRequestComponent, canActivate: [AuthGuard]},
   { path: 'auditlogs', component: AuditLogsComponent, canActivate: [AuthGuard]},
   { path: 'charts', component: ChartsComponent, canActivate: [AuthGuard]},
+  { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]},
   
   
   //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS
