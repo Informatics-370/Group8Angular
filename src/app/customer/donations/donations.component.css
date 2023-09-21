@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Hind:300,400&display=swap');
+
+.row-heading {
+  background-color: #B55933;
+  padding: 20px 0;
+}
+
+.selector {
+  font-family: 'Cinzel Decorative', cursive;
+}
+
+.row-heading h1 {
+  font-size: 4rem;
+  color: white;
+  text-align: center;
+}

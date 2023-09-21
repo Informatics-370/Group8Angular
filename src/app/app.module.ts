@@ -66,6 +66,7 @@ import { ScanTicketComponent } from './admin/scan-ticket/scan-ticket.component';
 import { HelpResourcesComponent } from './admin/help-resources/help-resources.component';
 import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { DonationsComponent } from './customer/donations/donations.component';
 
 
 @NgModule({
@@ -118,6 +119,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ScanTicketComponent,
     HelpResourcesComponent,
     AccessRestrictedComponent,
+    DonationsComponent,
   ],
   imports: [
     BrowserModule,
