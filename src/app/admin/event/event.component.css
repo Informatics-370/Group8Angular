@@ -22,4 +22,20 @@ table {
     text-align: left;
   }
   
+#eventImage {
+  position: relative;
+  color: transparent;
+  --dynamic-content: 'Pick an image file'; /* default content */
+}
+
+#eventImage::after {
+  content: var(--dynamic-content);  /* Using the CSS variable here */
+  color: black;
+  position: absolute;  /* Absolute position within #filePath */
+  left: 120px;  /* Adjust these values for desired positioning */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;  /* Make sure it doesn't interfere with user interactions */
+}
+
   

@@ -52,7 +52,7 @@ export class BlacklistService {
   async updateBlacklistC(id: number, blacklistC: Blacklist): Promise<any> {
     this.setHeaders()
     console.log('Updating Blacklist Customer with ID:', id, 'and data:', blacklistC);
-    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, blacklistC, { headers: this.headers}));
+    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, blacklistC,  { headers: this.headers}));
   }
 
   async deleteBlacklistC(blacklistDelete: BlacklistDelete): Promise<any> {

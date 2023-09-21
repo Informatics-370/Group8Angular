@@ -48,7 +48,8 @@ export class EventService {
   async updateEvent(id: number, event: FormData): Promise<any> {
     this.setHeaders()
     console.log('Updating event with ID:', id, 'and data:', event);
-    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, event, { headers: this.headers}));
+    const headers = this.headers?.delete('Content-Type'); 
+    return firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, event, { headers }));
   }
 
   async deleteEvent(id: number): Promise<any> {
