@@ -101,13 +101,14 @@ export class WineComponent implements OnInit {
 
   invalidFileType: boolean = false;  // Add this new variable to track if uploaded file is of invalid type
   public displayedImageURL: string | undefined;
+  public selectedWineImageURL: string | undefined;
 
   onFileSelected(wine: any) {
     if (wine.target.files && wine.target.files[0]) {
       const file = wine.target.files[0];
       const fileType = file["type"];
       const validImageTypes = ["image/jpeg", "image/png"];
-  
+      this.selectedWineImageURL = this.getObjectURL(file);
       if (!validImageTypes.includes(fileType)) {
         // Invalid file type
         this.invalidFileType = true;
@@ -117,11 +118,17 @@ export class WineComponent implements OnInit {
   
       this.invalidFileType = false;
       this.selectedFile = file;
+      let filePathInput = document.getElementById('filePath') as HTMLElement;
+      if (filePathInput) {
+          filePathInput.style.setProperty('--dynamic-content', `"${this.selectedFile?.name}"`); // Note the use of backticks and quotes
+      }
       this.currentWine.filePath = this.selectedFile?.name ?? '';
       
+
       // Update displayedImageURL here with null check
       if (this.selectedFile) {
         this.displayedImageURL = this.getObjectURL(this.selectedFile);
+        console.log("Display", this.displayedImageURL);
       }
     }
   
@@ -148,6 +155,11 @@ export class WineComponent implements OnInit {
 
   // Modal-related methods
   openAddWineModal() {
+    this.displayedImageURL = "";
+    let filePathInput = document.getElementById('filePath') as HTMLElement;
+      if (filePathInput) {
+          filePathInput.style.setProperty('--dynamic-content', `"Pick an image file"`); // Note the use of backticks and quotes
+      }
     if (this.varietals.length === 0 || this.winetypes.length === 0) {
       this.toastr.warning('Please add varietal and wine type before adding a wine.', 'Wine Form');
     } else {
@@ -162,8 +174,23 @@ export class WineComponent implements OnInit {
     this.editingWine = true;
     let wineToEdit = this.wines.find(wine => wine.wineID === id);
     this.currentWineImageURL = wineToEdit?.filePath;
+   if (this.currentWineImageURL) {
+      var lastUnderScore = this.currentWineImageURL.lastIndexOf('_');
+        
+        var extractedValue = this.currentWineImageURL.substring(lastUnderScore + 1);
+        
+        let filePathInput = document.getElementById('filePath') as HTMLInputElement;
+        if (filePathInput) {
+            filePathInput.style.setProperty('--dynamic-content', `"${extractedValue}"`);
+            filePathInput.placeholder = "";  // Clear actual placeholder
+        }
+  }
+
+
     console.log(this.currentWineImageURL)
     if (wineToEdit) {
+      this.selectedWineImageURL = wineToEdit.filePath; // Assuming wineToEdit.file contains the File object
+      this.displayedImageURL = this.selectedWineImageURL;
       this.tempWine = {
         ...wineToEdit,
         wineTypeName: this.getWinetypeName(wineToEdit.wineTypeID),
@@ -175,6 +202,9 @@ export class WineComponent implements OnInit {
   }
 
   closeWineModal() {
+    if (this.selectedWineImageURL && this.displayedImageURL !== this.selectedWineImageURL) {
+      this.displayedImageURL = this.selectedWineImageURL;
+  }
     this.showWineModal = false;
   }
 

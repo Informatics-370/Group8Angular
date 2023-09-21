@@ -100,6 +100,7 @@ export class EventComponent {
   currentEventImageURL!: string;
   searchQuery: string = ''; // Variable to capture user input
   filteredEvents: Event[] = [];
+  public selectedEventImageURL: string |undefined;
 
   //--------------------------------------------------------------------------------------------------------------------------------
   // Methods to load and get event-related information
@@ -136,6 +137,11 @@ export class EventComponent {
 
   // Event modal-related methods
   openAddEventModal() {
+    this.displayedEventImageURL = "";
+    let filePathInput = document.getElementById('eventImage') as HTMLElement;
+      if (filePathInput) {
+          filePathInput.style.setProperty('--dynamic-content', `"Pick an image file"`); // Note the use of backticks and quotes
+      }
     this.editingEvent = false;
     this.currentEvent = new Event();
     this.showEventModal = true;
@@ -148,9 +154,23 @@ export class EventComponent {
 
 this.fileUploaded = true;
     let eventToEdit = this.events.find(event => event.eventID === id);
-    this.currentEventImageURL = eventToEdit?.filePath || '';
+    if (eventToEdit?.filePath) {
+      var lastUnderScore = eventToEdit?.filePath.lastIndexOf('_');
+        
+        // Extract the value after the last "_" and before the last "."
+        var extractedValue = eventToEdit?.filePath.substring(lastUnderScore + 1);
+        
+        // Set this value as the value of the CSS variable for the input field
+        let filePathInput = document.getElementById('eventImage') as HTMLInputElement;
+        if (filePathInput) {
+            filePathInput.style.setProperty('--dynamic-content', `"${extractedValue}"`);
+            filePathInput.placeholder = "";  // Clear actual placeholder
+        }
+  }
 
     if (eventToEdit) {
+      this.selectedEventImageURL = eventToEdit?.filePath;
+      this.displayedEventImageURL = this.selectedEventImageURL;
       this.tempEvent = {
         ...eventToEdit,
         filePath: eventToEdit.filePath,
@@ -163,6 +183,9 @@ this.fileUploaded = true;
   }
 
   closeEventModal() {
+     if (this.selectedEventImageURL && this.displayedEventImageURL !== this.selectedEventImageURL) {
+      this.displayedEventImageURL = this.selectedEventImageURL;
+  }
     this.showEventModal = false;
     this.ngOnInit();
     this.fileUploaded = false;
@@ -216,13 +239,6 @@ this.fileUploaded = true;
           }
         }
 
-        if (this.selectedFile) {
-          formData.append('File', this.selectedFile, this.selectedFile.name);
-          console.log('File appended');
-        } else {
-          console.log('No File selected');
-        }
-
         // Log formData entries for debugging
         console.log("Logging formData Entries:");
         formData.forEach((value, key) => {
@@ -230,7 +246,33 @@ this.fileUploaded = true;
         });
 
         if (this.editingEvent) {
-          await this.eventService.updateEvent(this.currentEvent.eventID, formData);
+
+          const extractFileName = (path: string): string => {
+            const parts = path.split('_');
+            return parts[parts.length - 1];
+          };
+  
+          let oldEventImagePath = this.currentEvent.filePath;
+          let oldEventImagePathConvert = extractFileName(oldEventImagePath);
+  
+          if (this.selectedFile) {
+            formData.delete('File');
+            formData.delete('filePath');
+            formData.append('filePath', "");
+  
+            if (this.selectedFile.name != oldEventImagePathConvert && this.selectedFile.name.length != 0) {
+              formData.append('File', this.selectedFile);
+            } else {
+              formData.append('File', this.selectedFile);
+            }
+          } else if (this.selectedFile == null) {
+            formData.delete('File');
+            formData.delete('filePath');
+            formData.append('filePath', "");
+            formData.append('File', oldEventImagePathConvert);
+          }
+
+          await this.eventService.updateEvent(this.currentEvent.eventID!, formData);
           const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID);
           const index = this.events.findIndex(event => event.eventID === this.currentEvent.eventID);
 
@@ -295,10 +337,15 @@ this.fileUploaded = true;
       this.fileUploaded = false;
       return;
     }
+    this.selectedEventImageURL = this.getObjectURL(file);
   
     // If it's a valid image type, proceed with setting the necessary variables
     this.invalidFileType = false;
     this.selectedFile = file;
+    let filePathInput = document.getElementById('eventImage') as HTMLElement;
+      if (filePathInput) {
+          filePathInput.style.setProperty('--dynamic-content', `"${this.selectedFile?.name}"`); // Note the use of backticks and quotes
+      }
     this.currentEvent.filePath = file.name;
   
     // Create and revoke object URLs to prevent memory leak
