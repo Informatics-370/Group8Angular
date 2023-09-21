@@ -67,6 +67,7 @@ import { HelpResourcesComponent } from './admin/help-resources/help-resources.co
 import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DonationsComponent } from './customer/donations/donations.component';
+import { CalendarComponent } from './admin/calendar/calendar.component';
 
 
 @NgModule({
@@ -120,6 +121,7 @@ import { DonationsComponent } from './customer/donations/donations.component';
     HelpResourcesComponent,
     AccessRestrictedComponent,
     DonationsComponent,
+    CalendarComponent,
   ],
   imports: [
     BrowserModule,

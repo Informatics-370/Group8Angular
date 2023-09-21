@@ -62,7 +62,8 @@ export class AppComponent {
           '/auditlogs',
           '/charts',
           '/help',
-          'access-restricted'
+          'access-restricted',
+          '/calendar'
         ];
 
         const custroutes = [
