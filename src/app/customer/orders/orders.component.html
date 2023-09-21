@@ -37,7 +37,7 @@
 <div class="container">
   <div class="row row-cols-1 row-cols-md-2 g-4">
     <div *ngFor="let order of orders; let i = index" class="my-3">
-      <div class="card shadow p-3 mb-5 bg-light rounded">
+      <div class="card-display shadow p-3 mb-5 bg-light rounded">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <h2 class="card-title">Order # {{ i + 1 }} </h2>
@@ -113,10 +113,10 @@
               <button class="btn btn-outline-danger" (click)="openRefundModal(order)">Request Refund</button>
             </td>
             <td *ngIf="!order.isRefunded && !checkRefundAvailability(order)">
-              <p class="text-warning">Refund unavailable</p>
+              <p class="text-warning"></p> <!-- Refund unavailable -->
             </td>
             <td *ngIf="order.isRefunded">
-              <p class="text-warning">Refund already placed for this order</p>
+              <p class="text-info">Refund already placed for this order</p>
             </td>
           </div>
         </div>
