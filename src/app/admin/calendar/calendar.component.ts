@@ -15,6 +15,7 @@ export class CalendarComponent {
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   selectedMonth = this.months[this.currentDate.getMonth()];
   monthIndex = this.currentDate.getMonth();
+  calendarWeeks: { days: { dayOfMonth: number; events: Event[] }[] }[] = [];
 
   constructor( private eventService: EventService) {}
 
@@ -28,35 +29,41 @@ export class CalendarComponent {
   }
 
   generateCalendarData() {
-    this.calendarData = [];
-
-    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
-      let monthData: { month: string; days: { dayOfMonth: number; events: Event[] }[] } = {
-        month: this.months[monthIndex],
-        days: [] 
+    this.calendarWeeks = [];
+  
+    const daysInMonth = new Date(this.year, this.monthIndex + 1, 0).getDate();
+    let currentWeek: { days: { dayOfMonth: number; events: Event[] }[] } = { days: [] };
+  
+    const firstDayOfMonth = new Date(this.year, this.monthIndex, 1);
+    const offset = firstDayOfMonth.getDay(); 
+  
+    for (let i = 0; i < offset; i++) {
+      currentWeek.days.push({ dayOfMonth: 0, events: [] });
+    }
+  
+    for (let day = 1; day <= daysInMonth; day++) {
+      let dayData: { dayOfMonth: number; events: Event[] } = {
+        dayOfMonth: day,
+        events: []
       };
-
-      let daysInMonth = new Date(this.year, monthIndex + 1, 0).getDate();
-      for (let day = 1; day <= daysInMonth; day++) {
-        let dayData: { dayOfMonth: number; events: Event[] } = {
-          dayOfMonth: day,
-          events: []
-        };
-
-        for (let event of this.events) {
-          let eventDate = new Date(event.eventDate);
-          if (
-            eventDate.getFullYear() === this.year &&
-            eventDate.getMonth() === monthIndex &&
-            eventDate.getDate() === day
-          ) {
-            dayData.events.push(event);
-          }
-        }  
-
-       monthData.days.push(dayData);
+  
+      for (let event of this.events) {
+        let eventDate = new Date(event.eventDate);
+        if (
+          eventDate.getFullYear() === this.year &&
+          eventDate.getMonth() === this.monthIndex &&
+          eventDate.getDate() === day
+        ) {
+          dayData.events.push(event);
+        }
       }
-      this.calendarData.push(monthData);
+  
+      currentWeek.days.push(dayData);
+
+      if (currentWeek.days.length === 7 || day === daysInMonth) {
+        this.calendarWeeks.push(currentWeek);
+        currentWeek = { days: [] };
+      }
     }
   }
 
@@ -65,26 +72,24 @@ export class CalendarComponent {
   }
 
   prevMonth(): void {
-    // Logic to go to the previous month
     if (this.monthIndex > 0) {
       this.monthIndex--;
     } else {
-      this.monthIndex = 11; // Go to December if currently in January
-      this.year--; // Decrement the year
+      this.monthIndex = 11;
+      this.year--;
     }
-    this.selectedMonth = this.months[this.monthIndex]; // Set selectedMonth
+    this.selectedMonth = this.months[this.monthIndex]; 
     this.generateCalendarData();
   }
 
   nextMonth(): void {
-    // Logic to go to the next month
     if (this.monthIndex < 11) {
       this.monthIndex++;
     } else {
-      this.monthIndex = 0; // Go to January if currently in December
-      this.year++; // Increment the year
+      this.monthIndex = 0;
+      this.year++; 
     }
-    this.selectedMonth = this.months[this.monthIndex]; // Set selectedMonth
+    this.selectedMonth = this.months[this.monthIndex];
     this.generateCalendarData();
   }
   

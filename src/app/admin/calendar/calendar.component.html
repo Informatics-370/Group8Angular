@@ -23,8 +23,6 @@
         </div>
     </div>
 
-
-  <div class="calendar">
     <table>
       <thead>
         <tr>
@@ -38,16 +36,18 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let week of calendarData">
+        <ng-container *ngFor="let week of calendarWeeks">
           <tr>
             <td *ngFor="let day of week.days" (click)="showEvents(day)">
-              {{ day.dayOfMonth }}
+              <ng-container *ngIf="day.dayOfMonth !== 0">
+                {{ day.dayOfMonth }}
+              </ng-container>
               <div *ngFor="let event of day.events">
                 {{ event.name }}
               </div>
             </td>
           </tr>
-        </ng-container>
+        </ng-container>        
       </tbody>
     </table>
   </div>
