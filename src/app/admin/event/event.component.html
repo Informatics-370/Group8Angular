@@ -7,7 +7,8 @@
     <h2>Event</h2>
     <div class="row mb-3">
       <div class="col-md-6">
-        <input type="text" class="form-control mb-3" placeholder="Search" [(ngModel)]="searchQuery" (input)="filterEvents()">
+        <input type="text" class="form-control mb-3" placeholder="Search" [(ngModel)]="searchQuery"
+          (input)="filterEvents()">
       </div>
     </div>
   </div>
@@ -34,17 +35,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let event of filteredEvents">      
+    <tr *ngFor="let event of filteredEvents">
       <td class="align-middle"><img [src]="event.filePath" alt="{{ event.name }}'s Image" width="140" height="100"></td>
       <td class="d-none d-md-table-cell align-middle">{{ event.name }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.eventType?.eventTypeName }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.eventDate | date:'short' }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.tickets_Available }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.tickets_Sold }}</td>
-      <td class="d-none d-md-table-cell align-middle" style="text-align: right;">{{ event.price | currency:'R':'symbol':'1.2-2' }}</td>
-      <td class="d-none d-md-table-cell align-middle">{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.limit : 'N/A' }}</td>
+      <td class="d-none d-md-table-cell align-middle" style="text-align: right;">{{ event.price |
+        currency:'R':'symbol':'1.2-2' }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.earlyBirdID !== undefined ?
+        getEarlyBirdById(event.earlyBirdID)?.limit : 'N/A' }}</td>
       <!-- New Column -->
-      <td class="d-none d-md-table-cell align-middle">{{ event.earlyBirdID !== undefined ? getEarlyBirdById(event.earlyBirdID)?.percentage : 'N/A' }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.earlyBirdID !== undefined ?
+        getEarlyBirdById(event.earlyBirdID)?.percentage : 'N/A' }}</td>
       <td class="align-middle">
         <input type="checkbox" [checked]="event.displayItem" (change)="toggleDisplay(event)">
 
@@ -114,134 +118,161 @@
       <div class="modal-body">
         <form #eventForm="ngForm" (ngSubmit)="submitEventForm(eventForm); onSubmitClick()">
 
-          <div class="mb-3">
-            <label for="eventName" class="form-label">Event Name</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Event Name"></i>
-            <input type="text" class="form-control" id="eventName" [(ngModel)]="currentEvent.name" name="eventName"
-              required #eventNameField="ngModel">
-            <div *ngIf="eventNameField.invalid && eventNameField.touched" class="alert alert-danger">
-              <div *ngIf="eventNameField.errors?.['required']">Event name is required.</div>
-            </div>
+          <div class="d-flex justify-content-between">
+            <label for="eventName" class="form-label">Event Name
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Event Name"></i></label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+          <input type="text" class="form-control" id="eventName" [(ngModel)]="currentEvent.name" name="eventName"
+            required #eventNameField="ngModel" placeholder="Please enter the event name here">
+          <div *ngIf="eventNameField.invalid && eventNameField.touched" class="alert alert-danger">
+            <div *ngIf="eventNameField.errors?.['required']">Event name is required.</div>
           </div>
 
-          <div class="mb-3">
-            <label for="eventDescription" class="form-label">Event Description</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Event Description"></i>
-            <textarea type="text" class="form-control" id="eventDescription" [(ngModel)]="currentEvent.description"
-              name="eventDescription" required maxlength="255" (input)="updateCharacterCount($event)"
-              #eventDescriptionField="ngModel"></textarea>
-            <div class="character-count">{{characterCount || 0}} / 255 characters</div>
-            <div *ngIf="eventDescriptionField.invalid && eventDescriptionField.touched" class="alert alert-danger">
-              <div *ngIf="eventDescriptionField.errors?.['required']">Event description is required.</div>
-              <!-- <div *ngIf="eventDescriptionField.errors?.['maxlength']">Event description must not exceed 255 characters,
+          <div class="d-flex justify-content-between">
+            <label for="eventDescription" class="form-label">Event Description
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the Event Description"></i></label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+          <textarea type="text" class="form-control" id="eventDescription" [(ngModel)]="currentEvent.description"
+            name="eventDescription" required maxlength="255" (input)="updateCharacterCount($event)"
+            #eventDescriptionField="ngModel" placeholder="Please enter the event description here"></textarea>
+          <div class="character-count">{{characterCount || 0}} / 255 characters</div>
+          <div *ngIf="eventDescriptionField.invalid && eventDescriptionField.touched" class="alert alert-danger">
+            <div *ngIf="eventDescriptionField.errors?.['required']">Event description is required.</div>
+            <!-- <div *ngIf="eventDescriptionField.errors?.['maxlength']">Event description must not exceed 255 characters,
                 including spaces.</div> -->
-            </div>
           </div>
 
 
 
-          <div class="mb-3">
-            <label for="eventDate" class="form-label">Event Date and Time</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please Select the Event Date and Time"></i>
-            <input type="datetime-local" class="form-control" id="eventDate" [(ngModel)]="currentEvent.eventDate"
-              name="eventDate" required #eventDateField="ngModel" [min]="minDateTime">
-            <div *ngIf="eventDateField.invalid && eventDateField.touched" class="alert alert-danger">
-              <div *ngIf="eventDateField.errors?.['required']">Event date and time are required.</div>
-              <div *ngIf="eventDateField.errors?.['min'] && !eventDateField.errors?.['required']">Event date and time
-                must be in the future.</div>
-            </div>
+          <div class="d-flex justify-content-between">
+            <label for="eventDate" class="form-label">Event Date and Time <i class="fa fa-question-circle"
+                data-bs-toggle="tooltip" title="Please Select the Event Date and Time"></i>
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+          <input type="datetime-local" class="form-control" id="eventDate" [(ngModel)]="currentEvent.eventDate"
+            name="eventDate" required #eventDateField="ngModel" [min]="minDateTime">
+          <div *ngIf="eventDateField.invalid && eventDateField.touched" class="alert alert-danger">
+            <div *ngIf="eventDateField.errors?.['required']">Event date and time are required.</div>
+            <div *ngIf="eventDateField.errors?.['min'] && !eventDateField.errors?.['required']">Event date and time
+              must be in the future.</div>
           </div>
 
-          <div class="mb-3">
-            <label for="eventPrice" class="form-label">Event Price</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please enter the ticket price for the Event "></i>
-            <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.price" name="eventPrice"
-              required #eventPriceField="ngModel" min="1" (input)="sanitizeInput(currentEvent.price)">
-            <div *ngIf="eventPriceField.invalid && eventPriceField.touched || invalidLeadingZero" class="alert alert-danger">
-              <div *ngIf="eventPriceField.errors?.['required']">Event price is required.</div>
-              <div *ngIf="eventPriceField.errors?.['min'] && !eventPriceField.errors?.['required']">Event price must be
-                greater than 0.</div>
-              <div *ngIf="invalidLeadingZero">Event price should not start with 0.</div>
-            </div>
+          <div class="d-flex justify-content-between">
+            <label for="eventPrice" class="form-label">Event Price
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the ticket price for the Event "></i>
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
           </div>
-          
+          <input type="number" class="form-control" id="eventPrice" [(ngModel)]="currentEvent.price" name="eventPrice"
+            required #eventPriceField="ngModel" min="1" (input)="sanitizeInput(currentEvent.price)"
+            placeholder="Please enter the event price here">
+          <div *ngIf="eventPriceField.invalid && eventPriceField.touched || invalidLeadingZero"
+            class="alert alert-danger">
+            <div *ngIf="eventPriceField.errors?.['required']">Event price is required.</div>
+            <div *ngIf="eventPriceField.errors?.['min'] && !eventPriceField.errors?.['required']">Event price must be
+              greater than 0.</div>
+            <div *ngIf="invalidLeadingZero">Event price should not start with 0.</div>
+          </div>
 
-          <div class="mb-3">
-            <label for="ticketsAvailable" class="form-label">Tickets Available</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please enter the amount of tickets available for the Event"></i>
-            <input type="number" class="form-control" id="ticketsAvailable" [(ngModel)]="currentEvent.tickets_Available"
-              name="ticketsAvailable" required #ticketsAvailableField="ngModel" min="1" [readonly]="editingEvent">
-            <div *ngIf="ticketsAvailableField.invalid && ticketsAvailableField.touched" class="alert alert-danger">
-              <div *ngIf="ticketsAvailableField.errors?.['required']">Event price is required.</div>
-              <div *ngIf="ticketsAvailableField.errors?.['min'] && !ticketsAvailableField.errors?.['required']">Tickets
-                Availbale must be
-                greater than 0.</div>
-            </div>
+
+
+          <div class="d-flex justify-content-between">
+            <label for="ticketsAvailable" class="form-label">Tickets Available
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please enter the amount of tickets available for the Event"></i>
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+          <input type="number" class="form-control" id="ticketsAvailable" [(ngModel)]="currentEvent.tickets_Available"
+            name="ticketsAvailable" required #ticketsAvailableField="ngModel" min="1" [readonly]="editingEvent"
+            placeholder="Please enter the tickets available here">
+          <div *ngIf="ticketsAvailableField.invalid && ticketsAvailableField.touched" class="alert alert-danger">
+            <div *ngIf="ticketsAvailableField.errors?.['required']">Event price is required.</div>
+            <div *ngIf="ticketsAvailableField.errors?.['min'] && !ticketsAvailableField.errors?.['required']">Tickets
+              Availbale must be
+              greater than 0.</div>
           </div>
 
           <!-- Event Type Selection -->
-          <div class="mb-3">
-            <label for="eventType" class="form-label">Event Type</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please select the Event Type"></i>
-            <select id="eventType" name="eventType" [(ngModel)]="currentEvent.eventTypeID" #eventTypeField="ngModel"
-              class="form-control">
-              <!-- Placeholder -->
-              <option value="0" disabled selected>Select Event Type</option>
-              <!-- Options -->
-              <option *ngFor="let eventType of eventTypes" [value]="eventType.eventTypeID">{{eventType.eventTypeName}}
-              </option>
-            </select>
-            <div *ngIf="eventTypeField.invalid && eventTypeField.touched && eventTypeField.value == 0" class="alert alert-danger">
-              <div *ngIf="eventTypeField.errors?.['required']">Event Type is required.</div>
-            </div>
+          <div class="d-flex justify-content-between">
+            <label for="eventType" class="form-label">Event Type
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please select the Event Type"></i></label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+          <select id="eventType" name="eventType" [(ngModel)]="currentEvent.eventTypeID" #eventTypeField="ngModel"
+            class="form-control">
+            <!-- Placeholder -->
+            <option [value]="undefined" disabled selected>Select Event Type</option>
+            <!-- Options -->
+            <option *ngFor="let eventType of eventTypes" [value]="eventType.eventTypeID">{{eventType.eventTypeName}}
+            </option>
+          </select>
+          <div *ngIf="eventTypeField.touched && (eventTypeField.value == 0 || eventTypeField.value === undefined)"
+            class="alert alert-danger">
+            <div>Event Type is required.</div>
           </div>
 
 
 
-          <div class="mb-3">
-            <label for="earlyBird" class="form-label">Early Bird</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please select the early bird option applicable for the Event"></i>
-            <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" #earlyBirdField="ngModel"
-              class="form-control" [disabled]="editingEvent">
-              <!-- Placeholder -->
-              <option value="0" disabled selected>Select Early Bird</option>
-              <!-- Options -->
-              <option [value]=0>No Early Bird</option>
-              <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets
-                at {{earlyBird.percentage}}%</option>
-            </select>
-            <div *ngIf="earlyBirdField.value == '' && earlyBirdField.touched" class="alert alert-danger">
-              <div>Early Bird option is required.</div>
-            </div>
+
+          <div class="d-flex justify-content-between">
+            <label for="earlyBird" class="form-label">Early Bird
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please select the early bird option applicable for the Event"></i>
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
           </div>
+          <select id="earlyBirdID" name="earlyBirdID" [(ngModel)]="currentEvent.earlyBirdID" #earlyBirdField="ngModel"
+            class="form-control" [disabled]="editingEvent">
+            <!-- Placeholder -->
+            <option [value]="undefined" disabled selected>Select Early Bird</option>
+            <!-- Options -->
+            <option [value]="0">No Early Bird</option>
+            <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets
+              at {{earlyBird.percentage}}%</option>
+          </select>
+          <div *ngIf="earlyBirdField.touched && (earlyBirdField.value === null || earlyBirdField.value === '' || earlyBirdField.value === undefined)"
+            class="alert alert-danger">
+            <div>Early Bird option is required.</div>
+          </div>
+          
+          
+          
 
 
 
           <!---------------------------------------------------------------------------------------------------------->
-          <div class="mb-3">
-            <label for="eventImage" class="form-label">Event Image</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please select the image used for the Event"></i>
-            <input type="file" class="form-control" id="eventImage" accept=".png, .jpg, .jpeg"
-              (change)="onFileSelected($event)">
-            <!-- Display error if no file is uploaded or invalid type -->
-            <div *ngIf="(!fileUploaded || invalidFileType) && eventForm.submitted" class="alert alert-danger">
-              Valid event image (PNG or JPEG) is required.
-            </div>
+          <div class="d-flex justify-content-between">
+            <label for="eventImage" class="form-label">Event Image
+              <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Please select the image used for the Event"></i>
+            </label>
+            <span style="color: #ff6666; font-size: smaller; align-items: right;">* Required</span>
+          </div>
+          <input type="file" class="form-control" id="eventImage" accept=".png, .jpg, .jpeg"
+            (change)="onFileSelected($event)">
+          <!-- Display error if no file is uploaded or invalid type -->
+          <div *ngIf="(!fileUploaded || invalidFileType) && eventForm.submitted" class="alert alert-danger">
+            Valid event image (PNG or JPEG) is required.
           </div>
 
           <div *ngIf="displayedEventImageURL || editingEvent" class="mb-3">
-            <img [src]="displayedEventImageURL ? displayedEventImageURL : currentEventImageURL" alt="Selected Image" class="img-thumbnail">
+            <img [src]="displayedEventImageURL ? displayedEventImageURL : currentEventImageURL" alt="Selected Image"
+              class="img-thumbnail">
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
         <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
-          [disabled]="earlyBirdField.value == '' || eventTypeField.value==0 || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent? 'Save Changes' : 'Save'}}</button>
+          [disabled]="earlyBirdField.value == '' || earlyBirdField.value === undefined || eventTypeField.value==0 || eventTypeField.value === undefined || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent?
+          'Save Changes' : 'Save'}}</button>
       </div>
     </div>
   </div>

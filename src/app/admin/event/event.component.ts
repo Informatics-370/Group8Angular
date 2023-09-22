@@ -54,7 +54,8 @@ export class EventComponent {
     this.minDateTime = now.toISOString().slice(0, 16);
 
     this.filteredEvents = this.events;
-
+    this.currentEvent.earlyBirdID = undefined;
+    this.currentEvent.eventTypeID = undefined;
   }
 
   invalidLeadingZero: boolean = false;
@@ -220,9 +221,9 @@ this.fileUploaded = true;
       this.isSubmitting = true;
 
       // Adjustments for consistency
-      if (this.currentEvent.earlyBird === null) {
-        this.currentEvent.earlyBird = undefined;
-      }
+      // if (this.currentEvent.earlyBird === null) {
+      //   this.currentEvent.earlyBird = undefined;
+      // }
       if (this.currentEvent.earlyBirdID === null) {
         this.currentEvent.earlyBirdID = 0
       }

@@ -28,6 +28,7 @@ export class SupplierOrderComponent implements OnInit {
   showDeleteSupplierOrderModal = false;
   supplierOrderToDelete: SupplierOrder | null = null;
   showAddSupplierOrderModal = false;
+  showPaidModal: boolean = false;
   suppliers: Supplier[] = [];
   showStockTakeModel = false;
   stocktakes: StockTake[] = [];
@@ -88,7 +89,7 @@ export class SupplierOrderComponent implements OnInit {
   createOrder(order: SupplierOrder): void {
     console.log('Hallo Dihan', order);
     order.dateOrdered = new Date();
-    order.orderTotal = order.winePrice! * order.quantity_Ordered!;
+    order.orderTotal = 0;
     order.supplierOrderStatus = new SupplierOrderStatus(); // Initialize orderStatus
   
     this.supplierOrderService.createSupplierOrder(order).subscribe(
@@ -114,8 +115,8 @@ export class SupplierOrderComponent implements OnInit {
 
 
 
-  updateOrder(order: SupplierOrder): void {
-    
+  updateOrder(order: SupplierOrder, orderTotal: number): void {
+    console.log("Current Order:", orderTotal);
     if (order.supplierOrderStatus) {
       if (!order.supplierOrderStatus.paid) {
         order.supplierOrderStatus.received = false;
@@ -129,14 +130,16 @@ export class SupplierOrderComponent implements OnInit {
         console.log('Big brain on its way', order);
         this.showStockTakeModel = true;
       }
-
+      
       const statusDTO: UpdateSupplierOrderStatusDTO = {
         supplierOrderID: order.supplierOrderID!, // Assuming supplierOrderID is a non-null field
         supplierOrderStatusID: order.supplierOrderStatus.supplierOrderStatusID!,
+        orderPrice: orderTotal,
         ordered: order.supplierOrderStatus.ordered,
         paid: order.supplierOrderStatus.paid,
         received: order.supplierOrderStatus.received,
       };
+      console.log("StatusDTO:", statusDTO.orderPrice);
 
       try {
         this.supplierOrderService.updateSupplierOrderStatus(order.supplierOrderID!, statusDTO).subscribe(() => {
@@ -148,6 +151,7 @@ export class SupplierOrderComponent implements OnInit {
         });
 
         this.toastr.success('Successfully Updated', 'Order');
+        this.closePaidModal();
       } catch {
         this.toastr.error('Error occurred please try again', 'Order');
       }
@@ -222,6 +226,21 @@ export class SupplierOrderComponent implements OnInit {
   //     }
   //   }
   // }
+
+  openPaidModal(id: number){
+    let originalOrder = this.supplierOrders.find(x => x.supplierOrderID === id);
+    if (originalOrder) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentOrder = {...originalOrder};
+    }
+    this.showPaidModal = true;
+  }
+
+  closePaidModal() {
+    this.showPaidModal = false;
+  }
+
+
 
 
 
