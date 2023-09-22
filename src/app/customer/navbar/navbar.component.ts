@@ -20,7 +20,7 @@ import { CartService } from '../services/cart.service';
 })
 export class NavbarComponent {
 
-  appComponent = new AppComponent(this.router, this.dataService, this.toastr);
+  appComponent = new AppComponent(this.cartService, this.router, this.dataService, this.toastr);
 
 
   @ViewChild('Registerform') registerForm!: NgForm;
@@ -63,6 +63,8 @@ showPassword: boolean = false;
 titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
 genders = ['Male', 'Female', 'Other'];
 confirmPassword: string | undefined;
+  itemCount: number | undefined;
+  subscription: Subscription | undefined;
 
 isLoggedIn(): boolean {
   // Your logic here to determine if the user is logged in.
@@ -134,17 +136,13 @@ return false;
     console.log(this.dataService.getUserFromToken());
     console.log(this.isAdmin());
 
-  // Set initial value
-  this.cartCount = this.cartService.cartCountSubject.getValue();
-
-  // Update value when it changes
-  this.cartCountSubscription = this.cartService.cartCount$.subscribe(count => {
-    this.cartCount = count;
-  });
+    this.subscription = this.cartService.cartItemCount$.subscribe(count => {
+      this.itemCount = count;
+    });
   }
 
   ngOnDestroy(): void {
-    this.cartCountSubscription.unsubscribe();
+    this.subscription!.unsubscribe();
   }
 
   isPasswordInvalid(): boolean {

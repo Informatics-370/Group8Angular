@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { loginUpdateViewModel } from 'src/app/Model/loginUpdateViewModel';
 import { CustomerSidenavComponent } from '../customer-sidenav/customer-sidenav.component';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-username-and-password',
@@ -21,7 +22,7 @@ export class UsernameAndPasswordComponent {
 
   
 
-  constructor(private dataService: DataServiceService, private router: Router, private toastr: ToastrService) {}
+  constructor(private dataService: DataServiceService, private router: Router, private toastr: ToastrService, private cartService : CartService) {}
 
 
   passwordsMatch(): boolean {
@@ -100,7 +101,7 @@ export class UsernameAndPasswordComponent {
           this.dataService.userValue!.roles = this.dataService.userValue!.roles;
 
           this.router.navigate(['/clienthome']);
-          var cs = new CustomerSidenavComponent(this.router, this.dataService, this.toastr);
+          var cs = new CustomerSidenavComponent(this.router, this.dataService, this.toastr, this.cartService);
           cs.logOut();
           this.toastr.info("Because you updated your login details, we require you to log into your account once again. Thank you for understanding :)")
         },

@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { DataServiceService } from '../services/data-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserViewModel } from 'src/app/Model/userviewmodel';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-customer-sidenav',
@@ -18,7 +19,7 @@ export class CustomerSidenavComponent {
   };
   showSidebar: boolean = true;
 
-  constructor(private router: Router, private dataService: DataServiceService, private toastr: ToastrService) {}
+  constructor(private router: Router, private dataService: DataServiceService, private toastr: ToastrService, private cartService : CartService) {}
 
   ngOnInit() {
     this.router.events.subscribe(event => {
@@ -47,6 +48,7 @@ export class CustomerSidenavComponent {
         localStorage.removeItem("TokenExpiration");
         this.dataService.login(this.loggedOutUser);
         this.toastr.success('Logged out successfully', 'Logout');
+        this.cartService.resetCartItemCount();
         this.router.navigate(['/clienthome']);
       }else{
         console.log("Logout failed, please try again later");
