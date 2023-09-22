@@ -81,9 +81,19 @@
         <table class="table" style="border-color: #B55933;">
           <tbody>
             <tr style="color: #B54E33;">
-              <h3>Total: R{{ cartTotal }}</h3>
-             
+              <td class="text-right">VAT ({{ latestVatPercentage }} %):</td>
+              <td class="text-right">R{{ calculateVatAmount() | number:'1.2-2' }}</td>
             </tr>
+            <tr style="color: #B54E33;">
+              <td class="text-right"><h3>Total Before VAT:</h3></td>
+              <td class="text-right"><h3>R{{ calculateTotalBeforeVat() | number:'1.2-2' }}</h3></td>
+            </tr>
+            <tr style="color: #B54E33;">
+              <td class="text-right"><h3>Total:</h3></td>
+              <td class="text-right"><h3>R{{ cartTotal | number:'1.2-2' }}</h3></td>
+            </tr>
+            
+            
           </tbody>
         </table>
         <!-- Discount Code -->
@@ -144,3 +154,4 @@
     margin-right: 8px;
   }
 </style>
+
