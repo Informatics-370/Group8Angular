@@ -141,9 +141,11 @@ export class CartComponent implements OnInit {
     console.log('Sending discount code:', this.discountCode);
     try {
       let discount: Discount = await this.discountService.validateDiscountCode(this.discountCode);
-      if (discount && discount.discountPercentage) {
-        this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountPercentage / 100);
-        this.cartTotal = Math.round(this.cartTotal * 100) / 100;
+      if (discount && discount.discountAmount) {
+        this.cartTotal = this.cartTotal - discount.discountAmount;
+
+        // this.cartTotal = Math.round(this.cartTotal * 100) / 100;
+        
         console.log('New cart total:', this.cartTotal);
         this.isDiscountApplied = true;
   
