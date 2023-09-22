@@ -14,7 +14,8 @@ import { DiscountService } from 'src/app/admin/services/discount.service';
 import { Discount } from 'src/app/Model/discount';
 import { OrderService } from '../services/order.service';
 import { Order } from 'src/app/Model/order';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { VatService } from 'src/app/admin/services/vat.service';
 
 
 @Component({
@@ -29,12 +30,14 @@ export class CartComponent implements OnInit {
 
   wines: Wine[] = [];  // This will hold wines details
   cartTotal = 0;
+  latestVatPercentage: number | undefined;
+
 
   discountCode: string = '';
 
   isDiscountApplied: boolean = false;
 
-  constructor(private cartService: CartService, private wineService: WineService, private toastr: ToastrService, private loginService: DataServiceService, private paymentService: PaymentService, private discountService: DiscountService, private orderService: OrderService) { }  // Inject WineService
+  constructor(private cartService: CartService, private wineService: WineService, private toastr: ToastrService, private loginService: DataServiceService, private paymentService: PaymentService, private discountService: DiscountService, private orderService: OrderService, private vatService : VatService) { }  // Inject WineService
 
   async ngOnInit(): Promise<void> {
     let token = localStorage.getItem('Token') || '';
@@ -46,6 +49,8 @@ export class CartComponent implements OnInit {
 
     console.log(email);
     console.log(this.cart)
+
+    this.loadVat();
   }
 
 
@@ -83,6 +88,26 @@ export class CartComponent implements OnInit {
         console.error('Error:', error);
       }
     );
+  }
+
+  loadVat() {
+    this.vatService.getVATs().pipe(
+      // Map the array of VAT objects to their 'date' property
+      map(vats => vats.sort((a, b) => b.date!.getTime() - a.date!.getTime())),
+      // Map to the 'percentage' property of the first VAT object in the sorted array
+      map(sortedVats => sortedVats.length > 0 ? sortedVats[0].percentage : 0)
+    ).subscribe(latestVatPercentage => {
+      this.latestVatPercentage = latestVatPercentage;
+      // You can now use this.latestVatPercentage for your calculations
+    });
+  }
+
+  calculateVatAmount(): number {
+    return (this.cartTotal * this.latestVatPercentage!) / (100 + this.latestVatPercentage!);
+  }
+
+  calculateTotalBeforeVat(): number {
+    return this.cartTotal - this.calculateVatAmount();
   }
 
   async incrementQuantity(cartItemId: number): Promise<void> {
