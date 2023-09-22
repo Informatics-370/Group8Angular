@@ -155,6 +155,7 @@
 
 
 
+          <!-- Wine Type Dropdown -->
           <div class="mb-3">
             <label for="wineType" class="form-label">Wine Type</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
@@ -171,8 +172,20 @@
             </div>
           </div>
 
-
+          <!-- Blend Selection Dropdown -->
           <div class="mb-3" *ngIf="currentWine.wineTypeID && currentWine.wineTypeID !== 0">
+            <label for="isBlend" class="form-label">Is it a Blend?</label>
+            <select class="form-control" id="isBlend" [(ngModel)]="isBlendSelected" name="isBlend"
+              (change)="onBlendChange()">
+              <option [ngValue]="null">----Select an option----</option>
+              <option [ngValue]="true">YES</option>
+              <option [ngValue]="false">NO</option>
+            </select>
+          </div>
+
+          <!-- Wine Varietal Dropdown -->
+          <div class="mb-3"
+            *ngIf="currentWine.wineTypeID && currentWine.wineTypeID !== 0 && isBlendSelected !== undefined">
             <label for="varietal" class="form-label">Wine Varietal</label>
             <i class="fa fa-question-circle" data-bs-toggle="tooltip"
               title="Please select the appropriate the Wine Varietal"></i>
@@ -182,7 +195,6 @@
               <option *ngFor="let varietal of filteredVarietals" [value]="varietal.varietalID">{{varietal.name}}
               </option>
             </select>
-
 
             <div *ngIf="(wineVarietalField.value == '0' || wineVarietalField.invalid) && wineVarietalField.touched"
               class="alert alert-danger">
@@ -205,9 +217,10 @@
           </div>
 
           <div *ngIf="displayedImageURL || editingWine" class="mb-3">
-            <img [src]="displayedImageURL ? displayedImageURL : currentWineImageURL" alt="Selected Image" class="img-thumbnail">
+            <img [src]="displayedImageURL ? displayedImageURL : currentWineImageURL" alt="Selected Image"
+              class="img-thumbnail">
           </div>
-          
+
         </form>
       </div>
       <div class="modal-footer">
