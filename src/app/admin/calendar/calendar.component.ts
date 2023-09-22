@@ -13,7 +13,8 @@ export class CalendarComponent {
   year = this.currentDate.getFullYear();
   calendarData: { month: string; days: { dayOfMonth: number; events: Event[] }[] }[] = [];
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  selectedMonth = this.months[this.currentDate.getMonth()];
+  selectedMonth = this.months[this.currentDate.getMonth()] + ' ' + this.year;
+
   monthIndex = this.currentDate.getMonth();
   calendarWeeks: { days: { dayOfMonth: number; events: Event[] }[] }[] = [];
 
@@ -72,24 +73,26 @@ export class CalendarComponent {
   }
 
   prevMonth(): void {
+    // Logic to go to the previous month
     if (this.monthIndex > 0) {
       this.monthIndex--;
     } else {
-      this.monthIndex = 11;
-      this.year--;
+      this.monthIndex = 11; // Go to December if currently in January
+      this.year--; // Decrement the year
     }
-    this.selectedMonth = this.months[this.monthIndex]; 
+    this.selectedMonth = this.months[this.monthIndex] + ' ' + this.year; // Set selectedMonth
     this.generateCalendarData();
   }
-
+  
   nextMonth(): void {
+    // Logic to go to the next month
     if (this.monthIndex < 11) {
       this.monthIndex++;
     } else {
-      this.monthIndex = 0;
-      this.year++; 
+      this.monthIndex = 0; // Go to January if currently in December
+      this.year++; // Increment the year
     }
-    this.selectedMonth = this.months[this.monthIndex];
+    this.selectedMonth = this.months[this.monthIndex] + ' ' + this.year; // Set selectedMonth
     this.generateCalendarData();
   }
   

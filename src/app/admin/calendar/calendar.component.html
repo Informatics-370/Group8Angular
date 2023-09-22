@@ -9,7 +9,7 @@
 <div class="calendar">
     <div class="row align-items-center">
         <div class="col-md-6">
-            <h3>{{ selectedMonth }}</h3>
+            <h1>{{ selectedMonth }}</h1>
         </div>
     </div>
     <div class="row align-items-center">
@@ -38,17 +38,18 @@
       <tbody>
         <ng-container *ngFor="let week of calendarWeeks">
           <tr>
-            <td *ngFor="let day of week.days" (click)="showEvents(day)">
+            <td *ngFor="let day of week.days">
               <ng-container *ngIf="day.dayOfMonth !== 0">
-                {{ day.dayOfMonth }}
+                <div class="cell">
+                  <div class="day">{{ day.dayOfMonth }}</div>
+                  <div class="event" *ngFor="let event of day.events"> <i class="bi bi-circle-fill  custom-icon"></i> {{ event.name }}</div>
+                </div>
               </ng-container>
-              <div *ngFor="let event of day.events">
-                {{ event.name }}
-              </div>
             </td>
           </tr>
-        </ng-container>        
+        </ng-container>
       </tbody>
     </table>
+    
   </div>
   
