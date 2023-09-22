@@ -43,3 +43,5 @@ table {
   transform: translateY(-50%);
   pointer-events: none;  /* Make sure it doesn't interfere with user interactions */
 }
+
+
