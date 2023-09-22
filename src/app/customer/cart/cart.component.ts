@@ -142,12 +142,30 @@ export class CartComponent implements OnInit {
     this.openApplyDiscountModal();
   }
   
+  discount : Discount | undefined;
+
   async confirmApplyDiscount(): Promise<void> {
     console.log('Sending discount code:', this.discountCode);
     try {
       let discount: Discount = await this.discountService.validateDiscountCode(this.discountCode);
-      if (discount && discount.discountAmount) {
-        this.cartTotal = this.cartTotal - discount.discountAmount;
+      this.discount = discount; // assign the validated discount to the component property
+
+      if (discount && discount.discountAmount && discount.discountID != null) {
+        
+        // Calculate the new cart total after applying the discount
+        const newCartTotal = this.cartTotal - discount.discountAmount;
+        
+        // Check if the new cart total is less than R20
+        if (newCartTotal < 20) {
+          // Inform the user and return from the method
+          this.toastr.warning('Cart total cannot be less than R20 after applying discount.', 'Warning');
+          // Keep the discount modal open and do not apply the discount
+          return;
+        } 
+
+        this.discountService.deleteDiscount(discount.discountID);
+        // If newCartTotal is valid, update the cartTotal, mark the discount as applied, and proceed
+        this.cartTotal = newCartTotal;
         console.log('New cart total:', this.cartTotal);
         this.isDiscountApplied = true;
   
