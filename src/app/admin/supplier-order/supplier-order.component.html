@@ -38,15 +38,17 @@
                 <!-- Ordered -->
                 <td>
                     <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sOrdered"
-                        [(ngModel)]="order.supplierOrderStatus.ordered" [disabled]="order.supplierOrderStatus.received"
-                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Ordered')">
+                        [(ngModel)]="order.supplierOrderStatus.ordered" [disabled]="order.supplierOrderStatus.received || order.supplierOrderStatus.paid"
+                        (change)="updateOrder(order, 0); AddAuditLog('Supplier Order Update Status Ordered')">
                 </td>
 
                 <!-- Paid -->
                 <td>
                     <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sPaid"
-                        [(ngModel)]="order.supplierOrderStatus.paid" [disabled]="!order.supplierOrderStatus.ordered || order.supplierOrderStatus.received" 
-                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Paid')">
+                        [(ngModel)]="order.supplierOrderStatus.paid"
+                        [disabled]="!order.supplierOrderStatus.ordered || order.supplierOrderStatus.paid"
+                        (change)="AddAuditLog('Supplier Order Update Status Paid')"
+                        (click)="openPaidModal(order.supplierOrderID!)">
                 </td>
 
                 <!-- Received -->
@@ -54,7 +56,7 @@
                     <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sReceived"
                         [(ngModel)]="order.supplierOrderStatus.received"
                         [disabled]="!order.supplierOrderStatus.ordered || !order.supplierOrderStatus.paid || order.supplierOrderStatus.received"
-                        (change)="updateOrder(order); AddAuditLog('Supplier Order Update Status Received'); openStockTakeModal(order.supplierOrderID!)"
+                        (change)="updateOrder(order, 0); AddAuditLog('Supplier Order Update Status Received'); openStockTakeModal(order.supplierOrderID!)"
                         (click)="openStockTakeModal(order.supplierOrderID!)">
                 </td>
                 <!-- Add this to your <tr> element -->
@@ -96,39 +98,46 @@
                     <!-- In your Add Supplier Order Modal form -->
                     <div class="mb-3">
                         <label for="wineName" class="form-label">Wine Name</label>
-                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Name"></i>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                            title="Please enter the Wine Name"></i>
                         <input *ngIf="selectedOrder" type="text" class="form-control" id="wineName" name="wineName"
                             [(ngModel)]="selectedOrder.wineName" required>
                     </div>
                     <div class="mb-3">
                         <label for="wineYear" class="form-label">Wine Year</label>
-                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Year"></i>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                            title="Please enter the Wine Year"></i>
                         <input *ngIf="selectedOrder" type="text" class="form-control" id="wineYear" name="wineYear"
                             [(ngModel)]="selectedOrder.wineYear" required>
                     </div>
                     <div class="mb-3">
                         <label for="wineType" class="form-label">Wine Type</label>
-                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine type"></i>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                            title="Please enter the Wine type"></i>
                         <input *ngIf="selectedOrder" type="text" class="form-control" id="wineType" name="wineType"
                             [(ngModel)]="selectedOrder.wineType" required>
                     </div>
                     <div class="mb-3">
                         <label for="winePrice" class="form-label">Wine Price</label>
-                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine price"></i>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                            title="Please enter the Wine price"></i>
                         <input *ngIf="selectedOrder" type="number" class="form-control" id="winePrice" name="winePrice"
-                            [(ngModel)]="selectedOrder.winePrice" min="1" required>
+                            [(ngModel)]="selectedOrder.winePrice" min="1" disabled
+                            placeholder="Order price will be added later">
                     </div>
 
                     <div class="mb-3">
                         <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
-                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the quantity ordered"></i>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                            title="Please enter the quantity ordered"></i>
                         <input *ngIf="selectedOrder" type="number" class="form-control" id="quantityOrdered"
                             name="quantity_Ordered" [(ngModel)]="selectedOrder.quantity_Ordered" min="1" required>
                     </div>
 
                     <div *ngIf="selectedOrder">
                         <label for="quantityOrdered" class="form-label">Supplier</label>
-                        <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please select the supplier ordered from"></i>
+                        <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                            title="Please select the supplier ordered from"></i>
                         <select id="supplierID" name="supplierID" [(ngModel)]="selectedOrder.supplierID"
                             class="form-control">
                             <option *ngFor="let supplier of suppliers" [value]="supplier.supplierID">{{supplier.name}}
@@ -197,8 +206,7 @@
     [ngStyle]="{'display': showStockTakeModel ? 'block' : 'none'}">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Stocktake Entry</h5>
+            <div class="modal-header">Stocktake Entry
                 <!-- <button type="button" class="btn-close" aria-label="Close"
                     (click)="closeStockTakeModal()"></button> -->
             </div>
@@ -214,7 +222,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="quantityReceived" class="form-label">Quantity Received</label>
-                        <input type="number" class="form-control" id="quantityReceived" name="quantityReceived" min="1" required  [(ngModel)]="QuantityReceived">
+                        <input type="number" class="form-control" id="quantityReceived" name="quantityReceived" min="1"
+                            required [(ngModel)]="QuantityReceived">
                     </div>
                 </form>
             </div>
@@ -228,3 +237,38 @@
 </div>
 
 
+<div class="modal" tabindex="-1" [ngClass]="{'show': showPaidModal}"
+    [ngStyle]="{'display': showPaidModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">Order Details
+                <!-- <button type="button" class="btn-close" (click)="closePaidModal()" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body">
+                <!-- Display currentOrder Information -->
+                <p><strong>Date ordered:</strong> {{ currentOrder.dateOrdered }}</p>
+                <p><strong>Wine:</strong> {{ currentOrder.wineName }}</p>
+                <p><strong>Quantity ordered:</strong> {{ currentOrder.quantity_Ordered }}</p>
+                <!-- Add other properties of currentOrder that you want to display -->
+
+                <!-- Input for order price with VAT -->
+                <div class="form-group">
+                    <label for="orderPriceWithVAT">Amount Paid (including VAT):</label>
+                    <input type="text" class="form-control" id="orderPriceWithVAT"
+                        [(ngModel)]="currentOrder.orderTotal" #orderTotalField="ngModel"
+                        pattern="^[0-9]+(\.[0-9]{1,2})?$" [min]="0" required>
+                </div>
+                <div *ngIf="orderTotalField.invalid && orderTotalField.touched" class="alert alert-danger">
+                    <div *ngIf="orderTotalField.errors?.['required']">Order Total is required.</div>
+                    <div *ngIf="orderTotalField.errors?.['min'] && !orderTotalField.errors?.['required']">Order cost can't be less than 0</div>
+                    <div *ngIf="orderTotalField.errors?.['pattern']">Please enter a valid amount for order total.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"
+                    [disabled]="orderTotalField.invalid || orderTotalField.value == 0"
+                    (click)="updateOrder(currentOrder, currentOrder.orderTotal!); AddAuditLog('SupplierOrder: Added cost of order')">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -52,6 +52,7 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   updateOrderStatus(orderId: number, newStatus: number) {
+    this.toastr.info("Please be patient, attempting to update order status", "Order status");
     this.orderService.updateOrderStatus(orderId, newStatus).subscribe(
       response => {
         const order = this.orders.find(order => order.wineOrderId === orderId);
