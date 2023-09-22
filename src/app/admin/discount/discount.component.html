@@ -29,7 +29,7 @@
     <tr *ngFor="let discount of discounts">
       <td>{{ discount.discountCode }}</td>
       <td>{{ discount.discountDescription }}</td>
-      <td class="right-align">R{{ discount.discountPercentage}}.00</td>
+      <td class="right-align">R{{ discount.discountAmount}.00</td>
       <td>
         <button class="btn btn-primary"
           (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
@@ -88,7 +88,7 @@
               title="Please enter the Discount Percentage"></i></label>
               <span style="color: #ff6666; font-size: smaller;">* Required</span>
             </div>
-            <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountPercentage"
+            <input type="number" class="form-control" id="discountAmount" [(ngModel)]="currentDiscount.discountAmount"
               name="discountAmount" required [min]="1" [max]="100" #discountAmountField="ngModel">
             <div *ngIf="discountAmountField.invalid && discountAmountField.touched" class="alert alert-danger">
               <div *ngIf="discountAmountField.errors?.['required']">Discount amount is required.</div>
