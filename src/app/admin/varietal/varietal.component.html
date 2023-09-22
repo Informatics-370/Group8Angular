@@ -74,7 +74,7 @@
                 title="Please enter the Wine Varietal Name"></i></label>
               <span style="color: #ff6666; font-size: smaller;">* Required</span>  
             </div>
-            <input type="text" class="form-control" id="varietalName" [(ngModel)]="currentVarietal.name"
+            <input type="text" class="form-control" id="varietalName"  placeholder="Enter varietal name" [(ngModel)]="currentVarietal.name"
               name="varietalName" required #nameField="ngModel">
             <div *ngIf="nameField.invalid && nameField.touched" class="alert alert-danger">
               <div *ngIf="nameField.errors?.['required']">Varietal name is required.</div>
@@ -87,7 +87,7 @@
                 title="Please enter the Wine Varietal Description"></i></label>            
                 <span style="color: #ff6666; font-size: smaller;">* Required</span>
             </div>
-            <textarea type="text" class="form-control" id="varietalDescription" [(ngModel)]="currentVarietal.description"
+            <textarea type="text" class="form-control" id="varietalDescription"  placeholder="Enter varietal description" [(ngModel)]="currentVarietal.description"
               name="varietalDescription" required #descField="ngModel"></textarea>
             <div *ngIf="descField.invalid && descField.touched" class="alert alert-danger">
               <div *ngIf="descField.errors?.['required']">Varietal description is required.</div>
