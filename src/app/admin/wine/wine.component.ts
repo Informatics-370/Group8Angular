@@ -539,15 +539,27 @@ export class WineComponent implements OnInit {
     }
   }
 
-  onWineTypeChange() {
+  isBlendSelected: boolean | undefined;
+
+  filterVarietals() {
     const wineTypeID = Number(this.currentWine.wineTypeID); // Convert to Number
     const selectedWineType = this.winetypes.find(w => w.wineTypeID === wineTypeID);
+  
     if (selectedWineType) {
-      this.filteredVarietals = selectedWineType.varietals;
+      this.filteredVarietals = selectedWineType.varietals.filter(v => v.blend === this.isBlendSelected);
     } else {
       this.filteredVarietals = [];
     }
   }
+  
+  onWineTypeChange() {
+    this.filterVarietals();
+  }
+  
+  onBlendChange() {
+    this.filterVarietals();
+  }
+  
   
   // <!-- Varietal ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 

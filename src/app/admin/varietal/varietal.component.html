@@ -26,6 +26,8 @@
         <th scope="col">Name</th>
         <th scope="col">Description</th>
         <th scope="col">Wine Type</th>
+        <th scope="col">Blend</th>
+
       </tr>
     </thead>
     <tbody>
@@ -33,6 +35,7 @@
         <td>{{ varietal.name }}</td>
         <td>{{ varietal.description }}</td>
         <td>{{varietal.wineType?.name}}</td>
+        <td style="text-transform: uppercase;" >{{varietal.blend}}</td>
         <td>
           <button class="btn btn-primary"
             (click)="varietal.varietalID !== undefined && openEditVarietalModal(varietal.varietalID)"
@@ -108,6 +111,24 @@
               <div>Wine type is required.</div>
             </div>
           </div>
+
+          <div class="mb-3">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="blend" class="form-label">Blend <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                title="Is this varietal a blend?"></i></label>
+                <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+
+            </div>
+          
+
+            <select class="form-control" id="blend" [(ngModel)]="currentVarietal.blend" name="blend" required #blendField="ngModel">
+                <option [ngValue]="true">YES</option>
+                <option [ngValue]="false">NO</option>
+            </select>
+            <div *ngIf="blendField.invalid && blendField.touched" class="alert alert-danger">
+                <div *ngIf="blendField.errors?.['required']">Blend selection is required.</div>
+            </div>
+        </div>
 
 
         </form>
