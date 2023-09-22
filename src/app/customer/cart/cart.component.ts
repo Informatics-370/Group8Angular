@@ -62,12 +62,17 @@ export class CartComponent implements OnInit {
       (cart: Cart) => {
         this.cart = cart;
         this.cartTotal = cart.cartTotal;
+        
+        // After loading the cart, update the cartItemCount BehaviorSubject
+        const totalCount = cart.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        this.cartService.updateCartItemCount(totalCount); // Assuming you have a method to update cartItemCount
       },
       error => {
         console.error('Error:', error);
       }
     );
   }
+  
 
   loadCartTotal(email: string): void {
     this.cartService.getCartTotal(email).subscribe(
@@ -220,7 +225,7 @@ export class CartComponent implements OnInit {
                     this.cartTotal = 0; // Reset the cart total
                     this.loadCart(winePurchase.userEmail);
                     // Reset the cart counter
-                    this.cartService.resetCartCounter();
+                    
                 },
                 error => {
                     console.error('Error:', error);

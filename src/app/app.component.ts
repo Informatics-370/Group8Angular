@@ -3,7 +3,12 @@ import { Router, NavigationEnd } from '@angular/router';
 import { DataServiceService } from './customer/services/data-service.service';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { UserViewModel } from './Model/userviewmodel';
+import { CartService } from './customer/services/cart.service';
 import { timer } from 'rxjs';
+import jwt_decode from 'jwt-decode';
+import { DecodedToken } from './customer/services/data-service.service';
+
+
 
 
 
@@ -29,10 +34,14 @@ export class AppComponent {
 
   ngOnInit(){
     this.checkAndSetLogoutTimer();
+    let token = localStorage.getItem('Token') || '';
+    let decodedToken = jwt_decode(token) as DecodedToken;
+    let email = decodedToken.sub;
+    this.cartService.getCart(email).subscribe();
   }
 
 
-  constructor(private router: Router, private dataService: DataServiceService, private toastr: ToastrService) {
+  constructor( private cartService: CartService , private router: Router, private dataService: DataServiceService, private toastr: ToastrService) {
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // List of admin routes

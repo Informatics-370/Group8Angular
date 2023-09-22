@@ -2,9 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/app/environment'; // update with your path to environment file
-import { Cart } from 'src/app/Model/Cart';
+import { Cart, CartItem } from 'src/app/Model/Cart';
 import { Wine } from 'src/app/Model/wine';
 import { BehaviorSubject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -27,20 +29,27 @@ export class CartService {
     }
   }
   private apiUrl = `${environment.baseApiUrl}api/cart`;  // Append your endpoint to base URL
+  private cartItemCount = new BehaviorSubject<number>(0);
+  cartItemCount$ = this.cartItemCount.asObservable();
+
 
   constructor(private http: HttpClient) { }  // Inject HttpClient
 
-  public cartCountSubject = new BehaviorSubject<number>(0);
-  public cartCount$ = this.cartCountSubject.asObservable();
-
-  setCartCount(count: number): void {
-    this.cartCountSubject.next(count);
-  }
 
   getCart(email: string): Observable<Cart> {
     this.setHeaders();
-    return this.http.get<Cart>(`${this.apiUrl}/${email}`, { headers: this.headers });
+    return this.http.get<Cart>(`${this.apiUrl}/${email}`, { headers: this.headers }).pipe(
+      tap(cart => {
+        // Update the cartItemCount BehaviorSubject
+        this.cartItemCount.next(cart.cartItems.length);
+      })
+    );
   }
+
+  public updateCartItemCount(count: number): void {
+    this.cartItemCount.next(count);
+  }
+  
 
   getWine(wineID: number): Observable<Wine> {
     this.setHeaders();
@@ -50,19 +59,54 @@ export class CartService {
   
   addToCart(email: string, cartItem: any): Observable<any> {
     this.setHeaders();
-    return this.http.post<any>(`${this.apiUrl}/${email}`, cartItem, { headers: this.headers });
+    return this.http.post<any>(`${this.apiUrl}/${email}`, cartItem, { headers: this.headers }).pipe(
+      switchMap(() => {
+        return this.getCart(email);
+      }),
+      tap(cart => {
+        // Update the cartItemCount based on the total number of items in the cart
+        const totalCount = cart.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        this.cartItemCount.next(totalCount);
+      })
+    );
   }
-
+  
   incrementCartItemQuantity(email: string, cartItemId: number): Observable<any> {
     this.setHeaders();
-    return this.http.put<any>(`${this.apiUrl}/${email}/increment/${cartItemId}`,{} ,{ headers: this.headers });
-}
-
-decrementCartItemQuantity(email: string, cartItemId: number): Observable<any> {
-  this.setHeaders();
-  return this.http.put(`${this.apiUrl}/${email}/decrement/${cartItemId}`, {}, { headers: this.headers });
-}
-
+    return this.http.put<any>(`${this.apiUrl}/${email}/increment/${cartItemId}`, {}, { headers: this.headers }).pipe(
+      switchMap(() => {
+        return this.getCart(email);
+      }),
+      tap(cart => {
+        // Update the cartItemCount based on the total number of items in the cart
+        const totalCount = cart.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        this.cartItemCount.next(totalCount);
+      })
+    );
+  }
+  
+  
+  decrementCartItemQuantity(email: string, cartItemId: number): Observable<any> {
+    this.setHeaders();
+    return this.http.put(`${this.apiUrl}/${email}/decrement/${cartItemId}`, {}, { headers: this.headers }).pipe(
+      tap(() => {
+        // Decrement the cartItemCount BehaviorSubject value
+        // Make sure it does not go below 0
+        this.cartItemCount.next(Math.max(0, this.cartItemCount.value - 1));
+      })
+    );
+  }
+  
+  clearCart(email: string): Observable<any> {
+    this.setHeaders();
+    return this.http.delete<any>(`${this.apiUrl}/${email}/clear`, { headers: this.headers }).pipe(
+      tap(() => {
+        // Reset the cartItemCount BehaviorSubject value to 0
+        this.cartItemCount.next(0);
+      })
+    );
+  }
+  
 
 getCartTotal(email: string): Observable<any> {
   this.setHeaders();
@@ -74,14 +118,7 @@ applyDiscount(email: string, newTotal: number): Observable<any> {
   return this.http.put<any>(`${this.apiUrl}/${email}/applyDiscount`, newTotal, { headers: this.headers });
 }
 
-
-clearCart(email: string): Observable<any> {
-  this.setHeaders();
-  return this.http.delete<any>(`${this.apiUrl}/${email}/clear`, { headers: this.headers });
+public resetCartItemCount(): void {
+  this.cartItemCount.next(0);
 }
-
-resetCartCounter(): void {
-  this.setCartCount(0);
-}
-
 }
