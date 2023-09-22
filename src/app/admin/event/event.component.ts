@@ -245,33 +245,31 @@ this.fileUploaded = true;
           console.log(`${key}: ${value}`);
         });
 
-        if (this.editingEvent) {
+        const extractFileName = (path: string): string => {
+          const parts = path.split('_');
+          return parts[parts.length - 1];
+        };
 
-          const extractFileName = (path: string): string => {
-            const parts = path.split('_');
-            return parts[parts.length - 1];
-          };
-  
-          let oldEventImagePath = this.currentEvent.filePath;
-          let oldEventImagePathConvert = extractFileName(oldEventImagePath);
-  
-          if (this.selectedFile) {
-            formData.delete('File');
-            formData.delete('filePath');
-            formData.append('filePath', "");
-  
-            if (this.selectedFile.name != oldEventImagePathConvert && this.selectedFile.name.length != 0) {
-              formData.append('File', this.selectedFile);
-            } else {
-              formData.append('File', this.selectedFile);
-            }
-          } else if (this.selectedFile == null) {
-            formData.delete('File');
-            formData.delete('filePath');
-            formData.append('filePath', "");
-            formData.append('File', oldEventImagePathConvert);
+        let oldEventImagePath = this.currentEvent.filePath;
+        let oldEventImagePathConvert = extractFileName(oldEventImagePath);
+        if (this.selectedFile) {
+          formData.delete('File');
+          formData.delete('filePath');
+          formData.append('filePath', "");
+
+          if (this.selectedFile.name != oldEventImagePathConvert && this.selectedFile.name.length != 0) {
+            formData.append('File', this.selectedFile);
+          } else {
+            formData.append('File', this.selectedFile);
           }
+        } else if (this.selectedFile == null) {
+          formData.delete('File');
+          formData.delete('filePath');
+          formData.append('filePath', "");
+          formData.append('File', oldEventImagePathConvert);
+        }
 
+        if (this.editingEvent) {
           await this.eventService.updateEvent(this.currentEvent.eventID!, formData);
           const updatedEvent = await this.eventService.getEvent(this.currentEvent.eventID);
           const index = this.events.findIndex(event => event.eventID === this.currentEvent.eventID);
