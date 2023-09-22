@@ -29,7 +29,10 @@
     <tr *ngFor="let discount of discounts">
       <td>{{ discount.discountCode }}</td>
       <td>{{ discount.discountDescription }}</td>
-      <td class="right-align">R{{ discount.discountAmount}.00</td>
+
+      <td class="right-align">R{{ discount.discountAmount}}.00</td>
+
+
       <td>
         <button class="btn btn-primary"
           (click)="discount.discountID !== undefined && openEditDiscountModal(discount.discountID)"
@@ -123,7 +126,7 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to delete this discount?</p>
-<br/>
+        <br/>
         <p>Discount Code: {{ discountToDeleteDetails?.discountCode }}</p>
         <p>Discount Description: {{ discountToDeleteDetails?.discountDescription }}</p>
         <p>Discount Percentage: {{ discountToDeleteDetails?.discountPercentage }}%</p>
