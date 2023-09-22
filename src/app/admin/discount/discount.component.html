@@ -87,7 +87,7 @@
 
           <div class="mb-3">
             <div class="d-flex justify-content-between" style="margin: 0px;">
-              <label for="discountAmount" class="form-label">Discount Percentage Amount <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+              <label for="discountAmount" class="form-label">Discount Amount <i class="fa fa-question-circle" data-bs-toggle="tooltip"
               title="Please enter the Discount Percentage"></i></label>
               <span style="color: #ff6666; font-size: smaller;">* Required</span>
             </div>
@@ -96,7 +96,7 @@
             <div *ngIf="discountAmountField.invalid && discountAmountField.touched" class="alert alert-danger">
               <div *ngIf="discountAmountField.errors?.['required']">Discount amount is required.</div>
               <div *ngIf="discountAmountField.errors?.['min']">Discount amount cannot be zero.</div>
-              <div *ngIf="discountAmountField.errors?.['max']">Discount amount cannot be more than 100.</div>
+              <!-- <div *ngIf="discountAmountField.errors?.['max']">Discount amount cannot be more than 100.</div> -->
             </div>
           </div>
           
@@ -129,7 +129,7 @@
         <br/>
         <p>Discount Code: {{ discountToDeleteDetails?.discountCode }}</p>
         <p>Discount Description: {{ discountToDeleteDetails?.discountDescription }}</p>
-        <p>Discount Percentage: {{ discountToDeleteDetails?.discountPercentage }}%</p>
+        <p>Discount Amount: R{{ discountToDeleteDetails?.discountAmount | number:'1.2-2'}}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>
