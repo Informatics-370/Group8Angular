@@ -35,8 +35,9 @@
       <th scope="col">Varietal</th>
       <th scope="col">Type</th>
       <!-- <th scope="col">Restock Limit</th> -->
-      <th scope="col">Price (ZAR)</th>
       <th scope="col">Display</th>
+      <th scope="col">Price (ZAR)</th>
+
       <th scope="col"></th>
     </tr>
   </thead>
@@ -56,11 +57,13 @@
       <td class="align-middle">{{ getVarietalName(wine.varietalID) }}</td> <!-- Added Varietal data -->
       <td class="align-middle">{{ getWinetypeName(wine.wineTypeID) }}</td> <!-- Added Type data -->
       <!-- <td class="align-middle">{{ wine.restockLimit }}</td> -->
-      <td class="align-middle">{{ wine.price }}</td>
+     
       <td class="align-middle">
         <span *ngIf="wine.displayItem else disabledText"> Enabled</span><ng-template #disabledText>
           Disabled</ng-template>
       </td>
+      <td class="align-middle right-align">R{{ wine.price }}.00</td>
+
       <td class="align-middle">
         <button class="btn btn-primary" (click)="wine.wineID !== undefined && openEditWineModal(wine.wineID)"
           style="margin-right: 4px;">
@@ -90,23 +93,29 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeWineModal()"></button>
       </div>
       <div class="modal-body">
+
+
         <form #wineForm="ngForm" (ngSubmit)="submitWineForm(wineForm); onSubmitClick()">
-          <div class="mb-3">
-            <label for="name" class="form-label">Wine Name</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Name"></i>
+
+           <div class="mb-3">
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Name <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Name"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <input type="text" class="form-control" id="name" [(ngModel)]="currentWine.name" name="name" required
-              #wineNameField="ngModel">
+              placeholder="Enter wine name" #wineNameField="ngModel">
             <div *ngIf="wineNameField.invalid && wineNameField.touched" class="alert alert-danger">
               <div *ngIf="wineNameField.errors?.['required']">Wine name is required.</div>
             </div>
           </div>
 
           <div class="mb-3">
-            <label for="vintage" class="form-label">Wine Vintage</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please enter the Wine Vintage {The year the wine was made in.}"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Vintage <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Vintage"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <input type="text" class="form-control" id="vintage" [(ngModel)]="currentWine.vintage" name="vintage"
-              required #wineVintageField="ngModel" pattern="^\d{4}$">
+              required placeholder="Enter wine vintage (e.g. 2023)" #wineVintageField="ngModel" pattern="^\d{4}$">
             <div *ngIf="wineVintageField.invalid && wineVintageField.touched" class="alert alert-danger">
               <div *ngIf="wineVintageField.errors?.['required']">Wine vintage is required.</div>
               <div *ngIf="wineVintageField.errors?.['pattern']">Wine Vintage must be a valid Year in format yyyy.</div>
@@ -114,11 +123,13 @@
           </div>
 
           <div class="mb-3">
-            <label for="wineTastingNote" class="form-label">Wine Tasting Note</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Tasting notes"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Tasting Note <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Tasting Note"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <textarea type="text" class="form-control" id="wineTastingNote" [(ngModel)]="currentWine.wineTastingNote"
-              name="wineTastingNote" required maxlength="255" required (input)="updateCharacterCount($event)"
-              #wineTastingNoteField="ngModel"></textarea>
+              name="wineTastingNote" required maxlength="255" placeholder="Enter tasting notes" 
+              (input)="updateCharacterCount($event)" #wineTastingNoteField="ngModel"></textarea>
             <div class="character-count">{{characterCount || 0}} / 255 characters</div>
             <div *ngIf="wineTastingNoteField.invalid && wineTastingNoteField.touched" class="alert alert-danger">
               <div *ngIf="wineTastingNoteField.errors?.['required']">Wine Tasting Note is required.</div>
@@ -127,10 +138,12 @@
 
 
           <div class="mb-3">
-            <label for="price" class="form-label">Wine Price</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Price"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Price <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Price"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <input type="number" class="form-control" id="price" [(ngModel)]="currentWine.price" name="price" required
-              [min]="0.01" #winePriceField="ngModel">
+              [min]="0.01" placeholder="Enter wine price" #winePriceField="ngModel">
             <div *ngIf="winePriceField.invalid && winePriceField.touched" class="alert alert-danger">
               <div *ngIf="winePriceField.errors?.['required']">Wine price is required.</div>
               <div *ngIf="winePriceField.errors?.['min']">Wine price cannot be zero.</div>
@@ -138,12 +151,13 @@
           </div>
 
           <div class="mb-3">
-            <label for="displayItem" class="form-label">Display Wine in Shop</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please Choose Yes or No Depeding if you want to show the Wine on the Shop"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Shop Display <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Wine Shop Display"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <select class="form-control" required [(ngModel)]="currentWine.displayItem" id="displayItem"
               name="displayItem" #wineDisplayField="ngModel">
-              <option [ngStyle]="{'color': 'grey'}" [value]="null" disabled selected>----Select an option----</option>
+              <option [ngStyle]="{'color': 'grey'}" [value]="null" disabled selected>----Select Display Option----</option>
               <option [value]="true">Yes</option>
               <option [value]="false">No</option>
             </select>
@@ -157,20 +171,20 @@
 
           <!-- Wine Type Dropdown -->
           <div class="mb-3">
-            <label for="wineType" class="form-label">Wine Type</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please select the appropriate the Wine Type"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Type <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Type"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <select class="form-control" id="wineType" [(ngModel)]="currentWine.wineTypeID" name="wineType" required
               #wineTypeField="ngModel" (change)="onWineTypeChange()">
-              <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a wine type----</option>
+              <option [ngStyle]="{'color': 'grey'}" [value]="'0'" disabled selected>----Select a Wine Type----</option>
               <option *ngFor="let winetype of winetypes" [value]="winetype.wineTypeID">{{winetype.name}}</option>
             </select>
-
-            <div *ngIf="(wineTypeField.value == '0' || wineTypeField.invalid) && wineTypeField.touched"
-              class="alert alert-danger">
-              <div>Wine type is required.</div>
+            <div *ngIf="wineTypeField.invalid && wineTypeField.touched" class="alert alert-danger">
+              <div *ngIf="wineTypeField.errors?.['required']">Wine Type is required.</div>
             </div>
           </div>
+
 
           <!-- Blend Selection Dropdown -->
           <div class="mb-3" *ngIf="currentWine.wineTypeID && currentWine.wineTypeID !== 0">
@@ -186,9 +200,10 @@
           <!-- Wine Varietal Dropdown -->
           <div class="mb-3"
             *ngIf="currentWine.wineTypeID && currentWine.wineTypeID !== 0 && isBlendSelected !== undefined">
-            <label for="varietal" class="form-label">Wine Varietal</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please select the appropriate the Wine Varietal"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Varietal <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please enter the Wine Varietal(s)"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <select class="form-control" id="varietal" [(ngModel)]="currentWine.varietalID" name="varietal" required
               #wineVarietalField="ngModel">
               <option [ngStyle]="{'color': 'grey'}" [value]="'0'">----Select a varietal----</option>
@@ -205,9 +220,10 @@
 
           <!---------------------------------------------------------------------------------------------------------->
           <div class="mb-3">
-            <label for="filePath" class="form-label">Wine Image</label>
-            <i class="fa fa-question-circle" data-bs-toggle="tooltip"
-              title="Please Choose the image you want to display for the Wine"></i>
+            <div class="d-flex justify-content-between" style="margin: 0px;">
+              <label for="name" class="form-label">Wine Image <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please select a Wine Image"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>  
+            </div>
             <input type="file" class="form-control" id="filePath" accept=".png, .jpg, .jpeg"
               (change)="onFileSelected($event)">
             <!-- Display error if no file is uploaded or invalid type -->
@@ -226,8 +242,9 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
         <button type="button" class="btn btn-primary"
-          [disabled]="wineForm.invalid || (!fileUploaded || invalidFileType) || wineDisplayField.value == 'null' || wineTypeField.value == '0' || isSaving == true"
-          (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
+        [disabled]="wineForm.invalid || (editingWine ? false : (!fileUploaded || invalidFileType)) || wineDisplayField.value == 'null' || wineTypeField.value == '0' || isSaving == true"
+        (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
+      
       </div>
 
     </div>
