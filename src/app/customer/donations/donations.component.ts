@@ -18,7 +18,7 @@ interface DecodedToken {
 
 export class DonationsComponent {
 
-  amount: number = 0; // Initialize to a default value
+  amount: number | null = null;
   email: string | null = null;
   hostedUrl: string | null = null;
 
@@ -31,7 +31,7 @@ export class DonationsComponent {
   }
 
   makeDonation(): void {
-    if (this.amount <= 0) {
+    if (this.amount === null || this.amount <= 0) {
       this.toastr.error('Please enter an amount greater than zero.');  // <-- Toastr error
       return;
     }
@@ -40,7 +40,7 @@ export class DonationsComponent {
       description: 'Charity donation payment',
       pricing_type: 'fixed_price',
       local_price: {
-        amount: this.amount,
+        amount: this.amount ?? 0,
         currency: 'ZAR'
       }
     };

@@ -14,3 +14,52 @@
   color: white;
   text-align: center;
 }
+
+
+.donation-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.img-column, .form-column {
+  padding: 20px;
+}
+
+.donation-image {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-label i {
+  cursor: pointer;
+}
+
+.donation-input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.donation-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.text-row {
+  margin-top: 20px;
+}
+
+.donation-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
