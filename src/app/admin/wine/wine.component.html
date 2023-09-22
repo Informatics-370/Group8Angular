@@ -62,7 +62,7 @@
         <span *ngIf="wine.displayItem else disabledText"> Enabled</span><ng-template #disabledText>
           Disabled</ng-template>
       </td>
-      <td class="align-middle right-align">R{{ wine.price }}.00</td>
+      <td class="align-middle right-align">R{{ wine.price | number:'1.2-2' }}</td>
 
       <td class="align-middle">
         <button class="btn btn-primary" (click)="wine.wineID !== undefined && openEditWineModal(wine.wineID)"

@@ -27,27 +27,32 @@
                                     <th scope="col" class="text-left">Wine Name</th>
                                     <th scope="col" class="text-left">Quantity</th>
                                     <th scope="col" class="text-left">Actions</th>
-                                    <th scope="col" class="text-left">Wine Item Price</th>
+                                    <th scope="col" class="text-left">Wine Price</th>
+                                    <th scope="col" class="text-left">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of cart.cartItems; let i = index">
-                                    <th scope="row" class="text-left">{{ i + 1 }}</th>
-                                    <td class="text-left">
-                                        {{getWineDetails(item.wineID)?.name}}
-                                    </td>
-                                    <td class="text-left">{{item.quantity}}</td>
-                                    <td class="text-left">
-                                        <i class="bi bi-dash-circle" (click)="decrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
-                                        <i class="bi bi-plus-circle-fill" (click)="incrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
-
-                                    </td>
-                                    <td class="text-left">
-                                      R {{ item.quantity * (getWineDetails(item.wineID)?.price || 0) }}
-                                    </td>
-                                    <td></td>
-                                </tr>
+                              <tr *ngFor="let item of cart.cartItems; let i = index">
+                                <th scope="row" class="text-left">{{ i + 1 }}</th>
+                                <td class="text-left">
+                                  {{ getWineDetails(item.wineID)?.name }}
+                                </td>
+                                <td class="text-left">{{ item.quantity }}</td>
+                                <td class="text-left">
+                                  <i class="bi bi-dash-circle" (click)="decrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
+                                  <i class="bi bi-plus-circle-fill" (click)="incrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
+                                </td>
+                            
+                                <!-- Access the price property of the wine object within each CartItem -->
+                                <td>R {{ item.wine.price | number:'1.2-2' }}</td>
+                            
+                                <td class="text-left">
+                                  R {{ item.quantity * (getWineDetails(item.wineID)?.price || 0) | number:'1.2-2' }}
+                                </td>
+                                <td></td>
+                              </tr>
                             </tbody>
+                            
                         </table>
                     </div>
 
@@ -62,6 +67,8 @@
             </div>
         </div>
     </div>
+
+    <!-- <pre>{{cart | json }}</pre> -->
 
 <!-- Cart total table -->
 <div class="row justify-content-start">
@@ -111,6 +118,8 @@
           </span>
           <span class="warning-text">
             Note that this will delete the discount code from the database, and it will not be able to be used again.
+            <br>
+            It will also proceed to payment.
           </span>
         </p>
         <p>Code: {{ discountCode }}</p>

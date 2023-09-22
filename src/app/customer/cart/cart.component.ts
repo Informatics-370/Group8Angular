@@ -142,8 +142,7 @@ export class CartComponent implements OnInit {
     try {
       let discount: Discount = await this.discountService.validateDiscountCode(this.discountCode);
       if (discount && discount.discountAmount) {
-        this.cartTotal = this.cartTotal - (this.cartTotal * discount.discountAmount / 100);
-        this.cartTotal = Math.round(this.cartTotal * 100) / 100;
+        this.cartTotal = this.cartTotal - discount.discountAmount;
         console.log('New cart total:', this.cartTotal);
         this.isDiscountApplied = true;
   
@@ -152,9 +151,11 @@ export class CartComponent implements OnInit {
         let email = decodedToken.sub;
   
         this.cartService.applyDiscount(email, this.cartTotal).subscribe(
-          () => {
+          async () => {
             this.toastr.success('Discount code applied successfully!', 'Discount Code');
             this.closeApplyDiscountModal();
+            // Trigger the payment function after the discount has been applied successfully
+            await this.onProceedToPayment();
           },
           error => {
             console.error('Error updating discounted total:', error);

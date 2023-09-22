@@ -30,7 +30,7 @@
       <td>{{ discount.discountCode }}</td>
       <td>{{ discount.discountDescription }}</td>
 
-      <td class="right-align">R{{ discount.discountAmount}}.00</td>
+      <td class="right-align">R{{ discount.discountAmount  | number:'1.2-2'}}</td>
 
 
       <td>
