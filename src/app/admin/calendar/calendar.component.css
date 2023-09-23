@@ -7,7 +7,7 @@
   table {
     width: 100%; 
     border-collapse: collapse; 
-    pointer-events: none;
+    cursor: default;
   }
   
   table th {
@@ -33,11 +33,12 @@
   table tr:nth-child(even) {
     background-color: #f2f2f2; 
   }  
-
+  
+/* 
   table tr:hover {
     background-color: #ddd; 
-  }
-  
+  } 
+*/  
 
 table td .cell {
   display: flex;
@@ -56,8 +57,13 @@ table td .event {
   text-align: left;  
   padding: 5px 10px;
   font-size: 17px;
+  cursor: pointer;
 }
 
 .custom-icon {
     font-size: 10px;
+  }
+
+  table td .event:hover {
+    color: #0273cf;
   }

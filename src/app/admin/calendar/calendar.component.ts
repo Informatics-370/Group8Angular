@@ -95,6 +95,19 @@ export class CalendarComponent {
     this.selectedMonth = this.months[this.monthIndex] + ' ' + this.year; // Set selectedMonth
     this.generateCalendarData();
   }
+
+  showEventModal: boolean = false;
+  currentEvent: Event = new Event();
+
+
+  openEventModal(event: any) {
+    this.currentEvent = event;
+    this.showEventModal = true;
+  }
+
+  closeEventModal() {
+    this.showEventModal = false;
+  }
   
  
 }
