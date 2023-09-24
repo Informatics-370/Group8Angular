@@ -5,6 +5,12 @@ import { Router } from '@angular/router';
 import { Customer } from 'src/app/Model/customer';
 import { NgForm } from '@angular/forms';
 import { CustomersService } from 'src/app/admin/services/customers.service';
+import { OrderService } from '../services/order.service';
+import { Order } from 'src/app/Model/order';
+import { OrderStatusEnum } from 'src/app/Model/OrderStatusEnum';
+import { SuperuserService } from 'src/app/admin/services/superuser.service';
+import { PaymentService } from '../services/payment.service';
+import { TicketPurchase } from 'src/app/Model/TicketPurchase';
 
 @Component({
   selector: 'app-user-information',
@@ -19,12 +25,16 @@ export class UserInformationComponent implements OnInit {
   customerToDelete: any = null;
   customerToDeleteDetails: any = null;
   confirmationText: string = 'Confirm'
+  order: Order[] | undefined;
 
   constructor(
     private dataService: DataServiceService,
     private toastr: ToastrService,
     private router: Router,
-    private customerService: CustomersService
+    private customerService: CustomersService,
+    private orderService: OrderService,
+    private superuserService: SuperuserService,
+    private paymentService: PaymentService
   ) {}
 
   ngOnInit() {
@@ -104,29 +114,75 @@ export class UserInformationComponent implements OnInit {
     }
   }
   
+
+  loadOrders(userEmail: string): void {
+    this.orderService.getOrdersForUser(userEmail).subscribe(
+      (data: Order[]) => {
+        this.order = data;
+      },
+      (error) => {
+        console.error('Error fetching orders:', error);
+      }
+    );
+  }
+
   async deleteCustomer() {
-    // Implement logic to handle the delete customer action here
     if (this.user) {
-        try {
-            await this.customerService.DeleteCustomer(this.customerToDelete).subscribe((result: any) => {
-              console.log(result);
-              this.toastr.success("Success", "Deleted Customer Account");
+      try {
+    // Load orders and check for undelivered ones
+    const orders = await this.orderService.getOrdersForUser(this.user.email).toPromise();
+    let hasUndeliveredOrders = false;
 
-              this.dataService.LogOut();
-              this.router.navigate(['/clienthome']);
-              localStorage.removeItem('Token');
-              this.dataService.userValue!.email = "";
-              this.dataService.userValue!.username = "";
-              this.dataService.userValue!.token = "";
-              this.dataService.userValue!.roles = [];
-              this.dataService.getUserFromToken();
-            });
+    if (orders) {
+     hasUndeliveredOrders = orders.some((order: Order) => order.orderStatusId !== OrderStatusEnum.Collected);
+    }
 
-        } catch (error) {
-            console.error(error);
-            this.toastr.error('An error occurred while deleting the customer.', 'Delete Customer');
+        if (hasUndeliveredOrders) {
+          this.toastr.error("Cannot delete account with pending orders", "Delete Customer");
+          return;
         }
-        this.closeDeleteCustomerModal();
+
+// Role checks before deletion
+if (this.dataService.userValue!.roles.some(r => ['superuser', 'admin', 'employee'].includes(r.toLowerCase()))) {
+  this.toastr.error("Super Users, Admins and Employees can't delete accounts from the client side. Go to the admin side for deletion.", "Delete Customer");
+  return;
+}
+
+console.log(`User roles: ${this.dataService.userValue!.roles.join(", ")}`);
+
+//Check if the user still has any tickets that havent passed the event date
+// Load purchased tickets and check for events that haven't occurred
+const purchasedTickets = await this.paymentService.getPurchasedTickets().toPromise();
+let hasFutureEvents = false;
+
+if (purchasedTickets) {
+  hasFutureEvents = purchasedTickets.some((ticket: TicketPurchase) => new Date(ticket.eventDate) > new Date());
+}
+
+if (hasFutureEvents) {
+  this.toastr.error("Cannot delete account with upcoming events", "Delete Customer");
+  return;
+}
+        // Proceed to delete customer
+        await this.customerService.DeleteCustomer(this.customerToDelete).toPromise();
+  
+        this.toastr.success("Success", "Deleted Customer Account");
+        this.dataService.LogOut();
+        this.router.navigate(['/clienthome']);
+        localStorage.removeItem('Token');
+        this.dataService.userValue!.email = "";
+        this.dataService.userValue!.username = "";
+        this.dataService.userValue!.token = "";
+        this.dataService.userValue!.roles = [];
+        this.dataService.getUserFromToken();
+        
+      } catch (error) {
+        console.error(error);
+        this.toastr.error('An error occurred while deleting the customer.', 'Delete Customer');
+      }
+    } else {
+      this.toastr.error('No user data found.', 'Delete Customer');
     }
 }
 }
+ 
