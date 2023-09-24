@@ -15,6 +15,9 @@ import { StockTake } from 'src/app/Model/stocktake';
 import { StockTakeService } from '../services/stocktake.service';
 import { NgForm } from '@angular/forms';
 import { refresh } from 'aos';
+import { Inventory } from 'src/app/Model/inventory';
+import { InventoryService } from '../services/inventory.service';
+import { WineService } from '../services/wine.service';
 
 @Component({
   selector: 'app-supplier-order',
@@ -22,6 +25,7 @@ import { refresh } from 'aos';
   styleUrls: ['./supplier-order.component.css']
 })
 export class SupplierOrderComponent implements OnInit {
+  // SupplierOrders
   supplierOrders: SupplierOrder[] = [];
   selectedOrder?: SupplierOrder | null = null;
   currentOrder: SupplierOrder = new SupplierOrder();
@@ -29,29 +33,40 @@ export class SupplierOrderComponent implements OnInit {
   supplierOrderToDelete: SupplierOrder | null = null;
   showAddSupplierOrderModal = false;
   showPaidModal: boolean = false;
+
+  //Suppliers
   suppliers: Supplier[] = [];
+
+  //StockTake
   showStockTakeModel = false;
   stocktakes: StockTake[] = [];
   selectedStocktake: any = {};
+  QuantityReceived: number = 0;
+
+  //Inventory
+  inventories: Inventory[] = [];
+  wineNamesMap: Map<number, string> = new Map();
 
   constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService,
     private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService,
-    private stocktakeService: StockTakeService) { 
+    private stocktakeService: StockTakeService, private inventoryService: InventoryService, private wineService: WineService) { 
       this.selectedStocktake = new StockTake();
     }
 
   ngOnInit(): void {
     this.getSupplierOrders();
     this.getSuppliers();
+    this.getInventories();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
   }
 
+  //!Load all the necessary information for SupplierOrders
   getSupplierOrders(): void {
     this.supplierOrderService.getSupplierOrders().subscribe(
       orders => {
         this.supplierOrders = orders;
-        console.log("Orders:", this.supplierOrders);
+        //console.log("Orders:", this.supplierOrders);
       },
       error => {
         this.toastr.error('Error, failed to connect to the database', 'Supplier Order Table');
@@ -63,9 +78,48 @@ export class SupplierOrderComponent implements OnInit {
   getSuppliers(): void {
     this.supplierService.getSuppliers().subscribe(suppliers => {
       this.suppliers = suppliers;
-      console.log("Suppliers:", this.suppliers); // Check output
+      //console.log("Suppliers:", this.suppliers); // Check output
     });
   }
+
+  getInventories(): void {
+    this.inventoryService.getFullInventory().then(async (result: any) => {
+      this.inventories = result;
+
+      for (let inventory of this.inventories) {
+        let wineName = await this.getWineNameFromInventory(inventory.inventoryID);
+        this.wineNamesMap.set(inventory.inventoryID, wineName);
+      }
+      // /console.log("Inventory:", this.inventories);
+    })
+  }
+
+  //! Loaded all the neccessary information for SupplierOrders
+
+  async getWineNameFromInventory(id: number): Promise<string> {
+    try {
+      // Get Inventory object by id
+      let inventory = await this.inventoryService.getItemInventory(id);
+      
+      if (inventory) {
+        // Get wineID from the Inventory object
+        let wineID = inventory.wineID;
+        
+        // Get Wine object using wineID
+        let wine = await this.wineService.getWine(wineID);
+        
+        if (wine) {
+          // Return wineName from the Wine object
+          return wine.name;
+        }
+      }
+      throw new Error('Inventory or Wine not found');
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  
 
   getQuantityOrdered() {
     return this.selectedOrder ? this.selectedOrder.quantity_Ordered : 0;
@@ -107,14 +161,6 @@ export class SupplierOrderComponent implements OnInit {
     );
   }
   
-  Stocktake(order: SupplierOrder, form: NgForm): void{
-    let wineName = order.wineName;
-    let quantityOrdered = order.quantity_Ordered;
-  }
-
-
-
-
   updateOrder(order: SupplierOrder, orderTotal: number): void {
     console.log("Current Order:", orderTotal);
     if (order.supplierOrderStatus) {
@@ -158,6 +204,58 @@ export class SupplierOrderComponent implements OnInit {
     }
   }
 
+  openPaidModal(id: number){
+    let originalOrder = this.supplierOrders.find(x => x.supplierOrderID === id);
+    if (originalOrder) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentOrder = {...originalOrder};
+    }
+    this.showPaidModal = true;
+  }
+
+  openStockTakeModal(id: number){
+    let originalOrder = this.supplierOrders.find(x => x.supplierOrderID === id);
+    if (originalOrder) {
+      // Clone the original Customer Details object and assign it to currentBlacklistC
+      this.currentOrder = {...originalOrder};
+    }
+    this.showStockTakeModel = true;
+  }
+
+  closePaidModal() {
+    this.showPaidModal = false;
+  }
+
+  async submitStocktake(stocktakeForm: NgForm): Promise<void> {
+
+    if (stocktakeForm.valid) {
+      console.log('Quantity Received',this.QuantityReceived)
+      let newStockTake: StockTake = {
+        stocktakeID: 0,
+        quantityOrdered: this.currentOrder.quantity_Ordered!,
+        quantityReceived: this.QuantityReceived,
+        dateDone: new Date(),
+        added: false,
+        supplierOrderID: this.currentOrder.supplierOrderID!
+      };
+    console.log(newStockTake);
+  
+  try{
+    await this.stocktakeService.AddStockTake(newStockTake);
+    stocktakeForm.resetForm();
+    this.closeStockTakeModal();
+  }
+    catch{}
+  }
+
+}
+
+  closeStockTakeModal(){
+    this.showStockTakeModel = false;
+  }
+
+  //? AUDIT TRAIL 
+
   AuditTrail: AuditTrail[] = [];
   currentAudit: AuditTrail = new AuditTrail();
   user: Customer | undefined;
@@ -190,100 +288,4 @@ export class SupplierOrderComponent implements OnInit {
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
   }
-
-
-  // openStockTakeModal() {
-  //   this.showStockTakeModel = true;
-  // }
-
-  // closeStockTakeModal() {
-  //   this.showStockTakeModel = false;
-  // }
-
-
-
-
-
-  // async submitStocktake(stocktakeForm: NgForm): Promise<void> {
-  //   if (stocktakeForm.valid) {
-  //     try {
-  //       const stocktakeData = stocktakeForm.value;
-  //       console.log('EK sukkel', stocktakeData);
-  
-  //       // Assuming you have a stocktakeService to add a new stocktake
-  //       const submittedStocktake: StockTake = await this.stocktakeService.AddStockTake(stocktakeData).toPromise();
-        
-  //       this.stocktakes.push(submittedStocktake);
-  //       this.closeStockTakeModal();
-  //       stocktakeForm.resetForm();
-  //       console.log(submittedStocktake);
-        
-  //       this.toastr.success('Stocktake entry added successfully', 'Stocktake');
-  //     } catch (error) {
-  //       console.error(error);
-  //       this.toastr.error('Failed to add stocktake', 'Stocktake');
-  //       this.closeStockTakeModal();
-  //     }
-  //   }
-  // }
-
-  openPaidModal(id: number){
-    let originalOrder = this.supplierOrders.find(x => x.supplierOrderID === id);
-    if (originalOrder) {
-      // Clone the original Customer Details object and assign it to currentBlacklistC
-      this.currentOrder = {...originalOrder};
-    }
-    this.showPaidModal = true;
-  }
-
-  closePaidModal() {
-    this.showPaidModal = false;
-  }
-
-
-
-
-
-
-  openStockTakeModal(id: number) {
-    let originalOrder = this.supplierOrders.find(x => x.supplierOrderID === id);
-    if (originalOrder) {
-      // Clone the original Customer Details object and assign it to currentBlacklistC
-      this.currentOrder = {...originalOrder};
-    }
-    this.showStockTakeModel = true;
-    console.log('Current Order', this.currentOrder)
-  }
-
-  closeStockTakeModal() {
-    this.selectedStocktake = null;
-    this.showStockTakeModel = false;
-  }
-
-
-  public QuantityReceived: number = 0;
-
-  async submitStocktake(stocktakeForm: NgForm): Promise<void> {
-
-    if (stocktakeForm.valid) {
-      console.log('Quantity Received',this.QuantityReceived)
-      let newStockTake: StockTake = {
-        stocktakeID: 0,
-        wineName: this.currentOrder.wineName!,
-        quantityOrdered: this.currentOrder.quantity_Ordered!,
-        quantityReceived: this.QuantityReceived,
-        dateDone: new Date(),
-        added: false
-      };
-    console.log(newStockTake);
-  
-  try{
-    await this.stocktakeService.AddStockTake(newStockTake);
-    stocktakeForm.resetForm();
-    this.closeStockTakeModal();
-  }
-    catch{}
-  }
-
-}
 }

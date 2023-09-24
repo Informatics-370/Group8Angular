@@ -23,6 +23,7 @@ import { WriteOffsService } from '../services/write-offs.service';
 import { StockTakeService } from '../services/stocktake.service';
 import { StockTake } from 'src/app/Model/stocktake';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
+import { SupplierOrderService } from '../services/supplier-order.service';
 
 
 
@@ -59,7 +60,11 @@ export class InventoryComponent implements OnInit{
     winetypes: WineType[] = []; 
     varietals: Varietal[] = []; 
 
-    
+    currentPage: boolean = true;
+
+    inventories: Inventory[] = [];
+    public wineNamesMap = new Map<number, string>();
+
 
     constructor(private writeORService: WriteORService,
                 private router: Router,
@@ -69,7 +74,7 @@ export class InventoryComponent implements OnInit{
                 private winetypeService: WinetypeService,
                 private varietalService: VarietalService
                 , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService
-                , private writeoffsService: WriteOffsService, private stocktakeService: StockTakeService
+                , private writeoffsService: WriteOffsService, private stocktakeService: StockTakeService, private supplierOrderService: SupplierOrderService
                ) {}
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -82,7 +87,8 @@ export class InventoryComponent implements OnInit{
       this.userDetails = this.dataService.getUserFromToken();
       this.loadUserData();
       this.loadStockTake();
-
+      this.getInventories();
+      console.log("currentPage", this.currentPage);
     }
 
 // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -508,22 +514,95 @@ closeWROModal() {
 this.showWROModal = false;
 }
 
-currentPage: string = 'inventoryOnHand';
-
 showCurrentPage() {
-  this.currentPage = 'inventoryOnHand'; // Switch to the "Current Page" tab
+  this.currentPage = true; // Switch to the "Current Page" tab
 }
 
 showStockTakePage() {
-  this.currentPage = 'stockTake'; // Switch to the "Write Offs" tab
+  this.currentPage = false; // Switch to the "Write Offs" tab
+  this.loadStockTake();
 }
 
 stocktake: StockTake[] = [];
 
+
+// async populateWineNamesMap() {
+//   // Loop over all stocktake items
+//   for (const item of this.stocktake) {
+//     try {
+//       // Get the wine name for each stocktake item
+//       const wineName = await this.getWineNameFromInventory(item.supplierOrderID!);
+//       // Set the wine name in the wineNamesMap
+//       this.wineNamesMap.set(item.supplierOrderID!, wineName);
+//     } catch (error) {
+//       console.error(`Failed to get wine name for stocktake item with supplierOrderID: ${item.supplierOrderID!}`, error);
+//     }
+//   }
+// }
+
+getInventories(): void {
+  this.inventoryService.getFullInventory().then(async (result: any) => {
+    this.inventories = result;
+
+    for (let inventory of this.inventories) {
+      let wineName = await this.getWineNameFromInventory(inventory.inventoryID);
+      console.log("Wine name:", wineName);
+      this.wineNamesMap.set(inventory.inventoryID, wineName);
+    }
+    // /console.log("Inventory:", this.inventories);
+  })
+}
+
+async getWineNameFromInventory(id: number): Promise<string> {
+  try {
+    // Get SupplierOrder object by id
+    let supplierOrder = await this.supplierOrderService.getSupplierOrder(id).toPromise();
+    
+    // Check if the result has the expected inventoryID property
+    if (!supplierOrder || !supplierOrder.inventoryID) {
+      throw new Error('Invalid supplier order or Inventory ID not found');
+    }
+    console.log(supplierOrder.inventoryID);
+
+    // Get Inventory object by id
+    let inventoryId = supplierOrder.inventoryID;
+    let inventory = await this.inventoryService.getItemInventory(inventoryId);
+    
+    if (inventory) {
+      // Get wineID from the Inventory object
+      let wineID = inventory.wineID;
+      
+      // Get Wine object using wineID
+      let wine = await this.wineService.getWine(wineID);
+      
+      if (wine) {
+        // Return wineName from the Wine object
+        return wine.name;
+      }
+    }
+    throw new Error('Inventory or Wine not found');
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
+
 async loadStockTake(): Promise<void> {
   try {
-    this.stocktakeService.GetStockTake().subscribe((result: any) => {
+    this.stocktakeService.GetStockTake().subscribe(async (result: any) => {
       this.stocktake = result;
+
+      await Promise.all(this.stocktake.map(async (s) => {
+        try {
+          const wineName = await this.getWineNameFromInventory(s.supplierOrderID!);
+          this.wineNamesMap.set(s.supplierOrderID!, wineName);
+        } catch (error) {
+          console.error(`Failed to get wine name for stocktake with supplierOrderId: ${s.supplierOrderID}`, error);
+        }
+      }));
       this.updateDropdownOptions();
       console.log(this.stocktake);
     });
