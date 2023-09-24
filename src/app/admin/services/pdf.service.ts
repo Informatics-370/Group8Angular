@@ -720,7 +720,7 @@ export class PdfService {
           body.push([
             index + 1,
             { text: supplierNames[index], noWrap: true },
-            { text: order.wineName, noWrap: true },
+            { text: order.inventoryID, noWrap: true }, //TODO HERE IS INVENTORY WHICH IT SHOULD BE
             { text: quantityOrdered, noWrap: true },
             { text: `R ${orderValue.toFixed(2)}`, noWrap: true },
             { text: `R ${vat.toFixed(2)}`, noWrap: true },
@@ -877,7 +877,7 @@ async generateSupplierOrders(supplierOrderData: SuppOrderAndVATViewModel[]): Pro
           body.push([
             index + 1,
             { text: supplierNames[index], noWrap: false },
-            { text: order.wineName, noWrap: false },
+            { text: order.inventory, noWrap: false }, //TODO HERE IS INVENTORY WHICH IT SHOULD BE
             { text: quantityOrdered, noWrap: false },
             { text: `R ${orderValue.toFixed(2)}`, noWrap: false },
             { text: `R ${vat.toFixed(2)}`, noWrap: false },

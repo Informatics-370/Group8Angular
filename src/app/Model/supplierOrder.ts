@@ -1,4 +1,5 @@
 import { Supplier } from './supplier';
+import { Inventory } from './inventory'; // Import Inventory model
 
 export class SupplierOrderStatus {
   supplierOrderStatusID: number | undefined;
@@ -11,13 +12,11 @@ export class SupplierOrder {
   supplierOrderID: number | undefined;
   quantity_Ordered: number | undefined;
   dateOrdered: Date | undefined;
-  wineID: number | undefined;
-  wineName: string | undefined;
-  wineYear: string | undefined;
-  wineType: string | undefined;
-  winePrice: number | undefined;
   orderTotal: number | undefined;
   supplierID: number | undefined;
   supplier: Supplier | undefined;
+  inventoryID: number | undefined; // Added InventoryID property
+  inventory: Inventory | undefined; // Added Inventory property
   supplierOrderStatus: SupplierOrderStatus | undefined;
+  isBackOrder: boolean | undefined;
 }
