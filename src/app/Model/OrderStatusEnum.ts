@@ -4,6 +4,5 @@ export enum OrderStatusEnum {
     SupplierOrderPlaced,
     Received,
     Collected
-    // ... add other statuses here
   }
   
