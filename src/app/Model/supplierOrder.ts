@@ -10,6 +10,7 @@ export class SupplierOrderStatus {
 
 export class SupplierOrder {
   supplierOrderID: number | undefined;
+  supplierOrderRefNum: string | undefined;
   quantity_Ordered: number | undefined;
   dateOrdered: Date | undefined;
   orderTotal: number | undefined;

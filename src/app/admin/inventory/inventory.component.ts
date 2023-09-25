@@ -63,7 +63,9 @@ export class InventoryComponent implements OnInit{
     currentPage: boolean = true;
 
     inventories: Inventory[] = [];
+    supplierOrders: SupplierOrder[] = [];
     public wineNamesMap = new Map<number, string>();
+    public supOrderMap = new Map<number, string>();
 
 
     constructor(private writeORService: WriteORService,
@@ -588,6 +590,20 @@ async getWineNameFromInventory(id: number): Promise<string> {
 }
 
 
+async getOrderRefFromSupplierOrder(id: number): Promise<string>{
+  try{
+    let supplierOrder = await this.supplierOrderService.getSupplierOrder(id).toPromise();
+    if(supplierOrder){
+      return supplierOrder?.supplierOrderRefNum!;
+    }
+    throw new Error('SupplierOrderRef not found');
+  }catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
 
 
 async loadStockTake(): Promise<void> {
@@ -599,6 +615,8 @@ async loadStockTake(): Promise<void> {
         try {
           const wineName = await this.getWineNameFromInventory(s.supplierOrderID!);
           this.wineNamesMap.set(s.supplierOrderID!, wineName);
+          const orderRef = await this.getOrderRefFromSupplierOrder(s.supplierOrderID!);
+          this.supOrderMap.set(s.supplierOrderID!, orderRef);
         } catch (error) {
           console.error(`Failed to get wine name for stocktake with supplierOrderId: ${s.supplierOrderID}`, error);
         }
