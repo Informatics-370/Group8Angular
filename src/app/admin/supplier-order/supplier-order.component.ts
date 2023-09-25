@@ -195,7 +195,7 @@ export class SupplierOrderComponent implements OnInit {
           }
           this.selectedOrder = null; // clear selection
         });
-
+        this.getSupplierOrders();
         this.toastr.success('Successfully Updated', 'Order');
         this.closePaidModal();
       } catch {
@@ -242,6 +242,7 @@ export class SupplierOrderComponent implements OnInit {
   
   try{
     await this.stocktakeService.AddStockTake(newStockTake);
+    this.getSupplierOrders();
     stocktakeForm.resetForm();
     this.closeStockTakeModal();
   }

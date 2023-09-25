@@ -40,7 +40,7 @@
         <th scope="col" class="header-cell">Price</th>
         <th scope="col" class="header-cell">Stock Limit</th>
         <th scope="col" class="header-cell">Quantity on Hand</th>
-        <th scope="col" class="header-cell">Adjust QOH</th>
+        <th scope="col" class="header-cell">Write-off</th>
       </tr>
     </thead>
     <tbody>
@@ -52,10 +52,7 @@
         <td>{{ x.stockLimit }}</td>
         <td>{{ x.quantityOnHand }}</td>
         <td>
-
-          <i class="bi bi-dash-circle text-primary fs-3" (click)="openWROModal(x.wineID)"></i>
-          <i class="bi bi-plus-circle-fill text-primary fs-3" (click)="openSuppOModal(x.inventoryID)"></i>
-
+          <i class="bi bi-arrow-down-circle text-primary fs-3" (click)="openWROModal(x.wineID)"></i>
         </td>
         <td>
           <button class="btn btn-primary" style="margin-right: 4px;"
@@ -83,8 +80,7 @@
     [ngStyle]="{'display': showInventoryModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{editingInventory ? 'Edit Inventory' : 'Add Inventory'}}</h5>
+        <div class="modal-header">{{editingInventory ? 'Edit Inventory' : 'Add Inventory'}}
           <button type="button" class="btn-close" aria-label="Close" (click)="closeInventoryModal()"></button>
         </div>
         <div class="modal-body">
@@ -98,6 +94,7 @@
               <!-- When Adding Inventory -->
               <select *ngIf="!editingInventory" class="form-select" id="wineName" [(ngModel)]="currentInventory.wineID"
                 name="wineID" required (ngModelChange)="updateFieldsBasedOnWineName(currentInventory.wineID)">
+                <option [value]="0" disabled>Select a wine</option>
                 <option *ngFor="let wine of wines" [value]="wine.wineID">{{ wine.name }}</option>
               </select>
               <!-- When Editing Inventory -->
@@ -144,7 +141,7 @@
               <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                 title="Please enter minimun amount of the wine that should be available"></i>
               <input type="number" class="form-control" id="stockLimit" [(ngModel)]="currentInventory.stockLimit"
-                name="stockLimit" required [min]="0.01" #stockLimitField="ngModel">
+                name="stockLimit" required [min]="0" #stockLimitField="ngModel">
               <div *ngIf="stockLimitField.invalid && stockLimitField.touched" class="alert alert-danger">
                 <div *ngIf="stockLimitField.errors?.['required']">Stock Limit is required.</div>
                 <div *ngIf="stockLimitField.errors?.['min']">Stock Limit cannot be zero or less.</div>
@@ -188,8 +185,7 @@
     [ngStyle]="{'display': showDeleteInventoryModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Delete Confirmation</h5>
+        <div class="modal-header">Delete Confirmation
           <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteInventoryModal()"></button>
         </div>
         <div class="modal-body">
@@ -222,8 +218,7 @@
     [ngStyle]="{'display': showWROModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Write Off</h5>
+        <div class="modal-header">Write Off
           <button type="button" class="btn-close" aria-label="Close" (click)="closeWROModal()"></button>
         </div>
 
@@ -239,7 +234,7 @@
               <label for="WriteOffReason" class="form-label">Write Off Reason:</label>
               <br>
               <select id="WriteOffReason" name="WriteOffReason" required [(ngModel)]="WriteOffReasonSelected">
-                <option value="" disabled selected>Select a Write-Off Reason</option>
+                <option [value]="'NA'" disabled selected>Select a Write-Off Reason</option>
                 <option *ngFor="let x of WriteOffReasons" [value]="x">{{x}}</option>
               </select>
             </div>
@@ -249,7 +244,11 @@
               <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                 title="Please enter the amount of Wine you want to write off"></i>
               <input type="number" class="form-control" id="quantityWriteOff" name="quantityWriteOff" required
-                [max]="currentInventory.quantityOnHand" [(ngModel)]="quantityWriteOff">
+                [max]="currentInventory.quantityOnHand" [min]="0"  [(ngModel)]="quantityWriteOff" #quantityWriteOffField="ngModel">
+                <div *ngIf="quantityWriteOffField.invalid && quantityWriteOffField.touched" class="alert alert-danger">
+                  <div *ngIf="quantityWriteOffField.errors?.['required']">Write-off amount required.</div>
+                  <div *ngIf="quantityWriteOffField.errors?.['min']">You can't write-off negatice stock.</div>
+                </div>
             </div>
 
           </form>
@@ -263,44 +262,10 @@
     </div>
   </div>
 </div>
-  <!--************************************************************ WriteOff Modal ***********************************************************************************************-->
 
-  <!-- <div class="modal" tabindex="-1" [ngClass]="{'show': showSuppOModal}"
-[ngStyle]="{'display': showSuppOModal ? 'block' : 'none'}">
-<div class="modal-dialog">
-<div class="modal-content">
-  <div class="modal-header">
-    <h5 class="modal-title">Add Supplier Order Quantity</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="closeSuppOModal()"></button>
-  </div>
-  <div class="modal-body">
-    <form #StockTakeForm="ngForm" (ngSubmit)="UpdateStockTake(StockTakeForm)">      
-      <div class="mb-3">
-        <label for="WineName" class="form-label">Stocktake Wine name:</label>
-        <br>
-      <select id="TestWineName" name="WineName" required [(ngModel)]="WineNameSelected" (ngModelChange)="updateFieldsBasedOnWineSelected()">
-        <option value="" disabled selected>Select a StockTake to add to Quantity On Hand</option>
-        <option *ngFor="let x of dropdownOptions" [value]="x.stocktakeID">{{x.wineName}}</option>
-      </select>
-      </div>      
-      <div class="mb-3">
-        <label for="DateDone" class="form-label">Stocktake Date Done:</label>
-        <p *ngIf="currentStockTake?.wineName">{{currentStockTake.dateDone | date:'dd/MM/yyyy HH:mm'}}</p>
-      </div>      
-      <div class="mb-3">
-        <label for="quantityReceived" class="form-label">Stocktake Quantity Received:</label>
-        <p *ngIf="currentStockTake?.wineName">{{currentStockTake.quantityReceived}}</p>
-      </div>     
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="closeSuppOModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="StockTakeForm.invalid" (click)="UpdateStockTake(StockTakeForm); AddAuditLog('StockTake: Added')">Add Stock</button>
-  </div>
-</div>
-</div>
-</div>
--->
+
+
+
 
   <div *ngIf="!currentPage">
     <div class="row align-items-center">
@@ -312,6 +277,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th scope="col" class="header-cell">Supplier Order Ref</th>
           <th scope="col" class="header-cell">Wine Name</th>
           <th scope="col" class="header-cell">Date Done</th>
           <th scope="col" class="header-cell">Quantity Ordered</th>
@@ -320,6 +286,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let x of stocktake">
+          <td>{{ supOrderMap.get(x.supplierOrderID!) }}</td>
           <td>{{ wineNamesMap.get(x.supplierOrderID!) }}</td>
           <td>{{ x.dateDone | date:'dd/MM/yyyy HH:mm'}}</td>
           <td>{{ x.quantityOrdered }}</td>
