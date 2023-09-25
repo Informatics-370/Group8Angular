@@ -6,6 +6,9 @@ import { Employee } from 'src/app/Model/employee';
 import { AuditTrail } from 'src/app/Model/audit-trail';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
+import { OrderService } from 'src/app/customer/services/order.service';
+import { PaymentService } from 'src/app/customer/services/payment.service';
+import { OrderStatusEnum } from 'src/app/Model/OrderStatusEnum';
 
 @Component({
   selector: 'app-customers',
@@ -21,7 +24,9 @@ export class CustomersComponent {
   maxDate!: string;
 
   constructor(private customerService: CustomersService, private toastr : ToastrService
-    , private auditLogService: AuditlogService, private dataService: DataServiceService){ }
+    , private auditLogService: AuditlogService, private dataService: DataServiceService,
+    private orderService: OrderService,
+    private paymentService: PaymentService){ }
 
   ngOnInit(): void { 
     this.getCustomers();
@@ -65,10 +70,48 @@ export class CustomersComponent {
   async deleteCustomer(): Promise<void> {
     if (this.customerToDelete != null) {
       try {
-        this.customerService.DeleteCustomer(this.customerToDelete).subscribe((result: any) => {
-
-        });
-        console.log(this.customerToDelete);
+        // Find the customer's email by ID from the list of customers
+        const customerEmail = this.customers.find(c => c.id === this.customerToDelete)?.email;
+  
+        if (!customerEmail) {
+          this.toastr.error("Customer email not found. Cannot proceed with deletion.", "Delete Customer");
+          return;
+        }
+  
+        // Load orders and check for undelivered ones
+        const orders = await this.orderService.getOrdersForUser(customerEmail).toPromise();
+        let hasUndeliveredOrders = false;
+  
+        if (orders) {
+          hasUndeliveredOrders = orders.some(order => order.orderStatusId !== OrderStatusEnum.Collected);
+        }
+  
+        if (hasUndeliveredOrders) {
+          this.toastr.error("Cannot delete account with pending orders", "Delete Customer");
+          return;
+        }
+  
+        // Role checks before deletion
+        if (this.dataService.userValue!.roles.some(r => ['superuser', 'admin', 'employee'].includes(r.toLowerCase()))) {
+          this.toastr.error("Super Users, Admins and Employees can't delete accounts from the Customer table. Go to the SuperUser tab for deletion.", "Delete Customer");
+          return;
+        }
+  
+        // Check if the user still has any tickets that haven't passed the event date
+        const purchasedTickets = await this.paymentService.getPurchasedTickets().toPromise();
+        let hasFutureEvents = false;
+  
+        if (purchasedTickets) {
+          hasFutureEvents = purchasedTickets.some(ticket => new Date(ticket.eventDate) > new Date());
+        }
+  
+        if (hasFutureEvents) {
+          this.toastr.error("Cannot delete account with upcoming events", "Delete Customer");
+          return;
+        }
+  
+        // If all checks pass, proceed to delete the customer
+        this.customerService.DeleteCustomer(this.customerToDelete).subscribe((result: any) => {});
         this.customers = this.customers.filter(customer => customer.id !== this.customerToDelete);
         this.toastr.success("The customer has been deleted.", "Delete Customer");
       } catch (error) {

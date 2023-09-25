@@ -31,6 +31,15 @@ export class DonationsComponent {
   }
 
   makeDonation(): void {
+
+        // Check if the user is logged in
+        let token = localStorage.getItem('Token') || '';
+        if (!token) {
+          this.toastr.warning('Please log in to make a donation.');  // <-- Toastr warning
+          return;
+        }
+
+        
     if (this.amount === null || this.amount <= 0) {
       this.toastr.error('Please enter an amount greater than zero.');  // <-- Toastr error
       return;
