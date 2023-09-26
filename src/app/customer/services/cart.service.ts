@@ -49,7 +49,7 @@ export class CartService {
         this.updateCartItemCount(totalQuantity); // Assuming you have a method to update cartItemCount
 
         // Log the total quantity
-        console.log(totalQuantity);       
+        // console.log(totalQuantity);       
       })
     );
   }

@@ -91,7 +91,7 @@ export class ClientProductsComponent implements OnInit {
   loadVarietals() {
     this.varietalService.getVarietals().then((varietals: Varietal[]) => {
       this.varietals = varietals;
-      console.log(varietals);
+      // console.log(varietals);
       this.checkDataLoaded(); // Check if all data is loaded
 
     }).catch(error => {
@@ -106,7 +106,7 @@ export class ClientProductsComponent implements OnInit {
   loadWinetypes() {
     this.winetypeService.getWinetypes().then((winetypes: WineType[]) => {
       this.winetypes = winetypes;
-      console.log(winetypes);
+      // console.log(winetypes);
       this.checkDataLoaded(); // Check if all data is loaded
 
     }).catch(error => {
