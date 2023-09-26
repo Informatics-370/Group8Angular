@@ -1,5 +1,8 @@
 // discount.ts
 export class Discount {
+    static discountCode(refundRequestId: number, itemsStatuses: { RefundItemId: number | undefined; Status: any; }[], discountCode: any) {
+      throw new Error('Method not implemented.');
+    }
     discountID: number | undefined;
     discountCode: string | undefined;
     discountDescription: string | undefined;
