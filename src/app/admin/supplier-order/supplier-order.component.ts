@@ -18,6 +18,9 @@ import { refresh } from 'aos';
 import { Inventory } from 'src/app/Model/inventory';
 import { InventoryService } from '../services/inventory.service';
 import { WineService } from '../services/wine.service';
+import { ReportService } from '../services/report.service';
+import { PdfService } from '../services/pdf.service';
+import { SuppOrderAndVATViewModel } from 'src/app/Model/SupplierOrdersVATs';
 
 @Component({
   selector: 'app-supplier-order',
@@ -50,7 +53,8 @@ export class SupplierOrderComponent implements OnInit {
 
   constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService,
     private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService,
-    private stocktakeService: StockTakeService, private inventoryService: InventoryService, private wineService: WineService) { 
+    private stocktakeService: StockTakeService, private inventoryService: InventoryService, private wineService: WineService, private reportService: ReportService,
+    private pdfService: PdfService) { 
       this.selectedStocktake = new StockTake();
     }
 
@@ -315,5 +319,85 @@ export class SupplierOrderComponent implements OnInit {
     console.log(this.currentAudit);
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
+  }
+
+
+
+  // REPORT:
+  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES' | null = null;
+  showBlacklistModal: boolean = false;
+
+  showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES'): void {
+    this.currentReportType = reportType;
+    this.showBlacklistModal = true;
+  }
+
+  closeBlacklistModal() {
+    this.showBlacklistModal = false;
+    this.currentReportType = null;
+  }
+
+  OpenReports(): void {
+   
+    if (this.currentReportType === 'SUPPLIER ORDER') {
+      this.generateSupplierOrderReport();
+    } 
+  }
+
+  DownloadReports(): void {
+    if (this.currentReportType === 'SUPPLIER ORDER') {
+      this.generateSupplierOrderReportpdf();
+    }
+  }
+
+  async generateSupplierOrderReportpdf() {
+    let suppOrderAndVATData!: SuppOrderAndVATViewModel;
+
+    // Wait for the supplier order data to be fetched
+    await new Promise<void>((resolve, reject) => {
+      this.reportService.getSupplierOrder().subscribe(result => {
+        // Assuming result now returns an object with supplierOrders and vaTs properties
+        suppOrderAndVATData = result;
+        console.log('SuppOrderAndVAT Data', suppOrderAndVATData);
+        resolve();
+      }, error => reject(error));
+    });
+
+    // Ensure that we have data before proceeding
+    if (!suppOrderAndVATData || !suppOrderAndVATData.supplierOrders) {
+      console.error('Received undefined or invalid supplier order data');
+      return;
+    }
+    this.pdfService.generateSupplierOrdersPdf([suppOrderAndVATData]);
+  }
+
+  async generateSupplierOrderReport(): Promise<void> {
+    try {
+      let suppOrderAndVATData!: SuppOrderAndVATViewModel;
+
+      // Wait for the supplier order data to be fetched
+      await new Promise<void>((resolve, reject) => {
+        this.reportService.getSupplierOrder().subscribe(result => {
+          // Assuming result now returns an object with supplierOrders and vaTs properties
+          suppOrderAndVATData = result;
+          console.log('SuppOrderAndVAT Data', suppOrderAndVATData);
+          resolve();
+        }, error => reject(error));
+      });
+
+      // Ensure that we have data before proceeding
+      if (!suppOrderAndVATData || !suppOrderAndVATData.supplierOrders) {
+        console.error('Received undefined or invalid supplier order data');
+        return;
+      }
+      const pdfBlob = await this.pdfService.generateSupplierOrders([suppOrderAndVATData]);
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      const newTab = window.open(blobUrl, '_blank');
+      if (!newTab) {
+        console.error('Failed to open new tab for PDF');
+      }
+    } catch (error) {
+      console.error('Error generating inventory report:', error);
+    }
   }
 }

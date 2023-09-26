@@ -8,9 +8,10 @@ import { CustomersService } from 'src/app/admin/services/customers.service';
 import { OrderService } from '../services/order.service';
 import { Order } from 'src/app/Model/order';
 import { OrderStatusEnum } from 'src/app/Model/OrderStatusEnum';
-import { SuperuserService } from 'src/app/admin/services/superuser.service';
 import { PaymentService } from '../services/payment.service';
 import { TicketPurchase } from 'src/app/Model/TicketPurchase';
+import { UserViewModel } from 'src/app/Model/userviewmodel';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-user-information',
@@ -26,6 +27,12 @@ export class UserInformationComponent implements OnInit {
   customerToDeleteDetails: any = null;
   confirmationText: string = 'Confirm'
   order: Order[] | undefined;
+  loggedOutUser: UserViewModel ={
+    email: '',
+    username: '',
+    token: '',
+    roles: []
+  };
 
   constructor(
     private dataService: DataServiceService,
@@ -33,8 +40,8 @@ export class UserInformationComponent implements OnInit {
     private router: Router,
     private customerService: CustomersService,
     private orderService: OrderService,
-    private superuserService: SuperuserService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private cartService: CartService
   ) {}
 
   ngOnInit() {
@@ -60,6 +67,19 @@ export class UserInformationComponent implements OnInit {
         },
         (error: any) => {
           console.log(error);
+          this.dataService.LogOut().subscribe((result: any) => {
+            if(result.token.tokenValue == ''){
+              localStorage.removeItem("Token");
+              localStorage.removeItem("TokenExpiration");
+              this.dataService.login(this.loggedOutUser);
+              this.toastr.success('Logged out successfully', 'Logout');
+              this.cartService.resetCartItemCount();
+              this.router.navigate(['/clienthome']);
+            }else{
+              console.log("Logout failed, please try again later");
+              this.toastr.error('Failed please try again', 'Logout')
+            }
+          });
           this.toastr.error('Failed to load user data.');
           this.router.navigate(['/clienthome']); // Redirect to home or login page if an error occurs
         }

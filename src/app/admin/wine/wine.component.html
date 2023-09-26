@@ -188,10 +188,13 @@
 
           <!-- Blend Selection Dropdown -->
           <div class="mb-3" *ngIf="currentWine.wineTypeID && currentWine.wineTypeID !== 0">
-            <label for="isBlend" class="form-label">Is it a Blend?</label>
-            <select class="form-control" id="isBlend" [(ngModel)]="isBlendSelected" name="isBlend"
-              (change)="onBlendChange()">
-              <option [ngValue]="null">----Select an option----</option>
+            <div class="d-flex justify-content-between">
+              <label for="isBlend" class="form-label">Is it a Blend? <i class="fa fa-question-circle" data-bs-toggle="tooltip"
+                  title="Please select if the wine is a blend"></i></label>
+              <span style="color: #ff6666; font-size: smaller;">* Required</span>
+            </div>
+            <select class="form-control" id="isBlend" [(ngModel)]="isBlendSelected" name="isBlend" (change)="onBlendChange()">
+              <option [ngValue]="null" disabled>----Select an option----</option>
               <option [ngValue]="true">YES</option>
               <option [ngValue]="false">NO</option>
             </select>
