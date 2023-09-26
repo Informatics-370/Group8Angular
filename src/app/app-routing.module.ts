@@ -73,7 +73,7 @@ const routes: Routes = [
   { path: 'eventtype', component:EventTypeComponent, canActivate: [AuthGuard]},
   { path: 'eventprice', component: EventPriceComponent, canActivate: [AuthGuard]}, 
   { path: 'help', component: HelpResourcesComponent, canActivate: [AuthGuard]},
-  { path: 'TicketPurchases/Scan/:token', component: ScanTicketComponent, canActivate: [AuthGuard] },
+  { path: 'TicketPurchases/Scan/:token', component: ScanTicketComponent },
   { path: 'refundrequest', component: RefundRequestComponent, canActivate: [AuthGuard]},
   { path: 'auditlogs', component: AuditLogsComponent, canActivate: [AuthGuard]},
   { path: 'charts', component: ChartsComponent, canActivate: [AuthGuard]},
