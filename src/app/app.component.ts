@@ -19,6 +19,9 @@ import { DecodedToken } from './customer/services/data-service.service';
 })
 
 export class AppComponent {
+  title(title: any) {
+    throw new Error('Method not implemented.');
+  }
   logoutTimer: any;
   isAccessRestricted = false;
 
