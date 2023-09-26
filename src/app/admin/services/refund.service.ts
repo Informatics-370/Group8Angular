@@ -54,9 +54,10 @@ export class RefundService {
     return this.http.get(`${this.baseUrl}/GetWineDetailsForRefund/${refundRequestId}`, { headers: this.headers});
   }
 
-  updateRefundStatus(refundRequestId: number, itemsStatuses: any[]): Observable<any> {
-    this.setHeaders()
-    return this.http.put(`${this.baseUrl}/UpdateRefundStatus/${refundRequestId}`, itemsStatuses, { headers: this.headers});
+  updateRefundStatus(refundRequestId: number, itemsStatuses: any[], discountCode: string | null, allNotApproved: boolean): Observable<any> {
+    this.setHeaders();
+    const url = `${this.baseUrl}/UpdateRefundStatus/${refundRequestId}/${discountCode || 'null'}/${allNotApproved}`;
+    return this.http.put(url, itemsStatuses, { headers: this.headers });
   }
 
   getAllResponses(): Observable<any[]>{

@@ -37,6 +37,7 @@ export class RefundRequestComponent {
   searchTerm: string = '';
   displayedRefundsForSearch: RefundRequest[] = [];
 
+
   constructor(
     private refundService: RefundService,
     private orderService: OrderService,
@@ -161,47 +162,66 @@ export class RefundRequestComponent {
         };
       });
   
-      this.refundService
-        .updateRefundStatus(this.selectedRefund.refundRequestId, itemsStatuses)
-        .subscribe(
-          (response) => {
-            this.loadRefunds();
-            this.toastr.success('Updated refund status');
-            // Check if any item has an 'Approved' status
-            if (itemsStatuses.some(item => item.Status === 'Approved')) {
-              // Generate a unique discount code
-              const discountCode = this.generateUniqueCode();
-              
-              // Calculate the total amount to be refunded
-              let totalRefundAmount = 0;
-              //const totalRefundAmount = this.selectedRefund.refundItems.reduce((acc, item) => acc + (this.wineDetails.cost || 0), 0);
-              this.wineDetails.forEach(element => {
-                totalRefundAmount = element.cost;
-                console.log("RefundAmount:", totalRefundAmount);
-              });
-              
-              // Create a new Discount object
-              const discount = new Discount();
-              discount.discountCode = discountCode;
-              discount.discountDescription = 'Refund';
-              discount.discountAmount = totalRefundAmount;
+      // Initialize discountCode as null
+      let discountCode: string | null = null;
   
-              // Call the addDiscount method to create a new discount
-              this.discountService.addDiscount(discount).then((newDiscount) => {
-                this.toastr.success('Discount code generated: ' + newDiscount.discountCode);
-              }).catch(error => {
-                console.error('Error generating discount code:', error);
-              });
+      // Check if any item has an 'Approved' status
+      if (itemsStatuses.some(item => item.Status === 'Approved')) {
+        // Generate a unique discount code
+        discountCode = this.generateUniqueCode();
+        
+        // Calculate the total amount to be refunded
+        let totalRefundAmount = 0;
+        this.wineDetails.forEach(element => {
+          totalRefundAmount += element.cost;  // Assuming 'cost' is a number
+        });
+        
+        // Create a new Discount object
+        const discount = new Discount();
+        discount.discountCode = discountCode;
+        discount.discountDescription = 'Refund';
+        discount.discountAmount = totalRefundAmount;
+  
+        // Call the addDiscount method to create a new discount
+        this.discountService.addDiscount(discount).then((newDiscount) => {
+          this.toastr.success('Discount code generated: ' + newDiscount.discountCode);
+        }).catch(error => {
+          console.error('Error generating discount code:', error);
+        });
+      }
+  
+      // Check if all items have a 'Not Approved' status
+      const allNotApproved = itemsStatuses.every(item => item.Status === 'Not Approved');
+  
+      // Call the API
+      if (discountCode) {
+        this.refundService.updateRefundStatus(this.selectedRefund.refundRequestId, itemsStatuses, discountCode, allNotApproved)
+          .subscribe(
+            (response) => {
+              this.loadRefunds();
+              this.toastr.success('Updated refund status');
+            },
+            (error) => {
+              console.error('Error updating status:', error);
             }
-          },
-          (error) => {
-            console.error('Error updating status:', error);
-          }
-        );
+          );
+      } else {
+        this.refundService.updateRefundStatus(this.selectedRefund.refundRequestId, itemsStatuses, '', allNotApproved)
+          .subscribe(
+            (response) => {
+              this.loadRefunds();
+              this.toastr.success('Updated refund status');
+            },
+            (error) => {
+              console.error('Error updating status:', error);
+            }
+          );
+      }
     }
     this.showRefundsModal = false;
     this.showConfirmModal = false;
   }
+  
   
   generateUniqueCode() {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
