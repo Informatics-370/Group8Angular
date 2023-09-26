@@ -1,157 +1,171 @@
 <!-- i like turtles -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel+Decorative">
 <div class="container-fluid">
-    <div class="row row-heading">
-      <div class="col">
-        <br/>
-        <h1 class="selector">Cart</h1>
-      </div>
+  <div class="row row-heading">
+    <div class="col">
+      <br />
+      <h1 class="selector">Cart</h1>
     </div>
   </div>
+</div>
 <br>
 <br>
 <div class="container-fluid">
-<div class="container">
+  <div class="container">
     <div class="row justify-content-start">
-        <div class="col-md-6"> <!-- Changed from 8 to 6 -->
-            <div class="card mt-5">
-                <div class="card-header text-left">
-                    <h2>Your Cart</h2>
-                </div>
-                <div class="card-body">
-                    <div *ngIf="cart && cart.cartItems.length > 0; else noItems">
-                        <table class="table" style="border-color: #B55933;">
-                            <thead>
-                                <tr style="color: #B54E33;">
-                                    <th scope="col" class="text-left">#</th>
-                                    <th scope="col" class="text-left">Wine Name</th>
-                                    <th scope="col" class="text-left">Quantity</th>
-                                    <th scope="col" class="text-left">Actions</th>
-                                    <th scope="col" class="text-left">Wine Price</th>
-                                    <th scope="col" class="text-left">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <tr *ngFor="let item of cart.cartItems; let i = index">
-                                <th scope="row" class="text-left">{{ i + 1 }}</th>
-                                <td class="text-left">
-                                  {{ getWineDetails(item.wineID)?.name }}
-                                </td>
-                                <td class="text-left">{{ item.quantity }}</td>
-                                <td class="text-left">
-                                  <i class="bi bi-dash-circle" (click)="decrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
-                                  <i class="bi bi-plus-circle-fill" (click)="incrementQuantity(item.cartItemID)" style="font-size: 1.5rem; color: #B54E33;"></i>
-                                </td>
-                            
-                                <!-- Access the price property of the wine object within each CartItem -->
-                                <td>R {{ item.wine.price | number:'1.2-2' }}</td>
-                            
-                                <td class="text-left">
-                                  R {{ item.quantity * (getWineDetails(item.wineID)?.price || 0) | number:'1.2-2' }}
-                                </td>
-                                <td></td>
-                              </tr>
-                            </tbody>
-                            
-                        </table>
-                    </div>
+      <div class="col-md-6"> <!-- Changed from 8 to 6 -->
+        <div class="card mt-5">
+          <div class="card-header text-left">
+            <h2>Your Cart</h2>
+          </div>
+          <div class="card-body">
+            <div *ngIf="cart && cart.cartItems.length > 0; else noItems">
+              <table class="table" style="border-color: #B55933;">
+                <thead>
+                  <tr style="color: #B54E33;">
+                    <th scope="col" class="text-left">#</th>
+                    <th scope="col" class="text-left">Wine Name</th>
+                    <th scope="col" class="text-left">Quantity</th>
+                    <th scope="col" class="text-left">Actions</th>
+                    <th scope="col" class="text-left">Wine Price</th>
+                    <th scope="col" class="text-left">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of cart.cartItems; let i = index">
+                    <th scope="row" class="text-left">{{ i + 1 }}</th>
+                    <td class="text-left">
+                      {{ getWineDetails(item.wineID)?.name }}
+                    </td>
+                    <td class="text-left">{{ item.quantity }}</td>
+                    <td class="text-left">
+                      <i class="bi bi-dash-circle" (click)="decrementQuantity(item.cartItemID)"
+                        style="font-size: 1.5rem; color: #B54E33;"></i>
+                      <i class="bi bi-plus-circle-fill" (click)="incrementQuantity(item.cartItemID)"
+                        style="font-size: 1.5rem; color: #B54E33;"></i>
+                    </td>
 
-                    <ng-template #noItems>
-                        <h2>There are no items in your cart</h2>
-                        <div class="mt-3">
-                          <a routerLink="/clientproducts" class="btn btn-secondary">Browse More Wines</a>
-                        </div>
-                        
-                    </ng-template>
-                </div>
+                    <!-- Access the price property of the wine object within each CartItem -->
+                    <td>R {{ item.wine.price | number:'1.2-2' }}</td>
+
+                    <td class="text-left">
+                      R {{ item.quantity * (getWineDetails(item.wineID)?.price || 0) | number:'1.2-2' }}
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+
+              </table>
             </div>
+
+            <ng-template #noItems>
+              <h2>There are no items in your cart</h2>
+              <div class="mt-3">
+                <a routerLink="/clientproducts" class="btn btn-secondary">Browse More Wines</a>
+              </div>
+
+            </ng-template>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- <pre>{{cart | json }}</pre> -->
 
-<!-- Cart total table -->
-<div class="row justify-content-start">
-  <div class="col-md-6">
-    <div class="card mt-5">
-      <div class="card-header text-left">
-        <h2>Order Total</h2>
-      </div>
-      <div class="card-body">
-        <table class="table" style="border-color: #B55933;">
-          <tbody>
-            <tr style="color: #B54E33;">
-              <td class="text-right">VAT ({{ latestVatPercentage }} %):</td>
-              <td class="text-right">R{{ calculateVatAmount() | number:'1.2-2' }}</td>
-            </tr>
-            <tr style="color: #B54E33;">
-              <td class="text-right"><h3>Total Before VAT:</h3></td>
-              <td class="text-right"><h3>R{{ calculateTotalBeforeVat() | number:'1.2-2' }}</h3></td>
-            </tr>
-            <tr style="color: #B54E33;">
-              <td class="text-right"><h3>Total:</h3></td>
-              <td class="text-right"><h3>R{{ cartTotal | number:'1.2-2' }}</h3></td>
-            </tr>
-            
-            
-          </tbody>
-        </table>
-        <!-- Discount Code -->
-        <div class="input-group mb-3">
-          <input type="text" [(ngModel)]="discountCode" class="form-control" placeholder="Enter discount code">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" (click)="onApplyDiscountCode()">Apply Discount</button>
+    <!-- Cart total table -->
+    <div class="row justify-content-start">
+      <div class="col-md-6">
+        <div class="card mt-5">
+          <div class="card-header text-left">
+            <h2>Order Total</h2>
+          </div>
+          <div class="card-body">
+            <table class="table" style="border-color: #B55933;">
+              <tbody>
+                <tr style="color: #B54E33;">
+                  <td class="text-right">VAT ({{ latestVatPercentage || '0' }} %):</td>
+                  <td class="text-right">R{{ calculateVatAmount() | number:'1.2-2' }}</td>
+                </tr>
+                <tr style="color: #B54E33;">
+                  <td class="text-right">
+                    <h3>Total Before VAT:</h3>
+                  </td>
+                  <td class="text-right">
+                    <h3>R{{ calculateTotalBeforeVat() | number:'1.2-2' }}</h3>
+                  </td>
+                </tr>
+                <tr style="color: #B54E33;">
+                  <td class="text-right">
+                    <h3>Total:</h3>
+                  </td>
+                  <td class="text-right">
+                    <h3>R{{ cartTotal | number:'1.2-2' }}</h3>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+            <!-- Discount Code -->
+            <div class="input-group mb-3">
+              <input type="text" [(ngModel)]="discountCode" class="form-control" placeholder="Enter discount code">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" (click)="onApplyDiscountCode()">Apply
+                  Discount</button>
+              </div>
+            </div>
+            <!-- Payment button -->
+            <button type="button" class="btn btn-primary" (click)="onProceedToPayment()">Proceed to Payment</button>
+            <p style="font-size: smaller;">*Kindly be advised that we exclusively accommodate orders for on-site
+              collection, as regrettably, a delivery service is not currently available.</p>
           </div>
         </div>
-        <!-- Payment button -->
-        <button type="button" class="btn btn-primary" (click)="onProceedToPayment()">Proceed to Payment</button>
-        <p style="font-size: smaller;">*Kindly be advised that we exclusively accommodate orders for on-site collection, as regrettably, a delivery service is not currently available.</p>
       </div>
     </div>
-  </div>
-</div>
 
 
-<div class="modal" tabindex="-1" [ngClass]="{'show': showApplyDiscountModal}" [ngStyle]="{'display': showApplyDiscountModal ? 'block' : 'none'}">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Apply Discount Confirmation</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeApplyDiscountModal()"></button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to apply this discount code?</p>
-        <br>
-        <p>
-          <span class="warning-icon">
-            <i class="bi bi-exclamation-triangle-fill"></i> <!-- Assuming you're using Bootstrap icons -->
-          </span>
-          <span class="warning-text">
-            Note that this will delete the discount code from the database, and it will not be able to be used again.
+    <div class="modal" tabindex="-1" [ngClass]="{'show': showApplyDiscountModal}"
+      [ngStyle]="{'display': showApplyDiscountModal ? 'block' : 'none'}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Apply Discount Confirmation</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeApplyDiscountModal()"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to apply this discount code?</p>
             <br>
-            It will also proceed to payment.
-          </span>
-        </p>
-        <p>Code: {{ discountCode }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeApplyDiscountModal()">No</button>
-        <button type="button" class="btn btn-primary" (click)="confirmApplyDiscount()">Yes</button>
+            <p>
+              <span class="warning-icon">
+                <i class="bi bi-exclamation-triangle-fill"></i> <!-- Assuming you're using Bootstrap icons -->
+              </span>
+              <span class="warning-text">
+                Note that this will delete the discount code from the database, and it will not be able to be used
+                again.
+                <br>
+                It will also proceed to payment.
+              </span>
+            </p>
+            <p>Code: {{ discountCode }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeApplyDiscountModal()">No</button>
+            <button type="button" class="btn btn-primary" (click)="confirmApplyDiscount()">Yes</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<style>
-  .warning-text {
-    color: #FF0000;  /* Red color for emphasis */
-    font-weight: bold;
-    font-size: 1.1em;
-  }
+    <style>
+      .warning-text {
+        color: #FF0000;
+        /* Red color for emphasis */
+        font-weight: bold;
+        font-size: 1.1em;
+      }
 
-  .warning-icon i {
-    color: #FF0000;  /* Red color to match the text */
-    margin-right: 8px;
-  }
-</style>
-
+      .warning-icon i {
+        color: #FF0000;
+        /* Red color to match the text */
+        margin-right: 8px;
+      }
+    </style>
