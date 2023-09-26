@@ -38,10 +38,18 @@ export class CartService {
 
   getCart(email: string): Observable<Cart> {
     this.setHeaders();
+
     return this.http.get<Cart>(`${this.apiUrl}/${email}`, { headers: this.headers }).pipe(
       tap(cart => {
-        // Update the cartItemCount BehaviorSubject
+        // Update the cartItemCount BehaviorSubject with the number of CartItems
         this.cartItemCount.next(cart.cartItems.length);
+
+        // Calculate the total quantity of all items in the cart
+        const totalQuantity = cart.cartItems.reduce((sum, current) => sum + current.quantity, 0);
+        this.updateCartItemCount(totalQuantity); // Assuming you have a method to update cartItemCount
+
+        // Log the total quantity
+        console.log(totalQuantity);       
       })
     );
   }
