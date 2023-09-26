@@ -18,6 +18,7 @@
             <tr>
                 <th scope="col">Order Num</th>
                 <th scope="col">Wine Name</th>
+                <th scope="col">Vintage</th>
                 <th scope="col">Quantity Ordered</th>
                 <th scope="col">Order Price</th>
                 <th scope="col">Date Ordered</th>
@@ -32,6 +33,7 @@
             <tr *ngFor="let order of supplierOrders; let i = index">
                 <td>{{ order.supplierOrderRefNum }}</td>
                 <td>{{ wineNamesMap.get(order.inventoryID!) }}</td>
+                <td>{{ vintageMap.get(order.inventoryID!) }}</td>
                 <td>{{ order.quantity_Ordered }}</td>
                 <td *ngIf="order.isBackOrder == true">BackOrder</td>
                 <td *ngIf="order.isBackOrder == false">R{{ order.orderTotal }}</td>
@@ -93,7 +95,7 @@
                         <select id="inventoryID" name="inventoryID" [(ngModel)]="selectedOrder.inventoryID"
                             class="form-control" required>
                             <option *ngFor="let inventory of inventories" [value]="inventory.inventoryID">
-                                {{wineNamesMap.get(inventory.inventoryID)}} <!-- Display wineName from the map -->
+                                {{wineNamesMap.get(inventory.inventoryID)}} ({{ vintageMap.get(inventory.inventoryID!)}})<!-- Display wineName from the map -->
                             </option>
                         </select>
                     </div>

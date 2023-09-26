@@ -46,6 +46,7 @@ export class SupplierOrderComponent implements OnInit {
   //Inventory
   inventories: Inventory[] = [];
   wineNamesMap: Map<number, string> = new Map();
+  vintageMap: Map<number, string> = new Map();
 
   constructor(private supplierOrderService: SupplierOrderService, private supplierService: SupplierService, private toastr: ToastrService,
     private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService,
@@ -89,6 +90,8 @@ export class SupplierOrderComponent implements OnInit {
       for (let inventory of this.inventories) {
         let wineName = await this.getWineNameFromInventory(inventory.inventoryID);
         this.wineNamesMap.set(inventory.inventoryID, wineName);
+        let vintage = await this.getWineVintageFromInventory(inventory.inventoryID);
+        this.vintageMap.set(inventory.inventoryID, vintage);
       }
       // /console.log("Inventory:", this.inventories);
     })
@@ -111,6 +114,30 @@ export class SupplierOrderComponent implements OnInit {
         if (wine) {
           // Return wineName from the Wine object
           return wine.name;
+        }
+      }
+      throw new Error('Inventory or Wine not found');
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getWineVintageFromInventory(id: number): Promise<string> {
+    try {
+      // Get Inventory object by id
+      let inventory = await this.inventoryService.getItemInventory(id);
+      
+      if (inventory) {
+        // Get wineID from the Inventory object
+        let wineID = inventory.wineID;
+        
+        // Get Wine object using wineID
+        let wine = await this.wineService.getWine(wineID);
+        
+        if (wine) {
+          // Return wineName from the Wine object
+          return wine.vintage;
         }
       }
       throw new Error('Inventory or Wine not found');

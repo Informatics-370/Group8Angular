@@ -38,6 +38,7 @@
         <th scope="col" class="header-cell">Varietal</th>
         <th scope="col" class="header-cell">Type</th>
         <th scope="col" class="header-cell">Price</th>
+        <th scope="col" class="header-cell">Vintage</th>
         <th scope="col" class="header-cell">Stock Limit</th>
         <th scope="col" class="header-cell">Quantity on Hand</th>
         <th scope="col" class="header-cell">Write-off</th>
@@ -49,6 +50,7 @@
         <td>{{ getVarietalName(x.varietalID) }}</td>
         <td>{{ getWinetypeName(x.wineTypeID) }}</td>
         <td>{{ getWinePrice(x.wineID) }}</td>
+        <td>{{ getWineVintage(x.wineID)}}</td>
         <td>{{ x.stockLimit }}</td>
         <td>{{ x.quantityOnHand }}</td>
         <td>
@@ -95,7 +97,7 @@
               <select *ngIf="!editingInventory" class="form-select" id="wineName" [(ngModel)]="currentInventory.wineID"
                 name="wineID" required (ngModelChange)="updateFieldsBasedOnWineName(currentInventory.wineID)">
                 <option [value]="0" disabled>Select a wine</option>
-                <option *ngFor="let wine of wines" [value]="wine.wineID">{{ wine.name }}</option>
+                <option *ngFor="let wine of wines" [value]="wine.wineID">{{ wine.name }}  ({{ wine.vintage }})</option>
               </select>
               <!-- When Editing Inventory -->
               <p *ngIf="editingInventory">{{ getWineName(currentInventory.wineID) }}</p>
@@ -279,6 +281,7 @@
         <tr>
           <th scope="col" class="header-cell">Supplier Order Ref</th>
           <th scope="col" class="header-cell">Wine Name</th>
+          <th scope="col" class="header-cell">Vintage</th>
           <th scope="col" class="header-cell">Date Done</th>
           <th scope="col" class="header-cell">Quantity Ordered</th>
           <th scope="col" class="header-cell">Quantity Received</th>
@@ -288,6 +291,7 @@
         <tr *ngFor="let x of stocktake">
           <td>{{ supOrderMap.get(x.supplierOrderID!) }}</td>
           <td>{{ wineNamesMap.get(x.supplierOrderID!) }}</td>
+          <td>{{ vintageMap.get(x.supplierOrderID!)}}</td>
           <td>{{ x.dateDone | date:'dd/MM/yyyy HH:mm'}}</td>
           <td>{{ x.quantityOrdered }}</td>
           <td>{{ x.quantityReceived }}</td>

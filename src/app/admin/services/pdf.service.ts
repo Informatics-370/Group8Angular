@@ -68,6 +68,11 @@ export class PdfService {
     return winetype?.name || 'Unknown';
   }
 
+  getWineVintage(wineID: number): string {
+    let wine = this.allWines.find(w => w.wineID === wineID);
+    return wine?.vintage || 'Unknown';
+  }
+
   async loadWines(): Promise<void> {
     try {
       this.allWines = await this.wineService.getWines();
@@ -141,7 +146,7 @@ export class PdfService {
             {
               table: {
                 headerRows: 1,
-                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                 body: [
                   [
                     'No.',
@@ -149,6 +154,7 @@ export class PdfService {
                     'Wine Varietal',
                     'Wine Type',
                     'Wine Price',
+                    'Vintage',
                     'Stock Limit',
                     'Quantity on Hand',
                   ],
@@ -164,6 +170,9 @@ export class PdfService {
                     },
                     {
                       text: this.getWinetypeName(item.wineTypeID) || 'N/A',
+                      noWrap: false,
+                    },{
+                      text: this.getWineVintage(item.wineTypeID) || 'N/A',
                       noWrap: false,
                     },
                     { text: 'R ' + item.winePrice || 'N/A', noWrap: false },
@@ -302,7 +311,7 @@ export class PdfService {
             {
               table: {
                 headerRows: 1,
-                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                 body: [
                   [
                     'No.',
@@ -310,6 +319,7 @@ export class PdfService {
                     'Wine Varietal',
                     'Wine Type',
                     'Wine Price',
+                    'Wine Vintage',
                     'Stock Limit',
                     'Quantity on Hand',
                   ],
@@ -317,7 +327,7 @@ export class PdfService {
                     index + 1,
                     {
                       text: this.getWineName(item.wineID) || 'N/A',
-                      noWrap: false,
+                      noWrap: true,
                     },
                     {
                       text: this.getVarietalName(item.varietalID) || 'N/A',
@@ -325,9 +335,10 @@ export class PdfService {
                     },
                     {
                       text: this.getWinetypeName(item.wineTypeID) || 'N/A',
-                      noWrap: false,
+                      noWrap: true,
                     },
                     { text: 'R ' + item.winePrice || 'N/A', noWrap: false },
+                    { text: this.getWineVintage(item.wineID), noWrap: true},
                     { text: item.stockLimit || 'N/A', noWrap: false },
                     { text: item.quantityOnHand || 'N/A', noWrap: false },
                   ]),
@@ -855,7 +866,7 @@ export class PdfService {
           'Supplier',
           'Wine',
           'Quantity Ordered',
-          'Cost (excl VAT)',
+          'Cost(excl VAT)',
           `VAT (${supplierOrderData[0].vaTs.percentage}%)`,
           'Sub-Total',
         ],
@@ -897,9 +908,9 @@ export class PdfService {
           body.push([
             { text: order.supplierOrderRefNum, noWrap: false },
             { text: supplierNames[index], noWrap: false },
-            { text: this.getWineName(inventoryWineID), noWrap: false },
+            { text: `${this.getWineName(inventoryWineID)} (${this.getWineVintage(inventoryWineID)})`, noWrap: true },
             { text: quantityOrdered, noWrap: false },
-            { text: orderValueText, noWrap: false },
+            { text: orderValueText, noWrap: true },
             { text: vatText, noWrap: false },
             { text: totalWithVatText, noWrap: false },
           ]);
@@ -1090,7 +1101,7 @@ export class PdfService {
           'Supplier',
           'Wine',
           'Quantity Ordered',
-          'Cost (excl VAT)',
+          'Cost(excl VAT)',
           `VAT (${supplierOrderData[0].vaTs.percentage}%)`,
           'Sub-Total',
         ],
@@ -1132,9 +1143,9 @@ export class PdfService {
           body.push([
             { text: order.supplierOrderRefNum, noWrap: false },
             { text: supplierNames[index], noWrap: false },
-            { text: this.getWineName(inventoryWineID), noWrap: false },
+            { text: `${this.getWineName(inventoryWineID)} (${this.getWineVintage(inventoryWineID)})`, noWrap: true },
             { text: quantityOrdered, noWrap: false },
-            { text: orderValueText, noWrap: false },
+            { text: orderValueText, noWrap: true },
             { text: vatText, noWrap: false },
             { text: totalWithVatText, noWrap: false },
           ]);
@@ -1575,15 +1586,15 @@ export class PdfService {
             {
               table: {
                 headerRows: 1,
-                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto'],
+                widths: ['auto', '*', 'auto', 'auto', 'auto'],
                 body: [
-                  ['No.', 'Wine Name', 'Varietal', 'Type', 'Price', 'Active'],
+                  ['No.', 'Wine Name', 'Varietal', 'Type', 'Price'],
                   ...winesData.map((item, index) => {
                     const wineActive = item.displayItem ? 'Yes' : 'No';
 
                     return [
                       index + 1,
-                      { text: item.name, noWrap: false } || 'N/A',
+                      { text: `${item.name} (${item.vintage})` , noWrap: false } || 'N/A',
                       {
                         text: this.getVarietalName(item.varietalID),
                         noWrap: false,
@@ -1593,7 +1604,6 @@ export class PdfService {
                         noWrap: false,
                       } || 'N/A',
                       'R ' + item.price || 'N/A',
-                      wineActive,
                     ];
                   }),
                 ],
@@ -1706,15 +1716,14 @@ export class PdfService {
             {
               table: {
                 headerRows: 1,
-                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto'],
+                widths: ['auto', '*', 'auto', 'auto', 'auto'],
                 body: [
-                  ['No.', 'Wine Name', 'Varietal', 'Type', 'Price', 'Active'],
+                  ['No.', 'Wine Name', 'Varietal', 'Type', 'Price'],
                   ...winesData.map((item, index) => {
-                    const wineActive = item.displayItem ? 'Yes' : 'No';
 
                     return [
                       index + 1,
-                      { text: item.name, noWrap: false } || 'N/A',
+                      { text: `${item.name} (${item.vintage})`, noWrap: false } || 'N/A',
                       {
                         text: this.getVarietalName(item.varietalID),
                         noWrap: false,
@@ -1724,7 +1733,6 @@ export class PdfService {
                         noWrap: false,
                       } || 'N/A',
                       'R ' + item.price || 'N/A',
-                      wineActive,
                     ];
                   }),
                 ],
