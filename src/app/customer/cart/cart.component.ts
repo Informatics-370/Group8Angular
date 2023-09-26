@@ -99,7 +99,7 @@ export class CartComponent implements OnInit {
     this.vatService.getLatestVAT().subscribe(
       (vatPercentage: number) => {
         this.latestVatPercentage = vatPercentage;
-        console.log(this.latestVatPercentage);
+        // console.log(this.latestVatPercentage);
       },
       (error: any) => {
         console.error('Error loading VAT:', error);
