@@ -70,6 +70,10 @@
     </table>
 </div>
 
+<div>
+    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('SUPPLIER ORDER')">Supplier Order</button>
+</div>
+
 <div class="text-center" *ngIf="supplierOrders.length === 0">
     <h3>No supplier orders currently in your system.</h3>
 </div>
@@ -212,3 +216,26 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}" [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1>{{ currentReportType }}</h1>        
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeBlacklistModal()"></button>
+        </div>
+        <div class="modal-body">
+          <h5 class="modal-title">Please select how you want to view the {{ currentReportType?.toLowerCase() }} report</h5>
+        </div>      
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="OpenReports(); AddAuditLog('Report: ' + currentReportType + ' Opened')">Open Report</button>
+          <button type="button" class="btn btn-primary" (click)="DownloadReports(); AddAuditLog('Report: ' + currentReportType + ' Downloaded')">Download Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
