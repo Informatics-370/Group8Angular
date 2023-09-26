@@ -5,6 +5,9 @@ import { OrderService } from 'src/app/customer/services/order.service';
 import { ToastrService } from 'ngx-toastr';
 import { RefundReponseViewModel } from 'src/app/Model/refundResponseViewModel';
 import { switchMap } from 'rxjs';
+import { Discount } from 'src/app/Model/discount';
+import { DiscountService } from '../services/discount.service';
+import { compileNgModule } from '@angular/compiler';
 
 @Component({
   selector: 'app-refund-request',
@@ -37,7 +40,8 @@ export class RefundRequestComponent {
   constructor(
     private refundService: RefundService,
     private orderService: OrderService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private discountService: DiscountService
   ) {}
   ngOnInit(): void {
     this.loadRefunds();
@@ -150,24 +154,45 @@ export class RefundRequestComponent {
   saveChanges(): void {
     if (this.selectedRefund.refundRequestId !== undefined) {
       let itemsStatuses = this.wineDetails.map((wine, index) => {
-        let matchingRefundItem = this.selectedRefund.refundItems[index]; // Using index to map
-
+        let matchingRefundItem = this.selectedRefund.refundItems[index];
         return {
           RefundItemId: matchingRefundItem?.refundItemId,
           Status: wine.status,
         };
       });
-
-      // console.log("Mapped Item Statuses:", itemsStatuses);
-
+  
       this.refundService
         .updateRefundStatus(this.selectedRefund.refundRequestId, itemsStatuses)
         .subscribe(
           (response) => {
-            // console.log('Status updated successfully');
-            // console.log("Response from updateRefundStatus", response);
             this.loadRefunds();
             this.toastr.success('Updated refund status');
+            // Check if any item has an 'Approved' status
+            if (itemsStatuses.some(item => item.Status === 'Approved')) {
+              // Generate a unique discount code
+              const discountCode = this.generateUniqueCode();
+              
+              // Calculate the total amount to be refunded
+              let totalRefundAmount = 0;
+              //const totalRefundAmount = this.selectedRefund.refundItems.reduce((acc, item) => acc + (this.wineDetails.cost || 0), 0);
+              this.wineDetails.forEach(element => {
+                totalRefundAmount = element.cost;
+                console.log("RefundAmount:", totalRefundAmount);
+              });
+              
+              // Create a new Discount object
+              const discount = new Discount();
+              discount.discountCode = discountCode;
+              discount.discountDescription = 'Refund';
+              discount.discountAmount = totalRefundAmount;
+  
+              // Call the addDiscount method to create a new discount
+              this.discountService.addDiscount(discount).then((newDiscount) => {
+                this.toastr.success('Discount code generated: ' + newDiscount.discountCode);
+              }).catch(error => {
+                console.error('Error generating discount code:', error);
+              });
+            }
           },
           (error) => {
             console.error('Error updating status:', error);
@@ -177,6 +202,16 @@ export class RefundRequestComponent {
     this.showRefundsModal = false;
     this.showConfirmModal = false;
   }
+  
+  generateUniqueCode() {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const randomLetter1 = alphabet[Math.floor(Math.random() * alphabet.length)];
+    const randomLetter2 = alphabet[Math.floor(Math.random() * alphabet.length)];
+    const timestampLast3Digits = Date.now().toString().slice(-3);
+    return randomLetter1 + randomLetter2 + '-' + timestampLast3Digits;
+  }
+  
+  
 
   isAnyStatusEmpty(): boolean {
     return this.wineDetails.some(wine => !wine.status || wine.status.trim() === '');
