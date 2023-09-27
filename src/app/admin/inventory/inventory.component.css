@@ -75,4 +75,30 @@ table {
     transform: translateY(-50%);
     pointer-events: none;
   }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+  }
+  
+  .page-info {
+    margin: 0 20px; 
+    font-weight: bold;
+  }
+
+  .page-size-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .page-size-label {
+    margin-right: 10px;
+  }
+  
+  .page-size-dropdown {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
   

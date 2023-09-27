@@ -89,7 +89,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWinetypeModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="winetypeForm.invalid" (click)="submitWinetypeForm(winetypeForm)">{{editingWinetype ?
+        <button type="button" class="btn btn-primary" [disabled]="winetypeForm.invalid" (click)="submitWinetypeForm(winetypeForm); onSubmitClick()">{{editingWinetype ?
           'Save Changes' : 'Save'}}</button>
       </div>
     </div>

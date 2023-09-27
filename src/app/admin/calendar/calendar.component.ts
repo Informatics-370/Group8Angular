@@ -9,6 +9,7 @@ import { AuditTrail } from 'src/app/Model/audit-trail';
 import { Customer } from 'src/app/Model/customer';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
 
 
 
@@ -39,17 +40,20 @@ export class CalendarComponent {
 
   constructor( 
     private eventService: EventService,    
-    private dataService: ReportService, 
+    private reportService: ReportService, 
     private pdfService: PdfService, 
     private toastr: ToastrService,
     private auditLogService: AuditlogService, 
-    private customerService: CustomersService
+    private customerService: CustomersService,
+    private dataService: DataServiceService
 
     ) {}
 
   async ngOnInit(): Promise<void> {
       await this.loadEventData();
       this.generateCalendarData();
+      this.userDetails = this.dataService.getUserFromToken();
+      this.loadUserData();
   }
 
   async loadEventData(): Promise<void> {
@@ -174,7 +178,7 @@ export class CalendarComponent {
       return;
     }
 
-    this.dataService.getEventsReport(beginDate, endDate).subscribe((result: any) => {
+    this.reportService.getEventsReport(beginDate, endDate).subscribe((result: any) => {
       this.events = result.map((event: { revenue: number; ticketsSold: number; price: number; }) => {
         event.revenue = event.ticketsSold * event.price;
         return event;
@@ -196,7 +200,7 @@ export class CalendarComponent {
     } else {
 
       try {
-        const result: any = await this.dataService.getEventsReport(this.beginDate, this.endDate).toPromise();
+        const result: any = await this.reportService.getEventsReport(this.beginDate, this.endDate).toPromise();
         console.log('Result:', result);
 
         if (result !== undefined) {
@@ -237,12 +241,14 @@ export class CalendarComponent {
   
   async AddAuditLog(button: string): Promise<void> {
     this.loadUserData();
+    console.log("START ", this.user)
     this.currentAudit.buttonPressed = button;
     this.currentAudit.userName = this.user?.first_Name;
     this.currentAudit.userEmail = this.user?.email;
     console.log(this.currentAudit);
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
+    console.log("END ", this.user)
   }
 
   loadUserData() {

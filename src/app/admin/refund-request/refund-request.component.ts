@@ -8,6 +8,11 @@ import { switchMap } from 'rxjs';
 import { Discount } from 'src/app/Model/discount';
 import { DiscountService } from '../services/discount.service';
 import { compileNgModule } from '@angular/compiler';
+import { AuditTrail } from 'src/app/Model/audit-trail';
+import { Customer } from 'src/app/Model/customer';
+import { DataServiceService } from 'src/app/customer/services/data-service.service';
+import { AuditlogService } from '../services/auditlog.service';
+import { CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-refund-request',
@@ -42,11 +47,16 @@ export class RefundRequestComponent {
     private refundService: RefundService,
     private orderService: OrderService,
     private toastr: ToastrService,
-    private discountService: DiscountService
+    private discountService: DiscountService,
+    private customerService: CustomersService,
+    private auditLogService: AuditlogService,
+    private dataService: DataServiceService
   ) {}
   ngOnInit(): void {
     this.loadRefunds();
     this.loadRefundResponses();
+    this.userDetails = this.dataService.getUserFromToken();
+    this.loadUserData();
   }
 
   searchRefunds() {
@@ -255,5 +265,40 @@ export class RefundRequestComponent {
   closeConfirmModal(): void {
     this.confirmText = '';
     this.showConfirmModal = false;
+  }
+
+  
+  AuditTrail: AuditTrail[] = [];
+  currentAudit: AuditTrail = new AuditTrail();
+  user: Customer | undefined;
+  userDetails: any;
+
+  loadUserData() {
+    const userEmail = this.userDetails?.email;
+
+    if (userEmail != null) {
+      this.customerService.GetCustomer(userEmail).subscribe(
+        (result: any) => {
+          console.log(result);
+          // Access the user object within the result
+          this.user = result.user; // Assign the user data to the variable
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Failed to load user data.');
+        }
+      );
+    }
+  }
+
+
+  async AddAuditLog(button: string): Promise<void> {
+    this.loadUserData();
+    this.currentAudit.buttonPressed = button;
+    this.currentAudit.userName = this.user?.first_Name;
+    this.currentAudit.userEmail = this.user?.email;
+    console.log(this.currentAudit);
+    const data = await this.auditLogService.addAuditLog(this.currentAudit);
+    this.AuditTrail.push(data);
   }
 }

@@ -2,12 +2,6 @@
 <br>
 <div class="container">
   <h2>Complete System Audit Log</h2>
-  <!-- <div class="row mb-3">
-    <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Search Early" [(ngModel)]="searchQuery"
-        (input)="filterAuditTrails()">
-    </div>
-  </div> -->
 
   <!-- Add a single search input field -->
   <div class="row">
@@ -17,26 +11,46 @@
         class="form-control"
         placeholder="Search"
         [(ngModel)]="searchInput"
-        (ngModelChange)="search()"
+        (ngModelChange)="filterAuditTrails()"
       />
     </div>
-    <div class="col-md-2">
+    <!-- <div class="col-md-2">
       <button class="btn btn-primary" (click)="search()">Search</button>
-    </div>
+    </div> -->
   </div>
 
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col" class="header-cell">Button Pressed</th>
-        <th scope="col" class="header-cell">Username</th>
-        <th scope="col" class="header-cell"> User Email</th>
-        <th scope="col" class="header-cell"> Transaction Date</th>
-        <th scope="col" class="header-cell"> Quantity</th>
+        <th scope="col" class="header-cell" (click)="sortTable('buttonPressed')">Button Pressed
+          <span *ngIf="sortBy === 'buttonPressed'" class="sort-icon">
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          </span>
+        </th>
+        <th scope="col" class="header-cell" (click)="sortTable('userName')">Username
+          <span *ngIf="sortBy === 'userName'" class="sort-icon">
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          </span>
+        </th>
+        <th scope="col" class="header-cell" (click)="sortTable('userEmail')">User Email
+          <span *ngIf="sortBy === 'userEmail'" class="sort-icon">
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          </span>
+        </th>
+        <th scope="col" class="header-cell" (click)="sortTable('transactionDate')">Transaction Date
+          <span *ngIf="sortBy === 'transactionDate'" class="sort-icon">
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          </span>
+        </th>
+        <th scope="col" class="header-cell" (click)="sortTable('quantity')">Quantity
+          <span *ngIf="sortBy === 'quantity'" class="sort-icon">
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          </span>
+        </th>
       </tr>
-    </thead>
+    </thead>   
     <tbody>
-      <tr *ngFor="let x of AuditTrail">
+      <tr *ngFor="let x of paginatedAuditTrails">
         <td>{{ x.buttonPressed }}</td>
         <td>{{ x.userName }}</td>
         <td>{{ x.userEmail }}</td>
@@ -56,7 +70,7 @@
   </div>
 </div>
 
-<!-- <div class="pagination">
+<div class="pagination">
   <button class="btn btn-light" (click)="previousPage()">
     &laquo; Previous
   </button>
@@ -64,4 +78,15 @@
   <button class="btn btn-light" (click)="nextPage()">
     Next &raquo;
   </button>
-</div> -->
+</div>
+
+<div class="page-size-container">
+  <span class="page-size-label">Page Size:</span>
+  <select class="page-size-dropdown" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+    <option value="3">3</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="15">15</option>
+    <option value="25">25</option>
+  </select>
+</div>

@@ -83,7 +83,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeWORModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="writeORForm.invalid" (click)="submitWORForm(writeORForm)">{{editingWOR ?
+        <button type="button" class="btn btn-primary" [disabled]="writeORForm.invalid" (click)="submitWORForm(writeORForm); onSubmitClick()">{{editingWOR ?
           'Save Changes' : 'Save'}}</button>
       </div>
     </div>
