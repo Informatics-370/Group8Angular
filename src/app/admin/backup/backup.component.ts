@@ -82,6 +82,8 @@ export class BackupComponent {
 
   submitTimer() {
     let timerInMinutes = 0;
+    let timerDev = 'Minute(s)';
+    let toastValue = "";
     const inputValue = parseInt(this.value, 10);
     console.log(inputValue);
 
@@ -92,10 +94,12 @@ export class BackupComponent {
         break;
       case 'hours':
         timerInMinutes = inputValue * 60;
+        timerDev = "Hour(s)"
         console.log("Hours:", timerInMinutes);
         break;
       case 'days':
         console.log("Days:", timerInMinutes);
+        timerDev = "Day(s)"
         timerInMinutes = inputValue * 1440; // 60 minutes * 24 hours
         break;
     }
@@ -105,6 +109,17 @@ export class BackupComponent {
     this.backupService.updateTimer(timerInMinutes).subscribe(response => {
       // Handle the response as needed
       console.log(response);
+      if(timerDev == "Minute(s)"){
+        toastValue = " " + timerInMinutes + " minute(s)";
+      }else if(timerDev == "Hour(s)"){
+        toastValue = " " + timerInMinutes/60 + " hour(s)";
+      }else{
+        toastValue = " " + timerInMinutes/1440 + " day(s)";
+      }
+
+
+      this.toastr.success(`Database backup frequency updated to every ${toastValue}`)
+      this.getCurrentTimerFrequency();
       this.closeTimerModal();
     });
   }

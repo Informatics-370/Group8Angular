@@ -40,9 +40,8 @@ export class BackupService {
   }
 
   updateTimer(timer: number): Observable<any>{
-    console.log("Service:", timer);
     this.setHeaders();
-    return this.http.put(`${this.apiUrl}/UpdateTimer/${timer}`, {timer: timer}, { headers: this.headers });
+    return this.http.put(`${this.apiUrl}/UpdateTimer/${timer}`, timer, { headers: this.headers });
   }
 
   getTimer(): Observable<any> {
