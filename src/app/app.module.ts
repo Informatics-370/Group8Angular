@@ -68,6 +68,7 @@ import { AccessRestrictedComponent } from './admin/access-restricted/access-rest
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DonationsComponent } from './customer/donations/donations.component';
 import { CalendarComponent } from './admin/calendar/calendar.component';
+import { BackupComponent } from './admin/backup/backup.component';
 
 
 @NgModule({
@@ -122,6 +123,7 @@ import { CalendarComponent } from './admin/calendar/calendar.component';
     AccessRestrictedComponent,
     DonationsComponent,
     CalendarComponent,
+    BackupComponent,
   ],
   imports: [
     BrowserModule,

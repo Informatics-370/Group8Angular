@@ -75,7 +75,8 @@ export class AppComponent {
           '/charts',
           '/help',
           'access-restricted',
-          '/calendar'
+          '/calendar',
+          '/backup'
         ];
 
         const custroutes = [
