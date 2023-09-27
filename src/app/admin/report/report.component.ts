@@ -32,13 +32,16 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 export class ReportComponent {
 
 
-  constructor(private toastr: ToastrService,
+  constructor(
+    private toastr: ToastrService,
     private dataService: ReportService,
     private pdfService: PdfService,
     private inventoryService: InventoryService,
     private salesService: SalesService,
-    private wineService: WineService
-    , private customerService: CustomersService,private auditLogService: AuditlogService, private adataService: DataServiceService) { }
+    private wineService: WineService, 
+    private customerService: CustomersService,
+    private auditLogService: AuditlogService, 
+    private adataService: DataServiceService) { }
 
   showRefundsModal: boolean = false;
   currentDate = new Date();

@@ -1,9 +1,13 @@
 <br>
 <br>
-<div class="row align-items-center mb-3">
+<div class="row align-items-center">
     <div class="col-md-6">
         <h2>Event Calendar</h2>
     </div>
+    <div class="col-md-12 text-end">
+      <button type="button" class="btn btn-primary" style="margin-right: 160px;" (click)="showDateModal('EVENTS')">Report</button>
+    </div>
+    
 </div>
 
 <div class="calendar">
@@ -95,3 +99,31 @@
   </div>
 </div>
   
+
+<!-- Events Report Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showRefundsModal}"
+  [ngStyle]="{'display': showRefundsModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>{{ currentReportType }}</h1>        
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeRefundsModal()"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="modal-title">Please select the dates you wish to create a {{ currentReportType?.toLowerCase() }} report for</h5>
+        <div class="form-group">
+          <label for="beginDateInput">Begin Date:</label>
+          <input type="date" id="beginDateInput" [(ngModel)]="beginDate">
+        </div>
+        <div class="form-group">
+          <label for="endDateInput">End Date:</label>
+          <input type="date" id="endDateInput" [(ngModel)]="endDate">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="OpenDateReports(); AddAuditLog('Report: ' + currentReportType + ' Opened')">Open Report</button>
+        <button type="button" class="btn btn-primary" (click)="DownloadDateReports(); AddAuditLog('Report: ' + currentReportType + ' Downloaded')">Download Report</button>
+      </div>
+    </div>
+  </div>
+</div>

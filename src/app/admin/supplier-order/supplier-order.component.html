@@ -9,6 +9,12 @@
         <button class="btn btn-success" (click)="openAddSupplierOrderModal()">
             <i class="fas fa-plus"></i> Add
         </button>
+       <div>
+        <div>
+            <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('SUPPLIER ORDER')">Report</button>
+        </div>
+        
+       </div>
     </div>
 </div>
 
@@ -70,9 +76,6 @@
     </table>
 </div>
 
-<div>
-    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('SUPPLIER ORDER')">Supplier Order</button>
-</div>
 
 <div class="text-center" *ngIf="supplierOrders.length === 0">
     <h3>No supplier orders currently in your system.</h3>
