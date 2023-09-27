@@ -61,7 +61,7 @@
       </div>
 
       <div class="modal-body">
-        <form #blacklistForm="ngForm" (ngSubmit)="submitBlacklistCForm(blacklistForm)">
+        <form #blacklistForm="ngForm" (ngSubmit)="submitBlacklistCForm(blacklistForm); onSubmitClick()">
     
             <!-- Add Mode: Dropdown for Customer Emails -->
             <ng-container *ngIf="!editingBlacklistC">

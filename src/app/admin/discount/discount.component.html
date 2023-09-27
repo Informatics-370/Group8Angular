@@ -64,7 +64,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="closeDiscountModal()"></button>
       </div>
       <div class="modal-body">
-        <form #discountForm="ngForm" (ngSubmit)="submitDiscountForm(discountForm)">
+        <form #discountForm="ngForm" (ngSubmit)="submitDiscountForm(discountForm); onSubmitClick()">
 
           <div class="mb-3">
             <label for="discountCode" class="form-label">Discount Code</label>

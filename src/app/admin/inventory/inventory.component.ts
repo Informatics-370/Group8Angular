@@ -85,6 +85,11 @@ export class InventoryComponent implements OnInit {
     this.loadStockTake();
     this.getInventories();
     console.log('currentPage', this.currentPage);
+
+    setTimeout(() => {
+      this.filteredInventoryList  = [...this.inventory];
+      this.filterInventory();
+    }, 200);
   }
 
   // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -740,4 +745,61 @@ export class InventoryComponent implements OnInit {
   closeSuppOModal() {
     this.showSuppOModal = false;
   }
+
+  filteredInventoryList: Inventory[] = [];
+  currentPagePagination = 1;
+  pageSize = 10;
+
+  filterInventory() {
+    if (!this.searchQuery.trim()) {
+      this.filteredInventoryList = [...this.inventory]; // Show all items if the search query is empty
+    } else {
+      const searchTerm = this.searchQuery.toLowerCase().trim();
+      this.filteredInventoryList = this.inventory.filter(item =>
+        this.getWineName(item.wineID).toLowerCase().includes(searchTerm) ||
+        this.getVarietalName(item.varietalID).toLowerCase().includes(searchTerm) ||
+        this.getWinetypeName(item.wineTypeID).toLowerCase().includes(searchTerm) ||
+        item.winePrice.toString().includes(searchTerm) ||
+        this.getWineVintage(item.wineID).toString().includes(searchTerm) ||
+        item.stockLimit.toString().includes(searchTerm) ||
+        item.quantityOnHand.toString().includes(searchTerm)
+      );
+    }
+  }
+  
+  
+
+  get paginatedInventory(): Inventory[] {
+    const startIndex = (this.currentPagePagination - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.filteredInventoryList.slice(startIndex, endIndex);
+  }
+
+  changePage(page: number) {
+    this.currentPagePagination = page;
+  }
+
+  previousPage() {
+    if (this.currentPagePagination > 1) {
+      this.changePage(this.currentPagePagination - 1);
+    }
+  }
+
+  nextPage() {
+    const totalPages = Math.ceil(this.filteredInventoryList.length / this.pageSize);
+    if (this.currentPagePagination < totalPages) {
+      this.changePage(this.currentPagePagination + 1);
+    }
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredInventoryList.length / this.pageSize);
+  }
+
+  onPageSizeChange() {
+    this.currentPagePagination = 1;
+    this.filterInventory(); 
+  }
+
+
 }

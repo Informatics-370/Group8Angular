@@ -56,7 +56,7 @@
           (click)="closeSystemPrivilegeModal(); onSubmitClick()"></button>
       </div>
       <div class="modal-body">
-        <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm)">
+        <form #systemPrivilegeForm="ngForm" (ngSubmit)="submitSystemPrivilegeForm(systemPrivilegeForm); onSubmitClick()">
           <div class="d-flex justify-content-between">
             <label for="name" class="form-label">Name
               <i class="fa fa-question-circle" data-bs-toggle="tooltip"

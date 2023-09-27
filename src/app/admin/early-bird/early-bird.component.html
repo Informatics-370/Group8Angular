@@ -99,7 +99,7 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeEarlyBirdModal()">Close</button>
+            <button type="button" class="btn btn-secondary" (click)="closeEarlyBirdModal(); onSubmitClick()">Close</button>
             <button type="submit" class="btn btn-primary" [disabled]="earlyBirdForm.invalid || isSaving">{{editingEarlyBird ? 'Save Changes' : 'Save'}}</button>
           </div>
         </form>

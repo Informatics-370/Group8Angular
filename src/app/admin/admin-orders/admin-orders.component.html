@@ -35,7 +35,7 @@
         <div class="card-body">
           <p>Order Total: R{{ order.orderTotal }}</p>
           <p>Customer ID: {{ order.customerId }}</p>
-          <p>Order Date: {{ order.orderDate }}</p>
+          <p>Order Date: {{ order.orderDate | date:'dd/MM/yyyy HH:mm' }}</p>
           <p>Order reference: {{order.orderRefNum | uppercase}}</p>
 
           <!-- Show "Mark as Placed" only if the status is 1 -->

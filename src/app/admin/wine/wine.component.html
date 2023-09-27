@@ -246,7 +246,7 @@
         <button type="button" class="btn btn-secondary" (click)="closeWineModal()">Close</button>
         <button type="button" class="btn btn-primary"
         [disabled]="wineForm.invalid || (editingWine ? false : (!fileUploaded || invalidFileType)) || wineDisplayField.value == 'null' || wineTypeField.value == '0' || isSaving == true"
-        (click)="submitWineForm(wineForm)">{{editingWine ? 'Save Changes' : 'Save'}}</button>
+        (click)="submitWineForm(wineForm); onSubmitClick()">{{editingWine ? 'Save Changes' : 'Save'}}</button>
       
       </div>
 

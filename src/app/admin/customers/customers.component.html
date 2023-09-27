@@ -30,7 +30,7 @@
       <td>{{ emp.email }}</td>
       <td>{{ emp.phoneNumber }}</td>
       <td>{{ emp.iD_Number }}</td>
-      <td>{{ emp.date_Created }}</td>
+      <td>{{ emp.date_Created | date:'dd/MM/yyyy HH:mm' }}</td>
       <td>
         <button class="btn btn-danger" (click)="emp.id !== undefined && openDeleteCustomerModal(emp)">
           <i class="fas fa-trash-alt"></i>

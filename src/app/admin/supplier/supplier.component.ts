@@ -23,7 +23,7 @@ export class SupplierComponent implements OnInit {
   currentSupplier: Supplier = new Supplier();
   searchQuery: string = '';
   filteredSuppliers: Supplier[] = [];
-  pageSize: number = 5;
+  pageSize: number = 2;
   currentPage: number = 1;
 
     supplierToDelete: any = null;

@@ -39,7 +39,7 @@
       <td class="align-middle"><img [src]="event.filePath" alt="{{ event.name }}'s Image" width="140" height="100"></td>
       <td class="d-none d-md-table-cell align-middle">{{ event.name }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.eventType?.eventTypeName }}</td>
-      <td class="d-none d-md-table-cell align-middle">{{ event.eventDate | date:'short' }}</td>
+      <td class="d-none d-md-table-cell align-middle">{{ event.eventDate | date:'dd/MM/yyyy HH:mm' }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.tickets_Available }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.tickets_Sold }}</td>
       <td class="d-none d-md-table-cell align-middle" style="text-align: right;">{{ event.price |
@@ -270,7 +270,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeEventModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm)"
+        <button type="button" class="btn btn-primary" (click)="submitEventForm(eventForm); onSubmitClick()"
           [disabled]="earlyBirdField.value == '' || earlyBirdField.value === undefined || eventTypeField.value==0 || eventTypeField.value === undefined || eventForm.invalid || (!fileUploaded || invalidFileType) || isSubmitting">{{editingEvent?
           'Save Changes' : 'Save'}}</button>
       </div>

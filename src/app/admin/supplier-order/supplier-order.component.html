@@ -59,7 +59,6 @@
                     <input *ngIf="order.supplierOrderStatus" type="checkbox" id="sPaid"
                         [(ngModel)]="order.supplierOrderStatus.paid"
                         [disabled]="!order.supplierOrderStatus.ordered || order.supplierOrderStatus.paid"
-                        (change)="AddAuditLog('Supplier Order Update Status Paid')"
                         (click)="openPaidModal(order.supplierOrderID!)">
                 </td>
 
@@ -92,7 +91,7 @@
                     (click)="closeAddSupplierOrderModal()"></button>
             </div>
             <div class="modal-body">
-                <form #addSupplierOrderForm="ngForm" (ngSubmit)="createOrder(addSupplierOrderForm.value)">
+                <form #addSupplierOrderForm="ngForm" (ngSubmit)="createOrder(addSupplierOrderForm.value); AddAuditLog('Supplier Order Added')">
 
                     <!-- Select Inventory -->
                     <div *ngIf="selectedOrder">
@@ -179,7 +178,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary"
                     [disabled]="orderTotalField.invalid || orderTotalField.value == 0"
-                    (click)="updateOrder(currentOrder, currentOrder.orderTotal!); AddAuditLog('SupplierOrder: Added cost of order')">Update</button>
+                    (click)="updateOrder(currentOrder, currentOrder.orderTotal!); AddAuditLog('Supplier Order Update Status Paid') ;AddAuditLog('SupplierOrder: Added cost of order')">Update</button>
             </div>
         </div>
     </div>
