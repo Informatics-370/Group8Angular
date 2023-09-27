@@ -48,6 +48,7 @@ import { HelpResourcesComponent } from './admin/help-resources/help-resources.co
 import { AuthGuard } from './auth.guard';
 import { AccessRestrictedComponent } from './admin/access-restricted/access-restricted.component';
 import { DonationsComponent } from './customer/donations/donations.component';
+import { BackupComponent } from './admin/backup/backup.component';
 
 
 const routes: Routes = [
@@ -77,7 +78,8 @@ const routes: Routes = [
   { path: 'refundrequest', component: RefundRequestComponent, canActivate: [AuthGuard]},
   { path: 'auditlogs', component: AuditLogsComponent, canActivate: [AuthGuard]},
   { path: 'charts', component: ChartsComponent, canActivate: [AuthGuard]},
-  { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]},
+  { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]}, 
+  { path: 'backup', component: BackupComponent, canActivate: [AuthGuard]}, 
   
   
   //FROM HERE WE HAVE THE CLIENT SIDE COMPONENTS

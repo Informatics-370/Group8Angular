@@ -29,6 +29,7 @@ import { ScanTicketComponent } from './scan-ticket/scan-ticket.component';
 import { HelpResourcesComponent } from './help-resources/help-resources.component';
 import { RefundRequestComponent } from './refund-request/refund-request.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { BackupComponent } from './backup/backup.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/wine', pathMatch: 'full' },
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'help', component: HelpResourcesComponent},
   { path: 'Tickets/Scan/:token', component: ScanTicketComponent },
   { path: 'calendar', component: CalendarComponent},
+  { path: 'backup', component: BackupComponent},
 
 
 ];

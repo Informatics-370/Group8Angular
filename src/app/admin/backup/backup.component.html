@@ -1,0 +1,117 @@
+<br />
+<br />
+<div class="row align-items-center">
+    <div class="col">
+        <h1>Database backups</h1>
+    </div>
+</div>
+
+<div>
+    <div>
+        <h4 style="padding-right: 5px;">Backup Frequency</h4>
+    </div>
+    <div>
+        <button class="btn btn-primary" (click)="openTimerModal()">Update timer</button>
+    </div>
+</div>
+<br>
+<br>
+<div>
+    <div>
+        <h4 style="padding-right: 5px;">Backup:</h4>
+    </div>
+    <div>
+        <button class="btn btn-secondary" (click)="makeBackup()">Make backup</button>
+    </div>
+</div>
+<br>
+<br>
+<div>
+    <div>
+        <h4 style="padding-right: 5px;">Restore:</h4>
+    </div>
+    <div>
+        <button class="btn btn-danger" (click)="openModal()">Restore database</button>
+    </div>
+</div>
+
+
+
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': restoreModal}"
+    [ngStyle]="{'display': restoreModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">Database restore
+                <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form #restoreForm="ngForm" (ngSubmit)="restoreDatabase(restoreForm)">
+
+                    <div class="mb-3">
+                        <label for="backupFile" class="form-label">Select Backup File <i class="fa fa-question-circle"
+                                data-bs-toggle="tooltip"
+                                title="Please select the backup file you want to use for restoring the database"></i></label>
+                        <input type="file" class="form-control" id="backupFile" (change)="onFileSelected($event)"
+                            #backupFileField="ngModel" ngModel>
+                        <div *ngIf="backupFileField.invalid && backupFileField.touched" class="alert alert-danger">
+                            <div *ngIf="backupFileField.errors?.['required']">Backup file is required.</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="!selectedFileName"
+                    (click)="restoreDatabase(restoreForm)">Restore</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': timerModal}"
+     [ngStyle]="{'display': timerModal ? 'block' : 'none'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">Update Backup Frequency
+                <button type="button" class="btn-close" aria-label="Close" (click)="closeTimerModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form #timerForm="ngForm" (ngSubmit)="submitTimer()">
+
+                    <div class="mb-3">
+                        <label for="frequency" class="form-label">Select a frequency value <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please select the frequency you want to update your timer"></i></label>
+                        <select class="form-select" [(ngModel)]="selectedUnit" name="unit" #unitField="ngModel" required>
+                            <option value="first" selected disabled>Select a frequency value</option>
+                            <option value="minutes">Minutes</option>
+                            <option value="hours">Hours</option>
+                            <option value="days">Days</option>
+                        </select>
+                        <div *ngIf="unitField.invalid && unitField.touched" class="alert alert-danger">
+                            <div *ngIf="unitField.errors?.['required']">Frequency unit is required.</div>
+                        </div>
+                        <br>
+                        <label *ngIf="selectedUnit === 'first'" for="value" class="form-label">Current frequency in minutes: {{maxValues[selectedUnit]}} <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please input the value for the selected frequency"></i></label>
+                        <label *ngIf="selectedUnit !== 'first'" for="value" class="form-label">Value (Max {{maxValues[selectedUnit]}}) <i class="fa fa-question-circle" data-bs-toggle="tooltip" title="Please input the value for the selected frequency"></i></label>
+                        <input type="number" class="form-control" id="value" [(ngModel)]="value" name="value" #valueField="ngModel" [max]="maxValues[selectedUnit]" [min]="0" required placeholder="0" [disabled]="selectedUnit === 'first'">
+                        <div *ngIf="valueField.invalid && valueField.touched" class="alert alert-danger">
+                            <div *ngIf="valueField.errors?.['required']">Value is required.</div>
+                            <div *ngIf="valueField.errors?.['max']">Value exceeds the maximum allowed.</div>
+                            <div *ngIf="valueField.errors?.['min']">Value needs to be positive.</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeTimerModal()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="timerForm.form.invalid"
+                        (click)="submitTimer()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
