@@ -5,10 +5,10 @@
   </button>
   <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item" (click)="showWineSubnav = !showWineSubnav">
-      <a class="nav-link">
+      <a class="nav-link ">
         <i class="bi bi-basket me-2"></i>
         <span style="margin-top: 10px;">Wine</span>
-        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
+        <i [class]="showWineSubnav ? 'bi bi-chevron-down ' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
       </a>
 
       
@@ -45,7 +45,7 @@
       <a class="nav-link">
         <i class="bi bi-list-ol me-2"></i>
         <span>Inventory</span>
-        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
+        <i [class]="showInventorySubnav ? 'bi bi-chevron-down' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
       </a>
           <ul *ngIf="showInventorySubnav" class="nav flex-column ml-3 sub-nav">
             <li class="nav-item" style="background-color: rgb(59, 59, 255);">
@@ -67,7 +67,7 @@
       <a class="nav-link">
         <i class="bi bi-calendar-event me-2"></i>
         <span>Event</span>
-        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
+        <i [class]="showEventSubnav ? 'bi bi-chevron-down' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
       </a>
       
 <!-- UL with Event Subnav -->
@@ -109,7 +109,7 @@
       <a class="nav-link">
         <i class="bi bi-truck me-2"></i>
         <span>Supplier</span>
-        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
+        <i [class]="showSupplierSubnav ? 'bi bi-chevron-down' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
       </a>
       <ul *ngIf="showSupplierSubnav" class="nav flex-column ml-3 sub-nav">
         <li class="nav-item" style="background-color: rgb(59, 59, 255);">
@@ -165,7 +165,7 @@
       <a class="nav-link">
         <i class="bi bi-basket me-2"></i>
         <span>Accounts</span>
-        <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
+        <i [class]="showEmpSubnav ? 'bi bi-chevron-down' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
       </a>
 <ul *ngIf="showEmpSubnav" class="nav flex-column ml-3 sub-nav">
   <li class="nav-item" style="background-color: rgb(59, 59, 255);">
@@ -205,7 +205,7 @@
   <a class="nav-link">
     <i class="bi bi-bar-chart-fill me-2"></i>
     <span>Reports</span>
-    <i class="bi bi-chevron-down" style="margin-left: 15px;"></i>
+    <i [class]="showReportSubnav ? 'bi bi-chevron-down' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
   </a>
   <ul *ngIf="showReportSubnav" class="nav flex-column ml-3 sub-nav">
     <li class="nav-item" style="background-color: rgb(59, 59, 255);">
