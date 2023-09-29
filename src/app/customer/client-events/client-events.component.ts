@@ -204,7 +204,7 @@ export class ClientEventsComponent {
         },
         (error: HttpErrorResponse) => {
           console.error(error);
-          this.toastr.error('An error occurred while saving ticket purchase, please try again.', 'Purchase');
+          this.toastr.error(error.error.message, 'Purchase');
         }
       );
     }
@@ -252,12 +252,18 @@ export class ClientEventsComponent {
       this.toastr.info('Redirecting URL...', 'Purchasing ticket');
       return this.saveTicketPurchase(event);
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      this.toastr.error('An error occurred, please try again.', 'Purchase');
+      const e = error as { error: { message: string } };
+      if (e.error && e.error.message === 'Email not sent.') {
+        this.toastr.warning('Ticket Email could not be sent', 'Purchase');
+        console.log('Ticket Email could not be sent');
+      } else {
+        this.toastr.error('An error occurred, please try again.', 'Purchase');
+      }
       return;
     }
-  }
+  }    
 
 
 }
