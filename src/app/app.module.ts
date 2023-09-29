@@ -25,6 +25,9 @@ import { EmployeeComponent } from './admin/employee/employee.component';
 //Successfull and error message popups
 import { ToastrModule } from 'ngx-toastr';
 
+//Error Interceptor
+import { ErrorInterceptor } from './error.interceptor';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarietalComponent } from './admin/varietal/varietal.component';
 import { TypeComponent } from './admin/type/type.component';
@@ -146,7 +149,8 @@ import { BackupComponent } from './admin/backup/backup.component';
         provide: HTTP_INTERCEPTORS,
         useClass: HttpInterceptorInterceptor,
         multi: true
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     
   ],
   bootstrap: [AppComponent]
