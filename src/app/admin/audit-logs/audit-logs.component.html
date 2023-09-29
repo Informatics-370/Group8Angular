@@ -22,35 +22,37 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col" class="header-cell" (click)="sortTable('buttonPressed')">Button Pressed
+        <th scope="col" class="header-cell sortable" (click)="sortTable('buttonPressed')">Button Pressed
           <span *ngIf="sortBy === 'buttonPressed'" class="sort-icon">
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
         </th>
-        <th scope="col" class="header-cell" (click)="sortTable('userName')">Username
+        <th scope="col" class="header-cell sortable" (click)="sortTable('userName')">Username
           <span *ngIf="sortBy === 'userName'" class="sort-icon">
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
         </th>
-        <th scope="col" class="header-cell" (click)="sortTable('userEmail')">User Email
+        <th scope="col" class="header-cell sortable" (click)="sortTable('userEmail')">User Email
           <span *ngIf="sortBy === 'userEmail'" class="sort-icon">
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
         </th>
-        <th scope="col" class="header-cell" (click)="sortTable('transactionDate')">Transaction Date
+        <th scope="col" class="header-cell sortable" (click)="sortTable('transactionDate')">Transaction Date
           <span *ngIf="sortBy === 'transactionDate'" class="sort-icon">
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
         </th>
-        <th scope="col" class="header-cell" (click)="sortTable('quantity')">Quantity
+        <th scope="col" class="header-cell sortable" (click)="sortTable('quantity')">Quantity
           <span *ngIf="sortBy === 'quantity'" class="sort-icon">
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
         </th>
       </tr>
     </thead>   
+
+
     <tbody>
-      <tr *ngFor="let x of paginatedAuditTrails">
+      <tr *ngFor="let x of paginatedAuditTrails"> 
         <td>{{ x.buttonPressed }}</td>
         <td>{{ x.userName }}</td>
         <td>{{ x.userEmail }}</td>
@@ -63,6 +65,8 @@
         </td>
       </tr>
     </tbody>
+
+    
   </table>
 
   <div class="text-center" *ngIf="AuditTrail.length === 0">
@@ -70,6 +74,9 @@
   </div>
 </div>
 
+
+
+<!-- //=================================== Pagination =======================================================// -->
 <div class="pagination">
   <button class="btn btn-light" (click)="previousPage()">
     &laquo; Previous
@@ -90,3 +97,4 @@
     <option value="25">25</option>
   </select>
 </div>
+<!-- //=================================== Pagination =======================================================// -->
