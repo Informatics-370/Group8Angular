@@ -7,7 +7,7 @@
     <h2>Event</h2>
     <div class="row mb-3">
       <div class="col-md-6">
-        <input type="text" class="form-control mb-3" placeholder="Search" [(ngModel)]="searchQuery"
+        <input type="text" class="form-control mb-3" placeholder="Search Events" [(ngModel)]="searchQuery"
           (input)="filterEvents()">
       </div>
     </div>
@@ -35,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let event of filteredEvents">
+    <tr *ngFor="let event of events">
       <td class="align-middle"><img [src]="event.filePath" alt="{{ event.name }}'s Image" width="140" height="100"></td>
       <td class="d-none d-md-table-cell align-middle">{{ event.name }}</td>
       <td class="d-none d-md-table-cell align-middle">{{ event.eventType?.eventTypeName }}</td>
@@ -68,6 +68,15 @@
     </tr>
   </tbody>
 </table>
+
+<app-pagination
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions" 
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+></app-pagination>
 
 
 <div class="text-center" *ngIf="events.length === 0">

@@ -6,6 +6,15 @@
 <div class="row align-items-center mb-3">
   <div class="col-md-6">
     <h2>Discount</h2>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search Discounts" [(ngModel)]="searchQuery"
+          (input)="filterDiscounts()">
+      </div>
+    </div>
+
+
   </div>
   <div class="col-md-6 text-end">
     <button class="btn btn-success" (click)="openAddDiscountModal()">
@@ -26,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let discount of discounts">
+    <tr *ngFor="let discount of filteredDiscounts">
       <td>{{ discount.discountCode }}</td>
       <td>{{ discount.discountDescription }}</td>
 
