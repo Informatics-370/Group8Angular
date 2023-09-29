@@ -16,6 +16,7 @@ import { CustomersService } from '../services/customers.service';
   styleUrls: ['./discount.component.css']
 })
 export class DiscountComponent {
+  searchQuery: any;
 
 constructor(private toastr : ToastrService, private router: Router,  private discountService: DiscountService
   , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
@@ -26,14 +27,28 @@ ngOnInit(): void {
       this.loadUserData();
 }
 
-async loadDiscounts(): Promise<void> {
-  try {
-    this.discounts = await this.discountService.getDiscounts();
-  } catch (error) {
-    console.error(error);
-    this.toastr.error('Error, please try again', 'Discount Table');
+filteredDiscounts: Discount[] = [];
+
+  async loadDiscounts(): Promise<void> {
+    try {
+      this.discounts = await this.discountService.getDiscounts();
+      this.filteredDiscounts = [...this.discounts];
+    } catch (error) {
+      console.error(error);
+      this.toastr.error('Error, please try again', 'Discount Table');
+    }
   }
-}
+
+  filterDiscounts(): void {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredDiscounts = this.discounts.filter((discount) => {
+      return (
+        discount.discountCode?.toLowerCase().includes(query) ||
+        discount.discountDescription?.toLowerCase().includes(query)
+      );
+    });
+  }
+
   //Discount variables needed
   discounts: Discount[] = [];
   currentDiscount: Discount = new Discount();
@@ -42,6 +57,7 @@ async loadDiscounts(): Promise<void> {
   showDeleteDiscountModal = false;
   discountToDeleteDetails: any;
   discountToDelete: any = null;
+
 
 
   // Discount methods---------------------------------------------------------------------------------.>

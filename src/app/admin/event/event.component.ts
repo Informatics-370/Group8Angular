@@ -31,6 +31,7 @@ export class EventComponent {
   tempEvent: Event = new Event();
   minDateTime!: string;
   fileUploaded = false;  // Property to track if a file is uploaded
+  originalEvents!: Event[];
 
 
 
@@ -79,6 +80,9 @@ export class EventComponent {
 
   async loadEventData(): Promise<void> {
     this.events = await this.eventService.getEvents();
+    this.originalEvents = [...this.events];
+
+      this.filterEvents();
   }
 
   async loadDropdownData(): Promise<void> {
@@ -361,10 +365,18 @@ this.fileUploaded = true;
   async deleteEvent(): Promise<void> {
     try {
       await this.eventService.deleteEvent(this.eventToDelete);
+
+
       const index = this.events.findIndex(event => event.eventID === this.eventToDelete);
       if (index !== -1) {
         this.events.splice(index, 1);
       }
+
+      this.originalEvents = this.originalEvents.filter(event => event.eventID !== this.eventToDelete.eventID);
+  
+      // Reapply filters, sorting, and pagination
+      this.filterEvents();
+      
       this.toastr.success('Event has been deleted successfully.', 'Delete Event');
       this.closeDeleteEventModal();
     } catch (error: any) {
@@ -463,30 +475,75 @@ this.fileUploaded = true;
     this.AddAuditLog(auditLogMessage);
   }
 
+ 
   filterEvents(): void {
-    if (this.searchQuery.trim() === '') {
-      // If the search query is empty, show all events
-      this.filteredEvents = this.events;
+    // Reset to the first page when a new filter is applied
+    // this.currentPage = 1;
+
+    // Perform filtering
+    if (this.searchQuery.trim() !== '') {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.events = this.originalEvents.filter(event =>
+       event.name.toLowerCase().includes(query) ||
+        (event.eventType?.eventTypeName || '').toLowerCase().includes(query) ||
+        event.eventDate.toString().toLowerCase().includes(query) ||
+        event.tickets_Available.toString().toLowerCase().includes(query) ||
+        event.tickets_Sold.toString().toLowerCase().includes(query) ||
+        event.price.toString().toLowerCase().includes(query)
+      );
     } else {
-      // If there is a search query, filter events based on it
-      const query = this.searchQuery.toLowerCase();
-      this.filteredEvents = this.events.filter(event => {
-        // Your filter logic here, e.g., searching through all fields
-        return (
-          event.name.toLowerCase().includes(query) ||
-          (event.eventType?.eventTypeName || '').toLowerCase().includes(query) ||
-          event.eventDate.toString().toLowerCase().includes(query) ||
-          event.tickets_Available.toString().toLowerCase().includes(query) ||
-          event.tickets_Sold.toString().toLowerCase().includes(query) ||
-          event.price.toString().toLowerCase().includes(query)
-          // Add more fields as needed
-        );
+      // Reset allWines to its original state if no filter is applied
+      this.events = [...this.originalEvents];
+    }
+
+    // Perform sorting
+    if (this.sortBy) {
+      this.events.sort((a, b) => {
+        if (a[this.sortBy] < b[this.sortBy]) {
+          return this.sortDirection === 'asc' ? -1 : 1;
+        }
+        if (a[this.sortBy] > b[this.sortBy]) {
+          return this.sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
       });
     }
+
+    // Update total pages based on filtered results and page size
+    this.totalPages = Math.ceil(this.events.length / this.pageSize);
+
+    // Apply pagination after filtering and sorting
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.events = this.events.slice(startIndex, endIndex);
   }
 
 
 
+  //=========Pagination and sorting ===================================================================//
+
+  currentPage: number = 1; // Single number to represent the current page
+  totalPages: number = 1; // Just an example value, set this dynamically
+  pageSize: number = 3; // Items per page
+  pageSizeOptions: number[] = [3, 5, 10, 15, 20]; // Options for page size dropdown
+
+  sortBy: string = ''; // To store the field to sort by
+  sortDirection: 'asc' | 'desc' = 'asc'; // To store the sorting direction
+
+
+  onPageChange(newPage: number) {
+    console.log('Received new page:', newPage);
+    this.currentPage = newPage;
+    this.filterEvents(); // Re-filter wines without resetting allWines
+  }
+  
+  
+  onPageSizeChange(newSize: number) {
+    this.pageSize = newSize;
+    this.filterEvents(); // Re-filter wines without resetting allWines
+  }
+  
+
+
 
 }
-// EarlyBird END

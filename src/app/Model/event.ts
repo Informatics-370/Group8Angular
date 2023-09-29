@@ -17,6 +17,8 @@ export class Event {
 
     eventTypeID?: number;
     eventType?: EventType;
+    [key: string]: any; // Adding index signature
+
    
 
 
