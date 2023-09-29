@@ -9,6 +9,7 @@ import { Wine } from 'src/app/Model/wine';
 import { RefundService } from '../../admin/services/refund.service';
 import { NgForm } from '@angular/forms';
 import { RefundItem } from 'src/app/Model/RefundRequest';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-order-history',
@@ -121,13 +122,17 @@ export class OrdersComponent implements OnInit {
 
         if (refundItems.length > 0) {
             this.sendRefundRequest(refundItems);
+            this.loadOrders(email);
         }
-        this.loadOrders(email)
+        this.loadOrders(email);
+        delay(1234);
 
     } catch (error) {
         console.error('Error:', error);
         this.toastr.error('Could not process refund.', 'Error');
+        this.loadOrders(email);
     }
+    this.loadOrders(email);
 }
 
 extractRefundItems(currentOrder: any): RefundItem[] {
@@ -157,9 +162,12 @@ async sendRefundRequest(refundItems: RefundItem[]): Promise<void> {
         return;
     }
     console.log('Here', this.currentOrderId);
+    const email = this.dataService.getUserFromToken()?.email;
+    if (!email) return;
     try {
         await this.refundService.requestRefund(this.currentOrderId, "", refundItems).toPromise();
         this.toastr.success('Refund request has been sent.', 'Success');
+        this.loadOrders(email);
         this.closeRefundModal();
     } catch (error) {
         console.error('Error:', error);

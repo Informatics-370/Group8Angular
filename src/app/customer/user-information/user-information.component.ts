@@ -172,17 +172,21 @@ console.log(`User roles: ${this.dataService.userValue!.roles.join(", ")}`);
 
 //Check if the user still has any tickets that havent passed the event date
 // Load purchased tickets and check for events that haven't occurred
-const purchasedTickets = await this.paymentService.getPurchasedTickets().toPromise();
-let hasFutureEvents = false;
+await this.paymentService.getPurchasedTickets().subscribe((result: any) => {
+  console.log("PurchasedTicketsResult", result);
+  let hasFutureEvents = false;
 
-if (purchasedTickets) {
-  hasFutureEvents = purchasedTickets.some((ticket: TicketPurchase) => new Date(ticket.eventDate) > new Date());
-}
+  if (result) {
+    hasFutureEvents = result.some((ticket: TicketPurchase) => new Date(ticket.eventDate) > new Date());
+    console.log(hasFutureEvents);
+  }
+  
+  if (hasFutureEvents) {
+    this.toastr.error("Cannot delete account with upcoming events", "Delete Customer");
+    return;
+  }
+});
 
-if (hasFutureEvents) {
-  this.toastr.error("Cannot delete account with upcoming events", "Delete Customer");
-  return;
-}
         // Proceed to delete customer
         await this.customerService.DeleteCustomer(this.customerToDelete).toPromise();
   
