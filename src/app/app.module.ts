@@ -72,6 +72,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DonationsComponent } from './customer/donations/donations.component';
 import { CalendarComponent } from './admin/calendar/calendar.component';
 import { BackupComponent } from './admin/backup/backup.component';
+import { PaginationComponent } from './admin/pagination/pagination.component';
 
 
 @NgModule({
@@ -127,6 +128,7 @@ import { BackupComponent } from './admin/backup/backup.component';
     DonationsComponent,
     CalendarComponent,
     BackupComponent,
+    PaginationComponent,
   ],
   imports: [
     BrowserModule,

@@ -31,10 +31,12 @@ export class WineComponent implements OnInit {
   characterCount: any;
   fileUploaded!: boolean;
   currentWineImageURL: string | undefined;
+  originalWines!: Wine[];
+
 
   constructor(private toastr: ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService
     , private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef
-    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
+    , private customerService: CustomersService, private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
   ngOnInit(): void {
     this.loadVarietals();
@@ -42,7 +44,7 @@ export class WineComponent implements OnInit {
     this.loadWinetypes();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
-    
+
   }
   //--------------------------------------------------------------------------------------------------------------------------------
   //Methods to display the Wines, WineTypes and WineVarietals in the tables
@@ -51,6 +53,8 @@ export class WineComponent implements OnInit {
   async loadWines(): Promise<void> {
     try {
       this.allWines = await this.wineService.getWines();
+      this.originalWines = [...this.allWines];
+
       this.filterWines();
     } catch (error) {
       console.error(error);
@@ -99,6 +103,7 @@ export class WineComponent implements OnInit {
   searchQuery: string = '';
 
 
+
   invalidFileType: boolean = false;  // Add this new variable to track if uploaded file is of invalid type
   public displayedImageURL: string | undefined;
   public selectedWineImageURL: string | undefined;
@@ -115,15 +120,15 @@ export class WineComponent implements OnInit {
         this.fileUploaded = false;
         return;
       }
-  
+
       this.invalidFileType = false;
       this.selectedFile = file;
       let filePathInput = document.getElementById('filePath') as HTMLElement;
       if (filePathInput) {
-          filePathInput.style.setProperty('--dynamic-content', `"${this.selectedFile?.name}"`); // Note the use of backticks and quotes
+        filePathInput.style.setProperty('--dynamic-content', `"${this.selectedFile?.name}"`); // Note the use of backticks and quotes
       }
       this.currentWine.filePath = this.selectedFile?.name ?? '';
-      
+
 
       // Update displayedImageURL here with null check
       if (this.selectedFile) {
@@ -131,18 +136,18 @@ export class WineComponent implements OnInit {
         console.log("Display", this.displayedImageURL);
       }
     }
-  
+
     if (wine.target.files && wine.target.files.length > 0) {
       this.fileUploaded = true;
     } else {
       this.fileUploaded = false;
     }
-  
+
     // Trigger manual change detection
     this.changeDetector.detectChanges();
   }
-  
-  
+
+
 
 
   getObjectURL(file: File): string {
@@ -157,9 +162,9 @@ export class WineComponent implements OnInit {
   openAddWineModal() {
     this.displayedImageURL = "";
     let filePathInput = document.getElementById('filePath') as HTMLElement;
-      if (filePathInput) {
-          filePathInput.style.setProperty('--dynamic-content', `"Pick an image file"`); // Note the use of backticks and quotes
-      }
+    if (filePathInput) {
+      filePathInput.style.setProperty('--dynamic-content', `"Pick an image file"`); // Note the use of backticks and quotes
+    }
     if (this.varietals.length === 0 || this.winetypes.length === 0) {
       this.toastr.warning('Please add varietal and wine type before adding a wine.', 'Wine Form');
     } else {
@@ -174,17 +179,17 @@ export class WineComponent implements OnInit {
     this.editingWine = true;
     let wineToEdit = this.wines.find(wine => wine.wineID === id);
     this.currentWineImageURL = wineToEdit?.filePath;
-   if (this.currentWineImageURL) {
+    if (this.currentWineImageURL) {
       var lastUnderScore = this.currentWineImageURL.lastIndexOf('_');
-        
-        var extractedValue = this.currentWineImageURL.substring(lastUnderScore + 1);
-        
-        let filePathInput = document.getElementById('filePath') as HTMLInputElement;
-        if (filePathInput) {
-            filePathInput.style.setProperty('--dynamic-content', `"${extractedValue}"`);
-            filePathInput.placeholder = "";  // Clear actual placeholder
-        }
-  }
+
+      var extractedValue = this.currentWineImageURL.substring(lastUnderScore + 1);
+
+      let filePathInput = document.getElementById('filePath') as HTMLInputElement;
+      if (filePathInput) {
+        filePathInput.style.setProperty('--dynamic-content', `"${extractedValue}"`);
+        filePathInput.placeholder = "";  // Clear actual placeholder
+      }
+    }
 
 
     console.log(this.currentWineImageURL)
@@ -204,7 +209,7 @@ export class WineComponent implements OnInit {
   closeWineModal() {
     if (this.selectedWineImageURL && this.displayedImageURL !== this.selectedWineImageURL) {
       this.displayedImageURL = this.selectedWineImageURL;
-  }
+    }
     this.showWineModal = false;
   }
 
@@ -233,7 +238,7 @@ export class WineComponent implements OnInit {
           formData.append(key, (this.currentWine as any)[key]);
         }
       }
-  
+
       // Debug code to log the contents of formData
       console.log("Debugging FormData contents:");
       (formData as any).forEach((value: any, key: any) => {
@@ -272,11 +277,15 @@ export class WineComponent implements OnInit {
 
         await this.wineService.updateWine(this.currentWine.wineID!, formData);
         const updatedWine = await this.wineService.getWine(this.currentWine.wineID!);
-        const index = this.wines.findIndex(wine => wine.wineID === this.currentWine.wineID);
+        // Update both originalWines and allWines array.
+        const index = this.originalWines.findIndex(wine => wine.wineID === this.currentWine.wineID);
         if (index !== -1) {
-          this.wines[index] = updatedWine;
+          this.originalWines[index] = updatedWine;
+          this.allWines[index] = updatedWine;
         }
-        this.changeDetector.detectChanges();
+        this.filterWines(); // This should re-filter and paginate wines
+        this.changeDetector.detectChanges(); // Force the view to update
+
         this.toastr.success('Wine has been updated successfully.', 'Wine Form');
       } else {
         if (this.selectedFile) {
@@ -289,8 +298,16 @@ export class WineComponent implements OnInit {
         console.log('Data being sent to addWine API:', formData); // Add this log statement
 
         let createdWine = await this.wineService.addWine(formData);
+
+
+        // Update both originalWines and allWines array.
+        this.originalWines.push(createdWine);
+        this.allWines.push(createdWine);
+
+        this.filterWines(); // This should re-filter and paginate wines
+        this.changeDetector.detectChanges(); // Force the view to update
         this.updateDisplay(createdWine);
-        this.wines.push(createdWine);
+
         this.toastr.success('Wine has been added successfully.', 'Wine Form');
       }
 
@@ -312,8 +329,12 @@ export class WineComponent implements OnInit {
         // Attempt to delete the wine.
         await this.wineService.deleteWine(this.wineToDeleteDetails.wineID);
   
-        // Remove deleted wine from the local list.
-        this.wines = this.wines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
+        // Remove deleted wine from the local list of all wines.
+        this.allWines = this.allWines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
+        this.originalWines = this.originalWines.filter(wine => wine.wineID !== this.wineToDeleteDetails.wineID);
+  
+        // Reapply filters, sorting, and pagination
+        this.filterWines();
   
         // Notify user of successful delete.
         this.toastr.success('Wine has been deleted successfully.', 'Successful');
@@ -339,9 +360,13 @@ export class WineComponent implements OnInit {
 
 
   filterWines(): void {
+    // Reset to the first page when a new filter is applied
+    // this.currentPage = 1;
+
+    // Perform filtering
     if (this.searchQuery.trim() !== '') {
       const query = this.searchQuery.toLowerCase().trim();
-      this.wines = this.allWines.filter(wine =>
+      this.allWines = this.originalWines.filter(wine =>
         wine.name.toLowerCase().includes(query) ||
         wine.vintage.toString().includes(query) ||
         this.getVarietalName(wine.varietalID).toLowerCase().includes(query) ||
@@ -349,13 +374,64 @@ export class WineComponent implements OnInit {
         wine.price.toString().includes(query)
       );
     } else {
-      this.wines = [...this.allWines];
+      // Reset allWines to its original state if no filter is applied
+      this.allWines = [...this.originalWines];
     }
+
+    // Perform sorting
+    if (this.sortBy) {
+      this.allWines.sort((a, b) => {
+        if (a[this.sortBy] < b[this.sortBy]) {
+          return this.sortDirection === 'asc' ? -1 : 1;
+        }
+        if (a[this.sortBy] > b[this.sortBy]) {
+          return this.sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+
+    // Update total pages based on filtered results and page size
+    this.totalPages = Math.ceil(this.allWines.length / this.pageSize);
+
+    // Apply pagination after filtering and sorting
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.wines = this.allWines.slice(startIndex, endIndex);
   }
+
 
   updateCharacterCount(event: any) {
     this.characterCount = event.target.value.length;
   }
+
+
+  //=========Pagination and sorting ===================================================================//
+
+  currentPage: number = 1; // Single number to represent the current page
+  totalPages: number = 1; // Just an example value, set this dynamically
+  pageSize: number = 3; // Items per page
+  pageSizeOptions: number[] = [3, 5, 10, 15, 20]; // Options for page size dropdown
+
+  sortBy: string = ''; // To store the field to sort by
+  sortDirection: 'asc' | 'desc' = 'asc'; // To store the sorting direction
+
+
+  onPageChange(newPage: number) {
+    console.log('Received new page:', newPage);
+    this.currentPage = newPage;
+    this.filterWines(); // Re-filter wines without resetting allWines
+  }
+  
+  
+  onPageSizeChange(newSize: number) {
+    this.pageSize = newSize;
+    this.filterWines(); // Re-filter wines without resetting allWines
+  }
+  
+
+
+
 
   // Wine END-----------------------------------------------------------------------------------------------------.>
 
@@ -455,7 +531,7 @@ export class WineComponent implements OnInit {
   varietalToDeleteDetails: any;
   varietalToDelete: any = null;
   filteredVarietals: Varietal[] = [];
- 
+
 
 
 
@@ -544,23 +620,23 @@ export class WineComponent implements OnInit {
   filterVarietals() {
     const wineTypeID = Number(this.currentWine.wineTypeID); // Convert to Number
     const selectedWineType = this.winetypes.find(w => w.wineTypeID === wineTypeID);
-  
+
     if (selectedWineType) {
       this.filteredVarietals = selectedWineType.varietals.filter(v => v.blend === this.isBlendSelected);
     } else {
       this.filteredVarietals = [];
     }
   }
-  
+
   onWineTypeChange() {
     this.filterVarietals();
   }
-  
+
   onBlendChange() {
     this.filterVarietals();
   }
-  
-  
+
+
   // <!-- Varietal ------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 

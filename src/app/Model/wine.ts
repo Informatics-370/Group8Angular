@@ -4,9 +4,7 @@ import { Varietal } from "./varietal";
 export class Wine {
   wineID: number;
   name: string;
-  // description: string;
   vintage: string;
-  // restockLimit: number;
   filePath: string; 
   wineTastingNote: string;
   price: number;
@@ -15,6 +13,8 @@ export class Wine {
   varietalID: number;
   varietal: Varietal;
   displayItem: boolean;
+  [key: string]: any; // Adding index signature
+
 
   constructor(
     wineID: number = 0,
