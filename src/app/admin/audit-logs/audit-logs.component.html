@@ -42,11 +42,11 @@
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
         </th>
-        <th scope="col" class="header-cell sortable" (click)="sortTable('quantity')">Quantity
+        <!-- <th scope="col" class="header-cell sortable" (click)="sortTable('quantity')">Quantity
           <span *ngIf="sortBy === 'quantity'" class="sort-icon">
             {{ sortDirection === 'asc' ? '↑' : '↓' }}
           </span>
-        </th>
+        </th> -->
       </tr>
     </thead>   
 
@@ -58,9 +58,9 @@
         <td>{{ x.userEmail }}</td>
         <td>{{ x.transactionDate | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>
-          <ng-container *ngIf="x.quantity; else na">
+          <!-- <ng-container *ngIf="x.quantity; else na">
             {{ x.quantity }}
-          </ng-container>
+          </ng-container> -->
           <ng-template #na>NA</ng-template>
         </td>
       </tr>
