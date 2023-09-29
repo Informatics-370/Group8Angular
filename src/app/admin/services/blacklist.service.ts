@@ -57,7 +57,7 @@ export class BlacklistService {
 
   async deleteBlacklistC(blacklistDelete: BlacklistDelete): Promise<any> {
     this.setHeaders()
-    return firstValueFrom(this.http.delete(`${this.apiUrl}/${blacklistDelete.id}`, { headers: this.headers}));
+    return firstValueFrom(this.http.delete(`${this.apiUrl}`, {body: blacklistDelete, headers: this.headers}));
 }
 
 
