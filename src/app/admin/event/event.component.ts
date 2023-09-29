@@ -371,7 +371,7 @@ this.fileUploaded = true;
       console.error(error);
       if (error?.status === 400) {
         // Assuming that the server sends the error message in the 'message' field.
-        const serverMessage = error?.error?.message ?? 'Event cannot be deleted because tickets have already been purchased for the event and event date has not passed';
+        const serverMessage = error?.error?.message ?? 'Event cannot be deleted because tickets have already been purchased';
         this.toastr.warning(serverMessage, 'Delete Event');
       } else if (error?.status) {
         this.toastr.error('Error, please try again', 'Delete Event');
