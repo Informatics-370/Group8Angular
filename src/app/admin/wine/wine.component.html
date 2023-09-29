@@ -77,6 +77,21 @@
   </tbody>
 </table>
 
+<!-- Your wine list rendering code above this -->
+
+<!-- Your wine list rendering code above this -->
+
+<app-pagination
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions" 
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+></app-pagination>
+
+
+
 <div class="text-center" *ngIf="wines.length === 0">
   <h3>No wines currently in your system.</h3>
 </div>
