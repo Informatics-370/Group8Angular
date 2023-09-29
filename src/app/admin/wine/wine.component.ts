@@ -34,6 +34,7 @@ export class WineComponent implements OnInit {
   originalWines!: Wine[];
 
 
+
   constructor(private toastr: ToastrService, private discountService: DiscountService, private router: Router, private wineService: WineService
     , private winetypeService: WinetypeService, private varietalService: VarietalService, private changeDetector: ChangeDetectorRef
     , private customerService: CustomersService, private auditLogService: AuditlogService, private dataService: DataServiceService) { }
@@ -355,50 +356,69 @@ export class WineComponent implements OnInit {
       }
     }
   }
+
+  onSortChange(event: globalThis.Event): void {
+    // Assert the type to HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
+    // Now TypeScript knows that 'value' exists on target
+    const value = target.value;
+    this.sortBy = value;
+    this.filterWines(); // Re-filter and sort wines
+  }
+  
+  onSortDirectionChange(event: globalThis.Event): void {
+    // Assert the type to HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
+    // Now TypeScript knows that 'value' exists on target
+    const value = target.value;
+    this.sortDirection = value as 'asc' | 'desc';
+    this.filterWines(); // Re-filter and sort wines
+  }
+  
   
 
 
 
-  filterWines(): void {
-    // Reset to the first page when a new filter is applied
-    // this.currentPage = 1;
+ // TypeScript Code
 
-    // Perform filtering
-    if (this.searchQuery.trim() !== '') {
-      const query = this.searchQuery.toLowerCase().trim();
-      this.allWines = this.originalWines.filter(wine =>
-        wine.name.toLowerCase().includes(query) ||
-        wine.vintage.toString().includes(query) ||
-        this.getVarietalName(wine.varietalID).toLowerCase().includes(query) ||
-        this.getWinetypeName(wine.wineTypeID).toLowerCase().includes(query) ||
-        wine.price.toString().includes(query)
-      );
-    } else {
-      // Reset allWines to its original state if no filter is applied
-      this.allWines = [...this.originalWines];
-    }
-
-    // Perform sorting
-    if (this.sortBy) {
-      this.allWines.sort((a, b) => {
-        if (a[this.sortBy] < b[this.sortBy]) {
-          return this.sortDirection === 'asc' ? -1 : 1;
-        }
-        if (a[this.sortBy] > b[this.sortBy]) {
-          return this.sortDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-
-    // Update total pages based on filtered results and page size
-    this.totalPages = Math.ceil(this.allWines.length / this.pageSize);
-
-    // Apply pagination after filtering and sorting
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.wines = this.allWines.slice(startIndex, endIndex);
+filterWines(): void {
+  // Reset to the first page when a new filter is applied
+  // this.currentPage = 1;
+  
+  // Perform filtering
+  if (this.searchQuery.trim() !== '') {
+    const query = this.searchQuery.toLowerCase().trim();
+    this.allWines = this.originalWines.filter(wine =>
+      wine.name.toLowerCase().includes(query) ||
+      wine.vintage.toString().toLowerCase().includes(query) ||
+      wine.price.toString().toLowerCase().includes(query) 
+      // Add more fields here as needed
+    );
+     } else {
+    // Reset allWines to its original state if no filter is applied
+    this.allWines = [...this.originalWines];
   }
+  
+  // Perform sorting
+  if (this.sortBy) {
+    this.allWines.sort((a, b) => {
+      if (a[this.sortBy] < b[this.sortBy]) {
+        return this.sortDirection === 'asc' ? -1 : 1;
+      }
+      if (a[this.sortBy] > b[this.sortBy]) {
+        return this.sortDirection === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+  
+  // Update total pages based on filtered results and page size
+  this.totalPages = Math.ceil(this.allWines.length / this.pageSize);
+  
+  const startIndex = (this.currentPage - 1) * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.wines = this.allWines.slice(startIndex, endIndex);
+}
 
 
   updateCharacterCount(event: any) {

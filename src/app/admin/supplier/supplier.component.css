@@ -22,6 +22,7 @@ table {
   border-color: red;
 }
 
+
 .pagination {
   display: flex;
   align-items: center;
@@ -29,4 +30,5 @@ table {
 
 .page-info {
   margin: 0 20px; 
+  font-weight: bold;
 }

@@ -38,4 +38,35 @@ table {
   pointer-events: none;  /* Make sure it doesn't interfere with user interactions */
 }
 
+
+.sortable {
+  cursor: pointer;
+}
+
+.sortable:hover {
+  background-color: #f2f2f2; /* or any other color */
+}
+
+.sort-icon {
+  font-weight: bold;
+}
+
+
+.header-cell {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.header-cell:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sort-icon .arrow {
+  font-weight: bold;
+}
+
+.fixed-width-btn {
+  width: 150px;  /* Set the width as appropriate */
+}
+
   
