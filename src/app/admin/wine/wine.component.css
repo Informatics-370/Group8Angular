@@ -44,5 +44,12 @@ table {
   pointer-events: none;  /* Make sure it doesn't interfere with user interactions */
 }
 
+.fixed-width-btn {
+  width: 150px;  /* Set the width as appropriate */
+}
+
+
+
+
 
 

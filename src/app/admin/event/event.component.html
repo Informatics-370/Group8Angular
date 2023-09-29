@@ -10,6 +10,28 @@
         <input type="text" class="form-control mb-3" placeholder="Search Events" [(ngModel)]="searchQuery"
           (input)="filterEvents()">
       </div>
+      <div>
+        <!-- Note that I removed the TypeScript null assertion operator ! from $event.target.value -->
+        <select    class="btn btn-secondary dropdown-toggle fixed-width-btn" (change)="onSortChange($event)">
+          <option value="">Sort By</option>
+          <option value="eventID">Recent</option>
+          <option value="name">Name</option>
+          <option value="eventDate">Date</option>
+          <option value="tickets_Available">Tickets Available</option>
+          <option value="tickets_Sold">Tickets Sold</option>
+          <option value="price">Price</option>
+          <option value="earlyBirdID">Early Bird</option>
+          <!-- <option value="eventTypeID">Event Type ID</option> -->
+        </select>
+        
+
+        <select  class="btn btn-secondary dropdown-toggle fixed-width-btn" (change)="onSortDirectionChange($event)">
+          <option value="">Order By</option>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+
+      </div>
     </div>
   </div>
   <div class="col-md-6 text-end">
@@ -25,7 +47,7 @@
       <th scope="col" class="d-none d-md-table-cell">Image</th>
       <th scope="col" class="d-none d-md-table-cell">Name</th>
       <th scope="col" class="d-none d-md-table-cell">Type</th>
-      <th scope="col" class="d-none d-md-table-cell">Date</th>
+      <th scope="col" class="d-none d-md-table-cell">Date (DD/MM/YYYY)</th>
       <th scope="col" class="d-none d-md-table-cell">Tickets Available</th>
       <th scope="col" class="d-none d-md-table-cell">Tickets Sold</th>
       <th scope="col" class="d-none d-md-table-cell">Price (ZAR)</th>
@@ -69,14 +91,9 @@
   </tbody>
 </table>
 
-<app-pagination
-  [currentPage]="currentPage"
-  [totalPages]="totalPages"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="pageSizeOptions" 
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)"
-></app-pagination>
+<app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions" (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"></app-pagination>
 
 
 <div class="text-center" *ngIf="events.length === 0">
@@ -246,13 +263,14 @@
             <option *ngFor="let earlyBird of earlyBirds" [value]="earlyBird.earlyBirdID">{{earlyBird.limit}} Tickets
               at {{earlyBird.percentage}}%</option>
           </select>
-          <div *ngIf="earlyBirdField.touched && (earlyBirdField.value === null || earlyBirdField.value === '' || earlyBirdField.value === undefined)"
+          <div
+            *ngIf="earlyBirdField.touched && (earlyBirdField.value === null || earlyBirdField.value === '' || earlyBirdField.value === undefined)"
             class="alert alert-danger">
             <div>Early Bird option is required.</div>
           </div>
-          
-          
-          
+
+
+
 
 
 
@@ -285,3 +303,10 @@
       </div>
     </div>
   </div>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>

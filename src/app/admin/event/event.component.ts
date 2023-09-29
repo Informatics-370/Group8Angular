@@ -475,16 +475,37 @@ this.fileUploaded = true;
     this.AddAuditLog(auditLogMessage);
   }
 
+  onSortChange(event: globalThis.Event): void {
+    const target = event.target as HTMLSelectElement;
+    const value = target.value;
+    
+    this.sortBy = value;
+    this.filterEvents(); // Re-filter and sort events
+  }
+  
+
+  onSortDirectionChange(event: globalThis.Event): void {
+    const target = event.target as HTMLSelectElement;
+    const value = target.value;
+    
+    this.sortDirection = value as 'asc' | 'desc';
+    this.filterEvents(); // Re-filter and sort events
+  }
+  
+  
+  
+
+
  
   filterEvents(): void {
     // Reset to the first page when a new filter is applied
     // this.currentPage = 1;
-
+  
     // Perform filtering
     if (this.searchQuery.trim() !== '') {
       const query = this.searchQuery.toLowerCase().trim();
       this.events = this.originalEvents.filter(event =>
-       event.name.toLowerCase().includes(query) ||
+        event.name.toLowerCase().includes(query) ||
         (event.eventType?.eventTypeName || '').toLowerCase().includes(query) ||
         event.eventDate.toString().toLowerCase().includes(query) ||
         event.tickets_Available.toString().toLowerCase().includes(query) ||
@@ -492,31 +513,41 @@ this.fileUploaded = true;
         event.price.toString().toLowerCase().includes(query)
       );
     } else {
-      // Reset allWines to its original state if no filter is applied
+      // Reset events to its original state if no filter is applied
       this.events = [...this.originalEvents];
     }
-
+  
     // Perform sorting
     if (this.sortBy) {
       this.events.sort((a, b) => {
-        if (a[this.sortBy] < b[this.sortBy]) {
+        let valA = a[this.sortBy];
+        let valB = b[this.sortBy];
+  
+        // Special case for date sorting
+        if (this.sortBy === 'eventDate') {
+          valA = new Date(a[this.sortBy]);
+          valB = new Date(b[this.sortBy]);
+        }
+  
+        if (valA < valB) {
           return this.sortDirection === 'asc' ? -1 : 1;
         }
-        if (a[this.sortBy] > b[this.sortBy]) {
+        if (valA > valB) {
           return this.sortDirection === 'asc' ? 1 : -1;
         }
         return 0;
       });
     }
-
+  
     // Update total pages based on filtered results and page size
     this.totalPages = Math.ceil(this.events.length / this.pageSize);
-
+  
     // Apply pagination after filtering and sorting
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.events = this.events.slice(startIndex, endIndex);
   }
+  
 
 
 
