@@ -26,6 +26,6 @@ jobs:
 
       - name: Deploy to Azure Blob Storage
         run: |
-          az storage blob upload-batch -d <container-name> -s ./dist --connection-string "<connection-string>"
+          az storage blob upload-batch -d csb100320029c4ba133 -s ./dist --connection-string "DefaultEndpointsProtocol=https;AccountName=csb100320029c4ba133;AccountKey=C+Jkg2TrVZNkv7SQzJTjYIfQDBuTeb71DMvAoQCpd69hS0Tqj8etokuWix4OgfiYvL4Ed2ieLk4L+AStqCLGrA==;EndpointSuffix=core.windows.net"
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
