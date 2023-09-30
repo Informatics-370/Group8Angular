@@ -1,4 +1,6 @@
 export const environment = {
     production: false,
-    baseApiUrl: 'http://localhost:8001/'
+    baseApiUrl: 'vititechapi.azurewebsites.net'
 }
+
+//http://localhost:8001/
