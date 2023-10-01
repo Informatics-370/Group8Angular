@@ -560,6 +560,8 @@ this.fileUploaded = true;
   sortBy: string = ''; // To store the field to sort by
   sortDirection: 'asc' | 'desc' = 'asc'; // To store the sorting direction
 
+  
+
 
   onPageChange(newPage: number) {
     console.log('Received new page:', newPage);

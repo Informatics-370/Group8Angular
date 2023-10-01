@@ -16,6 +16,22 @@
         </div>
     </div>
 </div>
+<!-- Added search bar below the header -->
+<div class="row mb-3">
+    <div class="col-md-6">
+        <input type="text" class="form-control mb-3" placeholder="Search Supplier Orders" [(ngModel)]="searchQuery" (input)="filterOrders()">
+    </div>
+</div>
+
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="toggleReceivedOrders" 
+           (click)="toggleReceivedOrders()" [checked]="showReceivedOrders">
+    <label class="form-check-label" for="toggleReceivedOrders">
+      Show Received Orders
+    </label>
+  </div>
+  
+
 
 
 <div class="table-responsive">
@@ -36,7 +52,7 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let order of supplierOrders; let i = index">
+            <tr *ngFor="let order of pagedSupplierOrders; let i = index">
                 <td>{{ order.supplierOrderRefNum }}</td>
                 <td>{{ wineNamesMap.get(order.inventoryID!) }}</td>
                 <td>{{ vintageMap.get(order.inventoryID!) }}</td>
@@ -79,6 +95,16 @@
 <div class="text-center" *ngIf="supplierOrders.length === 0">
     <h3>No supplier orders currently in your system.</h3>
 </div>
+
+<div class="custom-pagination">
+    <button class="btn custom-btn" (click)="previousPage()">
+      &laquo; Previous
+    </button>
+    <span class="custom-page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+    <button class="btn custom-btn" (click)="nextPage()">
+      Next &raquo;
+    </button>
+  </div>
 
 <!-- Add Supplier Order Modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showAddSupplierOrderModal}"
