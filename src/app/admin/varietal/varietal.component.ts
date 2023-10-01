@@ -92,6 +92,8 @@ export class VarietalComponent {
         if (this.editingVarietal) {
           await this.varietalService.updateVarietal(this.currentVarietal.varietalID!, this.currentVarietal);
           const index = this.varietals.findIndex(varietal => varietal.varietalID === this.currentVarietal.varietalID);
+          window.location.reload();
+
           if (index !== -1) {
             this.varietals[index] = this.currentVarietal;
           }
@@ -118,6 +120,8 @@ export class VarietalComponent {
       this.varietals = this.varietals.filter(varietal => varietal.varietalID !== this.varietalToDeleteDetails.varietalID);
       this.closeDeleteVarietalModal();
       this.toastr.success('Varietal deleted successfully.', 'Successful');
+      window.location.reload();
+
     } catch (error) {
       console.error(error);
     
