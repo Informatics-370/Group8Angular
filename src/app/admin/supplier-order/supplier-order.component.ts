@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { SupplierOrderService } from '../services/supplier-order.service';
 import { SupplierOrder, SupplierOrderStatus  } from 'src/app/Model/supplierOrder';
 import { Supplier } from 'src/app/Model/supplier';
@@ -36,6 +36,7 @@ export class SupplierOrderComponent implements OnInit {
   supplierOrderToDelete: SupplierOrder | null = null;
   showAddSupplierOrderModal = false;
   showPaidModal: boolean = false;
+  originalSupplierOrders: SupplierOrder[] = []; 
 
   //Suppliers
   suppliers: Supplier[] = [];
@@ -64,21 +65,32 @@ export class SupplierOrderComponent implements OnInit {
     this.getInventories();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    this.totalPages = Math.ceil(this.supplierOrders.length / this.pageSize);
+    
+
+    this.originalSupplierOrders = [...this.supplierOrders]; // Initialize original orders
+
+    this.updateDisplayedOrders();
+    this.calculateTotalPages();
   }
 
-  //!Load all the necessary information for SupplierOrders
   getSupplierOrders(): void {
     this.supplierOrderService.getSupplierOrders().subscribe(
       orders => {
+        console.log('Fetched Orders:', orders);  // Debug line
         this.supplierOrders = orders;
-        //console.log("Orders:", this.supplierOrders);
+        this.originalSupplierOrders = [...this.supplierOrders];
+        console.log('Original Supplier Orders:', this.originalSupplierOrders);  // Additional Debug line
+        this.calculateTotalPages();
+        this.updateDisplayedOrders();
       },
       error => {
         this.toastr.error('Error, failed to connect to the database', 'Supplier Order Table');
       }
     );
-    
   }
+  
+  
 
   getSuppliers(): void {
     this.supplierService.getSuppliers().subscribe(suppliers => {
@@ -229,6 +241,7 @@ export class SupplierOrderComponent implements OnInit {
         this.getSupplierOrders();
         this.toastr.success('Successfully Updated', 'Order');
         this.closePaidModal();
+
       } catch {
         this.toastr.error('Error occurred please try again', 'Order');
       }
@@ -400,4 +413,94 @@ export class SupplierOrderComponent implements OnInit {
       console.error('Error generating inventory report:', error);
     }
   }
+
+
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pageSize: number = 10; // Items per page
+  pageChange: EventEmitter<number> = new EventEmitter();
+  displayedOrders: SupplierOrder[] = []; // Orders to be displayed based on pagination
+  searchQuery: string = ''; // Variable to hold search query
+  showReceivedOrders: boolean = true; // Show received orders by default
+
+
+
+
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateDisplayedOrders();
+      this.pageChange.emit(this.currentPage);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updateDisplayedOrders();
+      this.pageChange.emit(this.currentPage);
+    }
+  }
+
+  updateDisplayedOrders() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedOrders = this.supplierOrders.slice(start, end);
+  }
+  
+  calculateTotalPages() {
+    this.totalPages = Math.ceil(this.supplierOrders.length / this.pageSize);
+  }
+
+  filterOrders() {
+    this.supplierOrders = this.originalSupplierOrders.filter(order => {
+  
+      // Filter based on showReceivedOrders and SupplierOrderStatus.received
+      if (!this.showReceivedOrders && order.supplierOrderStatus?.received) {
+        return false;
+      }
+  
+      if (this.searchQuery) {
+        const attributesConcatenated = [
+          order.supplierOrderRefNum,
+          order.quantity_Ordered,
+          order.dateOrdered,
+          order.orderTotal,
+          order.isBackOrder,
+          order.supplier?.name,
+          order.supplierOrderStatus?.supplierOrderStatusID,
+          order.supplierOrderStatus?.ordered,
+          order.supplierOrderStatus?.paid,
+          order.supplierOrderStatus?.received
+        ].map(String).join(' ').toLowerCase();
+  
+        return attributesConcatenated.includes(this.searchQuery.toLowerCase());
+      }
+  
+      return true;
+    });
+  
+    this.calculateTotalPages();
+    this.currentPage = 1;
+    this.updateDisplayedOrders();
+  }
+  
+  get pagedSupplierOrders(): SupplierOrder[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.supplierOrders.slice(start, end);
+  }
+
+  toggleReceivedOrders() {
+    this.showReceivedOrders = !this.showReceivedOrders;
+    this.filterOrders(); // Re-filter the orders based on the new setting
+  }
+  
+  
+  
+
+ 
+  
 }
+
