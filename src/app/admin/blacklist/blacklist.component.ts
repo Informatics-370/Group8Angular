@@ -12,6 +12,9 @@ import { Customer } from 'src/app/Model/customer';
 import { NgModel } from '@angular/forms';
 import { BlacklistDelete } from 'src/app/Model/blacklistDelete';
 
+import { PdfService } from '../services/pdf.service';
+import { ReportService } from '../services/report.service';
+
 @Component({
   selector: 'app-blacklist',
   templateUrl: './blacklist.component.html',
@@ -29,6 +32,9 @@ export class BlacklistComponent implements OnInit {
   blacklistCToDeleteDetails: any;
   showDeleteBlacklistCModal = false;
   reason: string = '';
+  showBlacklistReportModal: boolean = false;
+  blacklistData: Blacklist[] = [];
+
 
   constructor(
     private blacklistService: BlacklistService,
@@ -36,7 +42,12 @@ export class BlacklistComponent implements OnInit {
     private toastr: ToastrService,
     private customerService: CustomersService,
     private auditLogService: AuditlogService,
-    private dataService: DataServiceService
+    private dataService: DataServiceService,
+    private pdfService: PdfService,
+    private adataService: ReportService,
+
+
+
   ) {}
 
   // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -262,4 +273,94 @@ export class BlacklistComponent implements OnInit {
       'Blacklist Customer: ' + (this.editingBlacklistC ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
   }
+
+
+  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES' | null = null;
+
+
+
+  getCurrentDateFormatted(): string {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const year = today.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES'): void {
+    this.currentReportType = reportType;
+    this.showBlacklistReportModal = true;
+  }
+
+
+  closeBlacklistModal() {
+    this.showBlacklistReportModal = false;
+    this.currentReportType = null;
+  }
+
+  OpenReports(): void {
+    if (this.currentReportType === 'BLACKLIST') {
+      this.generateBlacklistReport();
+    } 
+  }
+
+  async generateBlacklistReport() {
+    try {
+      let result: Blacklist[] | undefined = await this.adataService.getBlacklist();
+      console.log('Result:', result);
+
+      if (result !== undefined) {
+        this.blacklistData = result;
+        let currentDate = this.getCurrentDateFormatted();
+
+        const pdfBlob = await this.pdfService.generateBlacklist(this.blacklistData, currentDate);
+
+        // Await the promise and get the resolved Blob
+        const resolvedPdfBlob = await pdfBlob;
+
+        // Create a Blob URL and open it in a new tab
+        const blobUrl = URL.createObjectURL(resolvedPdfBlob);
+        const newTab = window.open(blobUrl, '_blank');
+        if (!newTab) {
+          console.error('Failed to open new tab for PDF');
+          // Handle error if new tab cannot be opened
+        }
+
+        // Do any additional processing or actions here if needed
+      } else {
+        console.error('Received undefined or invalid blacklist data');
+        // Handle the case where the returned data is undefined or invalid
+      }
+    } catch (error) {
+      console.error('Error fetching blacklist data:', error);
+      // Handle error if needed
+    }
+  }
+
+  DownloadReports(): void {
+    if (this.currentReportType === 'BLACKLIST') {
+      this.generateBlacklistReportpdf();
+    }
+  }
+
+  async generateBlacklistReportpdf() {
+    try {
+      let result: Blacklist[] | undefined = await this.adataService.getBlacklist();
+      console.log('Result:', result); // Add this line
+      if (result !== undefined) {
+        this.blacklistData = result;
+        let currentDate = this.getCurrentDateFormatted();
+        this.pdfService.generateBlacklistPdf(this.blacklistData, currentDate);
+      } else {
+        console.error('Received undefined or invalid blacklist data');
+        this.toastr.error('Error, failed to download Blacklist Report', 'Blacklist Report');
+      }
+    } catch (error) {
+      console.error('Error fetching blacklist data:', error);
+      this.toastr.error('Error, failed to retrieve Blacklist Data', 'Blacklist Report');
+    }
+  }
+
+
+
 } 

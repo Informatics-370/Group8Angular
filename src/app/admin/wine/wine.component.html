@@ -20,7 +20,7 @@
     <div>
       <!-- HTML Code -->
       <!-- Wine Sorting Dropdowns -->
-      <select class="btn btn-secondary dropdown-toggle fixed-width-btn" (change)="onSortChange($event)">
+      <select class="btn btn-light dropdown-toggle fixed-width-btn" (change)="onSortChange($event)">
         <option value="">Sort By</option>
         <option value="wineID">Recent</option>
         <option value="name">Name</option>
@@ -29,7 +29,7 @@
         <!-- Add more options based on the wine attributes -->
       </select>
 
-      <select class="btn btn-secondary dropdown-toggle fixed-width-btn" (change)="onSortDirectionChange($event)">
+      <select class="btn btn btn-light dropdown-toggle fixed-width-btn" (change)="onSortDirectionChange($event)">
         <option value="">Order By</option>
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
@@ -39,10 +39,14 @@
 
   </div>
   <div class="col-md-6 text-end">
-    <button class="btn btn-success" (click)="openAddWineModal()">
-      <i class="fas fa-plus"></i> Add
-    </button>
-  </div>
+    <div class="d-flex justify-content-end align-items-center">
+      <button class="btn btn-success" (click)="openAddWineModal()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+      <button type="button" class="btn btn-primary me-2" (click)="showModal('WINES')">Report</button>
+      
+    </div>
+    
 </div>
 
 <table class="table table-striped">
@@ -315,6 +319,25 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDeleteWineModal()">No</button>
         <button type="button" class="btn btn-primary" (click)="deleteWine(); AddAuditLog('Wine: Deleted')">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blacklist Report Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}" [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>{{ currentReportType }}</h1>        
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeBlacklistModal()"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="modal-title">Please select how you want to view the {{ currentReportType?.toLowerCase() }} report</h5>
+      </div>      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="OpenReports(); AddAuditLog('Report: ' + currentReportType + ' Opened')">Open Report</button>
+        <button type="button" class="btn btn-primary" (click)="DownloadReports(); AddAuditLog('Report: ' + currentReportType + ' Downloaded')">Download Report</button>
       </div>
     </div>
   </div>
