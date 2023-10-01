@@ -201,26 +201,12 @@
 </ul>
     </li>
 
-<li class="nav-item" (click)="showReportSubnav = !showReportSubnav">
-  <a class="nav-link">
+<!-- Dashboard item (formerly Charts) -->
+<li class="nav-item">
+  <a class="nav-link" routerLink="/charts">
     <i class="bi bi-bar-chart-fill me-2"></i>
-    <span>Reports</span>
-    <i [class]="showReportSubnav ? 'bi bi-chevron-down' : 'bi bi-chevron-right'" style="margin-left: 15px;"></i>
+    <span>Dashboard</span>
   </a>
-  <ul *ngIf="showReportSubnav" class="nav flex-column ml-3 sub-nav">
-    <li class="nav-item" style="background-color: rgb(59, 59, 255);">
-      <a class="nav-link" routerLink="/report">
-        <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
-        <span style="margin-left: 15px;">Reports</span>
-      </a>
-    </li>
-    <li class="nav-item" style="background-color: rgb(59, 59, 255);">
-      <a class="nav-link" routerLink="/charts">
-        <i class="fas fa-arrow-right float-left" style="margin-right: 7px;"></i>
-        <span style="margin-left: 15px;">Charts</span>
-      </a>
-    </li>
-  </ul>
 </li>
 
     
