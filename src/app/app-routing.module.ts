@@ -5,7 +5,6 @@ import { InventoryComponent } from './admin/inventory/inventory.component';
 import { EventComponent } from './admin/event/event.component';
 import { FaqComponent } from './admin/faq/faq.component';
 import { SupplierComponent } from './admin/supplier/supplier.component';
-import { ReportComponent } from './admin/report/report.component';
 import { BlacklistComponent } from './admin/blacklist/blacklist.component';
 import { VatComponent } from './admin/vat/vat.component';
 import { EmployeeComponent } from './admin/employee/employee.component';
@@ -58,7 +57,6 @@ const routes: Routes = [
   { path: 'event', component: EventComponent, canActivate: [AuthGuard] },
   { path: 'faq', component: FaqComponent, canActivate: [AuthGuard] },
   { path: 'supplier', component: SupplierComponent, canActivate: [AuthGuard] },
-  { path: 'report', component: ReportComponent, canActivate: [AuthGuard] },
   { path: 'blacklist', component: BlacklistComponent, canActivate: [AuthGuard] },
   { path: 'vat', component: VatComponent, canActivate: [AuthGuard]},
   { path: 'employees', component: EmployeeComponent, canActivate: [AuthGuard]},

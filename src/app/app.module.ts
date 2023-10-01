@@ -9,7 +9,6 @@ import { EventComponent } from './admin/event/event.component';
 import { InventoryComponent } from './admin/inventory/inventory.component';
 import { FaqComponent } from './admin/faq/faq.component';
 import { SupplierComponent } from './admin/supplier/supplier.component';
-import { ReportComponent } from './admin/report/report.component';
 import { BlacklistComponent } from './admin/blacklist/blacklist.component';
 
 //Bootstrap
@@ -83,7 +82,6 @@ import { PaginationComponent } from './admin/pagination/pagination.component';
     InventoryComponent,
     FaqComponent,
     SupplierComponent,
-    ReportComponent,
     BlacklistComponent,
     SidenavComponent,
     VatComponent,

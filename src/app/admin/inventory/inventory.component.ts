@@ -25,6 +25,9 @@ import { StockTake } from 'src/app/Model/stocktake';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
 import { SupplierOrderService } from '../services/supplier-order.service';
 
+import { PdfService } from '../services/pdf.service';
+import { ReportService } from '../services/report.service';
+
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
@@ -48,6 +51,8 @@ export class InventoryComponent implements OnInit {
   searchQuery: string = '';
   winetypes: WineType[] = [];
   varietals: Varietal[] = [];
+  currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES' | null = null;
+
 
   currentPage: boolean = true;
 
@@ -56,6 +61,7 @@ export class InventoryComponent implements OnInit {
   public wineNamesMap = new Map<number, string>();
   public supOrderMap = new Map<number, string>();
   vintageMap: Map<number, string> = new Map();
+  showBlacklistModal: boolean = false;
 
   constructor(
     private writeORService: WriteORService,
@@ -70,7 +76,9 @@ export class InventoryComponent implements OnInit {
     private dataService: DataServiceService,
     private writeoffsService: WriteOffsService,
     private stocktakeService: StockTakeService,
-    private supplierOrderService: SupplierOrderService
+    private supplierOrderService: SupplierOrderService,
+    private adataService: ReportService,
+    private pdfService: PdfService,
   ) {}
 
   // **********************************************************When the page is called these methods are automatically called*************************************************
@@ -799,6 +807,61 @@ export class InventoryComponent implements OnInit {
   onPageSizeChange() {
     this.currentPagePagination = 1;
     this.filterInventory(); 
+  }
+
+
+  showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES'): void {
+    this.currentReportType = reportType;
+    this.showBlacklistModal = true;
+  }
+
+  closeBlacklistModal() {
+    this.showBlacklistModal = false;
+    this.currentReportType = null;
+  }
+
+
+  OpenReports(): void {
+   if (this.currentReportType === 'INVENTORY') {
+      this.ViewInventory();
+    } 
+  }
+
+  DownloadReports(): void {
+    if (this.currentReportType === 'INVENTORY') {
+      this.exportInventoryToPdf();
+    } 
+  }
+
+  getCurrentDateFormatted(): string {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const year = today.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  exportInventoryToPdf(): void {
+    const currentDate = this.getCurrentDateFormatted(); // Get the current date
+    this.pdfService.generateInventoryPdf(this.inventory, currentDate);
+  }
+
+  async ViewInventory(): Promise<void> {
+    try {
+      const currentDate = this.getCurrentDateFormatted(); // Get the current date
+      const pdfBlob = await this.pdfService.generateInventoryReport(this.inventory, currentDate);
+      const resolvedPdfBlob = await pdfBlob;
+      // Create a Blob URL and open it in a new tab
+      const blobUrl = URL.createObjectURL(resolvedPdfBlob);
+      const newTab = window.open(blobUrl, '_blank');
+      if (!newTab) {
+        console.error('Failed to open new tab for PDF');
+      } else {
+        console.error('Received undefined or invalid inventory data');
+      }
+    } catch (error) {
+      console.error('Error generating inventory report:', error);
+    }
   }
 
 

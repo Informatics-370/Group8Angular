@@ -10,6 +10,8 @@
     <button class="btn btn-success" (click)="openAddBlacklistCModal()">
       <i class="fas fa-plus"></i> Add
     </button>
+    <button type="button" class="btn btn-primary" style="margin: 2px;" (click)="showModal('BLACKLIST')">Report</button>
+
   </div>
 </div>
 
@@ -158,3 +160,22 @@
 </div>
 
 <!--************************************************************ Delete Modal *************************************************************************************************-->
+
+<!-- Blacklist Report Modal -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistReportModal}" [ngStyle]="{'display': showBlacklistReportModal ? 'block' : 'none'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>{{ currentReportType }}</h1>        
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeBlacklistModal()"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="modal-title">Please select how you want to view the {{ currentReportType?.toLowerCase() }} report</h5>
+      </div>      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="OpenReports(); AddAuditLog('Report: ' + currentReportType + ' Opened')">Open Report</button>
+        <button type="button" class="btn btn-primary" (click)="DownloadReports(); AddAuditLog('Report: ' + currentReportType + ' Downloaded')">Download Report</button>
+      </div>
+    </div>
+  </div>
+</div>
