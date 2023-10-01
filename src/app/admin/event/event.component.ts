@@ -365,13 +365,11 @@ this.fileUploaded = true;
   async deleteEvent(): Promise<void> {
     try {
       await this.eventService.deleteEvent(this.eventToDelete);
-
-
-      const index = this.events.findIndex(event => event.eventID === this.eventToDelete);
-      if (index !== -1) {
-        this.events.splice(index, 1);
-      }
-
+  
+      // Remove from the events array based on eventID
+      this.events = this.events.filter(event => event.eventID !== this.eventToDelete.eventID);
+      
+      // Do the same for originalEvents to keep it in sync
       this.originalEvents = this.originalEvents.filter(event => event.eventID !== this.eventToDelete.eventID);
   
       // Reapply filters, sorting, and pagination
@@ -379,10 +377,11 @@ this.fileUploaded = true;
       
       this.toastr.success('Event has been deleted successfully.', 'Delete Event');
       this.closeDeleteEventModal();
+      window.location.reload();
+
     } catch (error: any) {
       console.error(error);
       if (error?.status === 400) {
-        // Assuming that the server sends the error message in the 'message' field.
         const serverMessage = error?.error?.message ?? 'Event cannot be deleted because tickets have already been purchased';
         this.toastr.warning(serverMessage, 'Delete Event');
       } else if (error?.status) {

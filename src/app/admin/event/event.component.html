@@ -91,14 +91,16 @@
   </tbody>
 </table>
 
+<div class="text-center" *ngIf="events.length === 0">
+  <h3>No events currently in your system.</h3>
+</div>
+
 <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [pageSize]="pageSize"
   [pageSizeOptions]="pageSizeOptions" (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)"></app-pagination>
 
 
-<div class="text-center" *ngIf="events.length === 0">
-  <h3>No events currently in your system.</h3>
-</div>
+
 
 
 

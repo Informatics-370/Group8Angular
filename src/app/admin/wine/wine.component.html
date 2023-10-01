@@ -99,6 +99,11 @@
   </tbody>
 </table>
 
+<div class="text-center" *ngIf="wines.length === 0">
+  <h3>No wines currently in your system.</h3>
+</div>
+
+
 <!-- Your wine list rendering code above this -->
 
 <!-- Your wine list rendering code above this -->
@@ -109,9 +114,6 @@
 
 
 
-<div class="text-center" *ngIf="wines.length === 0">
-  <h3>No wines currently in your system.</h3>
-</div>
 
 
 
