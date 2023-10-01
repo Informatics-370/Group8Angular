@@ -210,11 +210,13 @@ export class InventoryComponent implements OnInit {
   async loadInventory(): Promise<void> {
     try {
       this.inventory = await this.inventoryService.getFullInventory();
+      this.filteredInventoryList = [...this.inventory];
     } catch (error) {
       console.error(error);
       this.toastr.error('Error, please try again', 'Inventory Table');
     }
   }
+  
 
   // ****************** Methods to display *****************************************************************************************************
 
@@ -258,48 +260,38 @@ export class InventoryComponent implements OnInit {
   }
 
   async submitInventoryForm(form: NgForm): Promise<void> {
-    console.log(
-      'Submitting form with editing Inventory flag:',
-      this.editingInventory
-    );
+    console.log('Submitting form with editing Inventory flag:', this.editingInventory);
+    
     if (form.valid) {
       try {
         if (this.editingInventory) {
-          // Update inventory
-          console.log(this.currentInventory);
-          await this.inventoryService.updateInventory(
-            this.currentInventory.inventoryID!,
-            this.currentInventory
-          );
-          const index = this.inventory.findIndex(
-            (x) => x.inventoryID === this.currentInventory.inventoryID
-          );
+          await this.inventoryService.updateInventory(this.currentInventory.inventoryID!, this.currentInventory);
+          const index = this.inventory.findIndex((x) => x.inventoryID === this.currentInventory.inventoryID);
+          
           if (index !== -1) {
             this.inventory[index] = this.currentInventory;
           }
+          
           this.toastr.success('Successfully updated', 'Inventory');
+          
         } else {
-          console.log('WineID', this.currentInventory.wineID);
-          let isExistingInventory = this.inventory.find(
-            (x) => x.wineID === this.currentInventory.wineID
-          );
-          console.log('Copy Check ', isExistingInventory);
+          let isExistingInventory = this.inventory.find((x) => x.wineID === this.currentInventory.wineID);
+          
           if (isExistingInventory) {
-            this.toastr.warning(
-              'Wine with this ID is already added to the inventory.',
-              'Inventory'
-            );
+            this.toastr.warning('Wine with this ID is already added to the inventory.', 'Inventory');
           } else {
-            // Add inventory
-            const data = await this.inventoryService.addInventory(
-              this.currentInventory
-            );
+            const data = await this.inventoryService.addInventory(this.currentInventory);
             this.inventory.push(data);
-            this.loadInventory();
             this.toastr.success('Successfully added', 'Inventory');
           }
         }
+  
+        // Reload inventory and re-filter just once after operation
+        await this.loadInventory(); 
+        this.filterInventory();
+  
         this.closeInventoryModal();
+  
         if (!this.editingInventory) {
           form.resetForm();
         }
@@ -310,7 +302,7 @@ export class InventoryComponent implements OnInit {
       }
     }
   }
-
+  
   //******************* Delete Modal-related methods *********************************************************************************************************************************
 
   openDeleteInventoryModal(inventory: any): void {
@@ -334,20 +326,27 @@ export class InventoryComponent implements OnInit {
         await this.inventoryService.deleteInventory(
           this.inventoryToDeleteDetails.inventoryID
         );
+  
+        // Directly remove the deleted item from the current inventory array
         this.inventory = this.inventory.filter(
           (x) => x.inventoryID !== this.inventoryToDeleteDetails.inventoryID
         );
+  
         this.toastr.success('Successfully deleted', 'Inventory');
+  
+        // Reload inventory and re-filter just once after the delete operation
+        await this.loadInventory();
+        this.filterInventory();
+  
       } catch (error) {
         this.toastr.error('Deletion failed, please try again', 'Error');
-        console.log(
-          'Inventory to Delete is null, undefined, or has an undefined inventoryID property.'
-        );
+        console.error('Deletion failed, please try again');
       }
+  
       this.closeDeleteInventoryModal();
     }
   }
-
+  
   //******************* Delete Modal-related methods *********************************************************************************************************************************
 
   // Function to increase the Quantity on Hand for a specific wine
