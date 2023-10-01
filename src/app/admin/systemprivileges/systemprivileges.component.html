@@ -51,7 +51,8 @@
   [ngStyle]="{'display': showSystemPrivilegeModal ? 'block' : 'none'}">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header">{{editingSystemPrivilege ? 'Edit SystemPrivilege' : 'Add System Privilege'}}
+      <div class="modal-header">
+        <h2>{{editingSystemPrivilege ? 'Edit SystemPrivilege' : 'Add System Privilege'}}</h2>
         <button type="button" class="btn-close" aria-label="Close"
           (click)="closeSystemPrivilegeModal(); onSubmitClick()"></button>
       </div>
@@ -138,7 +139,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete Confirmation</h5>
+        <h2 class="modal-title">Delete Confirmation</h2>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteSystemPrivilegeModal()"></button>
       </div>
       <div class="modal-body">

@@ -11,8 +11,24 @@
 <br>
 
 <div class="container">
+    <!-- Search Bar -->
+<div class="row mb-4 justify-content-center"> <!-- Add justify-content-center -->
+    <div class="col-auto"> <!-- Use col-auto -->
+      <div class="input-group" style="min-width: 400px;"> <!-- Use min-width -->
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Search wines..." 
+          aria-label="Search" 
+          aria-describedby="basic-addon1" 
+          [(ngModel)]="searchTerm"
+          style="border: 2px solid #ccc;" 
+        >
+      </div>
+    </div>
+  </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col" *ngFor="let wine of displayedWines">
+        <div class="col" *ngFor="let wine of filteredWines">
             <div class="card mb-3 shadow-sm">
                 <div class="row g-0">
                     <div class="col-lg-4 col-md-12">

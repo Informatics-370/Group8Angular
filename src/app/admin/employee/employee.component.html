@@ -57,9 +57,10 @@
 <div class="modal" tabindex="-1" [ngClass]="{'show': showEmployeeModal}" [ngStyle]="{'display': showEmployeeModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">{{editingEmployee ? 'Edit Employee' : 'Add Employee'}}
+      <div class="modal-header">
+        <h2>{{editingEmployee ? 'Edit Employee' : 'Add Employee'}}</h2>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEmployeeModal()"></button>
-      </div>
+      </div>      
       <div class="modal-body">
         <form #employeeForm="ngForm" (ngSubmit)="submitEmployeeForm(employeeForm); onSubmitClick()">
           <!-- FIRST NAME -->

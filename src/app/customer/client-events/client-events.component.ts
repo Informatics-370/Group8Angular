@@ -23,13 +23,27 @@ export class ClientEventsComponent {
   earlyBirds: EarlyBird[] = [];
   purchasedEvents: string[] = [];
   displayableEvents: Event[] = [];
-
+  searchEventTerm: string = '';
 
   @ViewChild('noEventsMessage', { static: true }) noEventsMessage!: TemplateRef<any>;
 
   constructor(private eventService: EventService, private earlyBirdService: EarlyBirdService, private paymentService: PaymentService, private toastr: ToastrService, private loginService: DataServiceService, private blacklistService: BlacklistService) { }
 
-
+  get filteredEvents(): Event[] {
+    if (!this.searchEventTerm) {
+      return this.displayableEvents;
+    }
+  
+    const term = this.searchEventTerm.toLowerCase();
+    
+    return this.displayableEvents.filter(event => {
+      const nameMatch = event.name.toLowerCase().includes(term);
+      const priceMatch = event.price.toString().includes(term);
+      const dateMatch = new Date(event.eventDate).toLocaleDateString().toLowerCase().includes(term);
+  
+      return nameMatch || priceMatch || dateMatch;
+    });
+  }
 
   async ngOnInit(): Promise<void> {
     try {

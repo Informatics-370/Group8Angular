@@ -4,7 +4,7 @@
   border: none;
   width: 100%;
   height: 100%;
-  box-shadow: 0px 0px 15px rgba(215, 23, 23, 0.8);
+  box-shadow: 0px 0px 15px rgba(215, 23, 23, 0.9) !important;
 }
 
 .selector {
@@ -112,6 +112,73 @@ input[type=text] {
 
 }
 
+/* Mobile */
+@media (max-width: 575.98px) {
+  /* Your mobile styles here */
+  .cart-icons {
+    width: 100px;
+  }
+}
+
+/* Small devices (portrait tablets and large phones) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  /* Your small device styles here */
+  .cart-icons {
+    width: 120px;
+  }
+}
+
+div.card {
+  box-shadow: 0px 0px 15px rgba(100, 100, 100, 0.4) !important;
+}
+
+.wine-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Image styling */
+.wine-image img {
+  object-fit: cover;
+  height: 100%;
+}
+
+/* Text and Icon styling next to the image */
+.wine-info {
+  padding: 15px;
+  background: linear-gradient(to bottom, #fff, #f9f9f9);
+}
+
+.wine-info h2 {
+  font-size: 1.5em;
+  font-family: 'Garamond', serif;
+  color: #B55933;
+}
+
+.wine-info p {
+  margin-bottom: 8px;
+}
+
+.cart-icons {
+  margin-top: 10px;
+  /* ...existing CSS... */
+}
+
+.btn-custom, .btn-wishlist {
+  margin-top: 10px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 767.98px) {
+  .wine-info h2 {
+    font-size: 1.2em;
+  }
+  .wine-info p {
+    font-size: 0.9em;
+  }
+}
 
 
 
