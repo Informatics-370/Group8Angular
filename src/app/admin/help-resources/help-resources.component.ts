@@ -8,23 +8,28 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./help-resources.component.css']
 })
 export class HelpResourcesComponent {
-  videoPath: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
-  pdfPath: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+  videoPath: SafeResourceUrl | undefined;
+  pdfPath: SafeResourceUrl | undefined;
+  videoId: string = 'HliyseRRMAE'; // Just the video ID
 
   constructor(private helpResourceService: HelpResourcesService, private sanitizer: DomSanitizer) { }
   
-  ngOnInit(){
+  ngOnInit(): void {
     this.loadHelp();
+    this.videoPath = this.getVideoUrl();
+  }
+
+  getVideoUrl(): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${this.videoId}`);
   }
 
   loadHelp(): void {
-      this.helpResourceService.getHelpPaths().subscribe(result => {
-        console.log(result);
-        if (result && result.length > 0) {
-          this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(result[0].videoPath);
-          console.log(this.videoPath);
-          this.pdfPath = this.sanitizer.bypassSecurityTrustResourceUrl(result[0].pdfPath);
-        }
-      });
+    this.helpResourceService.getHelpPaths().subscribe(result => {
+      console.log(result);
+      if (result && result.length > 0) {
+        this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(result[0].videoPath);
+        this.pdfPath = this.sanitizer.bypassSecurityTrustResourceUrl(result[0].pdfPath);
+      }
+    });
   }
 }
