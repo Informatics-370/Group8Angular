@@ -1,0 +1,15 @@
+.custom-modal-lg {
+    max-width: 75%;
+}
+
+.custom-modal-title {
+    font-size: 24px;
+  }
+  .custom-checkbox-label {
+    font-size: 18px; 
+  }
+
+  .clickable-image {
+    cursor: pointer;
+  }
+  
