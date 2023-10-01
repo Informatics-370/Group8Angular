@@ -259,11 +259,16 @@
             <div class="mb-3">
               <label for="WriteOffReason" class="form-label">Write Off Reason:</label>
               <br>
-              <select id="WriteOffReason" name="WriteOffReason" required [(ngModel)]="WriteOffReasonSelected">
+              <select id="WriteOffReason" name="WriteOffReason" required [(ngModel)]="WriteOffReasonSelected" #writeOffReasonField="ngModel">
                 <option [value]="'NA'" disabled selected>Select a Write-Off Reason</option>
                 <option *ngFor="let x of WriteOffReasons" [value]="x">{{x}}</option>
               </select>
+              <div *ngIf="(writeOffReasonField.touched || formSubmitted) && WriteOffReasonSelected === 'NA'" 
+              class="alert alert-danger">
+           Write Off Reason is required.
+         </div>
             </div>
+            
 
             <div class="mb-3">
               <label for="quantityOnHand" class="form-label">Quantity Writing Off</label>
@@ -282,7 +287,8 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeWROModal()">Close</button>
           <button type="button" class="btn btn-primary" [disabled]="writeROForm.invalid"
-            (click)="AddWriteOff(writeROForm);  AddAuditLog('Write Off: Added')">Write Off</button>
+          (click)="AddWriteOff(writeROForm); AddAuditLog('Write Off: Added')">Write Off</button>
+  
         </div>
       </div>
     </div>

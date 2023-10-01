@@ -59,7 +59,8 @@
   [ngStyle]="{'display': showSuperuserModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">{{editingSuperuser ? 'Edit Superuser' : 'Add Superuser'}}
+      <div class="modal-header">
+        <h2>{{editingSuperuser ? 'Edit Superuser' : 'Add Superuser'}}</h2>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeSuperuserModal()"></button>
       </div>
       <div class="modal-body">

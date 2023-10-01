@@ -79,7 +79,6 @@
 
 
 <!--************************************************************ Table for View Suppliers *************************************************************************************-->
-
 <table class="table table-striped">
     <thead>
       <tr>
@@ -107,7 +106,7 @@
       </tbody>
     </table>
     
-    <div class="text-center" *ngIf="paginatedSuppliers.length === 0">
+    <div class="text-center" *ngIf="filteredSuppliers.length === 0">
       <h3>No suppliers currently in your system.</h3>
     </div>
 

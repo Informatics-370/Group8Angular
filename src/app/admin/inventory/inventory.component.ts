@@ -500,8 +500,19 @@ export class InventoryComponent implements OnInit {
   WriteOffReasons: string[] = [];
   public quantityWriteOff: number = 0;
   public WriteOffReasonSelected: string = 'NA';
+  public formSubmitted: boolean = false;
+
 
   async AddWriteOff(form: NgForm) {
+    this.formSubmitted = true;
+        // Manual validation for WriteOffReasonSelected
+        if (this.WriteOffReasonSelected === 'NA') {
+          // Display an error message or handle it however you'd like
+          this.toastr.error('Please select a Write Off Reason', 'Error');
+          return;
+        }
+          // <-- Add this line
+    if (form.valid) {
     if (form.valid) {
       console.log('Write Off Quantity', this.quantityWriteOff);
       let newWriteOff: WriteOffs = {
@@ -544,6 +555,7 @@ export class InventoryComponent implements OnInit {
         this.toastr.error('Failed to add Write Off', 'Error');
       }
     }
+  }
   }
 
   openWROModal(id: number) {

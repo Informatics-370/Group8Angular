@@ -35,6 +35,7 @@ export class WineComponent implements OnInit {
   fileUploaded!: boolean;
   currentWineImageURL: string | undefined;
   originalWines!: Wine[];
+  public isInvalidVintage = false;
 
 
 
@@ -234,6 +235,24 @@ export class WineComponent implements OnInit {
   }
 
   async submitWineForm(form: NgForm): Promise<void> {
+    
+    const currentYear = new Date().getFullYear();
+    const enteredVintage = parseInt(this.currentWine.vintage, 10); // Convert the string to a number
+    
+    if (isNaN(enteredVintage)) {
+      this.toastr.error('Wine vintage must be a valid year.', 'Wine Form');
+      this.isInvalidVintage = true;
+      this.isSaving = false;
+      return;
+    }
+    
+    this.isInvalidVintage = enteredVintage > currentYear; // Update this flag based on the validation
+  
+    if (this.isInvalidVintage) {
+      this.toastr.error('Wine vintage cannot be in the future.', 'Wine Form');
+      this.isSaving = false;
+      return;
+    }
     this.isSaving = true;
     try {
       const formData = new FormData();

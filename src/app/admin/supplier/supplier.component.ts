@@ -26,6 +26,8 @@ export class SupplierComponent implements OnInit {
   pageSize: number = 10;
   currentPage: number = 1;
 
+
+
     supplierToDelete: any = null;
     supplierToDeleteDetails: any;
     showDeleteSupplierModal = false;
@@ -44,14 +46,17 @@ export class SupplierComponent implements OnInit {
 // ****************** Methods to display the list of Suppliers. *****************************************************************************************************************
   
 loadSuppliers(): void {
-    this.supplierService.getSuppliers().subscribe({
-      next: (data: Supplier[]) => this.filteredSuppliers = data,
-      error: (error: any) => {
-        console.error(error);
-        this.toastr.error('Error, failed to connect to the database', 'Supplier Table');
-      }
-    });
-  }
+  this.supplierService.getSuppliers().subscribe({
+    next: (data: Supplier[]) => {
+      this.suppliers = data; // populate suppliers array
+      this.filteredSuppliers = [...this.suppliers]; // populate filteredSuppliers
+    },
+    error: (error: any) => {
+      console.error(error);
+      this.toastr.error('Error, failed to connect to the database', 'Supplier Table');
+    }
+  });
+}
 
 // ****************** Methods to display the list of Suppliers. *****************************************************************************************************************
 
@@ -204,7 +209,7 @@ onSubmitClick() {
 
 filterSuppliers() {
   if (this.searchQuery.trim() === '') {
-    this.filteredSuppliers = [...this.suppliers]; // If the search query is empty, show all wines
+    this.filteredSuppliers = [...this.suppliers];
   } else {
     const searchTerm = this.searchQuery.toLowerCase().trim();
     this.filteredSuppliers = this.suppliers.filter(supplier =>
@@ -213,6 +218,7 @@ filterSuppliers() {
       supplier.phoneNumber?.toString().includes(searchTerm)
     );
   }
+  this.currentPage = 1;  // reset to first page after filtering
 }
 
 get paginatedSuppliers(): Supplier[] {

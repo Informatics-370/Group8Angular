@@ -29,8 +29,25 @@ export class ClientProductsComponent implements OnInit {
   varietals: Varietal[] = [];
   dataLoaded = false;
   quantityMap: Map<number, number> = new Map<number, number>();
+  searchTerm: string = '';
 
-
+  // Add the getter for filtered wines
+  get filteredWines(): Wine[] {
+    if (!this.searchTerm) {
+      return this.displayedWines;
+    }
+  
+    const term = this.searchTerm.toLowerCase();
+    
+    return this.displayedWines.filter(wine => {
+      const nameMatch = wine.name.toLowerCase().includes(term);
+      const vintageMatch = wine.vintage.toLowerCase().includes(term); // assuming vintage is a string
+      const varietalMatch = wine.varietal?.name?.toLowerCase().includes(term); // check for existence before using
+      const priceMatch = wine.price.toString().includes(term); // convert to string before using
+  
+      return nameMatch || vintageMatch || varietalMatch || priceMatch;
+    });
+  }
 
   constructor(
     private wineService: WineService,
@@ -44,9 +61,7 @@ export class ClientProductsComponent implements OnInit {
   ngOnInit() {
     this.loadWines();
     this.loadVarietals();
-    this.loadWinetypes();
-
-    
+    this.loadWinetypes(); 
   }
 
   incrementCounter(wineId: number): void {
