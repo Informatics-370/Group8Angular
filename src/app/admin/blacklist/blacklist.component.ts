@@ -34,7 +34,6 @@ export class BlacklistComponent implements OnInit {
   reason: string = '';
   showBlacklistReportModal: boolean = false;
   blacklistData: Blacklist[] = [];
-
   filteredBlacklistC = [...this.blacklistC]; // Filtered blacklist
   pageSize = 10; // Items per page
   currentPage = 1; // Current page
@@ -51,27 +50,23 @@ export class BlacklistComponent implements OnInit {
     private dataService: DataServiceService,
     private pdfService: PdfService,
     private adataService: ReportService,
-
-
-
   ) {}
-
   // **********************************************************When the page is called these methods are automatically called*************************************************
-
   ngOnInit(): void {
     this.loadBlacklistCs();
     this.loadCustomerEmails();
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
+    this.filteredCustomerEmails = [...this.customerEmails];
+    
+
   }
-
   // **********************************************************When the page is called these methods are automatically called*************************************************
-
   // ****************** Methods to display the list of Blacklisted Customers. ************************************************************************************************
-
   async loadBlacklistCs(): Promise<void> {
     try {
       this.blacklistC = await this.blacklistService.getBlacklist();
+      this.filteredBlacklistC = [...this.blacklistC];  // Update here
     } catch (error) {
       console.error(error);
       this.toastr.error(
@@ -80,7 +75,6 @@ export class BlacklistComponent implements OnInit {
       );
     }
   }
-
   async loadCustomerEmails(): Promise<void> {
     try {
       this.customerService.GetCustomers().subscribe(async (result: any) => {
@@ -96,7 +90,6 @@ export class BlacklistComponent implements OnInit {
             notOnBlacklist.push(email);
           }
         }
-
         // Assigning the non-blacklisted emails to customerEmails
         this.customerEmails = notOnBlacklist;
       });
@@ -105,31 +98,21 @@ export class BlacklistComponent implements OnInit {
       this.toastr.error('Error, failed to load customer emails', 'Customer emails');
     }
 }
-
-
-
-
   // ****************** Methods to display the list of Blacklisted Customers. ************************************************************************************************
-
   //******************* Modal-related methods *********************************************************************************************************************************
-
   //******************* Add/Edit Modal-related methods *********************************************************************************************************************************
-
   openAddBlacklistCModal() {
     this.editingBlacklistC = false;
     this.currentBlacklistC = new Blacklist();
     this.showBlacklistModal = true;
   }
-
   closeBlacklistCModal() {
     this.showBlacklistModal = false;
     this.reason = '';
   }
-
   openEditBlacklistCModal(id: number) {
     console.log('Opening edit Blacklist customer modal for ID:', id);
     this.editingBlacklistC = true;
-
     const originalBlacklistC = this.blacklistC.find(
       (x) => x.blacklistID === id
     );
@@ -137,10 +120,8 @@ export class BlacklistComponent implements OnInit {
       // Clone the original Customer Details object and assign it to currentBlacklistC
       this.currentBlacklistC = { ...originalBlacklistC };
     }
-
     this.showBlacklistModal = true;
   }
-
   onEmailChange(): void {
     if (this.currentBlacklistC['email']) {
       this.emailSelected = true;
@@ -148,7 +129,6 @@ export class BlacklistComponent implements OnInit {
       this.emailSelected = false;
     }
   }
-
   async submitBlacklistCForm(form: NgForm): Promise<void> {
     console.log(
       'Submitting form with editing Blacklist flag:',
@@ -170,6 +150,7 @@ export class BlacklistComponent implements OnInit {
           }
           this.loadCustomerEmails();
           this.toastr.success('Successfully updated', 'Customer');
+          window.location.reload();
         } else {
           // Add Blacklist Customer
           const data = await this.blacklistService.addBlacklistC(
@@ -178,6 +159,7 @@ export class BlacklistComponent implements OnInit {
           this.blacklistC.push(data);
           this.loadCustomerEmails();
           this.toastr.success('Successfully added', 'Customer');
+          window.location.reload();
         }
         this.closeBlacklistCModal();
         if (!this.editingBlacklistC) {
@@ -190,23 +172,18 @@ export class BlacklistComponent implements OnInit {
       }
     }
   }
-
   //******************* Add/Edit Modal-related methods *********************************************************************************************************************************
-
   //******************* Delete Modal-related methods *********************************************************************************************************************************
-
   openDeleteBlacklistCModal(blacklistCustomer: any): void {
     this.blacklistCToDelete = blacklistCustomer.blacklistID;
     console.log('Blacklist Customer : ', this.blacklistCToDelete);
     this.blacklistCToDeleteDetails = blacklistCustomer;
     this.showDeleteBlacklistCModal = true;
   }
-
   closeDeleteBlacklistCModal(): void {
     this.showDeleteBlacklistCModal = false;
     this.reason = '';
   }
-
   async deleteBlacklistC(): Promise<void> {
     if (
       this.blacklistCToDeleteDetails &&
@@ -226,6 +203,7 @@ export class BlacklistComponent implements OnInit {
           (x) => x.blacklistID !== this.blacklistCToDeleteDetails.blacklistID
         );
         this.toastr.success('Successfully removed', 'Customer');
+        window.location.reload();
       } catch (error) {
         this.toastr.error('Removal failed, please try again', 'Error');
         console.log(
@@ -236,19 +214,14 @@ export class BlacklistComponent implements OnInit {
       this.closeDeleteBlacklistCModal();
     }
   }
-
   //******************* Delete Modal-related methods *********************************************************************************************************************************
-
   //******************* Modal-related methods *********************************************************************************************************************************
-
   AuditTrail: AuditTrail[] = [];
   currentAudit: AuditTrail = new AuditTrail();
   user: Customer | undefined;
   userDetails: any;
-
   loadUserData() {
     const userEmail = this.userDetails?.email;
-
     if (userEmail != null) {
       this.customerService.GetCustomer(userEmail).subscribe(
         (result: any) => {
@@ -263,7 +236,6 @@ export class BlacklistComponent implements OnInit {
       );
     }
   }
-
   async AddAuditLog(button: string): Promise<void> {
     this.loadUserData();
     this.currentAudit.buttonPressed = button;
@@ -273,18 +245,12 @@ export class BlacklistComponent implements OnInit {
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
   }
-
   onSubmitClick() {
     const auditLogMessage =
       'Blacklist Customer: ' + (this.editingBlacklistC ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
   }
-
-
   currentReportType: 'REFUNDS' | 'EVENTS' | 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES' | null = null;
-
-
-
   getCurrentDateFormatted(): string {
     const today = new Date();
     const day = today.getDate().toString().padStart(2, '0');
@@ -292,63 +258,45 @@ export class BlacklistComponent implements OnInit {
     const year = today.getFullYear();
     return `${day}/${month}/${year}`;
   }
-
   showModal(reportType: 'BLACKLIST' | 'INVENTORY' | 'SUPPLIER ORDER' | 'WINES'): void {
     this.currentReportType = reportType;
     this.showBlacklistReportModal = true;
   }
-
-
   closeBlacklistModal() {
     this.showBlacklistReportModal = false;
     this.currentReportType = null;
   }
-
   OpenReports(): void {
     if (this.currentReportType === 'BLACKLIST') {
       this.generateBlacklistReport();
     } 
   }
-
   async generateBlacklistReport() {
     try {
       let result: Blacklist[] | undefined = await this.adataService.getBlacklist();
       console.log('Result:', result);
-
       if (result !== undefined) {
         this.blacklistData = result;
         let currentDate = this.getCurrentDateFormatted();
-
         const pdfBlob = await this.pdfService.generateBlacklist(this.blacklistData, currentDate);
-
-        // Await the promise and get the resolved Blob
         const resolvedPdfBlob = await pdfBlob;
-
-        // Create a Blob URL and open it in a new tab
         const blobUrl = URL.createObjectURL(resolvedPdfBlob);
         const newTab = window.open(blobUrl, '_blank');
         if (!newTab) {
           console.error('Failed to open new tab for PDF');
-          // Handle error if new tab cannot be opened
         }
-
-        // Do any additional processing or actions here if needed
       } else {
         console.error('Received undefined or invalid blacklist data');
-        // Handle the case where the returned data is undefined or invalid
       }
     } catch (error) {
       console.error('Error fetching blacklist data:', error);
-      // Handle error if needed
     }
   }
-
   DownloadReports(): void {
     if (this.currentReportType === 'BLACKLIST') {
       this.generateBlacklistReportpdf();
     }
   }
-
   async generateBlacklistReportpdf() {
     try {
       let result: Blacklist[] | undefined = await this.adataService.getBlacklist();
@@ -366,33 +314,60 @@ export class BlacklistComponent implements OnInit {
       this.toastr.error('Error, failed to retrieve Blacklist Data', 'Blacklist Report');
     }
   }
-
   get totalPages() {
     return Math.ceil(this.filteredBlacklistC.length / this.pageSize);
   }
-
   get currentBlacklistPage() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     return this.filteredBlacklistC.slice(startIndex, startIndex + this.pageSize);
   }
-
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
-
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
     }
   }
-
   applySearch() {
-    this.filteredBlacklistC = this.blacklistC.filter(item => 
-      this.item.email.toLowerCase().includes(this.searchKeyword.toLowerCase()));
+    this.filteredBlacklistC = this.blacklistC.filter(item =>
+      item.email!.toLowerCase().includes(this.searchKeyword.toLowerCase())
+
+    );
+    console.log("Filtered items: ", this.filteredBlacklistC);
   }
 
+  // Declare additional variables
+searchCustomer: string = '';
+filteredCustomerEmails: string[] = [];
 
+// Method to filter customer emails based on the search term
+filterCustomers() {
+  if (this.searchCustomer) {
+    this.filteredCustomerEmails = this.customerEmails.filter(email => 
+      email.toLowerCase().includes(this.searchCustomer.toLowerCase())
+    );
+  } else {
+    this.filteredCustomerEmails = [...this.customerEmails];
+  }
+}
+
+
+filterEmails(event: any) {
+  const query = event.target.value;
+  if (query) {
+    this.filteredCustomerEmails = this.customerEmails.filter(email => 
+      email.toLowerCase().includes(query.toLowerCase()));
+  } else {
+    this.filteredCustomerEmails = [...this.customerEmails];
+  }
+}
+
+// Function to set selected email
+selectEmail(email: string) {
+  this.currentBlacklistC['email'] = email;
+}
 
 } 
