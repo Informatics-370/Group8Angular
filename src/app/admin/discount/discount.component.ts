@@ -17,27 +17,43 @@ import { CustomersService } from '../services/customers.service';
 })
 export class DiscountComponent {
   searchQuery: any;
+  // Variables for pagination
+    pageSize: number = 10; // Number of records per page
+    currentPage: number = 1; // Current page
+    totalPages: number | undefined; // Total number of pages
+
+    currentPageData: Discount[] = [];
+
 
 constructor(private toastr : ToastrService, private router: Router,  private discountService: DiscountService
   , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
 
 ngOnInit(): void {
-  this.loadDiscounts();
   this.userDetails = this.dataService.getUserFromToken();
+     
+      this.calculateTotalPages(); // Calculate total pages based on filteredDiscounts array
+
+      this.loadDiscounts();
       this.loadUserData();
+
 }
+
+
 
 filteredDiscounts: Discount[] = [];
 
-  async loadDiscounts(): Promise<void> {
-    try {
-      this.discounts = await this.discountService.getDiscounts();
-      this.filteredDiscounts = [...this.discounts];
-    } catch (error) {
-      console.error(error);
-      this.toastr.error('Error, please try again', 'Discount Table');
-    }
+async loadDiscounts(): Promise<void> {
+  try {
+    this.discounts = await this.discountService.getDiscounts();
+    this.filteredDiscounts = [...this.discounts];
+    this.calculateTotalPages();
+    this.loadCurrentPageData();
+  } catch (error) {
+    console.error(error);
+    this.toastr.error('Error, please try again', 'Discount Table');
   }
+}
+
 
   filterDiscounts(): void {
     const query = this.searchQuery.toLowerCase();
@@ -47,6 +63,8 @@ filteredDiscounts: Discount[] = [];
         discount.discountDescription?.toLowerCase().includes(query)
       );
     });
+    this.calculateTotalPages();
+     this.loadCurrentPageData();
   }
 
   //Discount variables needed
@@ -110,7 +128,6 @@ filteredDiscounts: Discount[] = [];
   async submitDiscountForm(form: NgForm): Promise<void> {
     console.log('Submitting form with editingDiscount flag:', this.editingDiscount);
     if (form.valid) {
-  
       // Generate a unique discount code only for new discount
       if (!this.editingDiscount) {
         const uniqueCode = this.generateUniqueCode();
@@ -121,16 +138,36 @@ filteredDiscounts: Discount[] = [];
         if (this.editingDiscount) {
           // Update Discount
           await this.discountService.updateDiscount(this.currentDiscount.discountID!, this.currentDiscount);
+  
+          // Update the main and filtered arrays with the updated discount
           const index = this.discounts.findIndex(discount => discount.discountID === this.currentDiscount.discountID);
+          const filterIndex = this.filteredDiscounts.findIndex(discount => discount.discountID === this.currentDiscount.discountID);
+  
           if (index !== -1) {
             // Update the original Discount object with the changes made to the clone
             this.discounts[index] = this.currentDiscount;
           }
+  
+          if (filterIndex !== -1) {
+            // Update the filtered array as well
+            this.filteredDiscounts[filterIndex] = this.currentDiscount;
+          }
+  
+          // Recalculate total pages and reload current page data
+          this.calculateTotalPages();
+          this.loadCurrentPageData();
+  
           this.toastr.success('Successfully updated', 'Update');
         } else {
           // Add Discount
           const data = await this.discountService.addDiscount(this.currentDiscount);
           this.discounts.push(data);
+          this.filteredDiscounts.push(data); // Update the filtered array as well
+  
+          // Recalculate total pages and reload current page data
+          this.calculateTotalPages();
+          this.loadCurrentPageData();
+  
           this.toastr.success('Successfully added', 'Add');
         }
         this.closeDiscountModal();
@@ -149,7 +186,15 @@ filteredDiscounts: Discount[] = [];
       try {
         await this.discountService.deleteDiscount(this.discountToDelete);
         console.log(this.discountToDelete);
+  
+        // Remove the deleted discount from both the main and filtered arrays
         this.discounts = this.discounts.filter(discount => discount.discountID !== this.discountToDelete);
+        this.filteredDiscounts = this.filteredDiscounts.filter(discount => discount.discountID !== this.discountToDelete);
+  
+        // Recalculate total pages and reload current page data
+        this.calculateTotalPages();
+        this.loadCurrentPageData();
+  
         this.toastr.success('Successfully deleted', 'Delete');
       } catch (error) {
         console.error('Error deleting Discount:', error);
@@ -158,6 +203,7 @@ filteredDiscounts: Discount[] = [];
       this.closeDeleteModal();
     }
   }
+  
 
   // Discount END-----------------------------------------------------------------------------------------------------.>
 
@@ -200,4 +246,30 @@ filteredDiscounts: Discount[] = [];
     this.AddAuditLog(auditLogMessage);
 }
 
+calculateTotalPages() {
+  this.totalPages = Math.ceil(this.filteredDiscounts.length / this.pageSize);
 }
+
+// Method to load data for the current page
+loadCurrentPageData() {
+  const start = (this.currentPage - 1) * this.pageSize;
+  const end = start + this.pageSize;
+  this.currentPageData = this.filteredDiscounts.slice(start, end);
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.currentPage -= 1;
+    this.loadCurrentPageData();
+  }
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages!) {
+    this.currentPage += 1;
+    this.loadCurrentPageData();
+  }
+}
+
+}
+

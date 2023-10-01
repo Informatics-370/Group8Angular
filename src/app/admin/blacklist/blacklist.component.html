@@ -3,9 +3,15 @@
 <br>
 <br>
 <div class="row align-items-center">
-  <div class="col">
+  <div class="col-md-6">
     <h1>Blacklist</h1>
   </div>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Search Blacklist" [(ngModel)]="searchKeyword" (input)="applySearch()">
+    </div>
+  </div>
+ 
   <div class="col text-end">
     <button class="btn btn-success" (click)="openAddBlacklistCModal()">
       <i class="fas fa-plus"></i> Add
@@ -29,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let x of blacklistC">
+    <tr *ngFor="let x of currentBlacklistPage">
       <td>{{ x.email }}</td>
       <td>{{ x.reason }}</td>
       <td>
@@ -47,6 +53,17 @@
 
 <div class="text-center" *ngIf="blacklistC.length === 0">
   <h3>No blacklisted customers currently in your system.</h3>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+  <button class="btn custom-btn" (click)="previousPage()">
+    &laquo; Previous
+  </button>
+  <span class="custom-page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn custom-btn" (click)="nextPage()">
+    Next &raquo;
+  </button>
 </div>
 
 <!--************************************************************ Table for View Blacklist *********************************************************************************-->

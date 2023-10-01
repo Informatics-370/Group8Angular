@@ -5,12 +5,17 @@
   <div class="col-md-6">
     <h2>Customer Accounts</h2>
   </div>
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="Search Customers" (ngModel)]="searchTerm" (input)="filterCustomers()">
+  </div>
 </div>
 
 <!-- Customer table -->
 <div class="text-center" *ngIf="customers.length === 0">
   <h3>No customer details are currently in your system.</h3>
 </div>
+
+
 
 <table class="table table-striped" *ngIf="customers.length > 0">
   <thead>
@@ -39,6 +44,17 @@
     </tr>
   </tbody>
 </table>
+
+<!-- Pagination -->
+<div class="pagination">
+  <button class="btn custom-btn" (click)="previousPage()">
+    &laquo; Previous
+  </button>
+  <span class="custom-page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn custom-btn" (click)="nextPage()">
+    Next &raquo;
+  </button>
+</div>
 
 
  <!-- Delete Customer modal -->

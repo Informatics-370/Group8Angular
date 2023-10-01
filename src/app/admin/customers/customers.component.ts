@@ -19,6 +19,13 @@ export class CustomersComponent {
   customerToDeleteDetails: any;
   customerToDelete: any = null;
   maxDate!: string;
+  searchTerm: string = '';
+  filteredCustomers: Customer[] = [];
+
+  // Pagination variables
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 0;
 
   constructor(private customerService: CustomersService, private toastr : ToastrService
     , private auditLogService: AuditlogService, private dataService: DataServiceService){ }
@@ -29,6 +36,8 @@ export class CustomersComponent {
     this.maxDate = this.formatDate(today);
     this.userDetails = this.dataService.getUserFromToken();
       this.loadUserData();
+      this.filterCustomers(); // call this once to initialize
+
   }
 
   formatDate(date: Date): string {
@@ -110,5 +119,27 @@ export class CustomersComponent {
     console.log(this.currentAudit);
     const data = await this.auditLogService.addAuditLog(this.currentAudit);
     this.AuditTrail.push(data);
+  }
+
+  filterCustomers() {
+    this.filteredCustomers = this.customers.filter(customer => {
+      return Object.values(customer).some(value => 
+        value.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    });
+    this.totalPages = Math.ceil(this.filteredCustomers.length / this.pageSize);
+    this.currentPage = 1; // reset to first page
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 }
