@@ -1,18 +1,16 @@
+<div class="custom-pagination">
+  <button class="btn custom-btn" (click)="previousPage()">
+    &laquo; Previous
+  </button>
+  <span class="custom-page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn custom-btn" (click)="nextPage()">
+    Next &raquo;
+  </button>
+</div>
 
-<div class="pagination">
-    <button class="btn btn-light" (click)="previousPage()">
-      &laquo; Previous
-    </button>
-    <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-    <button class="btn btn-light" (click)="nextPage()">
-      Next &raquo;
-    </button>
-  </div>
-  
-  <div class="page-size-container">
-    <span class="page-size-label">Page Size:</span>
-    <select class="page-size-dropdown" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange($event)">
-      <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
-    </select>
-  </div>
-  
+<div class="custom-page-size-container">
+  <span class="custom-page-size-label">Page Size:</span>
+  <select class="custom-dropdown" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+    <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+  </select>
+</div>

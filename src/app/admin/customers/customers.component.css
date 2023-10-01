@@ -11,3 +11,34 @@ table {
     padding: 10px;
     margin: 20px 0;
   }
+
+  /* Search Box */
+.mb-3 input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Custom button styles */
+.custom-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin: 5px;
+}
+
+.custom-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Custom text for page info */
+.custom-page-info {
+  font-weight: bold;
+  margin: 0 15px;
+}
+
+/* Pagination container */
+.pagination {
+  display: flex;
+  margin-top: 20px;
+}

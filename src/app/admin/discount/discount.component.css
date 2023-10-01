@@ -25,3 +25,27 @@ table {
   .right-align {
     padding-left: 70px ;
   }
+
+  /* Custom button styles */
+.custom-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin: 5px;
+}
+
+.custom-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Custom text for page info */
+.custom-page-info {
+  font-weight: bold;
+  margin: 0 15px;
+}
+
+/* Pagination container */
+.pagination {
+  display: flex;
+  margin-top: 20px;
+}

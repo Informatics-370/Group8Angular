@@ -35,6 +35,12 @@ export class BlacklistComponent implements OnInit {
   showBlacklistReportModal: boolean = false;
   blacklistData: Blacklist[] = [];
 
+  filteredBlacklistC = [...this.blacklistC]; // Filtered blacklist
+  pageSize = 10; // Items per page
+  currentPage = 1; // Current page
+  searchKeyword = ""; // Search keyword
+  item: any;
+
 
   constructor(
     private blacklistService: BlacklistService,
@@ -359,6 +365,32 @@ export class BlacklistComponent implements OnInit {
       console.error('Error fetching blacklist data:', error);
       this.toastr.error('Error, failed to retrieve Blacklist Data', 'Blacklist Report');
     }
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredBlacklistC.length / this.pageSize);
+  }
+
+  get currentBlacklistPage() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredBlacklistC.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  applySearch() {
+    this.filteredBlacklistC = this.blacklistC.filter(item => 
+      this.item.email.toLowerCase().includes(this.searchKeyword.toLowerCase()));
   }
 
 

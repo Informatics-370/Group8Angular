@@ -35,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let discount of filteredDiscounts">
+    <tr *ngFor="let discount of currentPageData">
       <td>{{ discount.discountCode }}</td>
       <td>{{ discount.discountDescription }}</td>
 
@@ -62,6 +62,19 @@
 <div class="text-center" *ngIf="discounts.length === 0">
   <h3>No discounts currently in your system.</h3>
 </div>
+
+<!-- Pagination -->
+<!-- Pagination -->
+<div class="pagination">
+  <button class="btn custom-btn" (click)="previousPage()">
+    &laquo; Previous
+  </button>
+  <span class="custom-page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button class="btn custom-btn" (click)="nextPage()">
+    Next &raquo;
+  </button>
+</div>
+
 
 
 <!-- Add/Edit Discount Modal -->
