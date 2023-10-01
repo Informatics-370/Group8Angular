@@ -72,6 +72,8 @@ import { DonationsComponent } from './customer/donations/donations.component';
 import { CalendarComponent } from './admin/calendar/calendar.component';
 import { BackupComponent } from './admin/backup/backup.component';
 import { PaginationComponent } from './admin/pagination/pagination.component';
+import { EventDamageComponent } from './admin/event-damage/event-damage.component';
+
 
 
 @NgModule({
@@ -127,6 +129,7 @@ import { PaginationComponent } from './admin/pagination/pagination.component';
     CalendarComponent,
     BackupComponent,
     PaginationComponent,
+    EventDamageComponent,
   ],
   imports: [
     BrowserModule,
