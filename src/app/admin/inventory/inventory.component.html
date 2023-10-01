@@ -105,9 +105,9 @@
     [ngStyle]="{'display': showInventoryModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">{{editingInventory ? 'Edit Inventory' : 'Add Inventory'}}
+        <h2 class="modal-header">{{editingInventory ? 'Edit Inventory' : 'Add Inventory'}}
           <button type="button" class="btn-close" aria-label="Close" (click)="closeInventoryModal()"></button>
-        </div>
+        </h2>
         <div class="modal-body">
           <form #inventoryForm="ngForm" (ngSubmit)="submitInventoryForm(inventoryForm); onSubmitClick()">
 
@@ -210,9 +210,9 @@
     [ngStyle]="{'display': showDeleteInventoryModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">Delete Confirmation
+        <h2 class="modal-header">Delete Confirmation
           <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteInventoryModal()"></button>
-        </div>
+        </h2>
         <div class="modal-body">
           <p>Are you sure you want to delete this Inventory?</p>
           <p>Wine Name: {{ getWineName(inventoryToDeleteDetails?.wineID) }}</p>
@@ -244,9 +244,9 @@
     [ngStyle]="{'display': showWROModal ? 'block' : 'none'}">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">Write Off
+        <h2 class="modal-header">Write Off
           <button type="button" class="btn-close" aria-label="Close" (click)="closeWROModal()"></button>
-        </div>
+        </h2>
 
         <div class="modal-body">
           <form #writeROForm="ngForm" (ngSubmit)="AddWriteOff(writeROForm);  AddAuditLog('Write Off: Added')">
@@ -305,7 +305,6 @@
         <tr>
           <th scope="col" class="header-cell">Supplier Order Ref</th>
           <th scope="col" class="header-cell">Wine Name</th>
-          <th scope="col" class="header-cell">Vintage</th>
           <th scope="col" class="header-cell">Date Done</th>
           <th scope="col" class="header-cell">Quantity Ordered</th>
           <th scope="col" class="header-cell">Quantity Received</th>
@@ -315,7 +314,6 @@
         <tr *ngFor="let x of stocktake">
           <td>{{ supOrderMap.get(x.supplierOrderID!) }}</td>
           <td>{{ wineNamesMap.get(x.supplierOrderID!) }}</td>
-          <td>{{ vintageMap.get(x.supplierOrderID!)}}</td>
           <td>{{ x.dateDone | date:'dd/MM/yyyy HH:mm'}}</td>
           <td>{{ x.quantityOrdered }}</td>
           <td>{{ x.quantityReceived }}</td>

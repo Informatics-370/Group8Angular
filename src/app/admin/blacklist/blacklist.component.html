@@ -1,5 +1,4 @@
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
-
 <br>
 <br>
 <div class="row align-items-center">
@@ -11,7 +10,6 @@
       <input type="text" class="form-control" placeholder="Search Blacklist" [(ngModel)]="searchKeyword" (input)="applySearch()">
     </div>
   </div>
- 
   <div class="col text-end">
     <button class="btn btn-success" (click)="openAddBlacklistCModal()">
       <i class="fas fa-plus"></i> Add
@@ -20,12 +18,8 @@
 
   </div>
 </div>
-
 <!--************************************************************ Page Heading + Add Button ************************************************************************************-->
-
-
 <!--************************************************************ Table for View Blacklist *************************************************************************************-->
-
 <table class="table table-striped">
   <thead>
     <tr>
@@ -50,7 +44,6 @@
     </tr>
   </tbody>
 </table>
-
 <div class="text-center" *ngIf="blacklistC.length === 0">
   <h3>No blacklisted customers currently in your system.</h3>
 </div>
@@ -65,23 +58,17 @@
     Next &raquo;
   </button>
 </div>
-
 <!--************************************************************ Table for View Blacklist *********************************************************************************-->
-
-
 <!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
-
 <div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistModal}"
   [ngStyle]="{'display': showBlacklistModal ? 'block' : 'none'}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">{{editingBlacklistC ? 'Edit Blacklist Customer' : 'Add Customer to Blacklist'}}
+      <h2 class="modal-header">{{editingBlacklistC ? 'Edit Blacklist Customer' : 'Add Customer to Blacklist'}}
         <button type="button" class="btn-close" aria-label="Close" (click)="closeBlacklistCModal()"></button>
-      </div>
-
+      </h2>
       <div class="modal-body">
         <form #blacklistForm="ngForm" (ngSubmit)="submitBlacklistCForm(blacklistForm); onSubmitClick()">
-    
             <!-- Add Mode: Dropdown for Customer Emails -->
             <ng-container *ngIf="!editingBlacklistC">
                 <div class="d-flex justify-content-between">
@@ -123,7 +110,6 @@
             </div>
         </form>
     </div>
-
       <!-- Modal Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeBlacklistCModal()">Close</button>
@@ -137,16 +123,8 @@
     </div>
   </div>
 </div>
-
-
-
-
-
 <!--************************************************************ Add/Edit Modal ***********************************************************************************************-->
-
-
 <!--************************************************************ Delete Modal *************************************************************************************************-->
-
 <div class="modal" tabindex="-1" [ngClass]="{'show': showDeleteBlacklistCModal}"
   [ngStyle]="{'display': showDeleteBlacklistCModal ? 'block' : 'none'}">
   <div class="modal-dialog">
@@ -175,9 +153,7 @@
     </div>
   </div>
 </div>
-
 <!--************************************************************ Delete Modal *************************************************************************************************-->
-
 <!-- Blacklist Report Modal -->
 <div class="modal" tabindex="-1" [ngClass]="{'show': showBlacklistReportModal}" [ngStyle]="{'display': showBlacklistReportModal ? 'block' : 'none'}">
   <div class="modal-dialog">

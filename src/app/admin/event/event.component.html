@@ -11,7 +11,6 @@
           (input)="filterEvents()">
       </div>
       <div>
-        <!-- Note that I removed the TypeScript null assertion operator ! from $event.target.value -->
         <select    class="btn btn-light dropdown-toggle fixed-width-btn" (change)="onSortChange($event)">
           <option value="">Sort By</option>
           <option value="eventID">Recent</option>
@@ -112,7 +111,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete Confirmation</h5>
+        <h2 class="modal-title">Delete Confirmation</h2>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteEventModal()"></button>
       </div>
       <div class="modal-body">
@@ -140,7 +139,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{editingEvent ? 'Edit Event' : 'Add Event'}}</h5>
+        <h2 class="modal-title">{{editingEvent ? 'Edit Event' : 'Add Event'}}</h2>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEventModal()"></button>
       </div>
       <div class="modal-body">
