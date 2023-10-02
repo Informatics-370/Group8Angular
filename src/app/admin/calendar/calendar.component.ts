@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Event } from 'src/app/Model/event';
 import { EventService } from '../services/event.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { Router } from '@angular/router';
 import { PdfService } from '../services/pdf.service';
 import { ReportService } from '../services/report.service';
 import { AuditTrail } from 'src/app/Model/audit-trail';
@@ -45,7 +45,8 @@ export class CalendarComponent {
     private toastr: ToastrService,
     private auditLogService: AuditlogService, 
     private customerService: CustomersService,
-    private dataService: DataServiceService
+    private dataService: DataServiceService,
+    private router: Router
 
     ) {}
 
@@ -269,6 +270,9 @@ export class CalendarComponent {
     }
   }
 
+  goToPage4() {
+    this.router.navigate(['/help/3']);
+  }
 
   
  

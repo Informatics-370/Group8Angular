@@ -38,7 +38,8 @@ export class EventComponent {
   constructor(private toastr: ToastrService, private eventService: EventService, private eventTypeService: EventTypeService, private eventPriceService: EventPriceService, private earlyBirdService: EarlyBirdService,
     private customerService: CustomersService,
     private auditLogService: AuditlogService,
-    private dataService: DataServiceService) { }
+    private dataService: DataServiceService,
+    private router : Router) { }
 
   async ngOnInit(): Promise<void> {
     this.userDetails = this.dataService.getUserFromToken();
@@ -574,8 +575,9 @@ this.fileUploaded = true;
     this.pageSize = newSize;
     this.filterEvents(); // Re-filter wines without resetting allWines
   }
-  
 
-
+  goToPage4() {
+    this.router.navigate(['/help/1']);
+  }
 
 }

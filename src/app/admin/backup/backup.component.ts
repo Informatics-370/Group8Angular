@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BackupService } from '../services/backup.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-backup',
@@ -23,12 +24,18 @@ export class BackupComponent {
   currentTimer: number = 0;
   constructor(
     private backupService: BackupService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(){
     this.getCurrentTimerFrequency();
   }
+
+  goToPage4() {
+    this.router.navigate(['/help/8']);
+  }
+
 
   makeBackup() {
     this.backupService.createBackup().subscribe(

@@ -103,7 +103,8 @@ const routes: Routes = [
   {path: 'userrefunds', component: MyRefundsComponent},
   {path: 'chatbot', component: ChatbotComponent},
   { path: 'access-restricted', component: AccessRestrictedComponent},
-  {path: 'donations', component: DonationsComponent}
+  {path: 'donations', component: DonationsComponent},
+  { path: 'help/:page', component: HelpResourcesComponent }
   
 ];
 

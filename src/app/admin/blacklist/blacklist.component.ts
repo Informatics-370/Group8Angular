@@ -370,4 +370,9 @@ selectEmail(email: string) {
   this.currentBlacklistC['email'] = email;
 }
 
+//Navigate to help document
+goToPage4() {
+  this.router.navigate(['/help/4']);
+}
+
 } 

@@ -801,4 +801,8 @@ filterWines(): void {
       'Wine: ' + (this.editingWine ? 'Updated' : 'Added');
     this.AddAuditLog(auditLogMessage);
   }
+
+  goToPage4() {
+    this.router.navigate(['/help/1']);
+  }
 }

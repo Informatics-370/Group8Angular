@@ -38,6 +38,9 @@ ngOnInit(): void {
 
 }
 
+goToPage4() {
+  this.router.navigate(['/help/9']);
+}
 
 
 filteredDiscounts: Discount[] = [];

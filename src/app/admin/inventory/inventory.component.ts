@@ -24,7 +24,6 @@ import { StockTakeService } from '../services/stocktake.service';
 import { StockTake } from 'src/app/Model/stocktake';
 import { SupplierOrder } from 'src/app/Model/supplierOrder';
 import { SupplierOrderService } from '../services/supplier-order.service';
-
 import { PdfService } from '../services/pdf.service';
 import { ReportService } from '../services/report.service';
 
@@ -98,6 +97,10 @@ export class InventoryComponent implements OnInit {
       this.filteredInventoryList  = [...this.inventory];
       this.filterInventory();
     }, 200);
+  }
+
+  goToPage4() {
+    this.router.navigate(['/help/11']);
   }
 
   // **********************************************************When the page is called these methods are automatically called*************************************************
