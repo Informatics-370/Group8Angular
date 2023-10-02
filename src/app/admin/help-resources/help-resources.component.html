@@ -1,4 +1,16 @@
-<!-- Create a container to center the content -->
+
+    <!-- Document Section -->
+<!-- Search Bar -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <h2 class="text-center display-4 fw-bold py-4">Help Document</h2>
+          <div class="pdf-container">
+            <iframe [src]="pdfUrl" width="100%" height="600" class="rounded"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create a container to center the content -->
 <div class="container my-5">
     <!-- Video Section -->
     <div class="row justify-content-center mb-5">
@@ -11,18 +23,6 @@
     </div>
 
   
-    <!-- Document Section -->
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <!-- Larger, bold heading with added padding -->
-        <h2 class="text-center display-4 fw-bold py-4">Help Document</h2>
-        <!-- Added shadow for a lifted appearance -->
-        <div class="pdf-container bg-light rounded border p-3 shadow">
-          <!-- Added rounded corners to iframe -->
-          <iframe [src]="pdfPath" width="100%" height="600" class="rounded"></iframe>
-        </div>
-      </div>
-    </div>
   
   
 

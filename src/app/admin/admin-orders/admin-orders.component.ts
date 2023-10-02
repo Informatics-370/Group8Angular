@@ -7,6 +7,7 @@ import { Customer } from 'src/app/Model/customer';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-orders',
@@ -19,7 +20,7 @@ export class AdminOrdersComponent implements OnInit {
   public showPastOrders: boolean = false;
 
   constructor(private orderService: OrderService, private toastr: ToastrService
-    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService) { }
+    , private customerService: CustomersService,private auditLogService: AuditlogService, private dataService: DataServiceService, private router: Router) { }
 
   ngOnInit() {
     this.fetchAllOrders();
@@ -27,6 +28,11 @@ export class AdminOrdersComponent implements OnInit {
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
   }
+
+  goToPage4() {
+    this.router.navigate(['/help/5']);
+  }
+
 
   fetchAllOrders() {
     this.orderService.getAllOrders().subscribe(

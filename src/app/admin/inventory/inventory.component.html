@@ -84,7 +84,7 @@
       Next &raquo;
     </button>
   </div>
-  
+  <br/>
   <div class="custom-page-size-container">
     <span class="custom-page-size-label">Page Size:</span>
     <select class="custom-dropdown" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
@@ -95,6 +95,8 @@
       <option value="25">25</option>
     </select>
   </div>
+  <br/>
+  <button type="button" style="width:auto" class="btn btn-primary" (click)="goToPage4()">Help</button>
   
   <!--************************************************************ Table for View Inventory ******************************************************************************-->
 

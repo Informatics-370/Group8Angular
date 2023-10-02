@@ -13,6 +13,7 @@ import { Customer } from 'src/app/Model/customer';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { AuditlogService } from '../services/auditlog.service';
 import { CustomersService } from '../services/customers.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-refund-request',
@@ -50,7 +51,8 @@ export class RefundRequestComponent {
     private discountService: DiscountService,
     private customerService: CustomersService,
     private auditLogService: AuditlogService,
-    private dataService: DataServiceService
+    private dataService: DataServiceService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.loadRefunds();
@@ -58,6 +60,11 @@ export class RefundRequestComponent {
     this.userDetails = this.dataService.getUserFromToken();
     this.loadUserData();
   }
+
+  goToPage4() {
+    this.router.navigate(['/help/10']);
+  }
+
 
   searchRefunds() {
     let filteredRefunds = [...this.refundRequests];

@@ -7,6 +7,7 @@ import { Customer } from 'src/app/Model/customer';
 import { CustomersService } from 'src/app/admin/services/customers.service';
 import { DataServiceService } from 'src/app/customer/services/data-service.service';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class AuditLogsComponent {
     private auditLogService: AuditlogService,
     private toastr: ToastrService,
     private customerService: CustomersService,
-    private dataService: DataServiceService
+    private dataService: DataServiceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,11 @@ export class AuditLogsComponent {
     }, 200);
     
   }
+
+  goToPage4() {
+    this.router.navigate(['/help/7']);
+  }
+
 
   loadUserData() {
     const userEmail = this.userDetails?.email;
