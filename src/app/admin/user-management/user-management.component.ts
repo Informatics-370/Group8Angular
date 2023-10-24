@@ -80,15 +80,25 @@ export class UserManagementComponent {
     this.userManagementService.UpdateUserRoles(user)
       .subscribe(
         (result : any) => {
-          this.toastr.success('Successfully Updated', 'User Roles')
+          this.toastr.success('Successfully Updated', 'User Roles');
           this.searchTerm = '';
           this.getAllUsers();
           this.getAllRoles();
           this.AddAuditLog('User Access: Updated');
         },
-        error => this.toastr.error('Error, failed to update', 'User Roles')
+        (error: any) => {
+          console.log(error);
+          const errorMessage = error?.error?.error;
+          if (errorMessage && errorMessage === "There must be at least one Superuser in the system. Cannot remove the last Superuser.") {
+            this.toastr.error('You cannot remove the last Superuser.', 'User Roles');
+          } else {
+            this.toastr.error('Error, failed to update', 'User Roles');
+          }
+          this.getAllUsers();
+          this.getAllRoles();
+        } 
       );
-  }
+}
 
   toggleEditMode(user: UserRolesViewModel): void {
     if (this.editableUsers.has(user)) {

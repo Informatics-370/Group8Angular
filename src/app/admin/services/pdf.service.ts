@@ -16,6 +16,7 @@ import { SupplierService } from './supplier.service';
 import { SuppOrderAndVATViewModel } from 'src/app/Model/SupplierOrdersVATs';
 import { VAT } from 'src/app/Model/vat';
 import { InventoryService } from './inventory.service';
+import { Align } from 'chart.js';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -834,476 +835,337 @@ export class PdfService {
 
   async generateSupplierOrdersPdf(
     supplierOrderData: SuppOrderAndVATViewModel[]
-  ): Promise<Blob> {
-    type Alignment = 'left' | 'right' | 'center' | 'justify';
-    return new Promise<Blob>((resolve, reject) => {
-      console.log('SupplierOrder And VAT:', supplierOrderData);
-      let generatedDate = Date.now();
-      let supplierTotals: { [key: string]: number } = {};
-      this.toastr.success('Generating...', 'Report');
+): Promise<Blob> {
+  type Alignment = 'left' | 'right' | 'center' | 'justify';
 
-      // Extract VAT percentage
-      if (!supplierOrderData[0].vaTs?.percentage) {
-        if (!supplierOrderData[0].vaTs) {
-          supplierOrderData[0].vaTs = {
-            vatid: 0,
-            percentage: 15,
-            date: new Date(), // Assuming the date format you want is a Date object
-          };
-        }
+  return new Promise<Blob>((resolve, reject) => {
+    console.log('SupplierOrder And VAT:', supplierOrderData);
+    let generatedDate = Date.now();
+
+    if (!supplierOrderData[0].vaTs?.percentage) {
+      if (!supplierOrderData[0].vaTs) {
+        supplierOrderData[0].vaTs = {
+          vatid: 0,
+          percentage: 15,
+          date: new Date(),
+        };
       }
-      const delay = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-      this.loadWines().then(() => {
-        delay(1234);
+    }
+    this.loadWines().then(() => {
+      setTimeout(() => {}, 1234);
+    });
+
+    const vatPercentage = supplierOrderData[0].vaTs.percentage ?? 0.15;
+    const flattenedSupplierOrders = supplierOrderData.flatMap((data) => data.supplierOrders || []).filter((order) => !!order);
+    const groupedBySupplier = flattenedSupplierOrders.reduce<{ [key: number]: typeof flattenedSupplierOrders }>((acc, order) => {
+      if (!acc[order.supplierID!]) acc[order.supplierID!] = [];
+      acc[order.supplierID!].push(order);
+      return acc;
+    }, {});
+    const supplierPromises = Object.keys(groupedBySupplier).map(supplierID => {
+      return new Promise<any>((resolve, reject) => {
+        this.supplierService.getSupplier(Number(supplierID)).subscribe(
+          (result: any) => resolve({ id: Number(supplierID), name: result.name }),
+          (error) => reject(error)
+        );
       });
-      
-      const vatPercentage = supplierOrderData[0].vaTs.percentage ?? 0.15; // Convert to a proportion for calculation
+    });
 
-      let body: any[] = [
-        [
-          'Order Ref',
-          'Supplier',
-          'Wine',
-          'Quantity Ordered',
-          'Cost(excl VAT)',
-          `VAT (${supplierOrderData[0].vaTs.percentage}%)`,
-          'Sub-Total',
-        ],
-      ];
-      let supplierTotalBody: any[] = [['Supplier Name', 'Total Amount Paid']];
+    Promise.all(supplierPromises).then(async (suppliers) => {
+      const tablesContent: any[] = [];
 
-      let grandTotal = 0;
-      const flattenedSupplierOrders = supplierOrderData
-        .flatMap((data) => data.supplierOrders || [])
-        .filter((order) => !!order);
+      for (const [index, supplier] of suppliers.entries()) {
+        tablesContent.push({ text: `Supplier: ${supplier.name}`, style: 'supplierHeader' });
 
-      Promise.all(
-        flattenedSupplierOrders.map((order) => {
-          return new Promise<string>((resolve, reject) => {
-            this.supplierService.getSupplier(order.supplierID!).subscribe(
-              (result: any) => resolve(result.name),
-              (error) => reject(error)
-            );
-          });
-        })
-      ).then(async (supplierNames) => {
-        flattenedSupplierOrders.forEach(async (order, index) => {
-          let orderValueText, vatText, totalWithVatText;
-          if (order.isBackOrder) {
-            orderValueText = vatText = totalWithVatText = "BO*";
-          } else {
-            const vat = ((order.orderTotal ?? 0) * vatPercentage) / 100;
-            const totalWithVat = order.orderTotal ?? 0;
-            const orderValue = (order.orderTotal || 0) * (1 - vatPercentage / 100);
-            grandTotal += totalWithVat;
-        
-            orderValueText = `R ${orderValue.toFixed(2)}`;
-            vatText = `R ${vat.toFixed(2)}`;
-            totalWithVatText = `R ${totalWithVat.toFixed(2)}`;
-          }
-        
-          const quantityOrdered = order.quantity_Ordered ?? 0;
-          let inventoryWineID = (await this.inventoryService.getItemInventory(order.inventoryID!)).wineID
-          body.push([
-            { text: order.supplierOrderRefNum, noWrap: false },
-            { text: supplierNames[index], noWrap: false },
-            { text: `${this.getWineName(inventoryWineID)} (${this.getWineVintage(inventoryWineID)})`, noWrap: true },
-            { text: quantityOrdered, noWrap: false },
-            { text: orderValueText, noWrap: true },
-            { text: vatText, noWrap: false },
-            { text: totalWithVatText, noWrap: false },
-          ]);
-        });
-        
+        const ordersGroupedByWine: { [key: number]: typeof flattenedSupplierOrders } = {};
+        for (const order of groupedBySupplier[supplier.id]) {
+          let inventoryWineID = (await this.inventoryService.getItemInventory(order.inventoryID!)).wineID;
+          if (!ordersGroupedByWine[inventoryWineID]) ordersGroupedByWine[inventoryWineID] = [];
+          ordersGroupedByWine[inventoryWineID].push(order);
+        }
 
-        let addedSuppliers = new Set<string>();
-        this.headerString = await this.toBase64('assets/download.png');
+        for (const wineID of Object.keys(ordersGroupedByWine)) {
+          tablesContent.push({ text: `Wine: ${this.getWineName(Number(wineID))} (${this.getWineVintage(Number(wineID))})`, style: 'subheader'});
 
-        flattenedSupplierOrders.forEach((order) => {
-          const vat = ((order.orderTotal ?? 0) * vatPercentage) / 100;
-          const orderValue = order.orderTotal!;
+          let body: any[] = [['Order Ref', 'Quantity Ordered', 'Cost(excl VAT)', `VAT (${vatPercentage}%)`, 'Sub-Total']];
+          let supplierTotal = 0;
+          let supplierVATTotal = 0;
 
-          if (order.supplierID !== undefined) {
-            if (!supplierTotals[order.supplierID]) {
-              supplierTotals[order.supplierID] = 0; // Initialize if not already set
+          for (const order of ordersGroupedByWine[Number(wineID)]) {
+            let orderValueText, vatText, totalWithVatText;
+            if (order.isBackOrder) {
+              orderValueText = vatText = totalWithVatText = "BO*";
+            } else {
+              const vat = ((order.orderTotal ?? 0) * vatPercentage) / 100;
+              const totalWithVat = order.orderTotal ?? 0;
+              const orderValue = (order.orderTotal || 0) * (1 - vatPercentage / 100);
+              supplierTotal += totalWithVat;
+              supplierVATTotal += vat;
+              orderValueText = `R ${orderValue.toFixed(2)}`;
+              vatText = `R ${vat.toFixed(2)}`;
+              totalWithVatText = `R ${totalWithVat.toFixed(2)}`;
             }
-            supplierTotals[order.supplierID] += orderValue; // Add to the supplier's total
-          }
-        });
 
-        flattenedSupplierOrders.forEach((order, index) => {
-          if (order.supplierID !== undefined) {
-            const supplierIDStr = String(order.supplierID);
-            if (!addedSuppliers.has(supplierIDStr)) {
-              supplierTotalBody.push([
-                supplierNames[index],
-                `R ${supplierTotals[order.supplierID].toFixed(2)}`,
-              ]);
-              addedSuppliers.add(supplierIDStr);
-            }
+            const quantityOrdered = order.quantity_Ordered ?? 0;
+            body.push([order.supplierOrderRefNum,  quantityOrdered, orderValueText, vatText, totalWithVatText]);
           }
-        });
 
-        // After you've added all suppliers and their totals, add the grand total:
-        supplierTotalBody.push(['', `R ${grandTotal.toFixed(2)}`]);
-        await delay(1234);
-        body.push([
-          {},
-          {},
-          {},
-          {},
-          {},
-          { text: 'Grand Total:', bold: true },
-          { text: `R ${grandTotal.toFixed(2)}`, bold: true },
-        ]);
-        
-        const documentDefinition = {
-          header: {
-            image: this.headerString,
-            fit: [40, 40] as [number, number],
-            alignment: 'center' as Alignment,
-          },
-          content: [
-            { text: 'Supplier Order Report', style: 'header' },
-            {
-              text: `Generated by: ${this.user.first_Name} ${this.user.last_Name}`,
-              style: 'subheader',
-            },
-            {
-              text: `Generated On: ${new Date(
-                generatedDate
-              ).toLocaleDateString()}`,
-              style: 'subheader',
-            },
-            '\n',
+          body.push([{ text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: 'VAT:', fillColor: 'lightgray' }, { text: `R ${supplierVATTotal.toFixed(2)}`, fillColor: 'lightgray' }]);
+          body.push([{ text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: 'Grand Total:', fillColor: 'lightgray' }, { text: `R ${supplierTotal.toFixed(2)}`, fillColor: 'lightgray' }]);
+          tablesContent.push(
             {
               table: {
                 headerRows: 1,
-                widths: [
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                ],
+                widths: [100, '*', '*', '*', '*'], // Adjusted widths to accommodate the new column
                 body: body,
               },
-              layout: {
-                fillColor: function (
-                  rowIndex: number,
-                  node: any,
-                  columnIndex: number
-                ) {
-                  return rowIndex === body.length - 1 ? '#DDDDDD' : null; // grey background for the last row
-                },
-              },
             },
-            { text: '* - Back Order', style: "superscript" },
-            '\n',
-            '\n', // Space between tables
+            { text: '* BO - Back Order', margin: [0, 10, 0, 10] }
+          );
+        }
+        if (index !== suppliers.length - 1) {
+          tablesContent.push({ text: '', pageBreak: 'before' });  // Only add page break if it's not the last supplier
+        }
+      }
+
+      this.headerString = await this.toBase64('assets/download.png');
+
+        const documentDefinition = {
+            header: {
+                image: this.headerString,
+                fit: [40, 40] as [number, number],
+                alignment: 'center' as Alignment,
+            },
+            content: [
+                { text: 'Supplier Order Report', style: 'header' },
+                {
+                    text: `Generated by: ${this.user.first_Name} ${this.user.last_Name}`,
+                    style: 'subheader',
+                },
+                {
+                    text: `Generated On: ${new Date(generatedDate).toLocaleDateString()}`,
+                    style: 'subheader',
+                },
+                '\n',
+                ...tablesContent,
+                { text: '*********** Report End ***********', style: 'reportEnd', alignment: 'center' as Alignment }
+            ],
+            footer: function (currentPage: number, pageCount: number): any {
+                return {
+                    columns: [
+                        'VITITECH',
+                        {
+                            text: 'Page ' + currentPage.toString() + ' of ' + pageCount,
+                            alignment: 'right' as Alignment,
+                        },
+                    ],
+                    margin: [30, 0] as [number, number],
+                };
+            },
+            styles: {
+                header: {
+                    fontSize: 16,
+                    bold: true,
+                    margin: [0, 10, 0, 10] as [number, number, number, number],
+                },
+                subheader: {
+                    fontSize: 12,
+                    italics: true,
+                    margin: [0, 5, 0, 5] as [number, number, number, number],
+                },
+                superscript: {
+                    fontsize: 8,
+                    margin: [0, 10, 0, 10] as [number, number, number, number],
+                },
+                reportEnd: {
+                  fontSize: 14,
+                  bold: true,
+                  margin: [0, 10, 0, 10] as [number, number, number, number]
+                },
+                supplierHeader: {
+                  background: '#f5f5f5',
+                  bold: true,
+                  fontSize: 14,
+                  margin: [0, 20, 0, 10] as [number, number, number, number],
+                  alignment: 'center' as Alignment
+              }
+            },
+        };
+
+            pdfMake.createPdf(documentDefinition).download(`supplierOrderReport_${generatedDate}.pdf`);
+        });
+    });
+}
+
+
+async generateSupplierOrders(
+  supplierOrderData: SuppOrderAndVATViewModel[]
+): Promise<Blob> {
+  type Alignment = 'left' | 'right' | 'center' | 'justify';
+
+  return new Promise<Blob>((resolve, reject) => {
+    console.log('SupplierOrder And VAT:', supplierOrderData);
+    let generatedDate = Date.now();
+
+    if (!supplierOrderData[0].vaTs?.percentage) {
+      if (!supplierOrderData[0].vaTs) {
+        supplierOrderData[0].vaTs = {
+          vatid: 0,
+          percentage: 15,
+          date: new Date(),
+        };
+      }
+    }
+    this.loadWines().then(() => {
+      setTimeout(() => {}, 1234);
+    });
+
+    const vatPercentage = supplierOrderData[0].vaTs.percentage ?? 0.15;
+    const flattenedSupplierOrders = supplierOrderData.flatMap((data) => data.supplierOrders || []).filter((order) => !!order);
+    const groupedBySupplier = flattenedSupplierOrders.reduce<{ [key: number]: typeof flattenedSupplierOrders }>((acc, order) => {
+      if (!acc[order.supplierID!]) acc[order.supplierID!] = [];
+      acc[order.supplierID!].push(order);
+      return acc;
+    }, {});
+    const supplierPromises = Object.keys(groupedBySupplier).map(supplierID => {
+      return new Promise<any>((resolve, reject) => {
+        this.supplierService.getSupplier(Number(supplierID)).subscribe(
+          (result: any) => resolve({ id: Number(supplierID), name: result.name }),
+          (error) => reject(error)
+        );
+      });
+    });
+
+    Promise.all(supplierPromises).then(async (suppliers) => {
+      const tablesContent: any[] = [];
+
+      for (const [index, supplier] of suppliers.entries()) {
+        tablesContent.push({ text: `Supplier: ${supplier.name}`, style: 'supplierHeader' });
+
+        const ordersGroupedByWine: { [key: number]: typeof flattenedSupplierOrders } = {};
+        for (const order of groupedBySupplier[supplier.id]) {
+          let inventoryWineID = (await this.inventoryService.getItemInventory(order.inventoryID!)).wineID;
+          if (!ordersGroupedByWine[inventoryWineID]) ordersGroupedByWine[inventoryWineID] = [];
+          ordersGroupedByWine[inventoryWineID].push(order);
+        }
+
+        for (const wineID of Object.keys(ordersGroupedByWine)) {
+          tablesContent.push({ text: `Wine: ${this.getWineName(Number(wineID))} (${this.getWineVintage(Number(wineID))})`, style: 'subheader'});
+
+          let body: any[] = [['Order Ref', 'Quantity Ordered', 'Cost(excl VAT)', `VAT (${vatPercentage}%)`, 'Sub-Total']];
+          let supplierTotal = 0;
+          let supplierVATTotal = 0;
+
+          for (const order of ordersGroupedByWine[Number(wineID)]) {
+            let orderValueText, vatText, totalWithVatText;
+            if (order.isBackOrder) {
+              orderValueText = vatText = totalWithVatText = "BO*";
+            } else {
+              const vat = ((order.orderTotal ?? 0) * vatPercentage) / 100;
+              const totalWithVat = order.orderTotal ?? 0;
+              const orderValue = (order.orderTotal || 0) * (1 - vatPercentage / 100);
+              supplierTotal += totalWithVat;
+              supplierVATTotal += vat;
+              orderValueText = `R ${orderValue.toFixed(2)}`;
+              vatText = `R ${vat.toFixed(2)}`;
+              totalWithVatText = `R ${totalWithVat.toFixed(2)}`;
+            }
+
+            const quantityOrdered = order.quantity_Ordered ?? 0;
+            body.push([order.supplierOrderRefNum,  quantityOrdered, orderValueText, vatText, totalWithVatText]);
+          }
+
+          body.push([{ text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: 'VAT:', fillColor: 'lightgray' }, { text: `R ${supplierVATTotal.toFixed(2)}`, fillColor: 'lightgray' }]);
+          body.push([{ text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: '', fillColor: 'lightgray' }, { text: 'Grand Total:', fillColor: 'lightgray' }, { text: `R ${supplierTotal.toFixed(2)}`, fillColor: 'lightgray' }]);
+          tablesContent.push(
             {
               table: {
-                widths: ['70%', '30%'],
-                body: supplierTotalBody,
-              },
-              layout: {
-                fillColor: function (
-                  rowIndex: number,
-                  node: any,
-                  columnIndex: number
-                ) {
-                  return rowIndex === supplierTotalBody.length - 1
-                    ? '#DDDDDD'
-                    : null; // grey background for the last row
-                },
+                headerRows: 1,
+                widths: [100, '*', '*', '*', '*'], // Adjusted widths to accommodate the new column
+                body: body,
               },
             },
-            '\n',
-            { text: '*********** Report End ***********', style: 'reportEnd' },
-          ],
-          footer: function (currentPage: number, pageCount: number): any {
-            return {
-              columns: [
-                'VITITECH',
-                {
-                  text: 'Page ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right' as Alignment,
-                },
-              ],
-              margin: [30, 0] as [number, number],
-            };
-          },
-          styles: {
+            { text: '* BO - Back Order', margin: [0, 10, 0, 10] }
+          );
+        }
+        if (index !== suppliers.length - 1) {
+          tablesContent.push({ text: '', pageBreak: 'before' });  // Only add page break if it's not the last supplier
+        }
+      }
+
+      this.headerString = await this.toBase64('assets/download.png');
+
+        const documentDefinition = {
             header: {
-              fontSize: 16,
-              bold: true,
-              margin: [0, 10, 0, 10] as [number, number, number, number],
+                image: this.headerString,
+                fit: [40, 40] as [number, number],
+                alignment: 'center' as Alignment,
             },
-            subheader: {
-              fontSize: 12,
-              italics: true,
-              margin: [0, 5, 0, 5] as [number, number, number, number],
+            content: [
+                { text: 'Supplier Order Report', style: 'header' },
+                {
+                    text: `Generated by: ${this.user.first_Name} ${this.user.last_Name}`,
+                    style: 'subheader',
+                },
+                {
+                    text: `Generated On: ${new Date(generatedDate).toLocaleDateString()}`,
+                    style: 'subheader',
+                },
+                '\n',
+                ...tablesContent,
+                { text: '*********** Report End ***********', style: 'reportEnd', alignment: 'center' as Alignment }
+            ],
+            footer: function (currentPage: number, pageCount: number): any {
+                return {
+                    columns: [
+                        'VITITECH',
+                        {
+                            text: 'Page ' + currentPage.toString() + ' of ' + pageCount,
+                            alignment: 'right' as Alignment,
+                        },
+                    ],
+                    margin: [30, 0] as [number, number],
+                };
             },
-            reportEnd: {
-              fontSize: 14,
-              bold: true,
-              margin: [0, 7, 0, 7] as [number, number, number, number],
-              alignment: 'center' as Alignment,
+            styles: {
+                header: {
+                    fontSize: 16,
+                    bold: true,
+                    margin: [0, 10, 0, 10] as [number, number, number, number],
+                },
+                subheader: {
+                    fontSize: 12,
+                    italics: true,
+                    margin: [0, 5, 0, 5] as [number, number, number, number],
+                },
+                superscript: {
+                    fontsize: 8,
+                    margin: [0, 10, 0, 10] as [number, number, number, number],
+                },
+                reportEnd: {
+                  fontSize: 14,
+                  bold: true,
+                  margin: [0, 10, 0, 10] as [number, number, number, number]
+                },
+                supplierHeader: {
+                  background: '#f5f5f5',
+                  bold: true,
+                  fontSize: 14,
+                  margin: [0, 20, 0, 10] as [number, number, number, number],
+                  alignment: 'center' as Alignment
+              }
             },
-            superscript: {
-              fontsize: 8,
-              margin: [0, 2, 0, 2] as [number, number, number, number]
-            }
-          },
-          pageOrientation: 'portrait' as const,
         };
-      pdfMake
-        .createPdf(documentDefinition)
-        .download(`supplier_order_report_${generatedDate}.pdf`);
+
+        const pdfDoc = pdfMake.createPdf(documentDefinition);
+        pdfDoc.getBlob((blob: Blob) => {
+            resolve(blob);
+        });
     });
   });
-  }
+}
 
-  async generateSupplierOrders(
-    supplierOrderData: SuppOrderAndVATViewModel[]
-  ): Promise<Blob> {
-    type Alignment = 'left' | 'right' | 'center' | 'justify';
-    return new Promise<Blob>((resolve, reject) => {
-      console.log('SupplierOrder And VAT:', supplierOrderData);
-      let generatedDate = Date.now();
-      let supplierTotals: { [key: string]: number } = {};
-      this.toastr.success('Generating...', 'Report');
 
-      // Extract VAT percentage
-      if (!supplierOrderData[0].vaTs?.percentage) {
-        if (!supplierOrderData[0].vaTs) {
-          supplierOrderData[0].vaTs = {
-            vatid: 0,
-            percentage: 15,
-            date: new Date(), // Assuming the date format you want is a Date object
-          };
-        }
-      }
-      const delay = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-      this.loadWines().then(() => {
-        delay(1234);
-      });
-      
-      const vatPercentage = supplierOrderData[0].vaTs.percentage ?? 0.15; // Convert to a proportion for calculation
-
-      let body: any[] = [
-        [
-          'Order Ref',
-          'Supplier',
-          'Wine',
-          'Quantity Ordered',
-          'Cost(excl VAT)',
-          `VAT (${supplierOrderData[0].vaTs.percentage}%)`,
-          'Sub-Total',
-        ],
-      ];
-      let supplierTotalBody: any[] = [['Supplier Name', 'Total Amount Paid']];
-
-      let grandTotal = 0;
-      const flattenedSupplierOrders = supplierOrderData
-        .flatMap((data) => data.supplierOrders || [])
-        .filter((order) => !!order);
-
-      Promise.all(
-        flattenedSupplierOrders.map((order) => {
-          return new Promise<string>((resolve, reject) => {
-            this.supplierService.getSupplier(order.supplierID!).subscribe(
-              (result: any) => resolve(result.name),
-              (error) => reject(error)
-            );
-          });
-        })
-      ).then(async (supplierNames) => {
-        flattenedSupplierOrders.forEach(async (order, index) => {
-          let orderValueText, vatText, totalWithVatText;
-          if (order.isBackOrder) {
-            orderValueText = vatText = totalWithVatText = "BO*";
-          } else {
-            const vat = ((order.orderTotal ?? 0) * vatPercentage) / 100;
-            const totalWithVat = order.orderTotal ?? 0;
-            const orderValue = (order.orderTotal || 0) * (1 - vatPercentage / 100);
-            grandTotal += totalWithVat;
-        
-            orderValueText = `R ${orderValue.toFixed(2)}`;
-            vatText = `R ${vat.toFixed(2)}`;
-            totalWithVatText = `R ${totalWithVat.toFixed(2)}`;
-          }
-        
-          const quantityOrdered = order.quantity_Ordered ?? 0;
-          let inventoryWineID = (await this.inventoryService.getItemInventory(order.inventoryID!)).wineID
-          body.push([
-            { text: order.supplierOrderRefNum, noWrap: false },
-            { text: supplierNames[index], noWrap: false },
-            { text: `${this.getWineName(inventoryWineID)} (${this.getWineVintage(inventoryWineID)})`, noWrap: true },
-            { text: quantityOrdered, noWrap: false },
-            { text: orderValueText, noWrap: true },
-            { text: vatText, noWrap: false },
-            { text: totalWithVatText, noWrap: false },
-          ]);
-        });
-        
-
-        let addedSuppliers = new Set<string>();
-        this.headerString = await this.toBase64('assets/download.png');
-
-        flattenedSupplierOrders.forEach((order) => {
-          const vat = ((order.orderTotal ?? 0) * vatPercentage) / 100;
-          const orderValue = order.orderTotal!;
-
-          if (order.supplierID !== undefined) {
-            if (!supplierTotals[order.supplierID]) {
-              supplierTotals[order.supplierID] = 0; // Initialize if not already set
-            }
-            supplierTotals[order.supplierID] += orderValue; // Add to the supplier's total
-          }
-        });
-
-        flattenedSupplierOrders.forEach((order, index) => {
-          if (order.supplierID !== undefined) {
-            const supplierIDStr = String(order.supplierID);
-            if (!addedSuppliers.has(supplierIDStr)) {
-              supplierTotalBody.push([
-                supplierNames[index],
-                `R ${supplierTotals[order.supplierID].toFixed(2)}`,
-              ]);
-              addedSuppliers.add(supplierIDStr);
-            }
-          }
-        });
-
-        // After you've added all suppliers and their totals, add the grand total:
-        supplierTotalBody.push(['', `R ${grandTotal.toFixed(2)}`]);
-        await delay(1234);
-        body.push([
-          {},
-          {},
-          {},
-          {},
-          {},
-          { text: 'Grand Total:', bold: true },
-          { text: `R ${grandTotal.toFixed(2)}`, bold: true },
-        ]);
-        
-        const documentDefinition = {
-          header: {
-            image: this.headerString,
-            fit: [40, 40] as [number, number],
-            alignment: 'center' as Alignment,
-          },
-          content: [
-            { text: 'Supplier Order Report', style: 'header' },
-            {
-              text: `Generated by: ${this.user.first_Name} ${this.user.last_Name}`,
-              style: 'subheader',
-            },
-            {
-              text: `Generated On: ${new Date(
-                generatedDate
-              ).toLocaleDateString()}`,
-              style: 'subheader',
-            },
-            '\n',
-            {
-              table: {
-                headerRows: 1,
-                widths: [
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                  'auto',
-                ],
-                body: body,
-              },
-              layout: {
-                fillColor: function (
-                  rowIndex: number,
-                  node: any,
-                  columnIndex: number
-                ) {
-                  return rowIndex === body.length - 1 ? '#DDDDDD' : null; // grey background for the last row
-                },
-              },
-            },
-            { text: '* - Back Order', style: "superscript" },
-            '\n',
-            '\n', // Space between tables
-            {
-              table: {
-                widths: ['70%', '30%'],
-                body: supplierTotalBody,
-              },
-              layout: {
-                fillColor: function (
-                  rowIndex: number,
-                  node: any,
-                  columnIndex: number
-                ) {
-                  return rowIndex === supplierTotalBody.length - 1
-                    ? '#DDDDDD'
-                    : null; // grey background for the last row
-                },
-              },
-            },
-            '\n',
-            { text: '*********** Report End ***********', style: 'reportEnd' },
-          ],
-          footer: function (currentPage: number, pageCount: number): any {
-            return {
-              columns: [
-                'VITITECH',
-                {
-                  text: 'Page ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right' as Alignment,
-                },
-              ],
-              margin: [30, 0] as [number, number],
-            };
-          },
-          styles: {
-            header: {
-              fontSize: 16,
-              bold: true,
-              margin: [0, 10, 0, 10] as [number, number, number, number],
-            },
-            subheader: {
-              fontSize: 12,
-              italics: true,
-              margin: [0, 5, 0, 5] as [number, number, number, number],
-            },
-            reportEnd: {
-              fontSize: 14,
-              bold: true,
-              margin: [0, 7, 0, 7] as [number, number, number, number],
-              alignment: 'center' as Alignment,
-            },
-            superscript: {
-              fontsize: 8,
-              margin: [0, 2, 0, 2] as [number, number, number, number]
-            }
-          },
-          pageOrientation: 'portrait' as const,
-        };
-
-        const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
-
-        pdfDocGenerator.getBlob((pdfBlob: Blob) => {
-          resolve(pdfBlob);
-        });
-      });
-    });
-  }
 
   //---------------------------------------------------  Supplier Order  ----------------------------------------------------------------
 
@@ -1496,7 +1358,7 @@ export class PdfService {
               fontSize: 14,
               bold: true,
               margin: [0, 7, 0, 7],
-              alignment: 'center',
+              alignment: 'center' as Alignment,
             },
           },
         };
