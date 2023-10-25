@@ -23,17 +23,18 @@
         <td>{{ orderRefNumMapping[request.wineOrderId] }}</td>
         <td>{{ request.requestDate | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>{{ request.status }}</td>
-        <!-- Action buttons like edit or delete -->
         <td>
           <button class="btn btn-primary btn-sm" (click)="editRefund(request)">
             <i class="fas fa-eye"></i>
           </button>
-      </td>
+        </td>
+      </tr>
     </tbody>
-    
-    
   </table>
+</div>
 
+
+<div>
   <div class="text-center empty-wishlist" *ngIf="refundRequests.length === 0">
     <h3>No wines currently in your refunds.</h3>
   </div>
@@ -109,6 +110,10 @@ aria-labelledby="refundStatusEditModalLabel" aria-hidden="true">
                   <td *ngIf="selectedRefund.status ===  'Completed'">{{ wine.status }}</td>
                   <td *ngIf="selectedRefund.status !== 'Completed'">In Progress</td>
                 </tr>
+
+                <sub>Should you have any queries with regards to your refunds.</sub>
+                <sub>Please contact us at: b4i.promenade@gmail.com</sub>
+
               </tbody>
             </table>
           </div>
