@@ -79,4 +79,23 @@
     background-color: #f8f8f8;
     padding: 10px;
   }
+
+  .text-right {
+    text-align: right;
+  }
   
+  .text-center {
+    text-align: center;
+  }
+  
+  .custom-btn {
+    background-color: #B55933;
+    color: #fff; 
+    border-color: #B55933;
+  }
+
+  .custom-btn:hover {
+    background-color: #8B3B20;
+    color: #fff; 
+    border-color: #8B3B20;
+  }

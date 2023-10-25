@@ -177,12 +177,16 @@ export class CartComponent implements OnInit {
   }
 
   discount: Discount | undefined;
+  displayDiscount: boolean = false;
+  cartTotalBeforeDiscount: number | undefined;
 
   async confirmApplyDiscount(): Promise<void> {
     console.log('Sending discount code:', this.discountCode);
     try {
+      this.cartTotalBeforeDiscount = this.cartTotal;
       let discount: Discount = await this.discountService.validateDiscountCode(this.discountCode);
       this.discount = discount; // assign the validated discount to the component property
+      
 
       if (discount && discount.discountAmount && discount.discountID != null) {
 
@@ -202,7 +206,7 @@ export class CartComponent implements OnInit {
         this.cartTotal = newCartTotal;
         console.log('New cart total:', this.cartTotal);
         this.isDiscountApplied = true;
-
+        this.displayDiscount = true;
         let token = localStorage.getItem('Token') || '';
         let decodedToken = jwt_decode(token) as DecodedToken;
         let email = decodedToken.sub;
@@ -212,7 +216,7 @@ export class CartComponent implements OnInit {
             this.toastr.success('Discount code applied successfully!', 'Discount Code');
             this.closeApplyDiscountModal();
             // Trigger the payment function after the discount has been applied successfully
-            await this.onProceedToPayment();
+            //await this.onProceedToPayment();
           },
           error => {
             console.error('Error updating discounted total:', error);

@@ -27,8 +27,8 @@
                     <th scope="col" class="text-left">Wine Name</th>
                     <th scope="col" class="text-left">Quantity</th>
                     <th scope="col" class="text-left">Actions</th>
-                    <th scope="col" class="text-left">Wine Price</th>
-                    <th scope="col" class="text-left">Total</th>
+                    <th scope="col" class="text-center">Wine Price</th>
+                    <th scope="col" class="text-center">Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -46,9 +46,9 @@
                     </td>
 
                     <!-- Access the price property of the wine object within each CartItem -->
-                    <td>R {{ item.wine.price | number:'1.2-2' }}</td>
+                    <td class="text-right">R {{ item.wine.price | number:'1.2-2' }}</td>
 
-                    <td class="text-left">
+                    <td class="text-right">
                       R {{ item.quantity * (getWineDetails(item.wineID)?.price || 0) | number:'1.2-2' }}
                     </td>
                     <td></td>
@@ -81,21 +81,37 @@
           </div>
           <div class="card-body">
             <table class="table" style="border-color: #B55933;">
-              <tbody>
+              <tbody> 
+                <tr style="color: #B54E33;" *ngIf="displayDiscount">
+                  <td>
+                    Total Before Discount:
+                  </td>
+                  <td class="text-right">
+                    R{{ cartTotalBeforeDiscount | number:'1.2-2' }}
+                  </td>
+                </tr>               
+                <tr style="color: #B54E33;" *ngIf="displayDiscount">
+                  <td>
+                    Discount Applied: 
+                  </td>                 
+                  <td class="text-right">
+                    R{{ discount?.discountAmount | number:'1.2-2' }}
+                  </td>
+                </tr>
                 <tr style="color: #B54E33;">
-                  <td class="text-right">VAT ({{ latestVatPercentage || '0' }} %):</td>
+                  <td>
+                    Total Before VAT:
+                  </td>
+                  <td class="text-right">
+                    R{{ calculateTotalBeforeVat() | number:'1.2-2' }}
+                  </td>
+                </tr>
+                <tr style="color: #B54E33;">
+                  <td>VAT ({{ latestVatPercentage || '0' }} %):</td>
                   <td class="text-right">R{{ calculateVatAmount() | number:'1.2-2' }}</td>
                 </tr>
                 <tr style="color: #B54E33;">
-                  <td class="text-right">
-                    <h3>Total Before VAT:</h3>
-                  </td>
-                  <td class="text-right">
-                    <h3>R{{ calculateTotalBeforeVat() | number:'1.2-2' }}</h3>
-                  </td>
-                </tr>
-                <tr style="color: #B54E33;">
-                  <td class="text-right">
+                  <td>
                     <h3>Total:</h3>
                   </td>
                   <td class="text-right">
@@ -109,9 +125,9 @@
             <div class="input-group mb-3">
               <input type="text" [(ngModel)]="discountCode" class="form-control" placeholder="Enter discount code">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" (click)="onApplyDiscountCode()">Apply
+                <button class="btn btn-outline-success custom-btn" type="button" (click)="onApplyDiscountCode()" style="color: white;">Apply
                   Discount</button>
-              </div>
+              </div>              
             </div>
             <!-- Payment button -->
             <button type="button" class="btn btn-primary" (click)="onProceedToPayment()">Proceed to Payment</button>
@@ -139,10 +155,7 @@
                 <i class="bi bi-exclamation-triangle-fill"></i> <!-- Assuming you're using Bootstrap icons -->
               </span>
               <span class="warning-text">
-                Note that this will delete the discount code from the database, and it will not be able to be used
-                again.
-                <br>
-                It will also proceed to payment.
+                Note that this will delete the discount code thus it will not be able to be used again.
               </span>
             </p>
             <p>Code: {{ discountCode }}</p>
