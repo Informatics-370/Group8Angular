@@ -50,3 +50,9 @@ table {
   margin: 0 15px;
 }
 
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 2%;
+}

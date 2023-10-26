@@ -85,9 +85,9 @@
     </button>
   </div>
   <br/>
-  <div class="custom-page-size-container">
-    <span class="custom-page-size-label">Page Size:</span>
-    <select class="custom-dropdown" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+  <div class="custom-page-size-container container-right">
+    <span class="custom-page-size-label align-right">Page Size:</span>
+    <select class="custom-dropdown align-right" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
       <option value="3">3</option>
       <option value="5">5</option>
       <option value="10">10</option>
@@ -96,7 +96,8 @@
     </select>
   </div>
   <br/>
-  <button type="button" style="width:auto" class="btn btn-primary" (click)="goToPage4()">Help</button>
+  <br>
+  <button type="button" style="width:auto" class="btn btn-primary align-right" (click)="goToPage4()">Help</button>
   
   <!--************************************************************ Table for View Inventory ******************************************************************************-->
 
@@ -236,7 +237,7 @@
 <br>
 
 
-  <button type="button" class="btn btn-primary" (click)="exportexcel()">Export to Excel</button>
+  <button type="button" class="btn btn-primary align-right" (click)="exportexcel()">Export to Excel</button>
   <!--************************************************************ Table for View Write Off Reason ******************************************************************************-->
 
 

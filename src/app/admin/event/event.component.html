@@ -94,11 +94,13 @@
   <h3>No events currently in your system.</h3>
 </div>
 
+<div class="container-right">
 <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [pageSize]="pageSize"
   [pageSizeOptions]="pageSizeOptions" (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)"></app-pagination>
+  <br>
   <button type="button" style="width:auto" class="btn btn-primary" (click)="goToPage4()">Help</button>
-
+</div>
 
 
 

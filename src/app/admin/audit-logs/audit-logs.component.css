@@ -64,3 +64,15 @@
     z-index: 10;
   }
   
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 2%;
+  }
+
+  .align-right {
+    float: right;
+    padding-right: 1%;
+  }
+  

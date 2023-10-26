@@ -48,8 +48,15 @@ table {
   width: 150px;  /* Set the width as appropriate */
 }
 
+.align-right {
+  float: right;
+  padding-right: 1%;
+}
 
-
+.container-right {
+  text-align: right;
+  padding-right: 2%;
+}
 
 
 

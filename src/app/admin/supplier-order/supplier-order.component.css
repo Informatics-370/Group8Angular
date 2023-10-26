@@ -82,3 +82,10 @@ table {
 .form-check-input:not(:checked) ~ .form-check-label .past-label {
   display: inline-block;
 }
+
+.custom-pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 2%;
+}
